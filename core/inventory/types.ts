@@ -19,6 +19,7 @@ export interface InventoryItem {
   salePrice: number
   notes: string
   minStock?: number
+  imageUrl?: string
 }
 
 // ─── Stock movements ──────────────────────────────────────────────────────────

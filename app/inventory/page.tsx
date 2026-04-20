@@ -66,6 +66,7 @@ type ItemFormData = {
   salePrice: string
   notes: string
   minStock: string
+  imageUrl: string
 }
 
 function ItemForm({
@@ -91,6 +92,7 @@ function ItemForm({
       salePrice: '',
       notes: '',
       minStock: '2',
+      imageUrl: '',
     },
   )
 
@@ -192,6 +194,26 @@ function ItemForm({
 
       <FormField label="Observações (opcional)">
         <Textarea value={data.notes} onChange={set('notes')} placeholder="Notas opcionais..." />
+      </FormField>
+
+      <FormField label="Foto (URL da imagem — opcional)">
+        <Input
+          value={data.imageUrl}
+          onChange={set('imageUrl')}
+          placeholder="https://exemplo.com/foto.jpg"
+          type="url"
+        />
+        {data.imageUrl && (
+          <div className="mt-2 rounded-lg overflow-hidden border border-[#2a2a2a] w-20 h-20">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={data.imageUrl}
+              alt="Preview"
+              className="w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).style.display = 'none' }}
+            />
+          </div>
+        )}
       </FormField>
 
       <SubmitButton>{initial ? 'Salvar Alterações' : 'Adicionar Item'}</SubmitButton>
@@ -362,6 +384,17 @@ function ItemRow({
     >
       {/* Mobile layout */}
       <div className="flex items-start gap-3 sm:hidden">
+        {item.imageUrl && (
+          <div className="w-12 h-12 rounded-lg overflow-hidden border border-[#2a2a2a] shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.imageUrl}
+              alt={item.name}
+              className="w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).parentElement!.style.display = 'none' }}
+            />
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <CatBadge cat={item.category} />
@@ -422,6 +455,17 @@ function ItemRow({
 
       {/* Desktop layout */}
       <div className="hidden sm:flex items-center gap-4">
+        {item.imageUrl && (
+          <div className="w-11 h-11 rounded-lg overflow-hidden border border-[#2a2a2a] shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.imageUrl}
+              alt={item.name}
+              className="w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).parentElement!.style.display = 'none' }}
+            />
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             <CatBadge cat={item.category} />
@@ -611,6 +655,7 @@ export default function InventoryPage() {
         salePrice: parseFloat(data.salePrice) || 0,
         notes:     data.notes.trim(),
         minStock:  parseInt(data.minStock)    || 2,
+        imageUrl:  data.imageUrl.trim() || undefined,
       },
     })
   }
@@ -631,6 +676,7 @@ export default function InventoryPage() {
         salePrice: parseFloat(data.salePrice) || 0,
         notes:     data.notes.trim(),
         minStock:  parseInt(data.minStock)    || 2,
+        imageUrl:  data.imageUrl.trim() || undefined,
       },
     })
     setEditing(null)
@@ -1102,6 +1148,7 @@ export default function InventoryPage() {
               salePrice: String(editing.salePrice),
               notes:     editing.notes,
               minStock:  String(editing.minStock ?? 2),
+              imageUrl:  editing.imageUrl ?? '',
             }}
             onSave={handleEdit}
             onClose={() => setEditing(null)}

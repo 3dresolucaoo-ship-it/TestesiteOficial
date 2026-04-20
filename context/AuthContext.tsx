@@ -56,12 +56,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Restore existing session (handles page refresh)
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    // Restore existing session (handles page refresh).
+    // setLoading(false) is called IMMEDIATELY after the local session read
+    // so the app renders without waiting for the profile network call.
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
-      if (session?.user) await loadProfile(session.user.id)
-      setLoading(false)
+      setLoading(false)                                    // ← unblocks the UI instantly
+      if (session?.user) loadProfile(session.user.id)    // ← background, no await
     }).catch(err => {
       console.error('[Auth] getSession failed:', err?.message)
       setLoading(false)

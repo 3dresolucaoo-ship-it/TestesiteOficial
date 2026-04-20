@@ -20,6 +20,7 @@ function itemFromDB(r: any): InventoryItem {
     salePrice:  Number(r.sale_price ?? 0),
     notes:      r.notes ?? '',
     minStock:   r.min_stock != null ? Number(r.min_stock) : undefined,
+    imageUrl:   r.image_url ?? undefined,
   }
 }
 
@@ -36,6 +37,7 @@ function itemToDB(i: InventoryItem, userId: string) {
     sale_price:  i.salePrice,
     notes:       i.notes,
     min_stock:   i.minStock ?? null,
+    image_url:   i.imageUrl ?? null,
     user_id:     userId,
   }
 }
