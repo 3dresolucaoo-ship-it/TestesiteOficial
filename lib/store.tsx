@@ -108,12 +108,13 @@ const EMPTY_STATE: AppState = {
 function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'HYDRATE':
+      // Always start from EMPTY_STATE — never from initialData — so mock data
+      // can never leak into a Supabase-backed session.
       return {
-        ...initialData,
+        ...EMPTY_STATE,
         ...action.payload,
-        movements: action.payload.movements ?? initialData.movements,
-        config:    action.payload.config    ?? initialData.config,
-        products:  action.payload.products  ?? [],
+        config:   action.payload.config   ?? DEFAULT_ADMIN_CONFIG,
+        products: action.payload.products ?? [],
       }
 
     case 'ADD_PROJECT':    return { ...state, projects: [...state.projects, action.payload] }

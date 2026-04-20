@@ -4,7 +4,7 @@ import { useEffect, type ReactNode } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { StoreProvider } from '@/lib/store'
-import { Sidebar, MobileNav } from '@/components/Sidebar'
+import { Sidebar, BottomNav } from '@/components/Sidebar'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
 
 // ─── Loading screen ───────────────────────────────────────────────────────────
@@ -97,10 +97,11 @@ export function AppShell({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="lg:ml-56 flex flex-col min-h-screen">
         <TopBar />
-        <main className="flex-1 p-4 sm:p-6 pb-24 lg:pb-6">
+        <main className="flex-1 p-4 sm:p-6 pb-20 lg:pb-6">
           {children}
         </main>
       </div>
+      <BottomNav />
     </StoreProvider>
   )
 }

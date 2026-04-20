@@ -198,6 +198,45 @@ function useProjectContext() {
   return null
 }
 
+// ─── Mobile bottom navigation bar ────────────────────────────────────────────
+const BOTTOM_NAV = [
+  { href: '/dashboard',  label: 'Dashboard',  icon: LayoutDashboard },
+  { href: '/projects',   label: 'Projetos',   icon: FolderKanban },
+  { href: '/finance',    label: 'Finanças',   icon: TrendingUp },
+  { href: '/orders',     label: 'Vendas',     icon: ShoppingCart },
+  { href: '/inventory',  label: 'Estoque',    icon: Package },
+]
+
+export function BottomNav() {
+  const pathname  = usePathname()
+  const projectId = useProjectContext()
+
+  // Inside a project sub-page: use hamburger drawer instead
+  if (projectId) return null
+
+  return (
+    <nav className="mobile-nav lg:hidden flex items-center justify-around px-1 py-1">
+      {BOTTOM_NAV.map(({ href, label, icon: Icon }) => {
+        const active = pathname === href || pathname.startsWith(href + '/')
+        return (
+          <Link
+            key={href}
+            href={href}
+            className="flex flex-col items-center gap-0.5 flex-1 py-2 rounded-xl transition-all"
+            style={{
+              color:      active ? '#a78bfa' : '#555566',
+              background: active ? 'rgba(124,58,237,0.12)' : 'transparent',
+            }}
+          >
+            <Icon size={18} strokeWidth={active ? 2 : 1.5} />
+            <span className="text-[9px] font-medium">{label}</span>
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+
 // ─── Desktop Sidebar ─────────────────────────────────────────────────────────
 export function Sidebar() {
   const projectId = useProjectContext()
