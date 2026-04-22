@@ -11,24 +11,42 @@ import { isSupabaseConfigured } from '@/lib/supabaseClient'
 
 function LoadingScreen() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-[#050508]">
+    <div
+      className="fixed inset-0 flex items-center justify-center"
+      style={{ background: 'var(--t-bg)' }}
+    >
       {/* Background glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2
-          w-[600px] h-[600px] rounded-full
-          bg-[#7c3aed] opacity-[0.06] blur-[120px]" />
+        <div
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2
+            w-[600px] h-[600px] rounded-full"
+          style={{
+            background: 'var(--t-accent)',
+            opacity:    0.06,
+            filter:     'blur(120px)',
+          }}
+        />
       </div>
       <div className="relative flex flex-col items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-[#7c3aed] flex items-center justify-center
-          text-white font-bold text-lg shadow-[0_0_30px_rgba(124,58,237,0.5)]">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center
+            text-white font-bold text-lg"
+          style={{
+            background: '#7c3aed',
+            boxShadow:  '0 0 30px rgba(124,58,237,0.5)',
+          }}
+        >
           B
         </div>
         <div className="flex items-center gap-1.5">
           {[0, 1, 2].map(i => (
             <div
               key={i}
-              className="w-1.5 h-1.5 rounded-full bg-[#7c3aed]"
-              style={{ animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite` }}
+              className="w-1.5 h-1.5 rounded-full"
+              style={{
+                background: '#7c3aed',
+                animation:  `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
+              }}
             />
           ))}
         </div>
@@ -69,7 +87,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       !loading &&
       user &&
       isAdminPath &&
-      role !== null &&      // wait until role is loaded
+      role !== null &&
       role !== 'admin'
     ) {
       router.replace('/dashboard')
