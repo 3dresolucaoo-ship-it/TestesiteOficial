@@ -56,15 +56,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
+    // Safety timeout: if getSession() hangs for any reason (bad key, CORS,
+    // network failure), we unblock the UI after 5 s instead of loading forever.
+    const safetyTimer = setTimeout(() => {
+      console.warn('[Auth] getSession timed out — unblocking UI')
+      setLoading(false)
+    }, 5000)
+
     // Restore existing session (handles page refresh).
     // setLoading(false) is called IMMEDIATELY after the local session read
     // so the app renders without waiting for the profile network call.
     supabase.auth.getSession().then(({ data: { session } }) => {
+      clearTimeout(safetyTimer)
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)                                    // ← unblocks the UI instantly
       if (session?.user) loadProfile(session.user.id)    // ← background, no await
     }).catch(err => {
+      clearTimeout(safetyTimer)
       console.error('[Auth] getSession failed:', err?.message)
       setLoading(false)
     })
@@ -82,7 +91,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      clearTimeout(safetyTimer)
+      subscription.unsubscribe()
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
