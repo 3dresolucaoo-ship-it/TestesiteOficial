@@ -61,6 +61,12 @@
   --t-scrollbar-hover: rgba(0,0,0,0.18);
 
   --t-table-stripe: rgba(0,0,0,0.02);
+
+  --t-body-bg:
+    radial-gradient(circle at 20% 30%, rgba(124,58,237,0.06) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(59,130,246,0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.04) 0%, transparent 40%),
+    #f2f2f7;
 }
 
 /* ─── Dark theme ────────────────────────────────────────────────────────────── */
@@ -112,33 +118,22 @@
   --t-scrollbar-hover: rgba(255,255,255,0.18);
 
   --t-table-stripe: rgba(255,255,255,0.012);
+
+  --t-body-bg:
+    radial-gradient(circle at 20% 30%, rgba(124,58,237,0.15) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.10) 0%, transparent 40%),
+    radial-gradient(circle at 90% 70%, rgba(124,58,237,0.07) 0%, transparent 35%),
+    #050508;
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────────────── */
 body {
-  background-color: var(--t-bg);
+  background: var(--t-body-bg);
   color: var(--t-text-primary);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.dark body {
-  background:
-    radial-gradient(circle at 20% 30%,  rgba(124,58,237,0.15) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%,  rgba(59,130,246,0.12) 0%, transparent 40%),
-    radial-gradient(circle at 50% 80%,  rgba(16,185,129,0.10) 0%, transparent 40%),
-    radial-gradient(circle at 90% 70%,  rgba(124,58,237,0.07) 0%, transparent 35%),
-    #050508;
-}
-
-:root body {
-  background:
-    radial-gradient(circle at 20% 30%, rgba(124,58,237,0.06) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(59,130,246,0.05) 0%, transparent 40%),
-    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.04) 0%, transparent 40%),
-    #f2f2f7;
 }
 
 * {
@@ -313,3 +308,46 @@ tbody tr:nth-child(even) {
 [style*="animation"], [class*="animate-"] {
   transition: none !important;
 }
+
+/* ─── Light mode: fix hardcoded dark-palette class colors ───────────────────── */
+/*
+   The page components use hardcoded Tailwind color classes designed for dark mode.
+   These CSS overrides fix text/bg visibility in light mode without touching each page.
+*/
+:root {
+  /* ── Near-white primary text → use theme primary (dark in light mode) ── */
+  .text-\[\#f0f0f5\]                              { color: var(--t-text-primary)   !important; }
+  .text-\[\#ebebeb\]                              { color: var(--t-text-primary)   !important; }
+  .text-\[\#f8f8f8\]                              { color: var(--t-text-primary)   !important; }
+  .text-white                                     { color: var(--t-text-primary)   !important; }
+
+  /* ── Hover states: white-on-hover → theme primary ── */
+  .hover\:text-\[\#f0f0f5\]:hover                 { color: var(--t-text-primary)   !important; }
+  .hover\:text-white:hover                        { color: var(--t-text-primary)   !important; }
+  .group:hover .group-hover\:text-\[\#f0f0f5\]    { color: var(--t-text-primary)   !important; }
+  .group:hover .group-hover\:text-white           { color: var(--t-text-primary)   !important; }
+  .group:hover .group-hover\:text-\[\#ebebeb\]    { color: var(--t-text-primary)   !important; }
+
+  /* ── Medium-gray text → stays readable (darken slightly) ── */
+  .text-\[\#8888a0\]                              { color: var(--t-text-secondary) !important; }
+
+  /* ── Progress / divider bars that use near-transparent white ── */
+  .bg-\[rgba\(255\,255\,255\,0\.05\)\]            { background-color: rgba(0,0,0,0.07) !important; }
+  .bg-\[rgba\(255\,255\,255\,0\.04\)\]            { background-color: rgba(0,0,0,0.06) !important; }
+  .bg-\[rgba\(255\,255\,255\,0\.03\)\]            { background-color: rgba(0,0,0,0.05) !important; }
+  .bg-\[rgba\(255\,255\,255\,0\.02\)\]            { background-color: rgba(0,0,0,0.03) !important; }
+
+  /* ── White-based borders → dark-based ── */
+  .border-\[rgba\(255\,255\,255\,0\.04\)\]        { border-color: rgba(0,0,0,0.07) !important; }
+  .border-\[rgba\(255\,255\,255\,0\.08\)\]        { border-color: rgba(0,0,0,0.09) !important; }
+  .border-\[rgba\(255\,255\,255\,0\.09\)\]        { border-color: rgba(0,0,0,0.10) !important; }
+
+  /* ── Hover bg that uses near-transparent white ── */
+  .hover\:bg-\[rgba\(255\,255\,255\,0\.02\)\]:hover { background-color: rgba(0,0,0,0.04) !important; }
+  .hover\:bg-\[rgba\(255\,255\,255\,0\.06\)\]:hover { background-color: rgba(0,0,0,0.06) !important; }
+
+  /* ── White/8% active state backgrounds ── */
+  .bg-white\/\[0\.08\]                            { background-color: rgba(0,0,0,0.07) !important; }
+  .hover\:bg-white\/\[0\.04\]:hover               { background-color: rgba(0,0,0,0.04) !important; }
+}
+
