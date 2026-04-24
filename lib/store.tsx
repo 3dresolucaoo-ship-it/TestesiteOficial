@@ -404,9 +404,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           err?.code ? `code=${err.code}` : null,
         ].filter(Boolean).join(' | ')
         console.error(`[Supabase sync error: ${action.type}]`, detail || err)
+        // Rollback: reload from DB so local state stays consistent with what was
+        // actually persisted. Without this, optimistic data silently disappears
+        // on the next page refresh.
+        setDbError(`Erro ao salvar (${action.type}): ${detail || err?.message || 'erro desconhecido'}`)
+        loadFromSupabase()
+          .then(data => dispatch({ type: 'HYDRATE', payload: data }))
+          .catch(() => {})
       })
     }
-  }, [])
+  }, [setDbError])
 
   return (
     <StoreContext.Provider value={{ state, dispatch: syncDispatch, rawDispatch, loading, dbError }}>

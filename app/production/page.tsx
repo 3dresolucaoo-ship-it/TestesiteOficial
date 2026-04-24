@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useStore, uid } from '@/lib/store'
-import type { ProductionItem, ProductionStatus, PrinterName } from '@/lib/types'
+import type { ProductionItem, ProductionStatus, PrinterName, StockMovement } from '@/lib/types'
 import {
   Plus, Pencil, Trash2, MoreHorizontal, GripVertical, Clock,
   Activity, CheckCircle2, Timer, Printer,
@@ -330,6 +330,35 @@ export default function ProductionPage() {
 
   function changeStatus(item: ProductionItem, status: ProductionStatus) {
     dispatch({ type: 'UPDATE_PRODUCTION', payload: { ...item, status } })
+
+    // Bambu Lab hook (mocked): print completion consumes filament.
+    // Fires only on the first waiting|printing → done transition for this item.
+    if (status === 'done' && item.status !== 'done') {
+      const order   = state.orders.find(o => o.id === item.orderId)
+      const product = order?.productId
+        ? state.products.find(p => p.id === order.productId)
+        : undefined
+      const grams = product?.materialGrams ?? 0
+      const filamentId = product?.inventoryItemId
+      const filament   = filamentId ? state.inventory.find(i => i.id === filamentId) : undefined
+
+      if (product && filament && grams > 0) {
+        const unit  = filament.unit
+        const delta = unit === 'kg' ? -(grams / 1000) : -grams
+        const movement: StockMovement = {
+          id:        uid(),
+          projectId: filament.projectId,
+          itemId:    filament.id,
+          type:      'out',
+          quantity:  Math.abs(delta),
+          reason:    'printing',
+          date:      new Date().toISOString().slice(0, 10),
+          notes:     `Impressão concluída · ${product.name} (${grams}g)`,
+        }
+        dispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: filament.id, delta } })
+      }
+    }
+
     setMenuOpen(null)
   }
 

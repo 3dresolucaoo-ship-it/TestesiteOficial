@@ -31,7 +31,12 @@
       "Bash(npx vercel *)",
       "mcp__f9d4fcd2-1da8-4791-9f28-fb62b088f4bb__list_projects",
       "mcp__f9d4fcd2-1da8-4791-9f28-fb62b088f4bb__execute_sql",
-      "mcp__f9d4fcd2-1da8-4791-9f28-fb62b088f4bb__apply_migration"
+      "mcp__f9d4fcd2-1da8-4791-9f28-fb62b088f4bb__apply_migration",
+      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__get_project",
+      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__get_deployment_build_logs",
+      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__get_runtime_logs",
+      "Bash(netstat -ano)",
+      "Bash(tasklist //FI \"PID eq 5424\")"
     ]
   }
 }

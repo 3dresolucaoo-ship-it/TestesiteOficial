@@ -51,14 +51,14 @@ export const ordersService = {
     return (data ?? []).map(fromDB)
   },
 
-  async create(o: Order): Promise<void> {
-    validateRequired('ordersService.create', {
-      id: o.id, projectId: o.projectId, clientName: o.clientName, item: o.item,
-    })
-    const userId = await requireUserId()
-    const { error } = await supabase.from('orders').insert(toDB(o, userId))
-    if (error) serviceError('ordersService.create', error)
-  },
+async create(o: Order): Promise<void> {
+  validateRequired('ordersService.create', {
+    id: o.id, projectId: o.projectId, clientName: o.clientName, item: o.item,
+  })
+  const userId = await requireUserId()
+  const { error } = await supabase.from('orders').insert(toDB(o, userId))
+  if (error) serviceError('ordersService.create', error)
+},
 
   async update(o: Order): Promise<void> {
     validateRequired('ordersService.update', { id: o.id })

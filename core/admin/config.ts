@@ -33,9 +33,28 @@ export interface ContentConfig {
   trackEngagement: boolean
 }
 
+export interface BrandConfig {
+  logoUrl:     string
+  accentColor: string   // hex, applied as --t-accent at runtime
+}
+
+export interface ModulesConfig {
+  finance:    boolean
+  orders:     boolean
+  crm:        boolean
+  products:   boolean
+  inventory:  boolean
+  production: boolean
+  content:    boolean
+  decisions:  boolean
+  metrics:    boolean
+}
+
 export interface AdminConfig {
   companyName: string
   timezone:    string
+  brand:       BrandConfig
+  modules:     ModulesConfig
   finance:     FinanceConfig
   crm:         CRMConfig
   inventory:   InventoryConfig
@@ -46,6 +65,23 @@ export interface AdminConfig {
 export const DEFAULT_ADMIN_CONFIG: AdminConfig = {
   companyName: 'BVaz Hub',
   timezone:    'America/Sao_Paulo',
+
+  brand: {
+    logoUrl:     '',
+    accentColor: '#3b82f6',
+  },
+
+  modules: {
+    finance:    true,
+    orders:     true,
+    crm:        true,
+    products:   true,
+    inventory:  true,
+    production: true,
+    content:    true,
+    decisions:  true,
+    metrics:    true,
+  },
 
   finance: {
     incomeCategories: [

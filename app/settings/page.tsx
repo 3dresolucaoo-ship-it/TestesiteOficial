@@ -249,6 +249,76 @@ export default function SettingsPage() {
               </div>
             </div>
           </SectionCard>
+          <SectionCard title="Aparência">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <FieldLabel>URL do Logo (opcional)</FieldLabel>
+                <TextInput
+                  value={draft.brand?.logoUrl ?? ''}
+                  onChange={v => setDraft(d => ({ ...d, brand: { ...d.brand, logoUrl: v } }))}
+                  placeholder="https://..."
+                />
+                <p className="text-[#3a3a3a] text-xs mt-1">Substitui o ícone no topo da barra lateral</p>
+              </div>
+              <div>
+                <FieldLabel>Cor de Destaque</FieldLabel>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={draft.brand?.accentColor ?? '#3b82f6'}
+                    onChange={e => setDraft(d => ({ ...d, brand: { ...d.brand, accentColor: e.target.value } }))}
+                    className="w-10 h-9 rounded cursor-pointer border-0 bg-transparent"
+                  />
+                  <TextInput
+                    value={draft.brand?.accentColor ?? '#3b82f6'}
+                    onChange={v => setDraft(d => ({ ...d, brand: { ...d.brand, accentColor: v } }))}
+                    placeholder="#3b82f6"
+                  />
+                </div>
+                <p className="text-[#3a3a3a] text-xs mt-1">Aplicado a botões, links e destaques</p>
+              </div>
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Módulos Ativos">
+            <p className="text-[#555555] text-xs -mt-2">Desative módulos que você não usa — eles somem da barra lateral.</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {([
+                ['finance',    'Finanças'],
+                ['orders',     'Vendas'],
+                ['crm',        'CRM'],
+                ['products',   'Produtos'],
+                ['inventory',  'Estoque'],
+                ['production', 'Produção'],
+                ['content',    'Conteúdo'],
+                ['decisions',  'Decisões'],
+                ['metrics',    'Métricas'],
+              ] as const).map(([key, label]) => {
+                const enabled = draft.modules?.[key] ?? true
+                return (
+                  <label key={key} className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-[#1c1c1c] transition-colors">
+                    <div
+                      onClick={() =>
+                        setDraft(d => ({
+                          ...d,
+                          modules: { ...d.modules, [key]: !enabled },
+                        }))
+                      }
+                      className={`w-8 h-4 rounded-full transition-colors relative cursor-pointer ${
+                        enabled ? 'bg-[#7c3aed]' : 'bg-[#2a2a2a]'
+                      }`}
+                    >
+                      <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-transform ${
+                        enabled ? 'translate-x-4' : 'translate-x-0.5'
+                      }`} />
+                    </div>
+                    <span className="text-[#ebebeb] text-sm">{label}</span>
+                  </label>
+                )
+              })}
+            </div>
+          </SectionCard>
+
           <SectionCard title="Sobre o BVaz Hub">
             <div className="space-y-2 text-[#555555] text-sm">
               <p>Sistema Operacional v0.3 — construído para gerenciar múltiplos projetos com finanças, estoque, CRM e conteúdo integrados.</p>

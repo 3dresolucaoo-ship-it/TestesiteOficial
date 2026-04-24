@@ -2,10 +2,10 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   LayoutDashboard, FolderKanban, ShoppingCart, Printer, Video,
-  Lightbulb, TrendingUp, X, Menu, ArrowLeft, ChevronRight, Settings, Package, Boxes,
+  Lightbulb, TrendingUp, X, Menu, ArrowLeft, ChevronRight, Settings, Package, Boxes, Users, BarChart3,
 } from 'lucide-react'
 import { useStore } from '@/lib/store'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
@@ -14,17 +14,19 @@ import { MODULE_CONFIG, getProjectColor } from '@/lib/moduleConfig'
 // ─── Global navigation items ─────────────────────────────────────────────────
 const GLOBAL_NAV = [
   { href: '/dashboard',  label: 'Dashboard',  icon: LayoutDashboard },
+  { href: '/metrics',    label: 'Métricas',   icon: BarChart3 },
   { href: '/projects',   label: 'Projetos',   icon: FolderKanban },
 ]
 
-const GLOBAL_MODULES = [
-  { href: '/finance',    label: 'Finanças',       icon: TrendingUp },
-  { href: '/orders',     label: 'Vendas',         icon: ShoppingCart },
-  { href: '/products',   label: 'Produtos',       icon: Boxes },
-  { href: '/inventory',  label: 'Estoque',        icon: Package },
-  { href: '/production', label: 'Produção',       icon: Printer },
-  { href: '/content',    label: 'Conteúdo',       icon: Video },
-  { href: '/decisions',  label: 'Decisões',       icon: Lightbulb },
+const GLOBAL_MODULES: Array<{ href: string; label: string; icon: React.ElementType; key: keyof import('@/core/admin/config').ModulesConfig }> = [
+  { href: '/finance',    label: 'Finanças',       icon: TrendingUp,   key: 'finance' },
+  { href: '/orders',     label: 'Vendas',         icon: ShoppingCart, key: 'orders' },
+  { href: '/crm',        label: 'CRM',            icon: Users,        key: 'crm' },
+  { href: '/products',   label: 'Produtos',       icon: Boxes,        key: 'products' },
+  { href: '/inventory',  label: 'Estoque',        icon: Package,      key: 'inventory' },
+  { href: '/production', label: 'Produção',       icon: Printer,      key: 'production' },
+  { href: '/content',    label: 'Conteúdo',       icon: Video,        key: 'content' },
+  { href: '/decisions',  label: 'Decisões',       icon: Lightbulb,    key: 'decisions' },
 ]
 
 const GLOBAL_SYSTEM = [
@@ -69,11 +71,21 @@ function NavLink({ href, label, icon: Icon, onClick, exact = false }: {
 
 // ─── Global sidebar content ───────────────────────────────────────────────────
 function GlobalNav({ onNav }: { onNav?: () => void }) {
+  const { state } = useStore()
+  const accent = state.config?.brand?.accentColor
+  useEffect(() => {
+    if (accent) document.documentElement.style.setProperty('--t-accent', accent)
+  }, [accent])
+  const modCfg = state.config?.modules
+  const metricsEnabled = modCfg?.metrics ?? true
+  const visibleModules = GLOBAL_MODULES.filter(m => modCfg ? modCfg[m.key] !== false : true)
+  const visibleGlobalNav = GLOBAL_NAV.filter(n => n.href !== '/metrics' || metricsEnabled)
+
   return (
     <div className="flex flex-col flex-1 overflow-y-auto">
       <Logo />
       <nav className="flex flex-col gap-0.5 mt-5 px-2">
-        {GLOBAL_NAV.map(item => (
+        {visibleGlobalNav.map(item => (
           <NavLink key={item.href} {...item} onClick={onNav} exact />
         ))}
       </nav>
@@ -81,7 +93,7 @@ function GlobalNav({ onNav }: { onNav?: () => void }) {
         <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
            style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
         <nav className="flex flex-col gap-0.5">
-          {GLOBAL_MODULES.map(item => (
+          {visibleModules.map(({ key: _k, ...item }) => (
             <NavLink key={item.href} {...item} onClick={onNav} />
           ))}
         </nav>
@@ -177,13 +189,25 @@ function ProjectNav({ projectId, onNav }: { projectId: string; onNav?: () => voi
 
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 function Logo() {
+  const { state } = useStore()
+  const name    = state.config?.companyName || 'BVaz Hub'
+  const logoUrl = state.config?.brand?.logoUrl
+  const accent  = state.config?.brand?.accentColor || 'var(--t-accent)'
   return (
     <div className="px-5 pt-5 pb-1">
       <Link href="/dashboard" className="flex items-center gap-2 group">
-        <div className="w-7 h-7 rounded-lg bg-[#7c3aed] flex items-center justify-center text-white font-bold text-sm shrink-0 group-hover:bg-[#6d28d9] transition-colors">
-          B
-        </div>
-        <span className="font-semibold text-sm" style={{ color: 'var(--t-text-primary)' }}>BVaz Hub</span>
+        {logoUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={logoUrl} alt={name} className="w-7 h-7 rounded-lg object-cover shrink-0" />
+        ) : (
+          <div
+            className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 transition-colors"
+            style={{ background: accent }}
+          >
+            {name.charAt(0).toUpperCase()}
+          </div>
+        )}
+        <span className="font-semibold text-sm truncate" style={{ color: 'var(--t-text-primary)' }}>{name}</span>
       </Link>
     </div>
   )
@@ -230,6 +254,7 @@ function useProjectContext() {
 // ─── Mobile bottom navigation bar ────────────────────────────────────────────
 const BOTTOM_NAV = [
   { href: '/dashboard',  label: 'Dashboard',  icon: LayoutDashboard },
+  { href: '/metrics',    label: 'Métricas',   icon: BarChart3 },
   { href: '/projects',   label: 'Projetos',   icon: FolderKanban },
   { href: '/finance',    label: 'Finanças',   icon: TrendingUp },
   { href: '/orders',     label: 'Vendas',     icon: ShoppingCart },

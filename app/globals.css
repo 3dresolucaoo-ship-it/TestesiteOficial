@@ -12,119 +12,119 @@
   --font-mono: ui-monospace, 'Cascadia Code', monospace;
 }
 
-/* ─── Light theme (default) ─────────────────────────────────────────────────── */
+/* ─── Light theme (azul claro + branco) ─────────────────────────────────────── */
 :root {
-  --t-bg:        #f2f2f7;
-  --t-surface:   #ffffff;
-  --t-elevated:  #eaeaf2;
-  --t-hover:     #e2e2ec;
+  --t-bg:        #dce7f7;
+  --t-surface:   #f4f8ff;
+  --t-elevated:  #cfddf2;
+  --t-hover:     #bccfec;
 
-  --t-border:        rgba(0,0,0,0.07);
-  --t-border-mid:    rgba(0,0,0,0.10);
-  --t-border-strong: rgba(0,0,0,0.15);
+  --t-border:        rgba(30,64,175,0.14);
+  --t-border-mid:    rgba(30,64,175,0.22);
+  --t-border-strong: rgba(30,64,175,0.34);
 
-  --t-text-primary:   #111118;
-  --t-text-secondary: #55556a;
-  --t-text-muted:     #9999b2;
+  --t-text-primary:   #061024;
+  --t-text-secondary: #223555;
+  --t-text-muted:     #556c90;
 
-  --t-accent:      #7c3aed;
-  --t-accent-soft: rgba(124,58,237,0.10);
-  --t-accent-glow: rgba(124,58,237,0.20);
+  --t-accent:      #2563eb;
+  --t-accent-soft: rgba(37,99,235,0.10);
+  --t-accent-glow: rgba(37,99,235,0.22);
 
   --t-glass-bg:    rgba(255,255,255,0.65);
-  --t-glass-border:rgba(0,0,0,0.07);
+  --t-glass-border:rgba(37,99,235,0.10);
   --t-glass-strong:rgba(255,255,255,0.88);
 
-  --t-card-from:  rgba(255,255,255,0.92);
-  --t-card-to:    rgba(255,255,255,0.75);
-  --t-card-border:rgba(0,0,0,0.08);
-  --t-card-shadow:0 4px 20px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,1);
-  --t-card-hover-shadow: 0 12px 40px rgba(0,0,0,0.11), 0 0 30px rgba(124,58,237,0.10);
+  --t-card-from:  rgba(255,255,255,0.94);
+  --t-card-to:    rgba(235,242,255,0.78);
+  --t-card-border:rgba(37,99,235,0.12);
+  --t-card-shadow:0 4px 22px rgba(15,40,95,0.08), inset 0 1px 0 rgba(255,255,255,1);
+  --t-card-hover-shadow: 0 14px 44px rgba(15,40,95,0.14), 0 0 30px rgba(37,99,235,0.14);
 
-  --t-sidebar-bg:      #f8f8fc;
-  --t-sidebar-border:  rgba(0,0,0,0.07);
-  --t-sidebar-section: #aaaabc;
-  --t-nav-inactive:    #66667a;
-  --t-nav-active-bg:   rgba(0,0,0,0.06);
-  --t-nav-active-text: #111118;
-  --t-footer-border:   rgba(0,0,0,0.07);
-  --t-footer-text:     #aaaabc;
+  --t-sidebar-bg:      #f5f8fd;
+  --t-sidebar-border:  rgba(37,99,235,0.10);
+  --t-sidebar-section: #8397b5;
+  --t-nav-inactive:    #4c6485;
+  --t-nav-active-bg:   rgba(37,99,235,0.10);
+  --t-nav-active-text: #0b1a33;
+  --t-footer-border:   rgba(37,99,235,0.08);
+  --t-footer-text:     #8397b5;
 
-  --t-topbar-bg:     rgba(242,242,247,0.85);
-  --t-topbar-border: rgba(0,0,0,0.07);
-  --t-topbar-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.05);
+  --t-topbar-bg:     rgba(238,243,251,0.82);
+  --t-topbar-border: rgba(37,99,235,0.08);
+  --t-topbar-shadow: 0 1px 0 rgba(37,99,235,0.05), 0 4px 20px rgba(15,40,95,0.05);
 
-  --t-mobile-bg:     rgba(248,248,252,0.96);
-  --t-mobile-border: rgba(0,0,0,0.07);
+  --t-mobile-bg:     rgba(245,248,253,0.96);
+  --t-mobile-border: rgba(37,99,235,0.10);
 
-  --t-scrollbar: rgba(0,0,0,0.10);
-  --t-scrollbar-hover: rgba(0,0,0,0.18);
+  --t-scrollbar: rgba(37,99,235,0.14);
+  --t-scrollbar-hover: rgba(37,99,235,0.28);
 
-  --t-table-stripe: rgba(0,0,0,0.02);
+  --t-table-stripe: rgba(37,99,235,0.03);
 
   --t-body-bg:
-    radial-gradient(circle at 20% 30%, rgba(124,58,237,0.06) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(59,130,246,0.05) 0%, transparent 40%),
-    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.04) 0%, transparent 40%),
-    #f2f2f7;
+    radial-gradient(circle at 20% 30%, rgba(37,99,235,0.22) 0%, transparent 48%),
+    radial-gradient(circle at 80% 15%, rgba(124,58,237,0.14) 0%, transparent 48%),
+    radial-gradient(circle at 50% 90%, rgba(59,130,246,0.18) 0%, transparent 48%),
+    #dce7f7;
 }
 
 /* ─── Dark theme ────────────────────────────────────────────────────────────── */
 .dark {
-  --t-bg:        #050508;
-  --t-surface:   #0d0d12;
-  --t-elevated:  #12121a;
-  --t-hover:     #16161f;
+  --t-bg:        #05091a;
+  --t-surface:   #0a1228;
+  --t-elevated:  #0f1a38;
+  --t-hover:     #142044;
 
-  --t-border:        rgba(255,255,255,0.05);
-  --t-border-mid:    rgba(255,255,255,0.08);
-  --t-border-strong: rgba(255,255,255,0.12);
+  --t-border:        rgba(120,160,255,0.07);
+  --t-border-mid:    rgba(120,160,255,0.12);
+  --t-border-strong: rgba(120,160,255,0.18);
 
-  --t-text-primary:   #f0f0f5;
-  --t-text-secondary: #8888a0;
-  --t-text-muted:     #444455;
+  --t-text-primary:   #eaf0ff;
+  --t-text-secondary: #8fa3c8;
+  --t-text-muted:     #465072;
 
-  --t-accent:      #7c3aed;
-  --t-accent-soft: rgba(124,58,237,0.12);
-  --t-accent-glow: rgba(124,58,237,0.35);
+  --t-accent:      #3b82f6;
+  --t-accent-soft: rgba(59,130,246,0.14);
+  --t-accent-glow: rgba(59,130,246,0.40);
 
-  --t-glass-bg:    rgba(255,255,255,0.03);
-  --t-glass-border:rgba(255,255,255,0.08);
-  --t-glass-strong:rgba(255,255,255,0.06);
+  --t-glass-bg:    rgba(120,160,255,0.04);
+  --t-glass-border:rgba(120,160,255,0.10);
+  --t-glass-strong:rgba(120,160,255,0.07);
 
-  --t-card-from:  rgba(255,255,255,0.045);
-  --t-card-to:    rgba(255,255,255,0.02);
-  --t-card-border:rgba(255,255,255,0.09);
-  --t-card-shadow:0 10px 30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06);
-  --t-card-hover-shadow: 0 20px 50px rgba(0,0,0,0.75), 0 0 30px rgba(124,58,237,0.20);
+  --t-card-from:  rgba(120,160,255,0.05);
+  --t-card-to:    rgba(120,160,255,0.02);
+  --t-card-border:rgba(120,160,255,0.10);
+  --t-card-shadow:0 10px 30px rgba(2,6,24,0.65), inset 0 1px 0 rgba(140,180,255,0.06);
+  --t-card-hover-shadow: 0 20px 50px rgba(2,6,24,0.80), 0 0 30px rgba(59,130,246,0.25);
 
-  --t-sidebar-bg:      #0a0a0a;
-  --t-sidebar-border:  rgba(255,255,255,0.07);
-  --t-sidebar-section: #3a3a3a;
-  --t-nav-inactive:    #888888;
-  --t-nav-active-bg:   rgba(255,255,255,0.08);
+  --t-sidebar-bg:      #060b20;
+  --t-sidebar-border:  rgba(120,160,255,0.09);
+  --t-sidebar-section: #4a5880;
+  --t-nav-inactive:    #8fa3c8;
+  --t-nav-active-bg:   rgba(59,130,246,0.15);
   --t-nav-active-text: #ffffff;
-  --t-footer-border:   rgba(255,255,255,0.06);
-  --t-footer-text:     #3a3a3a;
+  --t-footer-border:   rgba(120,160,255,0.07);
+  --t-footer-text:     #4a5880;
 
-  --t-topbar-bg:     rgba(5,5,8,0.80);
-  --t-topbar-border: rgba(255,255,255,0.07);
-  --t-topbar-shadow: 0 1px 0 rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3);
+  --t-topbar-bg:     rgba(5,9,26,0.82);
+  --t-topbar-border: rgba(120,160,255,0.09);
+  --t-topbar-shadow: 0 1px 0 rgba(140,180,255,0.04), 0 4px 20px rgba(2,6,24,0.35);
 
-  --t-mobile-bg:     rgba(5,5,8,0.92);
-  --t-mobile-border: rgba(255,255,255,0.08);
+  --t-mobile-bg:     rgba(5,9,26,0.94);
+  --t-mobile-border: rgba(120,160,255,0.10);
 
-  --t-scrollbar: rgba(255,255,255,0.10);
-  --t-scrollbar-hover: rgba(255,255,255,0.18);
+  --t-scrollbar: rgba(120,160,255,0.14);
+  --t-scrollbar-hover: rgba(120,160,255,0.24);
 
-  --t-table-stripe: rgba(255,255,255,0.012);
+  --t-table-stripe: rgba(120,160,255,0.02);
 
   --t-body-bg:
-    radial-gradient(circle at 20% 30%, rgba(124,58,237,0.15) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(59,130,246,0.12) 0%, transparent 40%),
-    radial-gradient(circle at 50% 80%, rgba(16,185,129,0.10) 0%, transparent 40%),
-    radial-gradient(circle at 90% 70%, rgba(124,58,237,0.07) 0%, transparent 35%),
-    #050508;
+    radial-gradient(circle at 20% 30%, rgba(59,130,246,0.18) 0%, transparent 42%),
+    radial-gradient(circle at 80% 20%, rgba(124,58,237,0.12) 0%, transparent 42%),
+    radial-gradient(circle at 50% 85%, rgba(37,99,235,0.14) 0%, transparent 45%),
+    radial-gradient(circle at 90% 70%, rgba(139,92,246,0.08) 0%, transparent 38%),
+    #05091a;
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────────────── */
@@ -328,8 +328,30 @@ tbody tr:nth-child(even) {
   .group:hover .group-hover\:text-white           { color: var(--t-text-primary)   !important; }
   .group:hover .group-hover\:text-\[\#ebebeb\]    { color: var(--t-text-primary)   !important; }
 
-  /* ── Medium-gray text → stays readable (darken slightly) ── */
+  /* ── Medium-gray text → stays readable (darken in light mode) ── */
   .text-\[\#8888a0\]                              { color: var(--t-text-secondary) !important; }
+  .text-\[\#888888\]                              { color: var(--t-text-secondary) !important; }
+  .text-\[\#999999\]                              { color: var(--t-text-secondary) !important; }
+  .text-\[\#aaaaaa\]                              { color: var(--t-text-secondary) !important; }
+  .text-\[\#6b7280\]                              { color: var(--t-text-secondary) !important; }
+  .text-\[\#555555\]                              { color: var(--t-text-muted)     !important; }
+  .text-\[\#666666\]                              { color: var(--t-text-muted)     !important; }
+  .text-\[\#777777\]                              { color: var(--t-text-muted)     !important; }
+  .text-\[\#a0a0a0\]                              { color: var(--t-text-secondary) !important; }
+  .text-\[\#b0b0b0\]                              { color: var(--t-text-secondary) !important; }
+  .hover\:text-\[\#ebebeb\]:hover                 { color: var(--t-text-primary)   !important; }
+  .hover\:text-\[\#f8f8f8\]:hover                 { color: var(--t-text-primary)   !important; }
+
+  /* ── Dark-palette backgrounds used by modals/cards → surface tokens ── */
+  .bg-\[\#0f0f0f\]                                { background-color: var(--t-surface)  !important; }
+  .bg-\[\#1a1a1a\]                                { background-color: var(--t-surface)  !important; }
+  .bg-\[\#111111\]                                { background-color: var(--t-surface)  !important; }
+  .bg-\[\#151515\]                                { background-color: var(--t-surface)  !important; }
+  .bg-\[\#0a0a0a\]                                { background-color: var(--t-elevated) !important; }
+  .bg-\[\#2a2a2a\]                                { background-color: var(--t-elevated) !important; }
+  .border-\[\#2a2a2a\]                            { border-color: var(--t-border-mid)   !important; }
+  .border-\[\#1a1a1a\]                            { border-color: var(--t-border)       !important; }
+  .border-\[\#333333\]                            { border-color: var(--t-border-mid)   !important; }
 
   /* ── Progress / divider bars that use near-transparent white ── */
   .bg-\[rgba\(255\,255\,255\,0\.05\)\]            { background-color: rgba(0,0,0,0.07) !important; }

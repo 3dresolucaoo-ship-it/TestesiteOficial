@@ -70,7 +70,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname                = usePathname()
   const router                  = useRouter()
 
-  const isPublicPath = pathname === '/login'
+  const isPublicPath = pathname === '/login' || pathname === '/showcase' || pathname.startsWith('/showcase/')
   const isAdminPath  = ADMIN_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
 
   // Redirect unauthenticated users to /login

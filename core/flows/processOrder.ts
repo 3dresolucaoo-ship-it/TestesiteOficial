@@ -56,8 +56,14 @@ async function applyPaidSideEffects(
     date:        order.date,
     source:      order.origin,
   }
-  // Idempotent — ignore duplicate-key errors (order can be re-marked paid via edit)
-  await transactionsService.create(transaction).catch(() => { /* already exists */ })
+  // Idempotent — ignore duplicate-key errors (order can be re-marked paid via edit).
+  // Any other error (constraint, RLS, network) is a real failure and must propagate.
+  try {
+    await transactionsService.create(transaction)
+  } catch (err: unknown) {
+    const pg = err as { code?: string }
+    if (pg?.code !== '23505') throw err
+  }
 
   // ── Inventory decrement ──────────────────────────────────────────────────
   let inventoryDelta: InventoryDelta | undefined

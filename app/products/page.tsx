@@ -8,6 +8,7 @@ import type { InventoryItem } from '@/lib/types'
 import {
   Plus, Pencil, Trash2, MoreHorizontal, Package, Zap,
   Flame, Clock, AlertTriangle, TrendingUp, DollarSign, ImageIcon, Loader2,
+  LayoutGrid, Wrench, FileText,
 } from 'lucide-react'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
 import { calcUnitCost, filamentCostPerKg, getProductStats } from '@/core/analytics/productionEngine'
@@ -367,6 +368,126 @@ function ProductForm({
 }
 
 // ─── Product card ─────────────────────────────────────────────────────────────
+// ─── Catalog card (visual, portfolio-style) ───────────────────────────────────
+function CatalogCard({
+  product,
+  projectName,
+  filamentItem,
+  onEdit,
+  onDelete,
+  onQuote,
+}: {
+  product:      Product
+  projectName:  string
+  filamentItem: InventoryItem | undefined
+  onEdit:       () => void
+  onDelete:     () => void
+  onQuote:      () => void
+}) {
+  const breakdown = calcUnitCost(product, filamentItem ? [filamentItem] : [])
+  const price = product.salePrice > 0
+    ? product.salePrice
+    : breakdown.totalCost * (1 + (product.marginPercentage ?? 0.3))
+  const unitMargin = price > 0
+    ? ((price - breakdown.totalCost) / price) * 100
+    : 0
+
+  return (
+    <div
+      className="group relative rounded-2xl overflow-hidden border transition-all"
+      style={{
+        background: 'var(--t-card-from)',
+        borderColor: 'var(--t-card-border)',
+        boxShadow: 'var(--t-card-shadow)',
+      }}
+    >
+      <div
+        className="relative aspect-[4/3] overflow-hidden"
+        style={{ background: 'var(--t-hover)' }}
+      >
+        {product.imageUrl ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center" style={{ color: 'var(--t-text-muted)' }}>
+            <Package size={44} />
+          </div>
+        )}
+
+        <div className="absolute top-2 left-2">
+          <span
+            className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wide"
+            style={{ background: 'var(--t-accent-soft)', color: 'var(--t-accent)' }}
+          >
+            {projectName}
+          </span>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 p-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black/75 to-transparent">
+          <button
+            onClick={onQuote}
+            className="flex-1 px-2 py-1 rounded-lg text-[11px] font-medium bg-[#10b9811a] text-[#10b981] border border-[#10b98133] hover:bg-[#10b98133]"
+          >
+            <FileText size={11} className="inline mr-1" /> Orçar
+          </button>
+          <button
+            onClick={onEdit}
+            className="p-1.5 rounded-lg bg-black/60 text-white/80 hover:text-white"
+            title="Editar"
+          >
+            <Pencil size={11} />
+          </button>
+          <button
+            onClick={onDelete}
+            className="p-1.5 rounded-lg bg-black/60 text-white/80 hover:text-[#ef4444]"
+            title="Excluir"
+          >
+            <Trash2 size={11} />
+          </button>
+        </div>
+      </div>
+
+      <div className="p-3 space-y-1.5">
+        <p
+          className="text-sm font-semibold truncate"
+          style={{ color: 'var(--t-text-primary)' }}
+          title={product.name}
+        >
+          {product.name}
+        </p>
+        {product.notes && (
+          <p className="text-[11px] truncate" style={{ color: 'var(--t-text-muted)' }}>
+            {product.notes}
+          </p>
+        )}
+        <div className="flex items-center justify-between pt-1">
+          <div>
+            <p className="text-base font-bold" style={{ color: 'var(--t-accent)' }}>
+              {fmt(price)}
+            </p>
+            <p className="text-[10px]" style={{ color: 'var(--t-text-muted)' }}>
+              custo {fmt(breakdown.totalCost)}
+            </p>
+          </div>
+          <span
+            className="text-[11px] font-semibold px-2 py-0.5 rounded-md"
+            style={{
+              background: 'var(--t-accent-soft)',
+              color: unitMargin >= 40 ? '#10b981' : unitMargin >= 20 ? 'var(--t-accent)' : '#f59e0b',
+            }}
+          >
+            {fmtPct(unitMargin)}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ProductCard({
   product,
   projectName,
@@ -523,6 +644,7 @@ export default function ProductsPage() {
   const [creating, setCreating] = useState(false)
   const [editing,  setEditing]  = useState<Product | null>(null)
   const [filterProject, setFilterProject] = useState('all')
+  const [viewMode, setViewMode] = useState<'catalog' | 'technical'>('catalog')
 
   const { products, inventory, projects, orders } = state
 
@@ -622,12 +744,34 @@ export default function ProductsPage() {
             {products.length} {products.length === 1 ? 'produto cadastrado' : 'produtos cadastrados'}
           </p>
         </div>
-        <button
-          onClick={() => setCreating(true)}
-          className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors"
-        >
-          <Plus size={15} /> Novo Produto
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center rounded-lg overflow-hidden border border-[#2a2a2a]">
+            <button
+              onClick={() => setViewMode('catalog')}
+              className={`px-3 py-2 flex items-center gap-1.5 text-xs transition-colors ${
+                viewMode === 'catalog' ? 'bg-[#7c3aed1a] text-[#a78bfa]' : 'text-[#888888] hover:text-[#ebebeb]'
+              }`}
+              title="Catálogo visual"
+            >
+              <LayoutGrid size={13} /> Catálogo
+            </button>
+            <button
+              onClick={() => setViewMode('technical')}
+              className={`px-3 py-2 flex items-center gap-1.5 text-xs transition-colors ${
+                viewMode === 'technical' ? 'bg-[#7c3aed1a] text-[#a78bfa]' : 'text-[#888888] hover:text-[#ebebeb]'
+              }`}
+              title="Vista técnica"
+            >
+              <Wrench size={13} /> Técnico
+            </button>
+          </div>
+          <button
+            onClick={() => setCreating(true)}
+            className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors"
+          >
+            <Plus size={15} /> Novo Produto
+          </button>
+        </div>
       </div>
 
       {/* ── KPIs ──────────────────────────────────────────────────────────── */}
@@ -743,6 +887,22 @@ export default function ProductsPage() {
               <Plus size={15} /> Criar Primeiro Produto
             </button>
           )}
+        </div>
+      ) : viewMode === 'catalog' ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {filtered.map(product => (
+            <CatalogCard
+              key={product.id}
+              product={product}
+              projectName={projectName(product.projectId)}
+              filamentItem={getFilament(product)}
+              onEdit={() => setEditing(product)}
+              onDelete={() => handleDelete(product.id)}
+              onQuote={() => {
+                window.location.href = `/orders?quote=${product.id}`
+              }}
+            />
+          ))}
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
