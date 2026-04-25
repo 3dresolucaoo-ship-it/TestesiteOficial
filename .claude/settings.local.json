@@ -46,7 +46,22 @@
       "mcp__d0953062-de31-423c-b70a-f6d232abf90f__web_fetch_vercel_url",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/)",
       "Skill(update-config)",
-      "Skill(update-config:*)"
+      "Skill(update-config:*)",
+      "Bash(node -e \"const f = require\\('fs'\\).readFileSync\\('.claude/settings.local.json','utf8'\\); const j = JSON.parse\\(f\\); console.log\\(j.hooks.Stop[0].hooks[0].command\\)\")"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"C:/Users/infin/OneDrive/Área de Trabalho/bvaz-hub\" && git add -A && git diff --staged --quiet && echo \"sem mudancas\" || (git commit -m \"auto: claude session changes\" && git push origin main)",
+            "timeout": 30,
+            "statusMessage": "Salvando e enviando alterações..."
+          }
+        ]
+      }
     ]
   }
 }
