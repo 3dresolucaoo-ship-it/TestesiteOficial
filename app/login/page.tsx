@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
-import { Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react'
+import { isSupabaseConfigured } from '@/lib/supabaseClient'
+import { Eye, EyeOff, ArrowRight, Loader2, AlertTriangle } from 'lucide-react'
 
 function AuthLoadingScreen() {
   return (
@@ -64,7 +65,6 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-    setSuccess(null)
 
     if (!email.trim() || !password.trim()) {
       setError('Preencha todos os campos.')
@@ -144,6 +144,16 @@ export default function LoginPage() {
               <h1 className="text-[#ebebeb] font-bold text-xl">Bem-vindo de volta</h1>
               <p className="text-[#555555] text-sm mt-1">Entre para acessar o sistema</p>
             </div>
+
+            {/* Supabase not configured warning */}
+            {!isSupabaseConfigured && (
+              <div className="flex items-start gap-2.5 bg-[#f59e0b1a] border border-[#f59e0b33] rounded-xl px-4 py-3 mb-4">
+                <AlertTriangle size={15} className="text-[#f59e0b] shrink-0 mt-0.5" />
+                <p className="text-[#f59e0b] text-xs leading-relaxed">
+                  Supabase não configurado. Defina <code className="font-mono">NEXT_PUBLIC_SUPABASE_URL</code> e <code className="font-mono">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> nas variáveis de ambiente.
+                </p>
+              </div>
+            )}
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">

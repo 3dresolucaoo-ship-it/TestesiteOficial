@@ -52,6 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
+      // Dev-only bypass: auto-login so local development without Supabase still works.
+      // In production, env vars must always be set — missing vars mean user=null → /login.
+      if (process.env.NODE_ENV === 'development') {
+        setUser({ id: 'local-dev', email: 'dev@local.com' } as unknown as User)
+        setRole('admin')
+      }
       setLoading(false)
       return
     }

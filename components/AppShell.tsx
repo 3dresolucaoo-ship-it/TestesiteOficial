@@ -79,9 +79,11 @@ export function AppShell({ children }: { children: ReactNode }) {
     pathname.startsWith('/checkout')
   const isAdminPath  = ADMIN_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
 
-  // Redirect unauthenticated users to /login
+  // Redirect unauthenticated users to /login.
+  // Guard runs regardless of isSupabaseConfigured — if env vars are missing in
+  // production the app must NOT be accessible without credentials.
   useEffect(() => {
-    if (isSupabaseConfigured && !loading && !user && !isPublicPath) {
+    if (!loading && !user && !isPublicPath) {
       router.replace('/login')
     }
   }, [user, loading, isPublicPath, router])
@@ -104,10 +106,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (isPublicPath) return <>{children}</>
 
   // Auth loading state
-  if (isSupabaseConfigured && loading) return <LoadingScreen />
+  if (loading) return <LoadingScreen />
 
   // Unauthenticated: blank while redirect fires
-  if (isSupabaseConfigured && !user) return null
+  if (!user) return null
 
   // Admin path: blank while role is still loading
   if (isSupabaseConfigured && isAdminPath && role === null) return <LoadingScreen />
@@ -115,7 +117,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   // Admin path + non-admin: blank while redirect fires
   if (isSupabaseConfigured && isAdminPath && role !== 'admin') return null
 
-  // Authenticated (or Supabase not configured — local dev mode)
   return (
     <StoreProvider>
       <Sidebar />
