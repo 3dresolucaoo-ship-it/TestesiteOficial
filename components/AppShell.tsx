@@ -120,7 +120,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <StoreProvider>
       <Sidebar />
-      <div className="lg:ml-56 flex flex-col min-h-screen">
+      <div className="sidebar-content flex flex-col min-h-screen">
         <TopBar />
         <main className="flex-1 p-4 sm:p-6 pb-24 lg:pb-6 animate-fade-in-up">
           {children}

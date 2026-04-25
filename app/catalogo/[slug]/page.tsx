@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { catalogsService } from '@/services/catalogs'
 import { supabase } from '@/lib/supabaseClient'
 import type { Product } from '@/lib/types'
+import type { CatalogTemplate } from '@/core/catalog/types'
 import { ShareButton } from '@/components/ShareButton'
 import { ProductCard } from './ProductCard'
 
@@ -38,10 +39,7 @@ function EmptyState() {
     <div className="flex flex-col items-center gap-4 py-32">
       <div
         className="w-20 h-20 rounded-3xl flex items-center justify-center"
-        style={{
-          background: 'rgba(124,58,237,0.08)',
-          border:     '1px solid rgba(124,58,237,0.15)',
-        }}
+        style={{ background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)' }}
       >
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.5)" strokeWidth="1.5">
           <path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
@@ -53,6 +51,242 @@ function EmptyState() {
       </p>
     </div>
   )
+}
+
+// ─── Grid template (default) ──────────────────────────────────────────────────
+function GridTemplate({
+  products, showPrice, catalogSlug, stockMap,
+}: {
+  products: Product[]; showPrice: boolean; catalogSlug: string; stockMap: Record<string, number | null>
+}) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+      {products.map(p => (
+        <ProductCard
+          key={p.id}
+          product={p}
+          showPrice={showPrice}
+          catalogSlug={catalogSlug}
+          stockQty={p.inventoryItemId ? stockMap[p.id] : undefined}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ─── List template ────────────────────────────────────────────────────────────
+function ListTemplate({
+  products, showPrice, catalogSlug, stockMap,
+}: {
+  products: Product[]; showPrice: boolean; catalogSlug: string; stockMap: Record<string, number | null>
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      {products.map(p => {
+        const stockQty = p.inventoryItemId ? stockMap[p.id] : undefined
+        const noStock  = stockQty === 0
+        const hasImg   = Boolean(p.imageUrl)
+
+        return (
+          <div
+            key={p.id}
+            className="flex items-center gap-4 rounded-2xl overflow-hidden transition-all duration-200"
+            style={{
+              background: 'linear-gradient(145deg, rgba(26,26,50,0.95) 0%, rgba(18,18,42,0.98) 100%)',
+              border:     '1px solid rgba(124,58,237,0.12)',
+              boxShadow:  '0 2px 16px rgba(0,0,0,0.3)',
+            }}
+            onMouseEnter={e => {
+              const el = e.currentTarget as HTMLElement
+              el.style.borderColor = 'rgba(124,58,237,0.3)'
+              el.style.boxShadow   = '0 4px 24px rgba(124,58,237,0.15)'
+            }}
+            onMouseLeave={e => {
+              const el = e.currentTarget as HTMLElement
+              el.style.borderColor = 'rgba(124,58,237,0.12)'
+              el.style.boxShadow   = '0 2px 16px rgba(0,0,0,0.3)'
+            }}
+          >
+            {/* Thumbnail */}
+            <div
+              className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 overflow-hidden"
+              style={{ background: '#0d0d24' }}
+            >
+              {hasImg ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={p.imageUrl!} alt={p.name}
+                     className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                       stroke="rgba(167,139,250,0.3)" strokeWidth="1.2">
+                    <rect x="3" y="3" width="18" height="18" rx="3"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="M21 15l-5-5L5 21"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+
+            {/* Info */}
+            <div className="flex-1 min-w-0 py-3 pr-4 flex flex-col gap-1.5">
+              <p className="font-semibold text-sm sm:text-base leading-snug truncate"
+                 style={{ color: '#e2e8f0' }}>
+                {p.name}
+              </p>
+
+              {stockQty != null && (
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: noStock ? '#ef4444' : '#10b981' }}
+                  />
+                  <span className="text-xs" style={{ color: noStock ? '#fca5a5' : '#6ee7b7' }}>
+                    {noStock ? 'Sem estoque' : `${stockQty} un. disponíveis`}
+                  </span>
+                </div>
+              )}
+
+              {showPrice && (
+                <div className="flex items-center gap-3 mt-1 flex-wrap">
+                  {p.salePrice > 0 ? (
+                    <span
+                      className="font-extrabold text-lg tracking-tight"
+                      style={{
+                        background:           'linear-gradient(135deg, #a78bfa, #e879f9)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor:  'transparent',
+                      }}
+                    >
+                      R$ {p.salePrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </span>
+                  ) : (
+                    <span className="text-xs italic" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                      Preço a consultar
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Buy button (desktop) */}
+            {showPrice && (
+              <div className="pr-4 hidden sm:block flex-shrink-0">
+                <a
+                  href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all"
+                  style={{
+                    background: noStock
+                      ? 'rgba(255,255,255,0.05)'
+                      : 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                    color:     noStock ? 'rgba(255,255,255,0.25)' : '#fff',
+                    cursor:    noStock ? 'not-allowed' : 'pointer',
+                    pointerEvents: noStock ? 'none' : 'auto',
+                    boxShadow: noStock ? 'none' : '0 2px 12px rgba(124,58,237,0.3)',
+                  }}
+                >
+                  {noStock ? 'Indisponível' : 'Comprar'}
+                </a>
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Minimal template ─────────────────────────────────────────────────────────
+function MinimalTemplate({
+  products, showPrice, catalogSlug, stockMap,
+}: {
+  products: Product[]; showPrice: boolean; catalogSlug: string; stockMap: Record<string, number | null>
+}) {
+  return (
+    <div
+      className="rounded-3xl overflow-hidden"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border:     '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      {products.map((p, i) => {
+        const stockQty = p.inventoryItemId ? stockMap[p.id] : undefined
+        const noStock  = stockQty === 0
+        const isLast   = i === products.length - 1
+
+        return (
+          <div
+            key={p.id}
+            className="flex items-center justify-between gap-4 px-6 py-4 transition-colors"
+            style={{
+              borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,0.06)',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.background = 'rgba(124,58,237,0.06)'
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.background = 'transparent'
+            }}
+          >
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-[15px] leading-snug truncate"
+                 style={{ color: '#e2e8f0' }}>
+                {p.name}
+              </p>
+              {stockQty != null && (
+                <p className="text-xs mt-0.5"
+                   style={{ color: noStock ? '#fca5a5' : 'rgba(255,255,255,0.35)' }}>
+                  {noStock ? '● Sem estoque' : `● ${stockQty} em estoque`}
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3 flex-shrink-0">
+              {showPrice && p.salePrice > 0 && (
+                <span
+                  className="text-base font-bold"
+                  style={{
+                    background:           'linear-gradient(135deg, #a78bfa, #e879f9)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor:  'transparent',
+                  }}
+                >
+                  R$ {p.salePrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              )}
+              {showPrice && !noStock && (
+                <a
+                  href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
+                  className="flex items-center justify-center w-8 h-8 rounded-xl transition-all"
+                  style={{
+                    background: 'rgba(124,58,237,0.2)',
+                    color:      '#a78bfa',
+                    border:     '1px solid rgba(124,58,237,0.25)',
+                  }}
+                  title="Comprar"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" strokeWidth="2.5">
+                    <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 01-8 0"/>
+                  </svg>
+                </a>
+              )}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Template pills (visual indicator) ───────────────────────────────────────
+const TEMPLATE_LABELS: Record<string, string> = {
+  grid:    'Grade',
+  list:    'Lista',
+  minimal: 'Minimal',
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -67,6 +301,7 @@ export default async function CatalogPublicPage({
 
   const products  = await getProducts(catalog.productIds)
   const showPrice = catalog.mode === 'catalog'
+  const template  = (catalog.template ?? 'grid') as CatalogTemplate
 
   const stockMap: Record<string, number | null> = {}
   await Promise.all(
@@ -89,21 +324,15 @@ export default async function CatalogPublicPage({
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px]"
-          style={{
-            background: 'radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, transparent 65%)',
-          }}
+          style={{ background: 'radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, transparent 65%)' }}
         />
         <div
           className="absolute top-1/3 -left-40 w-[500px] h-[500px]"
-          style={{
-            background: 'radial-gradient(ellipse, rgba(236,72,153,0.06) 0%, transparent 65%)',
-          }}
+          style={{ background: 'radial-gradient(ellipse, rgba(236,72,153,0.06) 0%, transparent 65%)' }}
         />
         <div
           className="absolute bottom-0 right-0 w-[500px] h-[500px]"
-          style={{
-            background: 'radial-gradient(ellipse, rgba(16,185,129,0.05) 0%, transparent 65%)',
-          }}
+          style={{ background: 'radial-gradient(ellipse, rgba(16,185,129,0.05) 0%, transparent 65%)' }}
         />
       </div>
 
@@ -121,24 +350,32 @@ export default async function CatalogPublicPage({
             />
           )}
 
-          {/* Mode pill */}
-          <div
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
-            style={{
-              background: showPrice
-                ? 'rgba(124,58,237,0.15)'
-                : 'rgba(236,72,153,0.12)',
-              color: showPrice
-                ? '#c4b5fd'
-                : '#f9a8d4',
-              border: `1px solid ${showPrice ? 'rgba(167,139,250,0.2)' : 'rgba(244,114,182,0.2)'}`,
-            }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: showPrice ? '#a78bfa' : '#f472b6' }}
-            />
-            {showPrice ? 'Catálogo de produtos' : 'Portfólio de trabalhos'}
+          {/* Mode + template pill */}
+          <div className="flex items-center gap-2 flex-wrap justify-center">
+            <div
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-widest"
+              style={{
+                background: showPrice ? 'rgba(124,58,237,0.15)' : 'rgba(236,72,153,0.12)',
+                color:      showPrice ? '#c4b5fd' : '#f9a8d4',
+                border:     `1px solid ${showPrice ? 'rgba(167,139,250,0.2)' : 'rgba(244,114,182,0.2)'}`,
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: showPrice ? '#a78bfa' : '#f472b6' }}
+              />
+              {showPrice ? 'Catálogo de produtos' : 'Portfólio de trabalhos'}
+            </div>
+            <div
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                color:      'rgba(255,255,255,0.4)',
+                border:     '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              {TEMPLATE_LABELS[template] ?? 'Grade'}
+            </div>
           </div>
 
           <h1
@@ -175,7 +412,6 @@ export default async function CatalogPublicPage({
             )}
           </div>
 
-          {/* Count info */}
           {products.length > 0 && (
             <p className="text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
               {products.length} {products.length === 1 ? 'produto' : 'produtos'}
@@ -183,21 +419,30 @@ export default async function CatalogPublicPage({
           )}
         </header>
 
-        {/* ── Products grid ─────────────────────────────────────────────── */}
+        {/* ── Products ──────────────────────────────────────────────────── */}
         {products.length === 0 ? (
           <EmptyState />
+        ) : template === 'list' ? (
+          <ListTemplate
+            products={products}
+            showPrice={showPrice}
+            catalogSlug={slug}
+            stockMap={stockMap}
+          />
+        ) : template === 'minimal' ? (
+          <MinimalTemplate
+            products={products}
+            showPrice={showPrice}
+            catalogSlug={slug}
+            stockMap={stockMap}
+          />
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-            {products.map((p) => (
-              <ProductCard
-                key={p.id}
-                product={p}
-                showPrice={showPrice}
-                catalogSlug={slug}
-                stockQty={p.inventoryItemId ? stockMap[p.id] : undefined}
-              />
-            ))}
-          </div>
+          <GridTemplate
+            products={products}
+            showPrice={showPrice}
+            catalogSlug={slug}
+            stockMap={stockMap}
+          />
         )}
 
         {/* ── CTA footer ────────────────────────────────────────────────── */}
@@ -259,13 +504,7 @@ export default async function CatalogPublicPage({
 
         {/* Footer */}
         <div className="mt-12 mb-4 text-center">
-          <p
-            className="text-xs"
-            style={{
-              color:          'rgba(255,255,255,0.15)',
-              letterSpacing:  '0.06em',
-            }}
-          >
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.15)', letterSpacing: '0.06em' }}>
             Feito com{' '}
             <span style={{ color: 'rgba(167,139,250,0.4)', fontWeight: 600 }}>BVaz Hub</span>
           </p>

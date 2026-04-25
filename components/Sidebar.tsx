@@ -6,8 +6,8 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import {
   LayoutDashboard, FolderKanban, ShoppingCart, Printer, Video,
-  Lightbulb, TrendingUp, X, Menu, ArrowLeft, ChevronRight, Settings, Package, Boxes, Users, BarChart3,
-  Store, Layers, LogOut,
+  Lightbulb, TrendingUp, X, Menu, ArrowLeft, ChevronRight, Settings,
+  Package, Boxes, Users, BarChart3, Store, Layers, LogOut, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import { useStore } from '@/lib/store'
 import { useAuth } from '@/context/AuthContext'
@@ -42,33 +42,56 @@ const GLOBAL_SYSTEM = [
 ]
 
 // ─── Shared NavLink ───────────────────────────────────────────────────────────
-function NavLink({ href, label, icon: Icon, onClick, exact = false }: {
-  href: string; label: string; icon: React.ElementType; onClick?: () => void; exact?: boolean
+function NavLink({ href, label, icon: Icon, onClick, exact = false, iconOnly = false }: {
+  href: string; label: string; icon: React.ElementType; onClick?: () => void; exact?: boolean; iconOnly?: boolean
 }) {
   const pathname = usePathname()
   const active = exact ? pathname === href : (pathname === href || pathname.startsWith(href + '/'))
+
+  const styleBase = {
+    background: active ? 'var(--t-nav-active-bg)' : 'transparent',
+    color:      active ? 'var(--t-nav-active-text)' : 'var(--t-nav-inactive)',
+  }
+  const onEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!active) {
+      e.currentTarget.style.color = 'var(--t-text-primary)'
+      e.currentTarget.style.background = 'var(--t-hover)'
+    }
+  }
+  const onLeave = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!active) {
+      e.currentTarget.style.color = 'var(--t-nav-inactive)'
+      e.currentTarget.style.background = 'transparent'
+    }
+  }
+
+  if (iconOnly) {
+    return (
+      <Link
+        href={href} onClick={onClick} title={label}
+        className="relative flex items-center justify-center w-9 h-9 mx-auto rounded-xl transition-all duration-150"
+        style={styleBase}
+        onMouseEnter={onEnter} onMouseLeave={onLeave}
+      >
+        {active && (
+          <span
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full"
+            style={{ background: 'var(--t-accent)' }}
+          />
+        )}
+        <Icon size={16} strokeWidth={active ? 2 : 1.5} />
+      </Link>
+    )
+  }
 
   return (
     <Link
       href={href}
       onClick={onClick}
       className="relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 overflow-hidden"
-      style={{
-        background: active ? 'var(--t-nav-active-bg)' : 'transparent',
-        color:      active ? 'var(--t-nav-active-text)' : 'var(--t-nav-inactive)',
-      }}
-      onMouseEnter={e => {
-        if (!active) {
-          (e.currentTarget as HTMLAnchorElement).style.color = 'var(--t-text-primary)'
-          ;(e.currentTarget as HTMLAnchorElement).style.background = 'var(--t-hover)'
-        }
-      }}
-      onMouseLeave={e => {
-        if (!active) {
-          (e.currentTarget as HTMLAnchorElement).style.color = 'var(--t-nav-inactive)'
-          ;(e.currentTarget as HTMLAnchorElement).style.background = 'transparent'
-        }
-      }}
+      style={styleBase}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
     >
       {active && (
         <span
@@ -83,33 +106,156 @@ function NavLink({ href, label, icon: Icon, onClick, exact = false }: {
   )
 }
 
+// ─── Logo ─────────────────────────────────────────────────────────────────────
+function Logo({ iconOnly = false }: { iconOnly?: boolean }) {
+  const { state } = useStore()
+  const name    = state.config?.companyName || 'BVaz Hub'
+  const logoUrl = state.config?.brand?.logoUrl
+  const accent  = state.config?.brand?.accentColor || 'var(--t-accent)'
+
+  const avatar = logoUrl ? (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img src={logoUrl} alt={name} className="w-7 h-7 rounded-lg object-cover shrink-0" />
+  ) : (
+    <div
+      className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 transition-colors"
+      style={{ background: accent }}
+    >
+      {name.charAt(0).toUpperCase()}
+    </div>
+  )
+
+  if (iconOnly) {
+    return (
+      <Link href="/dashboard" title={name} className="flex items-center justify-center py-4">
+        {avatar}
+      </Link>
+    )
+  }
+
+  return (
+    <div className="px-5 pt-5 pb-1">
+      <Link href="/dashboard" className="flex items-center gap-2 group">
+        {avatar}
+        <span className="font-semibold text-sm truncate" style={{ color: 'var(--t-text-primary)' }}>{name}</span>
+      </Link>
+    </div>
+  )
+}
+
+// ─── Sidebar footer ───────────────────────────────────────────────────────────
+function SidebarFooter({ iconOnly = false }: { iconOnly?: boolean }) {
+  const { loading, dbError } = useStore()
+
+  const dot = (
+    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+      loading ? 'bg-[#f59e0b] animate-pulse' : dbError ? 'bg-[#ef4444]' : 'bg-[#10b981]'
+    }`} />
+  )
+
+  if (iconOnly) {
+    return (
+      <div className="mt-auto pb-3 flex flex-col items-center gap-2"
+           style={{ borderTop: '1px solid var(--t-footer-border)', paddingTop: '0.75rem' }}>
+        {isSupabaseConfigured ? dot : (
+          <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--t-text-muted)' }} />
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-auto pt-3 px-5 pb-4"
+         style={{ borderTop: '1px solid var(--t-footer-border)' }}>
+      <p className="text-[11px]" style={{ color: 'var(--t-footer-text)' }}>
+        Sistema Operacional v0.3
+      </p>
+      {isSupabaseConfigured ? (
+        <div className="flex items-center gap-1.5 mt-1.5">
+          {dot}
+          <span className="text-[10px] truncate" style={{ color: 'var(--t-footer-text)' }}>
+            {loading ? 'Conectando…' : dbError ? 'Offline' : 'Supabase'}
+          </span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-1.5 mt-1.5">
+          <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'var(--t-text-muted)' }} />
+          <span className="text-[10px]" style={{ color: 'var(--t-footer-text)' }}>Local</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Global sidebar content ───────────────────────────────────────────────────
-function GlobalNav({ onNav, collapsible = true }: { onNav?: () => void; collapsible?: boolean }) {
+function GlobalNav({
+  onNav,
+  collapsed = false,
+  onToggle,
+}: {
+  onNav?: () => void
+  collapsed?: boolean
+  onToggle?: () => void
+}) {
   const { state } = useStore()
   const accent = state.config?.brand?.accentColor
   useEffect(() => {
     if (accent) document.documentElement.style.setProperty('--t-accent', accent)
   }, [accent])
-  const modCfg = state.config?.modules
+
+  const modCfg        = state.config?.modules
   const metricsEnabled = modCfg?.metrics ?? true
   const visibleModules = GLOBAL_MODULES.filter(m => modCfg ? modCfg[m.key] !== false : true)
   const visibleGlobalNav = GLOBAL_NAV.filter(n => n.href !== '/metrics' || metricsEnabled)
 
-  const [globalOpen, setGlobalOpen] = useState(() => {
-    if (!collapsible) return true
-    if (typeof window === 'undefined') return true
-    return localStorage.getItem('sidebar-global-collapsed') !== 'true'
-  })
+  // ── Icon-only (collapsed) view ─────────────────────────────────────────────
+  if (collapsed) {
+    return (
+      <div className="flex flex-col flex-1 overflow-y-auto items-center pt-2 pb-2 gap-0.5">
+        <Logo iconOnly />
 
-  function toggleGlobal() {
-    if (!collapsible) return
-    const next = !globalOpen
-    setGlobalOpen(next)
-    localStorage.setItem('sidebar-global-collapsed', String(!next))
+        {/* Expand button */}
+        <button
+          onClick={onToggle}
+          title="Expandir menu"
+          className="flex items-center justify-center w-9 h-9 rounded-xl mb-1 transition-colors"
+          style={{ color: 'var(--t-sidebar-section)' }}
+          onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-text-primary)'}
+          onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-sidebar-section)'}
+        >
+          <PanelLeftOpen size={15} />
+        </button>
+
+        {/* Dashboard / Métricas / Projetos */}
+        {visibleGlobalNav.map(item => (
+          <NavLink key={item.href} {...item} onClick={onNav} exact iconOnly />
+        ))}
+
+        <div className="w-5 my-1.5" style={{ height: 1, background: 'var(--t-footer-border)' }} />
+
+        {/* Modules */}
+        {visibleModules.map(({ key: _k, ...item }) => (
+          <NavLink key={item.href} {...item} onClick={onNav} iconOnly />
+        ))}
+
+        <div className="w-5 my-1.5" style={{ height: 1, background: 'var(--t-footer-border)' }} />
+
+        {/* Vitrine */}
+        {VITRINE_NAV.map(item => (
+          <NavLink key={item.href} {...item} onClick={onNav} iconOnly />
+        ))}
+
+        <div className="w-5 my-1.5" style={{ height: 1, background: 'var(--t-footer-border)' }} />
+
+        {/* Sistema */}
+        {GLOBAL_SYSTEM.map(item => (
+          <NavLink key={item.href} {...item} onClick={onNav} iconOnly />
+        ))}
+      </div>
+    )
   }
 
-  const showModules = !collapsible || globalOpen
-
+  // ── Full expanded view ─────────────────────────────────────────────────────
   return (
     <div className="flex flex-col flex-1 overflow-y-auto">
       <Logo />
@@ -118,35 +264,33 @@ function GlobalNav({ onNav, collapsible = true }: { onNav?: () => void; collapsi
           <NavLink key={item.href} {...item} onClick={onNav} exact />
         ))}
       </nav>
+
       <div className="mt-4 px-2">
-        {collapsible ? (
+        {/* GLOBAL section header — clicking collapses the whole sidebar */}
+        {onToggle ? (
           <button
-            onClick={toggleGlobal}
+            onClick={onToggle}
             className="flex items-center justify-between w-full px-3 mb-1 group"
           >
             <p className="text-[10px] font-semibold uppercase tracking-widest"
                style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
-            <ChevronRight
+            <PanelLeftClose
               size={11}
-              className="transition-transform duration-200"
-              style={{
-                color: 'var(--t-sidebar-section)',
-                transform: globalOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-              }}
+              style={{ color: 'var(--t-sidebar-section)' }}
+              className="opacity-0 group-hover:opacity-100 transition-opacity"
             />
           </button>
         ) : (
           <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
              style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
         )}
-        {showModules && (
-          <nav className="flex flex-col gap-0.5">
-            {visibleModules.map(({ key: _k, ...item }) => (
-              <NavLink key={item.href} {...item} onClick={onNav} />
-            ))}
-          </nav>
-        )}
+        <nav className="flex flex-col gap-0.5">
+          {visibleModules.map(({ key: _k, ...item }) => (
+            <NavLink key={item.href} {...item} onClick={onNav} />
+          ))}
+        </nav>
       </div>
+
       <div className="mt-4 px-2">
         <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
            style={{ color: 'var(--t-sidebar-section)' }}>Vitrine</p>
@@ -156,6 +300,7 @@ function GlobalNav({ onNav, collapsible = true }: { onNav?: () => void; collapsi
           ))}
         </nav>
       </div>
+
       <div className="mt-4 px-2">
         <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
            style={{ color: 'var(--t-sidebar-section)' }}>Sistema</p>
@@ -245,60 +390,6 @@ function ProjectNav({ projectId, onNav }: { projectId: string; onNav?: () => voi
   )
 }
 
-// ─── Logo ─────────────────────────────────────────────────────────────────────
-function Logo() {
-  const { state } = useStore()
-  const name    = state.config?.companyName || 'BVaz Hub'
-  const logoUrl = state.config?.brand?.logoUrl
-  const accent  = state.config?.brand?.accentColor || 'var(--t-accent)'
-  return (
-    <div className="px-5 pt-5 pb-1">
-      <Link href="/dashboard" className="flex items-center gap-2 group">
-        {logoUrl ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img src={logoUrl} alt={name} className="w-7 h-7 rounded-lg object-cover shrink-0" />
-        ) : (
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 transition-colors"
-            style={{ background: accent }}
-          >
-            {name.charAt(0).toUpperCase()}
-          </div>
-        )}
-        <span className="font-semibold text-sm truncate" style={{ color: 'var(--t-text-primary)' }}>{name}</span>
-      </Link>
-    </div>
-  )
-}
-
-// ─── Root sidebar footer ──────────────────────────────────────────────────────
-function SidebarFooter() {
-  const { loading, dbError } = useStore()
-  return (
-    <div className="mt-auto pt-3 px-5 pb-4"
-         style={{ borderTop: '1px solid var(--t-footer-border)' }}>
-      <p className="text-[11px]" style={{ color: 'var(--t-footer-text)' }}>
-        Sistema Operacional v0.3
-      </p>
-      {isSupabaseConfigured ? (
-        <div className="flex items-center gap-1.5 mt-1.5">
-          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-            loading ? 'bg-[#f59e0b] animate-pulse' : dbError ? 'bg-[#ef4444]' : 'bg-[#10b981]'
-          }`} />
-          <span className="text-[10px] truncate" style={{ color: 'var(--t-footer-text)' }}>
-            {loading ? 'Conectando…' : dbError ? 'Offline' : 'Supabase'}
-          </span>
-        </div>
-      ) : (
-        <div className="flex items-center gap-1.5 mt-1.5">
-          <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'var(--t-text-muted)' }} />
-          <span className="text-[10px]" style={{ color: 'var(--t-footer-text)' }}>Local</span>
-        </div>
-      )}
-    </div>
-  )
-}
-
 // ─── Detect project context ───────────────────────────────────────────────────
 function useProjectContext() {
   const pathname = usePathname()
@@ -311,11 +402,10 @@ function useProjectContext() {
 
 // ─── Mobile bottom navigation bar ────────────────────────────────────────────
 const BOTTOM_NAV = [
-  { href: '/dashboard',  label: 'Início',    icon: LayoutDashboard },
-  { href: '/orders',     label: 'Vendas',    icon: ShoppingCart },
-  { href: '/inventory',  label: 'Estoque',   icon: Package },
-  { href: '/products',   label: 'Produtos',  icon: Boxes },
-  { href: '/catalogs',   label: 'Catálogos', icon: Store },
+  { href: '/dashboard', label: 'Início',   icon: LayoutDashboard },
+  { href: '/finance',   label: 'Finanças', icon: TrendingUp },
+  { href: '/orders',    label: 'Vendas',   icon: ShoppingCart },
+  { href: '/inventory', label: 'Estoque',  icon: Package },
 ]
 
 export function BottomNav() {
@@ -323,6 +413,10 @@ export function BottomNav() {
   const projectId = useProjectContext()
 
   if (projectId) return null
+
+  function openMore() {
+    window.dispatchEvent(new Event('open-mobile-nav'))
+  }
 
   return (
     <nav className="mobile-nav lg:hidden flex items-center justify-around px-2 py-1">
@@ -343,18 +437,45 @@ export function BottomNav() {
           </Link>
         )
       })}
+      {/* Mais — opens full mobile nav drawer */}
+      <button
+        onClick={openMore}
+        className="flex flex-col items-center gap-1 flex-1 py-2 px-1 rounded-xl transition-all duration-200"
+        style={{ color: 'var(--t-nav-inactive)' }}
+      >
+        <Menu size={19} strokeWidth={1.5} />
+        <span className="text-[9.5px] font-medium leading-none">Mais</span>
+      </button>
     </nav>
   )
 }
 
-// ─── Desktop Sidebar ─────────────────────────────────────────────────────────
+// ─── Desktop Sidebar ──────────────────────────────────────────────────────────
 export function Sidebar() {
   const projectId = useProjectContext()
 
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem('sidebar-global-collapsed') === 'true'
+  })
+
+  // Keep CSS variable in sync (drives AppShell content margin)
+  useEffect(() => {
+    document.documentElement.style.setProperty('--sidebar-w', collapsed ? '3.5rem' : '14rem')
+  }, [collapsed])
+
+  function toggle() {
+    const next = !collapsed
+    setCollapsed(next)
+    localStorage.setItem('sidebar-global-collapsed', String(next))
+  }
+
   return (
     <aside
-      className="hidden lg:flex flex-col w-56 min-h-screen fixed top-0 left-0 z-30"
+      className="hidden lg:flex flex-col min-h-screen fixed top-0 left-0 z-30 overflow-hidden"
       style={{
+        width:       collapsed ? '3.5rem' : '14rem',
+        transition:  'width 200ms ease',
         background:  'linear-gradient(180deg, var(--t-accent-soft) 0%, transparent 30%), var(--t-sidebar-bg)',
         borderRight: '1px solid var(--t-sidebar-border)',
         boxShadow:   '1px 0 0 var(--t-sidebar-border)',
@@ -363,9 +484,9 @@ export function Sidebar() {
       {projectId ? (
         <ProjectNav projectId={projectId} />
       ) : (
-        <GlobalNav />
+        <GlobalNav collapsed={collapsed} onToggle={toggle} />
       )}
-      <SidebarFooter />
+      <SidebarFooter iconOnly={collapsed} />
     </aside>
   )
 }
@@ -379,7 +500,6 @@ export function MobileNav() {
 
   function openDrawer() {
     setMounted(true)
-    // One rAF so the DOM is present before the transition starts
     requestAnimationFrame(() => requestAnimationFrame(() => setOpen(true)))
   }
 
@@ -387,6 +507,13 @@ export function MobileNav() {
     setOpen(false)
     setTimeout(() => setMounted(false), 320)
   }
+
+  // Listen for 'open-mobile-nav' event from BottomNav's "Mais" button
+  useEffect(() => {
+    window.addEventListener('open-mobile-nav', openDrawer)
+    return () => window.removeEventListener('open-mobile-nav', openDrawer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
@@ -446,10 +573,13 @@ export function MobileNav() {
               {projectId ? (
                 <ProjectNav projectId={projectId} onNav={closeDrawer} />
               ) : (
-                <GlobalNav onNav={closeDrawer} collapsible={false} />
+                /* Mobile drawer: never collapsed, no toggle */
+                <GlobalNav onNav={closeDrawer} collapsed={false} />
               )}
             </div>
+
             <SidebarFooter />
+
             {user && (
               <div className="px-4 pb-4 pt-2" style={{ borderTop: '1px solid var(--t-footer-border)' }}>
                 <button

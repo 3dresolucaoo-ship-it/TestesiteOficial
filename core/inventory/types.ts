@@ -7,6 +7,15 @@ export const INVENTORY_CATEGORY_LABELS: Record<InventoryCategory, string> = {
   other:     'Outro',
 }
 
+/** For filament items: intended use. Non-filament items should leave this undefined. */
+export type FilamentUso = 'impressao' | 'venda' | 'ambos'
+
+export const FILAMENT_USO_LABELS: Record<FilamentUso, string> = {
+  impressao: 'Uso em impressão',
+  venda:     'Venda',
+  ambos:     'Ambos',
+}
+
 export interface InventoryItem {
   id: string
   projectId: string
@@ -20,6 +29,8 @@ export interface InventoryItem {
   notes: string
   minStock?: number
   imageUrl?: string
+  /** Only for filament category */
+  filamentUso?: FilamentUso
 }
 
 // ─── Stock movements ──────────────────────────────────────────────────────────

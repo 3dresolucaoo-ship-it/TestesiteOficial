@@ -8,6 +8,7 @@ import type { CategoryEntry } from '@/core/admin/config'
 import {
   Settings, DollarSign, Users, Package, Video,
   Plus, Trash2, Save, RotateCcw, Check, ExternalLink, ShieldCheck,
+  Printer, Store, Eye, EyeOff,
 } from 'lucide-react'
 import { DEFAULT_ADMIN_CONFIG } from '@/core/admin/config'
 import * as InstagramAdapter from '@/core/integrations/instagramAdapter'
@@ -54,6 +55,31 @@ function NumberInput({ value, onChange, min, max }: {
       onChange={e => onChange(parseFloat(e.target.value) || 0)}
       className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 py-2 text-[#ebebeb] text-sm outline-none focus:border-[#7c3aed] transition-colors"
     />
+  )
+}
+
+function SecretInput({ value, onChange, placeholder }: {
+  value: string; onChange: (v: string) => void; placeholder?: string
+}) {
+  const [show, setShow] = useState(false)
+  return (
+    <div className="relative">
+      <input
+        type={show ? 'text' : 'password'}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        autoComplete="off"
+        className="w-full bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 pr-10 py-2 text-[#ebebeb] text-sm outline-none focus:border-[#7c3aed] transition-colors"
+      />
+      <button
+        type="button"
+        onClick={() => setShow(s => !s)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#555555] hover:text-[#888888] transition-colors"
+      >
+        {show ? <EyeOff size={14} /> : <Eye size={14} />}
+      </button>
+    </div>
   )
 }
 
@@ -123,7 +149,7 @@ function CategoryListEditor({
 }
 
 // ─── Tab definitions ──────────────────────────────────────────────────────────
-type SettingsTab = 'general' | 'finance' | 'crm' | 'inventory' | 'content' | 'integrations'
+type SettingsTab = 'general' | 'finance' | 'crm' | 'inventory' | 'content' | 'production' | 'storefront' | 'integrations'
 
 const TABS: Array<{ id: SettingsTab; label: string; icon: React.ElementType }> = [
   { id: 'general',      label: 'Geral',         icon: Settings },
@@ -131,6 +157,8 @@ const TABS: Array<{ id: SettingsTab; label: string; icon: React.ElementType }> =
   { id: 'crm',          label: 'CRM',            icon: Users },
   { id: 'inventory',    label: 'Estoque',        icon: Package },
   { id: 'content',      label: 'Conteúdo',       icon: Video },
+  { id: 'production',   label: 'Produção',       icon: Printer },
+  { id: 'storefront',   label: 'Vitrine',        icon: Store },
   { id: 'integrations', label: 'Integrações',    icon: ExternalLink },
 ]
 
@@ -155,6 +183,12 @@ export default function SettingsPage() {
   }
   function updateContent(patch: Partial<AdminConfig['content']>) {
     setDraft(d => ({ ...d, content: { ...d.content, ...patch } }))
+  }
+  function updateProduction(patch: Partial<AdminConfig['production']>) {
+    setDraft(d => ({ ...d, production: { ...d.production, ...patch } }))
+  }
+  function updateStorefront(patch: Partial<AdminConfig['storefront']>) {
+    setDraft(d => ({ ...d, storefront: { ...d.storefront, ...patch } }))
   }
 
   function save() {
@@ -224,7 +258,7 @@ export default function SettingsPage() {
       {tab === 'general' && (
         <div className="space-y-4">
           <SectionCard title="Informações do Sistema">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <FieldLabel>Nome da empresa</FieldLabel>
                 <TextInput
@@ -250,7 +284,7 @@ export default function SettingsPage() {
             </div>
           </SectionCard>
           <SectionCard title="Aparência">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <FieldLabel>URL do Logo (opcional)</FieldLabel>
                 <TextInput
@@ -357,7 +391,7 @@ export default function SettingsPage() {
             />
           </SectionCard>
           <SectionCard title="Metas e Alertas">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <FieldLabel>Meta de margem de lucro (%)</FieldLabel>
                 <NumberInput
@@ -457,7 +491,7 @@ export default function SettingsPage() {
             />
           </SectionCard>
           <SectionCard title="Padrões">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <FieldLabel>Unidade padrão</FieldLabel>
                 <TextInput
@@ -530,6 +564,171 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {/* ── Production ──────────────────────────────────────────────────────── */}
+      {tab === 'production' && (
+        <div className="space-y-4">
+          <SectionCard title="Tipos de Impressora">
+            <p className="text-[#555555] text-xs -mt-2">Modelos de impressoras que você usa. Aparece no cadastro de tarefas de produção.</p>
+            <CategoryListEditor
+              items={draft.production.printerTypes}
+              onChange={v => updateProduction({ printerTypes: v })}
+              keyPrefix="printer"
+            />
+          </SectionCard>
+
+          <SectionCard title="Tipos de Filamento">
+            <p className="text-[#555555] text-xs -mt-2">Materiais disponíveis no seu estoque. Usado para calcular custos automaticamente.</p>
+            <CategoryListEditor
+              items={draft.production.filamentTypes}
+              onChange={v => updateProduction({ filamentTypes: v })}
+              keyPrefix="filament"
+            />
+          </SectionCard>
+
+          <SectionCard title="Alertas de Estoque">
+            <div className="space-y-4">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <div
+                  onClick={() => updateProduction({ lowStockAlertEnabled: !draft.production.lowStockAlertEnabled })}
+                  className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${
+                    draft.production.lowStockAlertEnabled ? 'bg-[#7c3aed]' : 'bg-[#2a2a2a]'
+                  }`}
+                >
+                  <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
+                    draft.production.lowStockAlertEnabled ? 'translate-x-4' : 'translate-x-0.5'
+                  }`} />
+                </div>
+                <div>
+                  <p className="text-[#ebebeb] text-sm">Alertar quando filamento estiver baixo</p>
+                  <p className="text-[#555555] text-xs">Exibe aviso no dashboard quando o estoque de filamento ficar abaixo do limite</p>
+                </div>
+              </label>
+              {draft.production.lowStockAlertEnabled && (
+                <div className="max-w-[200px]">
+                  <FieldLabel>Limite mínimo (gramas)</FieldLabel>
+                  <NumberInput
+                    value={draft.production.lowStockGrams}
+                    onChange={v => updateProduction({ lowStockGrams: v })}
+                    min={0}
+                  />
+                  <p className="text-[#3a3a3a] text-xs mt-1">Alerta aparece abaixo desta quantidade</p>
+                </div>
+              )}
+            </div>
+          </SectionCard>
+        </div>
+      )}
+
+      {/* ── Storefront (Vitrine) ──────────────────────────────────────────── */}
+      {tab === 'storefront' && (
+        <div className="space-y-4">
+          <SectionCard title="Provider de Pagamento">
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {(['none', 'mercadopago', 'stripe'] as const).map(p => {
+                const labels = { none: 'Nenhum', mercadopago: 'Mercado Pago', stripe: 'Stripe' }
+                const sel = draft.storefront.paymentProvider === p
+                return (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => updateStorefront({ paymentProvider: p })}
+                    className="px-3 py-2.5 rounded-xl border text-xs font-semibold transition-all"
+                    style={{
+                      background:  sel ? '#7c3aed1a' : '#0f0f0f',
+                      borderColor: sel ? '#7c3aed66' : '#2a2a2a',
+                      color:       sel ? '#a78bfa'   : '#888888',
+                    }}
+                  >
+                    {labels[p]}
+                  </button>
+                )
+              })}
+            </div>
+
+            <label className="flex items-center gap-3 cursor-pointer">
+              <div
+                onClick={() => updateStorefront({ checkoutEnabled: !draft.storefront.checkoutEnabled })}
+                className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${
+                  draft.storefront.checkoutEnabled ? 'bg-[#7c3aed]' : 'bg-[#2a2a2a]'
+                }`}
+              >
+                <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
+                  draft.storefront.checkoutEnabled ? 'translate-x-4' : 'translate-x-0.5'
+                }`} />
+              </div>
+              <div>
+                <p className="text-[#ebebeb] text-sm">Habilitar checkout nos catálogos</p>
+                <p className="text-[#555555] text-xs">Exibe o botão "Comprar" nos catálogos públicos</p>
+              </div>
+            </label>
+          </SectionCard>
+
+          {draft.storefront.paymentProvider === 'mercadopago' && (
+            <SectionCard title="Mercado Pago">
+              <div className="space-y-3">
+                <div>
+                  <FieldLabel>Chave Pública (Public Key)</FieldLabel>
+                  <TextInput
+                    value={draft.storefront.mpPublicKey}
+                    onChange={v => updateStorefront({ mpPublicKey: v })}
+                    placeholder="APP_USR-..."
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Access Token</FieldLabel>
+                  <SecretInput
+                    value={draft.storefront.mpAccessToken}
+                    onChange={v => updateStorefront({ mpAccessToken: v })}
+                    placeholder="APP_USR-... (token de produção)"
+                  />
+                  <p className="text-[#3a3a3a] text-xs mt-1">
+                    ⚠️ Armazenado no banco. Prefira usar variável de ambiente <code className="text-[#a78bfa]">MP_ACCESS_TOKEN</code> em produção.
+                  </p>
+                </div>
+              </div>
+            </SectionCard>
+          )}
+
+          {draft.storefront.paymentProvider === 'stripe' && (
+            <SectionCard title="Stripe">
+              <div className="space-y-3">
+                <div>
+                  <FieldLabel>Chave Pública (Publishable Key)</FieldLabel>
+                  <TextInput
+                    value={draft.storefront.stripePublicKey}
+                    onChange={v => updateStorefront({ stripePublicKey: v })}
+                    placeholder="pk_live_..."
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Chave Secreta (Secret Key)</FieldLabel>
+                  <SecretInput
+                    value={draft.storefront.stripeSecretKey}
+                    onChange={v => updateStorefront({ stripeSecretKey: v })}
+                    placeholder="sk_live_..."
+                  />
+                  <p className="text-[#3a3a3a] text-xs mt-1">
+                    ⚠️ Armazenado no banco. Prefira usar variável de ambiente <code className="text-[#a78bfa]">STRIPE_SECRET_KEY</code> em produção.
+                  </p>
+                </div>
+              </div>
+            </SectionCard>
+          )}
+
+          <SectionCard title="WhatsApp Padrão">
+            <FieldLabel>Número padrão para catálogos (com DDI)</FieldLabel>
+            <TextInput
+              value={draft.storefront.defaultWhatsapp}
+              onChange={v => updateStorefront({ defaultWhatsapp: v })}
+              placeholder="5511999999999"
+            />
+            <p className="text-[#3a3a3a] text-xs mt-1">
+              Usado quando o catálogo não tem WhatsApp próprio configurado.
+            </p>
+          </SectionCard>
+        </div>
+      )}
+
       {/* ── Integrations ────────────────────────────────────────────────────── */}
       {tab === 'integrations' && (
         <div className="space-y-4">
@@ -554,6 +753,20 @@ export default function SettingsPage() {
               status: BlingAdapter.isConfigured() ? 'configured' : 'not_configured',
               color: '#3b82f6',
               docs: 'https://developer.bling.com.br/referencia',
+            },
+            {
+              name: 'Mercado Pago',
+              description: 'Receba pagamentos via PIX, cartão e boleto. Configure as chaves na aba Vitrine.',
+              status: draft.storefront.mpAccessToken ? 'configured' : 'not_configured',
+              color: '#00b1ea',
+              docs: 'https://www.mercadopago.com.br/developers/pt/docs',
+            },
+            {
+              name: 'NFSe',
+              description: 'Emissão automática de Nota Fiscal de Serviço Eletrônica ao concluir pedidos.',
+              status: 'not_configured' as const,
+              color: '#10b981',
+              docs: 'https://www.nfse.gov.br/',
             },
           ].map(integration => (
             <div key={integration.name} className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-5 flex items-start gap-4">
@@ -590,9 +803,9 @@ export default function SettingsPage() {
           <div className="bg-[#f59e0b08] border border-[#f59e0b22] rounded-xl px-4 py-3">
             <p className="text-[#f59e0b] text-sm font-medium mb-0.5">Como configurar integrações</p>
             <p className="text-[#888888] text-xs">
-              As integrações são configuradas via código nos adapters em <code className="text-[#a78bfa]">core/integrations/</code>.
-              Chame <code className="text-[#a78bfa]">configure(&#123; accessToken &#125;)</code> no arquivo correspondente
-              com suas credenciais de API antes de usar <code className="text-[#a78bfa]">connect()</code> ou <code className="text-[#a78bfa]">syncData()</code>.
+              <strong className="text-[#aaaaaa]">Mercado Pago:</strong> configure as chaves na aba <strong className="text-[#a78bfa]">Vitrine</strong> acima.{' '}
+              <strong className="text-[#aaaaaa]">Instagram / YouTube / Bling:</strong> configure via código nos adapters em{' '}
+              <code className="text-[#a78bfa]">core/integrations/</code>.
             </p>
           </div>
         </div>

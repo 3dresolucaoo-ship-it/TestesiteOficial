@@ -12,6 +12,23 @@ import type {
 import { initialData } from './mockData'
 import { isSupabaseConfigured } from './supabaseClient'
 import { DEFAULT_ADMIN_CONFIG } from '@/core/admin/config'
+
+/** Deep-merge a DB-loaded config with defaults so new fields are always present. */
+function mergeConfig(loaded: Partial<AdminConfig> | null | undefined): AdminConfig {
+  if (!loaded) return DEFAULT_ADMIN_CONFIG
+  return {
+    ...DEFAULT_ADMIN_CONFIG,
+    ...loaded,
+    brand:      { ...DEFAULT_ADMIN_CONFIG.brand,      ...loaded.brand },
+    modules:    { ...DEFAULT_ADMIN_CONFIG.modules,    ...loaded.modules },
+    finance:    { ...DEFAULT_ADMIN_CONFIG.finance,    ...loaded.finance },
+    crm:        { ...DEFAULT_ADMIN_CONFIG.crm,        ...loaded.crm },
+    inventory:  { ...DEFAULT_ADMIN_CONFIG.inventory,  ...loaded.inventory },
+    content:    { ...DEFAULT_ADMIN_CONFIG.content,    ...loaded.content },
+    production: { ...DEFAULT_ADMIN_CONFIG.production, ...(loaded as AdminConfig).production },
+    storefront: { ...DEFAULT_ADMIN_CONFIG.storefront, ...(loaded as AdminConfig).storefront },
+  }
+}
 import { projectsService }                    from '@/services/projects'
 import { ordersService }                      from '@/services/orders'
 import { productionService }                  from '@/services/production'
@@ -119,7 +136,7 @@ function reducer(state: AppState, action: Action): AppState {
       return {
         ...EMPTY_STATE,
         ...action.payload,
-        config:   action.payload.config   ?? DEFAULT_ADMIN_CONFIG,
+        config:   mergeConfig(action.payload.config),
         products: action.payload.products ?? [],
         catalogs: action.payload.catalogs ?? [],
       }
@@ -214,7 +231,7 @@ async function loadFromSupabase(): Promise<AppState> {
   return {
     projects, orders, production, content, decisions,
     transactions, leads, affiliates, inventory, movements,
-    config: config ?? DEFAULT_ADMIN_CONFIG,
+    config: mergeConfig(config),
     products, catalogs,
   }
 }

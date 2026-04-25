@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useStore, uid } from '@/lib/store'
-import type { ProductionItem, ProductionStatus, PrinterName, StockMovement } from '@/lib/types'
+import type { ProductionItem, ProductionStatus, PrinterName, StockMovement, Transaction } from '@/lib/types'
 import {
   Plus, Pencil, Trash2, MoreHorizontal, GripVertical, Clock,
   Activity, CheckCircle2, Timer, Printer,
@@ -238,7 +238,7 @@ function ProductionForm({
       <FormField label="Item a imprimir">
         <Input value={data.item} onChange={set('item')} placeholder="O que será impresso" required />
       </FormField>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <FormField label="Impressora">
           <Select value={data.printer} onChange={set('printer')}>
             <option value="bambu">Bambu Lab</option>
@@ -253,7 +253,7 @@ function ProductionForm({
           </Select>
         </FormField>
       </div>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <FormField label="Tempo estimado (h)">
           <Input
             type="number"
@@ -331,20 +331,25 @@ export default function ProductionPage() {
   function changeStatus(item: ProductionItem, status: ProductionStatus) {
     dispatch({ type: 'UPDATE_PRODUCTION', payload: { ...item, status } })
 
-    // Bambu Lab hook (mocked): print completion consumes filament.
-    // Fires only on the first waiting|printing → done transition for this item.
-    if (status === 'done' && item.status !== 'done') {
+    // Auto-consume filament + create expense when printing starts
+    if (status === 'printing' && item.status !== 'printing') {
       const order   = state.orders.find(o => o.id === item.orderId)
       const product = order?.productId
         ? state.products.find(p => p.id === order.productId)
         : undefined
-      const grams = product?.materialGrams ?? 0
+      const baseGrams  = product?.materialGrams ?? 0
       const filamentId = product?.inventoryItemId
       const filament   = filamentId ? state.inventory.find(i => i.id === filamentId) : undefined
 
-      if (product && filament && grams > 0) {
-        const unit  = filament.unit
-        const delta = unit === 'kg' ? -(grams / 1000) : -grams
+      // Only consume from filament items marked for printing (or ambos, or not set)
+      const uso = filament?.filamentUso
+      const canConsume = !uso || uso === 'impressao' || uso === 'ambos'
+
+      if (product && filament && baseGrams > 0 && filament.category === 'filament' && canConsume) {
+        // Include failure-rate waste
+        const totalGrams = baseGrams * (1 + (product.failureRate ?? 0.1))
+        const delta = filament.unit === 'kg' ? -(totalGrams / 1000) : -totalGrams
+
         const movement: StockMovement = {
           id:        uid(),
           projectId: filament.projectId,
@@ -353,9 +358,28 @@ export default function ProductionPage() {
           quantity:  Math.abs(delta),
           reason:    'printing',
           date:      new Date().toISOString().slice(0, 10),
-          notes:     `Impressão concluída · ${product.name} (${grams}g)`,
+          notes:     `Impressão iniciada · ${product.name} (${totalGrams.toFixed(0)}g)`,
         }
         dispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: filament.id, delta } })
+
+        // Create filament expense transaction (Etapa 5.3)
+        const costPerUnit  = filament.costPrice ?? 0
+        const filamentCost = filament.unit === 'kg'
+          ? costPerUnit * (totalGrams / 1000)
+          : costPerUnit * totalGrams
+        if (filamentCost > 0) {
+          const transaction: Transaction = {
+            id:          uid(),
+            projectId:   filament.projectId,
+            type:        'expense',
+            value:       Math.round(filamentCost * 100) / 100,
+            category:    'filament',
+            description: `Filamento: ${product.name} (${totalGrams.toFixed(0)}g)`,
+            date:        new Date().toISOString().slice(0, 10),
+            source:      'Auto-gerado ao iniciar impressão',
+          }
+          dispatch({ type: 'ADD_TRANSACTION', payload: transaction })
+        }
       }
     }
 

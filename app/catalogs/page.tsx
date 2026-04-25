@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useStore, uid } from '@/lib/store'
 import type { Catalog, Product } from '@/lib/types'
+import type { CatalogTemplate } from '@/core/catalog/types'
 import { generateSlug } from '@/services/catalogs'
 import {
   Plus, Copy, ExternalLink, Trash2, BookOpen, ImageIcon, Check,
@@ -125,11 +126,12 @@ function CatalogFormModal({
   isEdit?: boolean
   products: Product[]
   onClose: () => void
-  onSave: (data: { name: string; mode: Catalog['mode']; logoUrl: string; productIds: string[] }) => void
+  onSave: (data: { name: string; mode: Catalog['mode']; template: CatalogTemplate; logoUrl: string; productIds: string[] }) => void
 }) {
   const [form, setForm] = useState({
     name:       initial?.name       ?? '',
     mode:       initial?.mode       ?? ('catalog' as Catalog['mode']),
+    template:   (initial?.template  ?? 'grid') as CatalogTemplate,
     logoUrl:    initial?.logoUrl    ?? '',
     productIds: initial?.productIds ?? [] as string[],
   })
@@ -139,7 +141,13 @@ function CatalogFormModal({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!form.name.trim()) return
-    onSave({ ...form })
+    onSave({
+      name:       form.name,
+      mode:       form.mode,
+      template:   form.template,
+      logoUrl:    form.logoUrl,
+      productIds: form.productIds,
+    })
   }
 
   return (
@@ -168,6 +176,40 @@ function CatalogFormModal({
             <option value="catalog">Catálogo com preço</option>
             <option value="portfolio">Portfólio (sem preço)</option>
           </Select>
+        </FormField>
+
+        <FormField label="Template visual">
+          <div className="grid grid-cols-3 gap-2">
+            {(['grid', 'list', 'minimal'] as CatalogTemplate[]).map(t => {
+              const labels: Record<CatalogTemplate, string> = {
+                grid:    'Grade',
+                list:    'Lista',
+                minimal: 'Minimal',
+              }
+              const descriptions: Record<CatalogTemplate, string> = {
+                grid:    'Cards em grade',
+                list:    'Linhas horizontais',
+                minimal: 'Tabela clean',
+              }
+              const selected = form.template === t
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setForm(f => ({ ...f, template: t }))}
+                  className="flex flex-col items-center gap-1.5 px-3 py-2.5 rounded-xl border transition-all text-center"
+                  style={{
+                    background:   selected ? '#7c3aed1a' : 'var(--t-surface-2)',
+                    borderColor:  selected ? '#7c3aed66' : 'var(--t-border)',
+                    color:        selected ? '#a78bfa'   : 'var(--t-text-secondary)',
+                  }}
+                >
+                  <span className="text-xs font-semibold">{labels[t]}</span>
+                  <span className="text-[10px] opacity-60">{descriptions[t]}</span>
+                </button>
+              )
+            })}
+          </div>
         </FormField>
 
         <FormField label="URL da logo (opcional)">
@@ -380,7 +422,7 @@ export default function CatalogsPage() {
   const [creating, setCreating] = useState(false)
   const [editing,  setEditing]  = useState<Catalog | null>(null)
 
-  function handleCreate(data: { name: string; mode: Catalog['mode']; logoUrl: string; productIds: string[] }) {
+  function handleCreate(data: { name: string; mode: Catalog['mode']; template: CatalogTemplate; logoUrl: string; productIds: string[] }) {
     const catalog: Catalog = {
       id:         uid(),
       userId:     '',
@@ -388,6 +430,7 @@ export default function CatalogsPage() {
       name:       data.name.trim(),
       slug:       generateSlug(data.name) || uid(),
       mode:       data.mode,
+      template:   data.template,
       productIds: data.productIds,
       logoUrl:    data.logoUrl.trim() || undefined,
       isPublic:   true,
@@ -398,12 +441,13 @@ export default function CatalogsPage() {
     showToast('Catálogo criado com sucesso!')
   }
 
-  function handleEdit(data: { name: string; mode: Catalog['mode']; logoUrl: string; productIds: string[] }) {
+  function handleEdit(data: { name: string; mode: Catalog['mode']; template: CatalogTemplate; logoUrl: string; productIds: string[] }) {
     if (!editing) return
     const updated: Catalog = {
       ...editing,
       name:       data.name.trim(),
       mode:       data.mode,
+      template:   data.template,
       productIds: data.productIds,
       logoUrl:    data.logoUrl.trim() || undefined,
     }

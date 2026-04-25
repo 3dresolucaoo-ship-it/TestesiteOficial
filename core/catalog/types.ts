@@ -1,3 +1,5 @@
+export type CatalogTemplate = 'grid' | 'list' | 'minimal'
+
 export interface Catalog {
   id: string
   userId: string
@@ -5,6 +7,7 @@ export interface Catalog {
   name: string
   slug: string
   mode: 'catalog' | 'portfolio'
+  template: CatalogTemplate
   productIds: string[]
   logoUrl?: string
   whatsapp?: string

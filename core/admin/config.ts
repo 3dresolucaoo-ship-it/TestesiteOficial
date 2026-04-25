@@ -33,6 +33,23 @@ export interface ContentConfig {
   trackEngagement: boolean
 }
 
+export interface ProductionConfig {
+  printerTypes:         CategoryEntry[]   // printer models/types
+  filamentTypes:        CategoryEntry[]   // material types (PLA, PETG, TPU...)
+  lowStockAlertEnabled: boolean           // show alerts when filament is low
+  lowStockGrams:        number            // threshold in grams
+}
+
+export interface StorefrontConfig {
+  paymentProvider:  'stripe' | 'mercadopago' | 'none'
+  stripePublicKey:  string
+  stripeSecretKey:  string
+  mpPublicKey:      string
+  mpAccessToken:    string
+  defaultWhatsapp:  string   // default number for catalog WhatsApp buttons
+  checkoutEnabled:  boolean
+}
+
 export interface BrandConfig {
   logoUrl:     string
   accentColor: string   // hex, applied as --t-accent at runtime
@@ -59,6 +76,8 @@ export interface AdminConfig {
   crm:         CRMConfig
   inventory:   InventoryConfig
   content:     ContentConfig
+  production:  ProductionConfig
+  storefront:  StorefrontConfig
 }
 
 // ─── Defaults (mirrors current hardcoded values) ─────────────────────────────
@@ -146,5 +165,36 @@ export const DEFAULT_ADMIN_CONFIG: AdminConfig = {
       { key: 'posted',   label: 'Postado', color: 'text-[#10b981]' },
     ],
     trackEngagement: true,
+  },
+
+  production: {
+    printerTypes: [
+      { key: 'bambu_x1c', label: 'Bambu Lab X1C' },
+      { key: 'bambu_p1s', label: 'Bambu Lab P1S' },
+      { key: 'bambu_a1',  label: 'Bambu Lab A1' },
+      { key: 'ender_3',   label: 'Creality Ender 3' },
+      { key: 'other',     label: 'Outro' },
+    ],
+    filamentTypes: [
+      { key: 'pla',    label: 'PLA' },
+      { key: 'petg',   label: 'PETG' },
+      { key: 'abs',    label: 'ABS' },
+      { key: 'tpu',    label: 'TPU' },
+      { key: 'asa',    label: 'ASA' },
+      { key: 'pa',     label: 'Nylon (PA)' },
+      { key: 'resin',  label: 'Resina' },
+    ],
+    lowStockAlertEnabled: true,
+    lowStockGrams:        200,
+  },
+
+  storefront: {
+    paymentProvider: 'none',
+    stripePublicKey: '',
+    stripeSecretKey: '',
+    mpPublicKey:     '',
+    mpAccessToken:   '',
+    defaultWhatsapp: '',
+    checkoutEnabled: false,
   },
 }

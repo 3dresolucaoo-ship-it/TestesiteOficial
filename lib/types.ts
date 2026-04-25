@@ -18,10 +18,11 @@ export type { LeadStatus, ContactSource, Lead, Affiliate } from '@/core/crm/type
 export { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/core/crm/types'
 
 export type {
-  InventoryCategory, InventoryItem, StockMovement, MovementReason,
+  InventoryCategory, InventoryItem, StockMovement, MovementReason, FilamentUso,
 } from '@/core/inventory/types'
 export {
   INVENTORY_CATEGORY_LABELS, MOVEMENT_REASON_LABELS, MOVEMENT_REASONS_BY_TYPE,
+  FILAMENT_USO_LABELS,
 } from '@/core/inventory/types'
 
 // ─── Projects ─────────────────────────────────────────────────────────────────

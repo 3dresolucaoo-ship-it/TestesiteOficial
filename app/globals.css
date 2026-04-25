@@ -265,6 +265,18 @@ input:focus, select:focus, textarea:focus {
 .stagger-children > *:nth-child(8)  { animation-delay: 350ms; }
 
 /* ─── Sidebar ───────────────────────────────────────────────────────────────── */
+
+/* Sidebar width is driven by the --sidebar-w CSS variable (set by Sidebar.tsx).
+   .sidebar-content applies the responsive left margin so content shifts with it. */
+:root { --sidebar-w: 14rem; }
+
+@media (min-width: 1024px) {
+  .sidebar-content {
+    margin-left: var(--sidebar-w, 14rem);
+    transition: margin-left 200ms ease;
+  }
+}
+
 .sidebar-bg {
   background: linear-gradient(180deg, var(--t-accent-soft) 0%, transparent 60%), var(--t-sidebar-bg);
   border-right: 1px solid var(--t-sidebar-border);

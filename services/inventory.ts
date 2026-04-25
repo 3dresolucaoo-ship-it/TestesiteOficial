@@ -9,36 +9,38 @@ import type { Product } from '@/core/products/types'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function itemFromDB(r: any): InventoryItem {
   return {
-    id:         r.id,
-    projectId:  r.project_id,
-    category:   r.category,
-    name:       r.name,
-    sku:        r.sku ?? '',
-    quantity:   Number(r.quantity ?? 0),
-    unit:       r.unit ?? 'un',
-    costPrice:  Number(r.cost_price ?? 0),
-    salePrice:  Number(r.sale_price ?? 0),
-    notes:      r.notes ?? '',
-    minStock:   r.min_stock != null ? Number(r.min_stock) : undefined,
-    imageUrl:   r.image_url ?? undefined,
+    id:          r.id,
+    projectId:   r.project_id,
+    category:    r.category,
+    name:        r.name,
+    sku:         r.sku ?? '',
+    quantity:    Number(r.quantity ?? 0),
+    unit:        r.unit ?? 'un',
+    costPrice:   Number(r.cost_price ?? 0),
+    salePrice:   Number(r.sale_price ?? 0),
+    notes:       r.notes ?? '',
+    minStock:    r.min_stock != null ? Number(r.min_stock) : undefined,
+    imageUrl:    r.image_url ?? undefined,
+    filamentUso: r.filament_uso ?? undefined,
   }
 }
 
 function itemToDB(i: InventoryItem, userId: string) {
   return {
-    id:          i.id,
-    project_id:  i.projectId,
-    category:    i.category,
-    name:        i.name,
-    sku:         i.sku,
-    quantity:    i.quantity,
-    unit:        i.unit,
-    cost_price:  i.costPrice,
-    sale_price:  i.salePrice,
-    notes:       i.notes,
-    min_stock:   i.minStock ?? null,
-    image_url:   i.imageUrl ?? null,
-    user_id:     userId,
+    id:           i.id,
+    project_id:   i.projectId,
+    category:     i.category,
+    name:         i.name,
+    sku:          i.sku,
+    quantity:     i.quantity,
+    unit:         i.unit,
+    cost_price:   i.costPrice,
+    sale_price:   i.salePrice,
+    notes:        i.notes,
+    min_stock:    i.minStock ?? null,
+    image_url:    i.imageUrl ?? null,
+    filament_uso: i.filamentUso ?? null,
+    user_id:      userId,
   }
 }
 

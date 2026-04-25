@@ -3,10 +3,12 @@
 import { useState, useMemo, useRef } from 'react'
 import { useStore, uid } from '@/lib/store'
 import type { InventoryItem, InventoryCategory, StockMovement, MovementReason } from '@/lib/types'
+import type { FilamentUso } from '@/core/inventory/types'
 import {
   INVENTORY_CATEGORY_LABELS,
   MOVEMENT_REASON_LABELS,
   MOVEMENT_REASONS_BY_TYPE,
+  FILAMENT_USO_LABELS,
 } from '@/lib/types'
 import {
   Plus, Pencil, Trash2, MoreHorizontal, AlertTriangle,
@@ -138,17 +140,18 @@ function ImageUploader({ value, onChange }: { value: string; onChange: (url: str
 
 // ─── Item form ────────────────────────────────────────────────────────────────
 type ItemFormData = {
-  projectId: string
-  category: InventoryCategory
-  name: string
-  sku: string
-  quantity: string
-  unit: string
-  costPrice: string
-  salePrice: string
-  notes: string
-  minStock: string
-  imageUrl: string
+  projectId:   string
+  category:    InventoryCategory
+  name:        string
+  sku:         string
+  quantity:    string
+  unit:        string
+  costPrice:   string
+  salePrice:   string
+  notes:       string
+  minStock:    string
+  imageUrl:    string
+  filamentUso: FilamentUso | ''
 }
 
 function ItemForm({
@@ -164,17 +167,18 @@ function ItemForm({
 }) {
   const [data, setData] = useState<ItemFormData>(
     initial ?? {
-      projectId: projects[0]?.id ?? '',
-      category: 'product',
-      name: '',
-      sku: '',
-      quantity: '1',
-      unit: 'un',
-      costPrice: '',
-      salePrice: '',
-      notes: '',
-      minStock: '2',
-      imageUrl: '',
+      projectId:   projects[0]?.id ?? '',
+      category:    'product',
+      name:        '',
+      sku:         '',
+      quantity:    '1',
+      unit:        'un',
+      costPrice:   '',
+      salePrice:   '',
+      notes:       '',
+      minStock:    '2',
+      imageUrl:    '',
+      filamentUso: '',
     },
   )
 
@@ -218,6 +222,21 @@ function ItemForm({
           </Select>
         </FormField>
       </div>
+
+      {/* Filament use — only shown when category is filament */}
+      {data.category === 'filament' && (
+        <FormField label="Uso do filamento">
+          <Select
+            value={data.filamentUso}
+            onChange={e => setData(p => ({ ...p, filamentUso: e.target.value as FilamentUso | '' }))}
+          >
+            <option value="">Não especificado</option>
+            {Object.entries(FILAMENT_USO_LABELS).map(([k, v]) => (
+              <option key={k} value={k}>{v}</option>
+            ))}
+          </Select>
+        </FormField>
+      )}
 
       <FormField label="Nome do Item">
         <Input
@@ -882,18 +901,19 @@ export default function InventoryPage() {
     dispatch({
       type: 'ADD_INVENTORY',
       payload: {
-        id:        uid(),
-        projectId: data.projectId,
-        category:  data.category,
-        name:      data.name.trim(),
-        sku:       data.sku.trim(),
-        quantity:  parseFloat(data.quantity)  || 0,
-        unit:      data.unit,
-        costPrice: parseFloat(data.costPrice) || 0,
-        salePrice: parseFloat(data.salePrice) || 0,
-        notes:     data.notes.trim(),
-        minStock:  parseInt(data.minStock)    || 2,
-        imageUrl:  data.imageUrl.trim() || undefined,
+        id:          uid(),
+        projectId:   data.projectId,
+        category:    data.category,
+        name:        data.name.trim(),
+        sku:         data.sku.trim(),
+        quantity:    parseFloat(data.quantity)  || 0,
+        unit:        data.unit,
+        costPrice:   parseFloat(data.costPrice) || 0,
+        salePrice:   parseFloat(data.salePrice) || 0,
+        notes:       data.notes.trim(),
+        minStock:    parseInt(data.minStock)    || 2,
+        imageUrl:    data.imageUrl.trim() || undefined,
+        filamentUso: data.category === 'filament' && data.filamentUso ? data.filamentUso : undefined,
       },
     })
   }
@@ -904,17 +924,18 @@ export default function InventoryPage() {
       type: 'UPDATE_INVENTORY',
       payload: {
         ...editing,
-        projectId: data.projectId,
-        category:  data.category,
-        name:      data.name.trim(),
-        sku:       data.sku.trim(),
-        quantity:  parseFloat(data.quantity)  || 0,
-        unit:      data.unit,
-        costPrice: parseFloat(data.costPrice) || 0,
-        salePrice: parseFloat(data.salePrice) || 0,
-        notes:     data.notes.trim(),
-        minStock:  parseInt(data.minStock)    || 2,
-        imageUrl:  data.imageUrl.trim() || undefined,
+        projectId:   data.projectId,
+        category:    data.category,
+        name:        data.name.trim(),
+        sku:         data.sku.trim(),
+        quantity:    parseFloat(data.quantity)  || 0,
+        unit:        data.unit,
+        costPrice:   parseFloat(data.costPrice) || 0,
+        salePrice:   parseFloat(data.salePrice) || 0,
+        notes:       data.notes.trim(),
+        minStock:    parseInt(data.minStock)    || 2,
+        imageUrl:    data.imageUrl.trim() || undefined,
+        filamentUso: data.category === 'filament' && data.filamentUso ? data.filamentUso : undefined,
       },
     })
     setEditing(null)
@@ -1412,17 +1433,18 @@ export default function InventoryPage() {
           <ItemForm
             projects={projects}
             initial={{
-              projectId: editing.projectId,
-              category:  editing.category,
-              name:      editing.name,
-              sku:       editing.sku,
-              quantity:  String(editing.quantity),
-              unit:      editing.unit,
-              costPrice: String(editing.costPrice),
-              salePrice: String(editing.salePrice),
-              notes:     editing.notes,
-              minStock:  String(editing.minStock ?? 2),
-              imageUrl:  editing.imageUrl ?? '',
+              projectId:   editing.projectId,
+              category:    editing.category,
+              name:        editing.name,
+              sku:         editing.sku,
+              quantity:    String(editing.quantity),
+              unit:        editing.unit,
+              costPrice:   String(editing.costPrice),
+              salePrice:   String(editing.salePrice),
+              notes:       editing.notes,
+              minStock:    String(editing.minStock ?? 2),
+              imageUrl:    editing.imageUrl ?? '',
+              filamentUso: editing.filamentUso ?? '',
             }}
             onSave={handleEdit}
             onClose={() => setEditing(null)}
