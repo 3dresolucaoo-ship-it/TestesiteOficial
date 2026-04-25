@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import {
   LayoutDashboard, FolderKanban, ShoppingCart, Printer, Video,
   Lightbulb, TrendingUp, X, Menu, ArrowLeft, ChevronRight, Settings, Package, Boxes, Users, BarChart3,
@@ -83,7 +84,7 @@ function NavLink({ href, label, icon: Icon, onClick, exact = false }: {
 }
 
 // ─── Global sidebar content ───────────────────────────────────────────────────
-function GlobalNav({ onNav }: { onNav?: () => void }) {
+function GlobalNav({ onNav, collapsible = true }: { onNav?: () => void; collapsible?: boolean }) {
   const { state } = useStore()
   const accent = state.config?.brand?.accentColor
   useEffect(() => {
@@ -95,15 +96,19 @@ function GlobalNav({ onNav }: { onNav?: () => void }) {
   const visibleGlobalNav = GLOBAL_NAV.filter(n => n.href !== '/metrics' || metricsEnabled)
 
   const [globalOpen, setGlobalOpen] = useState(() => {
+    if (!collapsible) return true
     if (typeof window === 'undefined') return true
     return localStorage.getItem('sidebar-global-collapsed') !== 'true'
   })
 
   function toggleGlobal() {
+    if (!collapsible) return
     const next = !globalOpen
     setGlobalOpen(next)
     localStorage.setItem('sidebar-global-collapsed', String(!next))
   }
+
+  const showModules = !collapsible || globalOpen
 
   return (
     <div className="flex flex-col flex-1 overflow-y-auto">
@@ -114,22 +119,27 @@ function GlobalNav({ onNav }: { onNav?: () => void }) {
         ))}
       </nav>
       <div className="mt-4 px-2">
-        <button
-          onClick={toggleGlobal}
-          className="flex items-center justify-between w-full px-3 mb-1 group"
-        >
-          <p className="text-[10px] font-semibold uppercase tracking-widest"
+        {collapsible ? (
+          <button
+            onClick={toggleGlobal}
+            className="flex items-center justify-between w-full px-3 mb-1 group"
+          >
+            <p className="text-[10px] font-semibold uppercase tracking-widest"
+               style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
+            <ChevronRight
+              size={11}
+              className="transition-transform duration-200"
+              style={{
+                color: 'var(--t-sidebar-section)',
+                transform: globalOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+              }}
+            />
+          </button>
+        ) : (
+          <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
              style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
-          <ChevronRight
-            size={11}
-            className="transition-transform duration-200"
-            style={{
-              color: 'var(--t-sidebar-section)',
-              transform: globalOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-            }}
-          />
-        </button>
-        {globalOpen && (
+        )}
+        {showModules && (
           <nav className="flex flex-col gap-0.5">
             {visibleModules.map(({ key: _k, ...item }) => (
               <NavLink key={item.href} {...item} onClick={onNav} />
@@ -391,8 +401,8 @@ export function MobileNav() {
         <Menu size={20} />
       </button>
 
-      {mounted && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+      {mounted && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-50">
           {/* Overlay */}
           <div
             className="absolute inset-0 transition-opacity duration-300"
@@ -436,7 +446,7 @@ export function MobileNav() {
               {projectId ? (
                 <ProjectNav projectId={projectId} onNav={closeDrawer} />
               ) : (
-                <GlobalNav onNav={closeDrawer} />
+                <GlobalNav onNav={closeDrawer} collapsible={false} />
               )}
             </div>
             <SidebarFooter />
@@ -453,7 +463,8 @@ export function MobileNav() {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   )
