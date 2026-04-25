@@ -5,6 +5,30 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react'
 
+function AuthLoadingScreen() {
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-[#050508]">
+      <div className="flex flex-col items-center gap-4">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+          style={{ background: 'linear-gradient(135deg,#7c3aed,#6d28d9)', boxShadow: '0 0 30px rgba(124,58,237,0.5)' }}
+        >
+          B
+        </div>
+        <div className="flex items-center gap-1.5">
+          {[0, 1, 2].map(i => (
+            <div
+              key={i}
+              className="w-1.5 h-1.5 rounded-full bg-[#7c3aed]"
+              style={{ animation: `pulse 1.2s ease-in-out ${i * 0.2}s infinite` }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Animated gradient orb ────────────────────────────────────────────────────
 function GlowOrb({ className }: { className?: string }) {
   return (
@@ -32,6 +56,12 @@ export default function LoginPage() {
       router.replace('/dashboard')
     }
   }, [user, authLoading, router])
+
+  // While auth is resolving, don't flash the login form
+  if (authLoading) return <AuthLoadingScreen />
+
+  // If user is logged in, redirect is in flight — blank until it fires
+  if (user) return null
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

@@ -41,7 +41,12 @@
       "Bash(vercel --version)",
       "Bash(npm i *)",
       "mcp__d0953062-de31-423c-b70a-f6d232abf90f__get_deployment",
-      "Bash(gh auth *)"
+      "Bash(gh auth *)",
+      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__get_access_to_vercel_url",
+      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__web_fetch_vercel_url",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
     ]
   }
 }

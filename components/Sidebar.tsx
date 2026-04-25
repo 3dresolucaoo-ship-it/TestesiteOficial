@@ -50,7 +50,7 @@ function NavLink({ href, label, icon: Icon, onClick, exact = false }: {
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+      className="relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 overflow-hidden"
       style={{
         background: active ? 'var(--t-nav-active-bg)' : 'transparent',
         color:      active ? 'var(--t-nav-active-text)' : 'var(--t-nav-inactive)',
@@ -68,9 +68,15 @@ function NavLink({ href, label, icon: Icon, onClick, exact = false }: {
         }
       }}
     >
-      <Icon size={15} strokeWidth={1.5} />
+      {active && (
+        <span
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full"
+          style={{ background: 'var(--t-accent)' }}
+        />
+      )}
+      <Icon size={15} strokeWidth={active ? 2 : 1.5} />
       <span className="truncate">{label}</span>
-      {active && <ChevronRight size={12} className="ml-auto opacity-40" />}
+      {active && <ChevronRight size={12} className="ml-auto opacity-50" />}
     </Link>
   )
 }
@@ -268,12 +274,11 @@ function useProjectContext() {
 
 // ─── Mobile bottom navigation bar ────────────────────────────────────────────
 const BOTTOM_NAV = [
-  { href: '/dashboard',  label: 'Dashboard',  icon: LayoutDashboard },
-  { href: '/metrics',    label: 'Métricas',   icon: BarChart3 },
-  { href: '/projects',   label: 'Projetos',   icon: FolderKanban },
-  { href: '/finance',    label: 'Finanças',   icon: TrendingUp },
-  { href: '/orders',     label: 'Vendas',     icon: ShoppingCart },
-  { href: '/inventory',  label: 'Estoque',    icon: Package },
+  { href: '/dashboard',  label: 'Início',    icon: LayoutDashboard },
+  { href: '/orders',     label: 'Vendas',    icon: ShoppingCart },
+  { href: '/inventory',  label: 'Estoque',   icon: Package },
+  { href: '/products',   label: 'Produtos',  icon: Boxes },
+  { href: '/catalogs',   label: 'Catálogos', icon: Store },
 ]
 
 export function BottomNav() {
@@ -283,21 +288,21 @@ export function BottomNav() {
   if (projectId) return null
 
   return (
-    <nav className="mobile-nav lg:hidden flex items-center justify-around px-1 py-1">
+    <nav className="mobile-nav lg:hidden flex items-center justify-around px-2 py-1">
       {BOTTOM_NAV.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(href + '/')
         return (
           <Link
             key={href}
             href={href}
-            className="flex flex-col items-center gap-0.5 flex-1 py-2 rounded-xl transition-all"
+            className="flex flex-col items-center gap-1 flex-1 py-2 px-1 rounded-xl transition-all duration-200"
             style={{
-              color:      active ? '#a78bfa' : 'var(--t-nav-inactive)',
+              color:      active ? 'var(--t-accent)' : 'var(--t-nav-inactive)',
               background: active ? 'var(--t-accent-soft)' : 'transparent',
             }}
           >
-            <Icon size={18} strokeWidth={active ? 2 : 1.5} />
-            <span className="text-[9px] font-medium">{label}</span>
+            <Icon size={19} strokeWidth={active ? 2.2 : 1.5} />
+            <span className="text-[9.5px] font-medium leading-none">{label}</span>
           </Link>
         )
       })}
@@ -313,8 +318,9 @@ export function Sidebar() {
     <aside
       className="hidden lg:flex flex-col w-56 min-h-screen fixed top-0 left-0 z-30"
       style={{
-        background:  'var(--t-sidebar-bg)',
+        background:  'linear-gradient(180deg, var(--t-accent-soft) 0%, transparent 30%), var(--t-sidebar-bg)',
         borderRight: '1px solid var(--t-sidebar-border)',
+        boxShadow:   '1px 0 0 var(--t-sidebar-border)',
       }}
     >
       {projectId ? (
@@ -329,48 +335,80 @@ export function Sidebar() {
 
 // ─── Mobile Nav ───────────────────────────────────────────────────────────────
 export function MobileNav() {
-  const [open, setOpen] = useState(false)
+  const [open,    setOpen]    = useState(false)
+  const [mounted, setMounted] = useState(false)
   const projectId = useProjectContext()
+
+  function openDrawer() {
+    setMounted(true)
+    // One rAF so the DOM is present before the transition starts
+    requestAnimationFrame(() => requestAnimationFrame(() => setOpen(true)))
+  }
+
+  function closeDrawer() {
+    setOpen(false)
+    setTimeout(() => setMounted(false), 320)
+  }
 
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
-        className="lg:hidden p-2 transition-colors"
+        onClick={openDrawer}
+        className="lg:hidden p-2 rounded-lg transition-colors"
         style={{ color: 'var(--t-nav-inactive)' }}
         onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-text-primary)'}
         onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-nav-inactive)'}
+        aria-label="Abrir menu"
       >
         <Menu size={20} />
       </button>
 
-      {open && (
+      {mounted && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
+          {/* Overlay */}
           <div
-            className="absolute left-0 top-0 bottom-0 w-64 flex flex-col"
+            className="absolute inset-0 transition-opacity duration-300"
+            style={{
+              background: 'rgba(0,0,0,0.6)',
+              backdropFilter: 'blur(2px)',
+              opacity: open ? 1 : 0,
+            }}
+            onClick={closeDrawer}
+          />
+
+          {/* Drawer */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-72 flex flex-col transition-transform duration-300 ease-out"
             style={{
               background:  'var(--t-sidebar-bg)',
               borderRight: '1px solid var(--t-sidebar-border)',
+              transform:   open ? 'translateX(0)' : 'translateX(-100%)',
+              boxShadow:   '4px 0 40px rgba(0,0,0,0.4)',
             }}
           >
-            <div className="flex items-center justify-end p-3"
-                 style={{ borderBottom: '1px solid var(--t-footer-border)' }}>
+            {/* Close button row */}
+            <div
+              className="flex items-center justify-between px-4 py-3"
+              style={{ borderBottom: '1px solid var(--t-footer-border)' }}
+            >
+              <Logo />
               <button
-                onClick={() => setOpen(false)}
-                className="p-1 transition-colors"
+                onClick={closeDrawer}
+                className="p-1.5 rounded-lg transition-colors"
                 style={{ color: 'var(--t-nav-inactive)' }}
                 onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-text-primary)'}
                 onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-nav-inactive)'}
+                aria-label="Fechar menu"
               >
                 <X size={18} />
               </button>
             </div>
+
             <div className="flex-1 overflow-y-auto flex flex-col">
               {projectId ? (
-                <ProjectNav projectId={projectId} onNav={() => setOpen(false)} />
+                <ProjectNav projectId={projectId} onNav={closeDrawer} />
               ) : (
-                <GlobalNav onNav={() => setOpen(false)} />
+                <GlobalNav onNav={closeDrawer} />
               )}
             </div>
             <SidebarFooter />

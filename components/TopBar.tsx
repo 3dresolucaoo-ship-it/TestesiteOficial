@@ -53,54 +53,58 @@ export function TopBar() {
 
   return (
     <header
-      className="sticky top-0 z-40 flex items-center gap-3 px-4 py-3"
+      className="sticky top-0 z-40 flex items-center gap-3 px-4 h-14"
       style={{
-        background:          'var(--t-topbar-bg)',
-        backdropFilter:      'blur(24px)',
-        WebkitBackdropFilter:'blur(24px)',
-        borderBottom:        '1px solid var(--t-topbar-border)',
-        boxShadow:           'var(--t-topbar-shadow)',
+        background:           'var(--t-topbar-bg)',
+        backdropFilter:       'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        borderBottom:         '1px solid var(--t-topbar-border)',
+        boxShadow:            'var(--t-topbar-shadow)',
       }}
     >
       {/* Top accent gradient line */}
       <div
         className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
         style={{
-          background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.5) 30%, rgba(59,130,246,0.4) 70%, transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.4) 25%, rgba(59,130,246,0.35) 75%, transparent)',
         }}
       />
 
       <MobileNav />
 
       <h1
-        className="font-semibold text-sm flex-1"
-        style={{ color: 'var(--t-text-primary)', letterSpacing: '0.01em' }}
+        className="font-semibold text-[15px] flex-1 truncate"
+        style={{ color: 'var(--t-text-primary)', letterSpacing: '0.005em' }}
       >
         {title}
       </h1>
 
       {/* Right side */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
 
         {/* Role badge */}
         {role === 'admin' && (
-          <span className="hidden sm:flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium"
+          <span
+            className="hidden sm:flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold tracking-wide"
             style={{
-              background:  'var(--t-accent-soft)',
-              color:       '#a78bfa',
-              border:      '1px solid rgba(124,58,237,0.2)',
-            }}>
+              background: 'var(--t-accent-soft)',
+              color:      'var(--t-accent)',
+              border:     '1px solid var(--t-accent-glow)',
+            }}
+          >
             Admin
           </span>
         )}
 
         {/* User email */}
         {user && (
-          <div className="hidden sm:flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#10b981]"
-              style={{ boxShadow: '0 0 6px rgba(16,185,129,0.8)' }} />
-            <span className="text-[11px] max-w-[120px] truncate"
-              style={{ color: 'var(--t-text-muted)' }}>
+          <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-lg"
+               style={{ background: 'var(--t-glass-bg)', border: '1px solid var(--t-border)' }}>
+            <div
+              className="w-1.5 h-1.5 rounded-full bg-[#10b981] shrink-0"
+              style={{ boxShadow: '0 0 6px rgba(16,185,129,0.8)' }}
+            />
+            <span className="text-[11px] max-w-[110px] truncate" style={{ color: 'var(--t-text-muted)' }}>
               {user.email}
             </span>
           </div>
@@ -111,11 +115,8 @@ export function TopBar() {
           id="theme-toggle-btn"
           onClick={toggle}
           title={isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
-          className="p-1.5 rounded-lg transition-all"
-          style={{
-            color:      'var(--t-text-secondary)',
-            background: 'transparent',
-          }}
+          className="p-2 rounded-lg transition-all duration-150"
+          style={{ color: 'var(--t-text-secondary)', background: 'transparent' }}
           onMouseEnter={e => {
             (e.currentTarget as HTMLButtonElement).style.background = 'var(--t-hover)'
             ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--t-text-primary)'
@@ -125,21 +126,18 @@ export function TopBar() {
             ;(e.currentTarget as HTMLButtonElement).style.color = 'var(--t-text-secondary)'
           }}
         >
-          {isDark
-            ? <Sun  size={14} strokeWidth={1.8} />
-            : <Moon size={14} strokeWidth={1.8} />
-          }
+          {isDark ? <Sun size={15} strokeWidth={1.8} /> : <Moon size={15} strokeWidth={1.8} />}
         </button>
 
         {/* Sign out */}
         {user && (
           <button
             onClick={() => signOut()}
-            className="p-1.5 rounded-lg transition-all"
-            style={{ color: 'var(--t-text-muted)' }}
+            className="p-2 rounded-lg transition-all duration-150"
+            style={{ color: 'var(--t-text-muted)', background: 'transparent' }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-text-primary)'
-              ;(e.currentTarget as HTMLButtonElement).style.background = 'var(--t-hover)'
+              (e.currentTarget as HTMLButtonElement).style.color = '#ef4444'
+              ;(e.currentTarget as HTMLButtonElement).style.background = 'rgba(239,68,68,0.08)'
             }}
             onMouseLeave={e => {
               (e.currentTarget as HTMLButtonElement).style.color = 'var(--t-text-muted)'
@@ -147,7 +145,7 @@ export function TopBar() {
             }}
             title="Sair"
           >
-            <LogOut size={13} />
+            <LogOut size={14} />
           </button>
         )}
       </div>
