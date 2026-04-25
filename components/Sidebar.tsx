@@ -6,9 +6,10 @@ import { useState, useEffect } from 'react'
 import {
   LayoutDashboard, FolderKanban, ShoppingCart, Printer, Video,
   Lightbulb, TrendingUp, X, Menu, ArrowLeft, ChevronRight, Settings, Package, Boxes, Users, BarChart3,
-  Store, Layers,
+  Store, Layers, LogOut,
 } from 'lucide-react'
 import { useStore } from '@/lib/store'
+import { useAuth } from '@/context/AuthContext'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import { MODULE_CONFIG, getProjectColor } from '@/lib/moduleConfig'
 
@@ -93,6 +94,17 @@ function GlobalNav({ onNav }: { onNav?: () => void }) {
   const visibleModules = GLOBAL_MODULES.filter(m => modCfg ? modCfg[m.key] !== false : true)
   const visibleGlobalNav = GLOBAL_NAV.filter(n => n.href !== '/metrics' || metricsEnabled)
 
+  const [globalOpen, setGlobalOpen] = useState(() => {
+    if (typeof window === 'undefined') return true
+    return localStorage.getItem('sidebar-global-collapsed') !== 'true'
+  })
+
+  function toggleGlobal() {
+    const next = !globalOpen
+    setGlobalOpen(next)
+    localStorage.setItem('sidebar-global-collapsed', String(!next))
+  }
+
   return (
     <div className="flex flex-col flex-1 overflow-y-auto">
       <Logo />
@@ -102,13 +114,28 @@ function GlobalNav({ onNav }: { onNav?: () => void }) {
         ))}
       </nav>
       <div className="mt-4 px-2">
-        <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
-           style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
-        <nav className="flex flex-col gap-0.5">
-          {visibleModules.map(({ key: _k, ...item }) => (
-            <NavLink key={item.href} {...item} onClick={onNav} />
-          ))}
-        </nav>
+        <button
+          onClick={toggleGlobal}
+          className="flex items-center justify-between w-full px-3 mb-1 group"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-widest"
+             style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
+          <ChevronRight
+            size={11}
+            className="transition-transform duration-200"
+            style={{
+              color: 'var(--t-sidebar-section)',
+              transform: globalOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+            }}
+          />
+        </button>
+        {globalOpen && (
+          <nav className="flex flex-col gap-0.5">
+            {visibleModules.map(({ key: _k, ...item }) => (
+              <NavLink key={item.href} {...item} onClick={onNav} />
+            ))}
+          </nav>
+        )}
       </div>
       <div className="mt-4 px-2">
         <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
@@ -338,6 +365,7 @@ export function MobileNav() {
   const [open,    setOpen]    = useState(false)
   const [mounted, setMounted] = useState(false)
   const projectId = useProjectContext()
+  const { signOut, user } = useAuth()
 
   function openDrawer() {
     setMounted(true)
@@ -412,6 +440,18 @@ export function MobileNav() {
               )}
             </div>
             <SidebarFooter />
+            {user && (
+              <div className="px-4 pb-4 pt-2" style={{ borderTop: '1px solid var(--t-footer-border)' }}>
+                <button
+                  onClick={() => { closeDrawer(); signOut() }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-colors text-sm font-medium"
+                  style={{ color: '#ef4444', background: 'rgba(239,68,68,0.08)' }}
+                >
+                  <LogOut size={15} />
+                  Sair da conta
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

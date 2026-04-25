@@ -39,16 +39,14 @@ function GlowOrb({ className }: { className?: string }) {
 }
 
 export default function LoginPage() {
-  const { signIn, signUp, user, loading: authLoading } = useAuth()
+  const { signIn, user, loading: authLoading } = useAuth()
   const router = useRouter()
 
-  const [mode,     setMode]     = useState<'login' | 'register'>('login')
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
   const [showPwd,  setShowPwd]  = useState(false)
   const [loading,  setLoading]  = useState(false)
   const [error,    setError]    = useState<string | null>(null)
-  const [success,  setSuccess]  = useState<string | null>(null)
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -79,14 +77,8 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      if (mode === 'login') {
-        await signIn(email.trim(), password)
-        router.replace('/dashboard')
-      } else {
-        await signUp(email.trim(), password)
-        setSuccess('Conta criada! Verifique seu e-mail para confirmar o cadastro.')
-        setMode('login')
-      }
+      await signIn(email.trim(), password)
+      router.replace('/dashboard')
     } catch (err: unknown) {
       const msg = (err as { message?: string })?.message ?? 'Ocorreu um erro. Tente novamente.'
       // Translate common Supabase error messages
@@ -149,31 +141,8 @@ export default function LoginPage() {
 
             {/* Header */}
             <div className="mb-6">
-              <h1 className="text-[#ebebeb] font-bold text-xl">
-                {mode === 'login' ? 'Bem-vindo de volta' : 'Criar conta'}
-              </h1>
-              <p className="text-[#555555] text-sm mt-1">
-                {mode === 'login'
-                  ? 'Entre para acessar o sistema'
-                  : 'Preencha os dados para criar sua conta'}
-              </p>
-            </div>
-
-            {/* Mode tabs */}
-            <div className="flex bg-[#0a0a0f] rounded-lg p-0.5 border border-[#ffffff08] mb-6">
-              {(['login', 'register'] as const).map(m => (
-                <button
-                  key={m}
-                  onClick={() => { setMode(m); setError(null); setSuccess(null) }}
-                  className={`flex-1 py-2 text-xs font-medium rounded-md transition-all duration-200 ${
-                    mode === m
-                      ? 'bg-[#7c3aed] text-white shadow-[0_0_15px_rgba(124,58,237,0.3)]'
-                      : 'text-[#555555] hover:text-[#888888]'
-                  }`}
-                >
-                  {m === 'login' ? 'Entrar' : 'Cadastrar'}
-                </button>
-              ))}
+              <h1 className="text-[#ebebeb] font-bold text-xl">Bem-vindo de volta</h1>
+              <p className="text-[#555555] text-sm mt-1">Entre para acessar o sistema</p>
             </div>
 
             {/* Form */}
@@ -203,8 +172,8 @@ export default function LoginPage() {
                     type={showPwd ? 'text' : 'password'}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    placeholder={mode === 'register' ? 'Mínimo 6 caracteres' : '••••••••'}
-                    autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
                     required
                     className="w-full bg-[#0a0a0f] border border-[#ffffff10] rounded-xl
                       px-4 pr-12 h-12 text-[#ebebeb] text-sm placeholder:text-[#333333]
@@ -227,11 +196,6 @@ export default function LoginPage() {
                   <p className="text-[#ef4444] text-sm">{error}</p>
                 </div>
               )}
-              {success && (
-                <div className="bg-[#10b9811a] border border-[#10b98133] rounded-xl px-4 py-3">
-                  <p className="text-[#10b981] text-sm">{success}</p>
-                </div>
-              )}
 
               {/* Submit */}
               <button
@@ -250,7 +214,7 @@ export default function LoginPage() {
                   <Loader2 size={16} className="animate-spin" />
                 ) : (
                   <>
-                    {mode === 'login' ? 'Entrar' : 'Criar conta'}
+                    Entrar
                     <ArrowRight size={15} />
                   </>
                 )}
