@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
-import { StoreProvider } from '@/lib/store'
+import { StoreProvider, useStore } from '@/lib/store'
 import { Sidebar, BottomNav } from '@/components/Sidebar'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
+import { AlertTriangle, X } from 'lucide-react'
 
 // ─── Loading screen ───────────────────────────────────────────────────────────
 
@@ -51,6 +52,49 @@ function LoadingScreen() {
           ))}
         </div>
       </div>
+    </div>
+  )
+}
+
+// ─── DB Error Toast ───────────────────────────────────────────────────────────
+
+function DbErrorToast() {
+  const { dbError } = useStore()
+  const [visible, setVisible] = useState(false)
+  const [msg, setMsg]         = useState<string | null>(null)
+
+  useEffect(() => {
+    if (dbError) {
+      setMsg(dbError)
+      setVisible(true)
+      const t = setTimeout(() => setVisible(false), 8000)
+      return () => clearTimeout(t)
+    }
+  }, [dbError])
+
+  if (!visible || !msg) return null
+
+  return (
+    <div
+      className="fixed bottom-20 lg:bottom-6 left-1/2 -translate-x-1/2 z-[9999]
+        flex items-start gap-3 px-4 py-3 rounded-xl shadow-2xl max-w-sm w-[calc(100%-2rem)]"
+      style={{
+        background: 'rgba(239,68,68,0.12)',
+        border:     '1px solid rgba(239,68,68,0.35)',
+        backdropFilter: 'blur(12px)',
+      }}
+    >
+      <AlertTriangle size={16} className="text-[#ef4444] shrink-0 mt-0.5" />
+      <p className="text-[#ef4444] text-xs leading-relaxed flex-1">
+        <span className="font-semibold block mb-0.5">Erro ao salvar</span>
+        {msg}
+      </p>
+      <button
+        onClick={() => setVisible(false)}
+        className="text-[#ef4444] opacity-60 hover:opacity-100 transition-opacity shrink-0"
+      >
+        <X size={13} />
+      </button>
     </div>
   )
 }
@@ -127,6 +171,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
       </div>
       <BottomNav />
+      <DbErrorToast />
     </StoreProvider>
   )
 }

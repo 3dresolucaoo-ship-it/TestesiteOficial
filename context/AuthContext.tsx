@@ -62,23 +62,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Safety timeout: if getSession() hangs for any reason (bad key, CORS,
-    // network failure), we unblock the UI after 5 s instead of loading forever.
+    // Safety timeout: if getSession() hangs (bad key, CORS, network failure,
+    // Supabase cold start), unblock the UI after 12 s instead of loading forever.
+    // We track whether getSession() has already resolved so the timer never
+    // overrides a real "user is logged in" state.
+    let sessionResolved = false
     const safetyTimer = setTimeout(() => {
-      console.warn('[Auth] getSession timed out — unblocking UI')
-      setLoading(false)
-    }, 5000)
+      if (!sessionResolved) {
+        console.warn('[Auth] getSession timed out — unblocking UI (no session confirmed)')
+        setLoading(false)
+        // user stays null → AppShell will redirect to /login (correct safe-fail behavior)
+      }
+    }, 12_000)
 
     // Restore existing session (handles page refresh).
     // setLoading(false) is called IMMEDIATELY after the local session read
     // so the app renders without waiting for the profile network call.
     supabase.auth.getSession().then(({ data: { session } }) => {
+      sessionResolved = true
       clearTimeout(safetyTimer)
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)                                    // ← unblocks the UI instantly
       if (session?.user) loadProfile(session.user.id)    // ← background, no await
     }).catch(err => {
+      sessionResolved = true
       clearTimeout(safetyTimer)
       console.error('[Auth] getSession failed:', err?.message)
       setLoading(false)
