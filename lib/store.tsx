@@ -379,13 +379,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         // loadFromSupabase uses safeLoad per-table, so it always resolves.
         // We never fall back to localStorage here — that would mix mock data
         // with whatever is in Supabase and cause ghost records.
+        const timeout = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), 10_000)
+        )
         try {
-          const data = await loadFromSupabase()
+          const data = await Promise.race([loadFromSupabase(), timeout])
           dispatch({ type: 'HYDRATE', payload: data })
         } catch (err) {
-          // Shouldn't happen (safeLoad absorbs table errors), but guard anyway.
-          console.error('[BVaz] Unexpected Supabase hydration error:', err)
-          setDbError('Erro ao carregar dados do Supabase.')
+          const isTimeout = (err as Error)?.message === 'timeout'
+          console.error('[BVaz] Supabase hydration error:', err)
+          if (!isTimeout) setDbError('Erro ao carregar dados do Supabase.')
         } finally {
           setLoading(false)
         }
