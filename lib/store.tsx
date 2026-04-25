@@ -7,7 +7,7 @@ import {
 import type {
   AppState, Project, Order, ProductionItem, ContentItem, Decision,
   Transaction, Lead, Affiliate, InventoryItem, StockMovement, AdminConfig,
-  Product,
+  Product, Catalog,
 } from './types'
 import { initialData } from './mockData'
 import { isSupabaseConfigured } from './supabaseClient'
@@ -22,6 +22,7 @@ import { leadsService, affiliatesService }    from '@/services/leads'
 import { inventoryService, movementsService } from '@/services/inventory'
 import { configService }                      from '@/services/config'
 import { productsService }                    from '@/services/products'
+import { catalogsService }                    from '@/services/catalogs'
 import { processNewOrder, processOrderUpdate } from '@/core/flows/processOrder'
 
 // ─── Action types ─────────────────────────────────────────────────────────────
@@ -70,6 +71,10 @@ type Action =
   | { type: 'ADD_PRODUCT';    payload: Product }
   | { type: 'UPDATE_PRODUCT'; payload: Product }
   | { type: 'DELETE_PRODUCT'; payload: string }
+  // ── Catalogs
+  | { type: 'ADD_CATALOG';    payload: Catalog }
+  | { type: 'UPDATE_CATALOG'; payload: Catalog }
+  | { type: 'DELETE_CATALOG'; payload: string }
   // ── System
   | { type: 'HYDRATE'; payload: AppState }
 
@@ -102,6 +107,7 @@ const EMPTY_STATE: AppState = {
   movements:    [],
   config:       DEFAULT_ADMIN_CONFIG,
   products:     [],
+  catalogs:     [],
 }
 
 // ─── Reducer (pure — no side-effects) ────────────────────────────────────────
@@ -115,6 +121,7 @@ function reducer(state: AppState, action: Action): AppState {
         ...action.payload,
         config:   action.payload.config   ?? DEFAULT_ADMIN_CONFIG,
         products: action.payload.products ?? [],
+        catalogs: action.payload.catalogs ?? [],
       }
 
     case 'ADD_PROJECT':    return { ...state, projects: [...state.projects, action.payload] }
@@ -174,6 +181,10 @@ function reducer(state: AppState, action: Action): AppState {
     case 'UPDATE_PRODUCT': return { ...state, products: up(state.products, action.payload) }
     case 'DELETE_PRODUCT': return { ...state, products: rm(state.products, action.payload) }
 
+    case 'ADD_CATALOG':    return { ...state, catalogs: [...state.catalogs, action.payload] }
+    case 'UPDATE_CATALOG': return { ...state, catalogs: up(state.catalogs, action.payload) }
+    case 'DELETE_CATALOG': return { ...state, catalogs: rm(state.catalogs, action.payload) }
+
     default: return state
   }
 }
@@ -184,26 +195,27 @@ function reducer(state: AppState, action: Action): AppState {
 async function loadFromSupabase(): Promise<AppState> {
   const [
     projects, orders, production, content, decisions,
-    transactions, leads, affiliates, inventory, movements, config, products,
+    transactions, leads, affiliates, inventory, movements, config, products, catalogs,
   ] = await Promise.all([
-    safeLoad(() => projectsService.getAll(),     [],   'projects'),
-    safeLoad(() => ordersService.getAll(),        [],   'orders'),
-    safeLoad(() => productionService.getAll(),    [],   'production'),
-    safeLoad(() => contentService.getAll(),       [],   'content'),
-    safeLoad(() => decisionsService.getAll(),     [],   'decisions'),
-    safeLoad(() => transactionsService.getAll(),  [],   'transactions'),
-    safeLoad(() => leadsService.getAll(),         [],   'leads'),
-    safeLoad(() => affiliatesService.getAll(),    [],   'affiliates'),
-    safeLoad(() => inventoryService.getAll(),     [],   'inventory'),
-    safeLoad(() => movementsService.getAll(),     [],   'movements'),
-    safeLoad(() => configService.get(),           null, 'config'),
-    safeLoad(() => productsService.getAll(),      [],   'products'),
+    safeLoad(() => projectsService.getAll(),          [],   'projects'),
+    safeLoad(() => ordersService.getAll(),             [],   'orders'),
+    safeLoad(() => productionService.getAll(),         [],   'production'),
+    safeLoad(() => contentService.getAll(),            [],   'content'),
+    safeLoad(() => decisionsService.getAll(),          [],   'decisions'),
+    safeLoad(() => transactionsService.getAll(),       [],   'transactions'),
+    safeLoad(() => leadsService.getAll(),              [],   'leads'),
+    safeLoad(() => affiliatesService.getAll(),         [],   'affiliates'),
+    safeLoad(() => inventoryService.getAll(),          [],   'inventory'),
+    safeLoad(() => movementsService.getAll(),          [],   'movements'),
+    safeLoad(() => configService.get(),                null, 'config'),
+    safeLoad(() => productsService.getAll(),           [],   'products'),
+    safeLoad(() => catalogsService.listCatalogs(),     [],   'catalogs'),
   ])
   return {
     projects, orders, production, content, decisions,
     transactions, leads, affiliates, inventory, movements,
     config: config ?? DEFAULT_ADMIN_CONFIG,
-    products,
+    products, catalogs,
   }
 }
 
@@ -313,9 +325,20 @@ async function syncAction(
     }
 
     // Products
-    case 'ADD_PRODUCT':    await productsService.create(action.payload); break
+    case 'ADD_PRODUCT': {
+      const created = await productsService.create(action.payload)
+      // Remove the optimistic entry (local uid) and replace with the real DB product (uuid)
+      rawDispatch({ type: 'DELETE_PRODUCT', payload: action.payload.id })
+      rawDispatch({ type: 'ADD_PRODUCT',    payload: created })
+      break
+    }
     case 'UPDATE_PRODUCT': await productsService.update(action.payload); break
     case 'DELETE_PRODUCT': await productsService.delete(action.payload); break
+
+    // Catalogs
+    case 'ADD_CATALOG':    await catalogsService.createCatalog(action.payload); break
+    case 'UPDATE_CATALOG': await catalogsService.updateCatalog(action.payload); break
+    case 'DELETE_CATALOG': await catalogsService.deleteCatalog(action.payload); break
 
     // HYDRATE is read-only — no write needed
     case 'HYDRATE': break

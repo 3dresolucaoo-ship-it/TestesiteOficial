@@ -139,4 +139,7 @@ export const initialData: AppState = {
 
   // ─── Products (print templates) ─────────────────────────────────────────────
   products: [],
+
+  // ─── Catalogs ────────────────────────────────────────────────────────────────
+  catalogs: [],
 }

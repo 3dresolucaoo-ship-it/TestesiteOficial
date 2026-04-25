@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import {
   LayoutDashboard, FolderKanban, ShoppingCart, Printer, Video,
   Lightbulb, TrendingUp, X, Menu, ArrowLeft, ChevronRight, Settings, Package, Boxes, Users, BarChart3,
+  Store, Layers,
 } from 'lucide-react'
 import { useStore } from '@/lib/store'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
@@ -27,6 +28,11 @@ const GLOBAL_MODULES: Array<{ href: string; label: string; icon: React.ElementTy
   { href: '/production', label: 'Produção',       icon: Printer,      key: 'production' },
   { href: '/content',    label: 'Conteúdo',       icon: Video,        key: 'content' },
   { href: '/decisions',  label: 'Decisões',       icon: Lightbulb,    key: 'decisions' },
+]
+
+const VITRINE_NAV = [
+  { href: '/catalogs',   label: 'Catálogos',  icon: Store },
+  { href: '/portfolios', label: 'Portfólios', icon: Layers },
 ]
 
 const GLOBAL_SYSTEM = [
@@ -94,6 +100,15 @@ function GlobalNav({ onNav }: { onNav?: () => void }) {
            style={{ color: 'var(--t-sidebar-section)' }}>Global</p>
         <nav className="flex flex-col gap-0.5">
           {visibleModules.map(({ key: _k, ...item }) => (
+            <NavLink key={item.href} {...item} onClick={onNav} />
+          ))}
+        </nav>
+      </div>
+      <div className="mt-4 px-2">
+        <p className="text-[10px] font-semibold uppercase tracking-widest px-3 mb-1"
+           style={{ color: 'var(--t-sidebar-section)' }}>Vitrine</p>
+        <nav className="flex flex-col gap-0.5">
+          {VITRINE_NAV.map(item => (
             <NavLink key={item.href} {...item} onClick={onNav} />
           ))}
         </nav>

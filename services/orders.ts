@@ -6,18 +6,24 @@ import type { Order }      from '@/lib/types'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fromDB(r: any): Order {
   return {
-    id:              r.id,
-    projectId:       r.project_id,
-    clientName:      r.client_name,
-    origin:          r.origin,
-    item:            r.item,
-    value:           Number(r.value),
-    status:          r.status,
-    date:            r.date,
-    inventoryItemId: r.inventory_item_id ?? undefined,
-    qtyUsed:         r.qty_used      != null ? Number(r.qty_used)       : undefined,
-    productId:       r.product_id        ?? undefined,
-    productionCost:  r.production_cost != null ? Number(r.production_cost) : undefined,
+    id:               r.id,
+    projectId:        r.project_id,
+    clientName:       r.client_name,
+    origin:           r.origin,
+    item:             r.item,
+    value:            Number(r.value),
+    status:           r.status,
+    date:             r.date,
+    inventoryItemId:  r.inventory_item_id  ?? undefined,
+    qtyUsed:          r.qty_used      != null ? Number(r.qty_used)       : undefined,
+    productId:        r.product_id         ?? undefined,
+    productionCost:   r.production_cost != null ? Number(r.production_cost) : undefined,
+    // e-commerce fields
+    source:           r.source            ?? undefined,
+    catalogSlug:      r.catalog_slug      ?? undefined,
+    paymentId:        r.payment_id        ?? undefined,
+    paymentStatus:    r.payment_status    ?? undefined,
+    customerWhatsapp: r.customer_whatsapp ?? undefined,
   }
 }
 
@@ -31,11 +37,17 @@ function toDB(o: Order, userId: string) {
     value:             o.value,
     status:            o.status,
     date:              o.date,
-    inventory_item_id: o.inventoryItemId ?? null,
-    qty_used:          o.qtyUsed         ?? null,
-    product_id:        o.productId       ?? null,
-    production_cost:   o.productionCost  ?? null,
+    inventory_item_id: o.inventoryItemId  ?? null,
+    qty_used:          o.qtyUsed          ?? null,
+    product_id:        o.productId        ?? null,
+    production_cost:   o.productionCost   ?? null,
     user_id:           userId,
+    // e-commerce fields
+    source:            o.source            ?? null,
+    catalog_slug:      o.catalogSlug       ?? null,
+    payment_id:        o.paymentId         ?? null,
+    payment_status:    o.paymentStatus     ?? null,
+    customer_whatsapp: o.customerWhatsapp  ?? null,
   }
 }
 

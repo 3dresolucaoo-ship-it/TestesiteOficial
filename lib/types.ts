@@ -3,6 +3,8 @@ export type { AdminConfig } from '@/core/admin/config'
 export { DEFAULT_ADMIN_CONFIG } from '@/core/admin/config'
 
 export type { Product } from '@/core/products/types'
+export type { Catalog } from '@/core/catalog/types'
+export type { Portfolio, PortfolioItem } from '@/core/portfolio/types'
 
 export type { ProjectModule, ProjectType } from '@/core/shared/types'
 export { PROJECT_MODULES_BY_TYPE } from '@/core/shared/types'
@@ -38,8 +40,10 @@ export interface Project {
 }
 
 // ─── Orders ───────────────────────────────────────────────────────────────────
-export type OrderStatus = 'lead' | 'quote_sent' | 'paid' | 'delivered'
-export type OrderOrigin = 'whatsapp' | 'instagram' | 'facebook' | 'other'
+export type OrderStatus        = 'lead' | 'quote_sent' | 'paid' | 'delivered'
+export type OrderOrigin        = 'whatsapp' | 'instagram' | 'facebook' | 'other'
+export type OrderSource        = 'manual' | 'catalog'
+export type OrderPaymentStatus = 'pending' | 'paid' | 'failed'
 
 export interface Order {
   id: string
@@ -56,6 +60,18 @@ export interface Order {
   productId?: string
   /** Production cost locked in at order creation time (R$). */
   productionCost?: number
+
+  // ── Campos de e-commerce (preenchidos quando source = 'catalog') ──────────
+  /** 'manual' = criado pelo admin | 'catalog' = gerado via checkout público */
+  source?: OrderSource
+  /** Slug do catálogo de origem */
+  catalogSlug?: string
+  /** ID único do pagamento no gateway — garante idempotência */
+  paymentId?: string
+  /** Status do pagamento no gateway */
+  paymentStatus?: OrderPaymentStatus
+  /** WhatsApp do comprador (capturado no checkout público) */
+  customerWhatsapp?: string
 }
 
 // ─── Production ───────────────────────────────────────────────────────────────
@@ -113,6 +129,7 @@ import type { Lead, Affiliate } from '@/core/crm/types'
 import type { InventoryItem, StockMovement } from '@/core/inventory/types'
 import type { AdminConfig } from '@/core/admin/config'
 import type { Product } from '@/core/products/types'
+import type { Catalog } from '@/core/catalog/types'
 
 export interface AppState {
   projects:     Project[]
@@ -127,4 +144,5 @@ export interface AppState {
   movements:    StockMovement[]
   config:       AdminConfig
   products:     Product[]
+  catalogs:     Catalog[]
 }

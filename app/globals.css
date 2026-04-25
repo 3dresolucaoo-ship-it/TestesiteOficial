@@ -16,15 +16,15 @@
 :root {
   --t-bg:        #dce7f7;
   --t-surface:   #f4f8ff;
-  --t-elevated:  #cfddf2;
-  --t-hover:     #bccfec;
+  --t-elevated:  hsl(216, 57%, 88%);
+  --t-hover:     #a0c4ff;
 
   --t-border:        rgba(30,64,175,0.14);
   --t-border-mid:    rgba(30,64,175,0.22);
   --t-border-strong: rgba(30,64,175,0.34);
 
   --t-text-primary:   #061024;
-  --t-text-secondary: #223555;
+  --t-text-secondary: #000000;
   --t-text-muted:     #556c90;
 
   --t-accent:      #2563eb;
@@ -32,16 +32,16 @@
   --t-accent-glow: rgba(37,99,235,0.22);
 
   --t-glass-bg:    rgba(255,255,255,0.65);
-  --t-glass-border:rgba(37,99,235,0.10);
+  --t-glass-border:rgba(37, 100, 235, 0.732);
   --t-glass-strong:rgba(255,255,255,0.88);
 
   --t-card-from:  rgba(255,255,255,0.94);
   --t-card-to:    rgba(235,242,255,0.78);
-  --t-card-border:rgba(37,99,235,0.12);
+  --t-card-border:rgba(119, 157, 237, 0.61);
   --t-card-shadow:0 4px 22px rgba(15,40,95,0.08), inset 0 1px 0 rgba(255,255,255,1);
   --t-card-hover-shadow: 0 14px 44px rgba(15,40,95,0.14), 0 0 30px rgba(37,99,235,0.14);
 
-  --t-sidebar-bg:      #f5f8fd;
+  --t-sidebar-bg:      #acc9fb;
   --t-sidebar-border:  rgba(37,99,235,0.10);
   --t-sidebar-section: #8397b5;
   --t-nav-inactive:    #4c6485;
@@ -50,8 +50,8 @@
   --t-footer-border:   rgba(37,99,235,0.08);
   --t-footer-text:     #8397b5;
 
-  --t-topbar-bg:     rgba(238,243,251,0.82);
-  --t-topbar-border: rgba(37,99,235,0.08);
+  --t-topbar-bg:     rgba(167, 201, 255, 0.82);
+  --t-topbar-border: rgba(99, 145, 245, 0.08);
   --t-topbar-shadow: 0 1px 0 rgba(37,99,235,0.05), 0 4px 20px rgba(15,40,95,0.05);
 
   --t-mobile-bg:     rgba(245,248,253,0.96);

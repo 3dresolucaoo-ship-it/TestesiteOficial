@@ -640,7 +640,7 @@ function ProductCard({
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function ProductsPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, dbError } = useStore()
   const [creating, setCreating] = useState(false)
   const [editing,  setEditing]  = useState<Product | null>(null)
   const [filterProject, setFilterProject] = useState('all')
@@ -735,6 +735,14 @@ export default function ProductsPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-5">
+
+      {/* ── DB error banner ─────────────────────────────────────────────────── */}
+      {dbError && (
+        <div className="flex items-start gap-3 bg-[#ef44440d] border border-[#ef444433] rounded-xl px-4 py-3">
+          <AlertTriangle size={15} className="text-[#ef4444] mt-0.5 shrink-0" />
+          <p className="text-[#ef4444] text-sm">{dbError}</p>
+        </div>
+      )}
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between flex-wrap gap-3">

@@ -322,3 +322,35 @@ CREATE POLICY "config_own" ON config
 -- ALTER PUBLICATION supabase_realtime ADD TABLE transactions;
 -- ALTER PUBLICATION supabase_realtime ADD TABLE inventory;
 -- ALTER PUBLICATION supabase_realtime ADD TABLE movements;
+
+-- ─── Catalogs (public product/portfolio pages) ────────────────────────────────
+CREATE TABLE IF NOT EXISTS catalogs (
+  id             text          PRIMARY KEY,
+  user_id        uuid          REFERENCES auth.users(id) ON DELETE CASCADE,
+  project_id     text          NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+  name           text          NOT NULL,
+  slug           text          NOT NULL,
+  mode           text          NOT NULL DEFAULT 'catalog',
+  product_ids    text[]        NOT NULL DEFAULT '{}',
+  logo_url       text,
+  whatsapp       text,
+  portfolio_slug text,
+  is_public      boolean       NOT NULL DEFAULT false,
+  created_at     timestamptz   NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS catalogs_slug_idx ON catalogs(slug);
+ALTER TABLE catalogs ADD COLUMN IF NOT EXISTS user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE;
+CREATE INDEX IF NOT EXISTS catalogs_user_id_idx ON catalogs(user_id);
+
+ALTER TABLE catalogs ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "catalogs_own"         ON catalogs;
+DROP POLICY IF EXISTS "catalogs_public_read" ON catalogs;
+
+-- Authenticated users manage their own catalogs (admin CRUD)
+CREATE POLICY "catalogs_own" ON catalogs
+  FOR ALL USING (auth.uid() = user_id);
+
+-- Anonymous users can read catalogs where is_public = true (public page)
+CREATE POLICY "catalogs_public_read" ON catalogs
+  FOR SELECT USING (is_public = true);

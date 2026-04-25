@@ -1,221 +1,168 @@
 /**
- * POST /api/webhooks/payment
+ * POST /api/webhooks/payment?merchant=<merchantId>
  *
- * Generic payment webhook — handles both Stripe and Mercado Pago notifications.
- * The provider is detected automatically from request headers / body shape.
+ * Generic payment webhook — delegates signature verification and payload parsing
+ * to the active PaymentProvider for the given merchant (resolved from DB config).
  *
- * Supported providers:
- *   • Stripe   — "stripe-signature" header present
- *   • Mercado Pago — "x-signature" + "x-request-id" headers present
+ * URL pattern:
+ *   For Mercado Pago: set `notification_url` in the preference to include
+ *     ?merchant=<user_id> so each merchant's webhook is routed here correctly.
+ *   For Stripe: register the webhook URL in the Stripe dashboard with the same
+ *     ?merchant=<user_id> query param.
  *
- * Both providers ultimately call processNewOrder() so all side effects
- * (transaction creation, inventory decrement, production task) are identical.
+ * Security:
+ *   - merchantId read from URL ?merchant= param (not from body — prevents spoofing)
+ *   - Provider verifies the gateway signature before reading any payload
+ *   - metadata.merchantId is verified to match the URL param (cross-merchant check)
  *
- * Environment variables:
- *   STRIPE_WEBHOOK_SECRET        — Stripe signing secret
- *   MP_WEBHOOK_SECRET            — Mercado Pago webhook secret (HMAC-SHA256)
- *   MP_ACCESS_TOKEN              — Mercado Pago access token (to look up payment)
+ * Side effects on approved payment:
+ *   - Order created (source='catalog', status='paid', paymentStatus='paid')
+ *   - Production task created (if productId set)
+ *   - Finance transaction created
+ *   - Inventory NOT decremented (happens when production → done)
+ *
+ * Always returns 200 { received: true } to prevent gateway retries on logic errors.
+ * Only returns non-200 on invalid signature (which the gateway should retry).
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createHmac }              from 'crypto'
-import { constructWebhookEvent }   from '@/core/integrations/stripe'
-import { processNewOrder }         from '@/core/flows/processOrder'
-import { productsService }         from '@/services/products'
-import type { Order, OrderOrigin } from '@/lib/types'
-import type Stripe                 from 'stripe'
+import { getPaymentProvider }        from '@/services/payments'
+import { processNewOrderAdmin }      from '@/core/flows/processOrderAdmin'
+import { getSupabaseAdmin }          from '@/lib/supabaseAdmin'
+import type { Order }                from '@/lib/types'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function uid() {
-  return Math.random().toString(36).slice(2, 10)
+  return `order-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`
 }
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10)
 }
 
-// ─── Mercado Pago signature verification ──────────────────────────────────────
-// Docs: https://www.mercadopago.com.br/developers/pt/docs/your-integrations/notifications/webhooks
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function verifyMercadoPagoSignature(
-  rawBody:    Buffer,
-  xSignature: string,
-  xRequestId: string,
-): boolean {
-  const secret = process.env.MP_WEBHOOK_SECRET
-  if (!secret) return false
+// Supabase user IDs are UUIDs — validate format to reject obviously invalid values
+// (typos, injection attempts, mis-configured webhook URLs).
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
-  // The signature template: id:{ts}.{requestId}
-  const parts     = xSignature.split(',').reduce<Record<string, string>>((acc, part) => {
-    const [k, v] = part.split('=')
-    if (k && v) acc[k.trim()] = v.trim()
-    return acc
-  }, {})
-  const ts  = parts['ts']
-  const v1  = parts['v1']
-  if (!ts || !v1) return false
-
-  const message  = `id:${ts};request-id:${xRequestId};`
-  const expected = createHmac('sha256', secret).update(message).digest('hex')
-
-  return expected === v1
-}
-
-// ─── Mercado Pago — fetch payment data ────────────────────────────────────────
-
-interface MPPayment {
-  id:              number
-  status:          string
-  transaction_amount: number
-  payer?:          { email?: string; first_name?: string; last_name?: string }
-  metadata?:       Record<string, string>
-  date_approved?:  string
-}
-
-async function fetchMPPayment(paymentId: string): Promise<MPPayment | null> {
-  const token = process.env.MP_ACCESS_TOKEN
-  if (!token) return null
-
-  const res = await fetch(
-    `https://api.mercadopago.com/v1/payments/${paymentId}`,
-    { headers: { Authorization: `Bearer ${token}` } },
-  )
-  if (!res.ok) {
-    console.error('[PaymentWebhook] MP fetch payment failed', res.status, await res.text())
-    return null
-  }
-  return res.json() as Promise<MPPayment>
+function isValidUUID(value: string): boolean {
+  return UUID_RE.test(value)
 }
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
 
 export async function POST(req: NextRequest) {
-  const rawBody    = Buffer.from(await req.arrayBuffer())
-  const stripeHdr  = req.headers.get('stripe-signature')
-  const mpSig      = req.headers.get('x-signature')
-  const mpReqId    = req.headers.get('x-request-id')
+  // ── 1. Validate merchantId from URL ───────────────────────────────────────
+  // merchantId identifies which merchant's payment config to load.
+  // Must be a valid UUID — rejects mis-configured or tampered webhook URLs.
+  const merchantId = req.nextUrl.searchParams.get('merchant')
 
-  // ── Stripe ────────────────────────────────────────────────────────────────
-  if (stripeHdr) {
-    let event: Stripe.Event
-    try {
-      event = constructWebhookEvent(rawBody, stripeHdr)
-    } catch (err) {
-      console.error('[PaymentWebhook/Stripe] Signature verification failed:', err)
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
-    }
-
-    if (event.type === 'checkout.session.completed') {
-      const session    = event.data.object as Stripe.Checkout.Session
-      const productId  = session.metadata?.bvaz_product_id
-      const quantity   = parseInt(session.metadata?.bvaz_quantity ?? '1', 10)
-      const clientName = session.metadata?.bvaz_client || 'Cliente Stripe'
-
-      if (!productId) {
-        console.warn('[PaymentWebhook/Stripe] Missing bvaz_product_id', session.id)
-        return NextResponse.json({ received: true })
-      }
-
-      const product = await productsService.getById(productId)
-      if (!product) {
-        console.error('[PaymentWebhook/Stripe] Product not found:', productId)
-        return NextResponse.json({ received: true })
-      }
-
-      const totalBRL = (session.amount_total ?? 0) / 100
-      const order: Order = {
-        id:         uid(),
-        projectId:  product.projectId,
-        clientName,
-        origin:     'other' as OrderOrigin,
-        item:       quantity > 1 ? `${product.name} × ${quantity}` : product.name,
-        value:      totalBRL,
-        status:     'paid',
-        date:       todayISO(),
-        productId:  product.id,
-      }
-
-      try {
-        await processNewOrder(order)
-        console.info('[PaymentWebhook/Stripe] Order created:', order.id)
-      } catch (err) {
-        console.error('[PaymentWebhook/Stripe] processNewOrder failed:', err)
-        return NextResponse.json({ error: 'Failed to process order' }, { status: 500 })
-      }
-    }
-
+  if (!merchantId) {
+    console.warn('[webhook/payment] Missing ?merchant= query param')
     return NextResponse.json({ received: true })
   }
 
-  // ── Mercado Pago ──────────────────────────────────────────────────────────
-  if (mpSig && mpReqId) {
-    if (process.env.MP_WEBHOOK_SECRET) {
-      const valid = verifyMercadoPagoSignature(rawBody, mpSig, mpReqId)
-      if (!valid) {
-        console.error('[PaymentWebhook/MP] Signature verification failed')
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
-      }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let body: any
-    try {
-      body = JSON.parse(rawBody.toString())
-    } catch {
-      return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
-    }
-
-    // MP sends type=payment, action=payment.created/updated
-    if (body.type === 'payment' && body.data?.id) {
-      const payment = await fetchMPPayment(String(body.data.id))
-
-      if (!payment || payment.status !== 'approved') {
-        console.info('[PaymentWebhook/MP] Payment not approved or not found:', body.data.id)
-        return NextResponse.json({ received: true })
-      }
-
-      const productId  = payment.metadata?.bvaz_product_id
-      const clientName = payment.payer?.first_name
-        ? `${payment.payer.first_name} ${payment.payer.last_name ?? ''}`.trim()
-        : payment.payer?.email ?? 'Cliente Mercado Pago'
-
-      if (!productId) {
-        console.warn('[PaymentWebhook/MP] Missing bvaz_product_id in payment.metadata', payment.id)
-        return NextResponse.json({ received: true })
-      }
-
-      const product = await productsService.getById(productId)
-      if (!product) {
-        console.error('[PaymentWebhook/MP] Product not found:', productId)
-        return NextResponse.json({ received: true })
-      }
-
-      const order: Order = {
-        id:         uid(),
-        projectId:  product.projectId,
-        clientName,
-        origin:     'other' as OrderOrigin,
-        item:       product.name,
-        value:      payment.transaction_amount,
-        status:     'paid',
-        date:       todayISO(),
-        productId:  product.id,
-      }
-
-      try {
-        await processNewOrder(order)
-        console.info('[PaymentWebhook/MP] Order created:', order.id)
-      } catch (err) {
-        console.error('[PaymentWebhook/MP] processNewOrder failed:', err)
-        return NextResponse.json({ error: 'Failed to process order' }, { status: 500 })
-      }
-    }
-
+  if (!isValidUUID(merchantId)) {
+    console.warn(`[webhook/payment] Invalid merchantId format (not a UUID): ${merchantId}`)
     return NextResponse.json({ received: true })
   }
 
-  // Unknown provider
-  console.warn('[PaymentWebhook] Unknown provider — no recognized headers')
-  return NextResponse.json({ error: 'Unknown payment provider' }, { status: 400 })
+  // ── 2. Read raw body (required for signature verification) ─────────────────
+  const rawBody = Buffer.from(await req.arrayBuffer())
+
+  // ── 3. Resolve provider and parse webhook ──────────────────────────────────
+  // bypassCache: true — always read fresh credentials in webhook context
+  let payload
+  try {
+    const provider = await getPaymentProvider(merchantId, { bypassCache: true })
+    payload = await provider.parseWebhook(rawBody, req.headers)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error(`[webhook/payment] Provider error | merchantId=${merchantId} | ${msg}`)
+    // Return 500 so the gateway retries (provider may be temporarily unavailable)
+    return NextResponse.json({ error: 'Provider error' }, { status: 500 })
+  }
+
+  // ── 4. Ignore non-approved or non-payment events ───────────────────────────
+  if (!payload) {
+    // Event type we don't handle (e.g. pending, refund, test ping) — ack silently
+    return NextResponse.json({ received: true })
+  }
+
+  if (payload.status !== 'approved') {
+    console.info(
+      `[webhook/payment] Non-approved status ignored | status=${payload.status} | paymentId=${payload.paymentId} | merchantId=${merchantId}`,
+    )
+    return NextResponse.json({ received: true })
+  }
+
+  // ── 5. Cross-merchant security check ──────────────────────────────────────
+  // Ensures a payment from merchant A cannot be processed under merchant B's config.
+  if (payload.metadata.merchantId && payload.metadata.merchantId !== merchantId) {
+    console.warn(
+      `[webhook/payment] merchantId mismatch — possible spoofing attempt. ` +
+      `URL merchantId=${merchantId} | metadata merchantId=${payload.metadata.merchantId} | paymentId=${payload.paymentId}`,
+    )
+    return NextResponse.json({ received: true })
+  }
+
+  const { metadata } = payload
+
+  // ── 6. Look up product for name and sale_price ─────────────────────────────
+  // Needed to populate order.item and order.value correctly.
+  const admin = getSupabaseAdmin()
+  const { data: product } = await admin
+    .from('products')
+    .select('name, sale_price')
+    .eq('id', metadata.productId)
+    .maybeSingle()
+
+  const productName = product?.name ?? metadata.productId
+  // Use stored sale_price × quantity as canonical value (not payment amount)
+  // so the order value is always consistent with the product configuration.
+  const orderValue = product
+    ? Number(product.sale_price) * metadata.quantity
+    : 0
+
+  // ── 7. Build Order ─────────────────────────────────────────────────────────
+  // All required metadata fields from the WebhookPayload are mapped here.
+  const order: Order = {
+    id:               uid(),
+    projectId:        metadata.projectId,
+    clientName:       metadata.customerName,
+    origin:           'other',          // catalog sales have no social-media origin
+    item:             metadata.quantity > 1
+                        ? `${productName} × ${metadata.quantity}`
+                        : productName,
+    value:            orderValue,
+    status:           'paid',           // order is created only after payment approved
+    date:             todayISO(),
+    // product link
+    productId:        metadata.productId  || undefined,
+    qtyUsed:          Math.max(1, metadata.quantity || 1),  // safe default — point 4
+    // e-commerce fields (points 2 & 3)
+    source:           'catalog',
+    catalogSlug:      metadata.catalogSlug  || undefined,
+    paymentId:        payload.paymentId,
+    paymentStatus:    'paid',
+    customerWhatsapp: metadata.whatsapp    || undefined,
+  }
+
+  // ── 8. Persist order + side effects ───────────────────────────────────────
+  // processNewOrderAdmin handles idempotency internally — safe to call even if
+  // the gateway retries the same event.
+  try {
+    await processNewOrderAdmin(order, merchantId)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error(
+      `[webhook/payment] processNewOrderAdmin failed | paymentId=${payload.paymentId} | merchantId=${merchantId} | ${msg}`,
+    )
+    // Return 500 so the gateway retries — processNewOrderAdmin is idempotent
+    return NextResponse.json({ error: 'Failed to process order' }, { status: 500 })
+  }
+
+  return NextResponse.json({ received: true })
 }

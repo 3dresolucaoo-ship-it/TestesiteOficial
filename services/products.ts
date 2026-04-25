@@ -65,13 +65,25 @@ export const productsService = {
     return data ? fromDB(data) : null
   },
 
-  async create(p: Product): Promise<void> {
+  async create(p: Product): Promise<Product> {
     validateRequired('productsService.create', {
-      id: p.id, projectId: p.projectId, name: p.name,
+      projectId: p.projectId, name: p.name,
     })
     const userId = await requireUserId()
-    const { error } = await supabase.from('products').insert(toDB(p, userId))
-    if (error) serviceError('productsService.create', error)
+    const { id: _ignored, ...rowWithoutId } = toDB(p, userId)
+
+    console.log('CREATE PRODUCT PAYLOAD', rowWithoutId)
+
+    const { data, error } = await supabase
+      .from('products')
+      .insert(rowWithoutId)
+      .select()
+      .single()
+    if (error) {
+      console.error('[products.create] ERRO DO SUPABASE:', JSON.stringify(error))
+      serviceError('productsService.create', error)
+    }
+    return fromDB(data!)
   },
 
   async update(p: Product): Promise<void> {

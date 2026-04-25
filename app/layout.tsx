@@ -20,23 +20,9 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 }
 
-/* Inline script prevents flash-of-wrong-theme before React hydrates */
-const themeScript = `
-try {
-  var t = localStorage.getItem('bvaz-theme');
-  document.documentElement.classList.add(t === 'light' ? 'light' : 'dark');
-} catch(e) {
-  document.documentElement.classList.add('dark');
-}
-`
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${geist.variable} dark`} suppressHydrationWarning>
-      <head>
-        {/* Run before first paint to avoid FOUC */}
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <ThemeProvider>
           <AuthProvider>
