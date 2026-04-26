@@ -284,6 +284,137 @@ export function RevenueLineChart({
   )
 }
 
+// ─── Vertical bar chart (e.g. revenue per project) ───────────────────────────
+export function VerticalBarChart({
+  rows,
+  height = 180,
+}: {
+  rows:    Array<{ label: string; value: number; color?: string }>
+  height?: number
+}) {
+  if (rows.length === 0) {
+    return (
+      <div className="flex items-center justify-center" style={{ height }}>
+        <p className="text-[#444455] text-xs">Sem dados</p>
+      </div>
+    )
+  }
+  const max = Math.max(...rows.map(r => r.value), 1)
+  return (
+    <div className="w-full">
+      <div className="flex items-end gap-3" style={{ height }}>
+        {rows.slice(0, 8).map((row, i) => {
+          const pct = (row.value / max) * 100
+          const color = row.color ?? '#a78bfa'
+          return (
+            <div key={`${row.label}-${i}`} className="flex-1 flex flex-col items-center gap-2 min-w-0">
+              <span className="text-[#f0f0f5] text-[10px] font-semibold tabular-nums opacity-80">
+                {fmtShort(row.value)}
+              </span>
+              <div className="w-full flex items-end" style={{ height: height - 40 }}>
+                <div
+                  className="w-full rounded-t-md transition-all duration-700 ease-out"
+                  style={{
+                    height: `${Math.max(pct, 3)}%`,
+                    background: `linear-gradient(180deg, ${color} 0%, ${color}66 100%)`,
+                    boxShadow: `0 0 16px ${color}40`,
+                  }}
+                  title={`${row.label}: ${fmtShort(row.value)}`}
+                />
+              </div>
+              <span className="text-[#8888a0] text-[10px] truncate w-full text-center">{row.label}</span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ─── Donut chart ──────────────────────────────────────────────────────────────
+export function DonutChart({
+  segments,
+  size = 160,
+  centerLabel,
+  centerValue,
+}: {
+  segments:     Array<{ label: string; value: number; color: string }>
+  size?:        number
+  centerLabel?: string
+  centerValue?: string
+}) {
+  const total = segments.reduce((s, x) => s + Math.max(0, x.value), 0)
+  const radius = size / 2 - 12
+  const circumference = 2 * Math.PI * radius
+  const cx = size / 2
+  const cy = size / 2
+
+  let offset = 0
+
+  if (total <= 0) {
+    return (
+      <div className="flex items-center justify-center" style={{ width: size, height: size }}>
+        <p className="text-[#444455] text-xs">Sem dados</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex items-center gap-5">
+      <div className="relative shrink-0" style={{ width: size, height: size }}>
+        <svg width={size} height={size} className="-rotate-90">
+          <circle
+            cx={cx} cy={cy} r={radius}
+            fill="none"
+            stroke="rgba(255,255,255,0.04)"
+            strokeWidth={14}
+          />
+          {segments.map((seg, i) => {
+            const pct = seg.value / total
+            const dash = pct * circumference
+            const el = (
+              <circle
+                key={i}
+                cx={cx} cy={cy} r={radius}
+                fill="none"
+                stroke={seg.color}
+                strokeWidth={14}
+                strokeLinecap="round"
+                strokeDasharray={`${dash} ${circumference - dash}`}
+                strokeDashoffset={-offset}
+                style={{
+                  filter: `drop-shadow(0 0 6px ${seg.color}80)`,
+                  transition: 'stroke-dasharray 0.7s ease-out',
+                }}
+              />
+            )
+            offset += dash
+            return el
+          })}
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          {centerLabel && <span className="text-[#555566] text-[10px] uppercase tracking-wider">{centerLabel}</span>}
+          {centerValue && <span className="text-[#f0f0f5] text-base font-bold tabular-nums">{centerValue}</span>}
+        </div>
+      </div>
+
+      <div className="flex-1 min-w-0 space-y-2">
+        {segments.map((seg, i) => {
+          const pct = (seg.value / total) * 100
+          return (
+            <div key={i} className="flex items-center gap-2 text-xs">
+              <span className="w-2 h-2 rounded-full shrink-0"
+                style={{ backgroundColor: seg.color, boxShadow: `0 0 6px ${seg.color}80` }} />
+              <span className="text-[#8888a0] truncate flex-1">{seg.label}</span>
+              <span className="text-[#f0f0f5] font-semibold tabular-nums">{pct.toFixed(0)}%</span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ─── Mini sparkline (area chart) for dashboard ────────────────────────────────
 export function Sparkline({
   data,
