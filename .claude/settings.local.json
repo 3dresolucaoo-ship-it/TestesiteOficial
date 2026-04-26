@@ -49,7 +49,9 @@
       "Skill(update-config:*)",
       "Bash(node -e \"const f = require\\('fs'\\).readFileSync\\('.claude/settings.local.json','utf8'\\); const j = JSON.parse\\(f\\); console.log\\(j.hooks.Stop[0].hooks[0].command\\)\")",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__list_deployments"
     ]
   },
   "hooks": {
