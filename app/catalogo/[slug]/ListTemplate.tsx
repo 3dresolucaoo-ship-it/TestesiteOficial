@@ -16,7 +16,7 @@ export function ListTemplate({ products, showPrice, catalogSlug, stockMap }: Pro
         const stockQty = p.inventoryItemId ? stockMap[p.id] : undefined
         const noStock  = stockQty === 0
         const hasImg   = Boolean(p.imageUrl)
-        const disabled = noStock || p.salePrice <= 0
+        const noPrice  = p.salePrice <= 0
 
         return (
           <div
@@ -85,7 +85,7 @@ export function ListTemplate({ products, showPrice, catalogSlug, stockMap }: Pro
                     </span>
                   ) : (
                     <span className="text-xs italic" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                      Indisponível
+                      Sem preço definido
                     </span>
                   )}
                 </div>
@@ -95,17 +95,25 @@ export function ListTemplate({ products, showPrice, catalogSlug, stockMap }: Pro
             {/* Buy button (desktop) */}
             {showPrice && (
               <div className="pr-4 hidden sm:block flex-shrink-0">
-                {disabled ? (
+                {noPrice ? (
                   <span
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold"
                     style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.25)', cursor: 'not-allowed' }}
                   >
                     Indisponível
                   </span>
+                ) : noStock ? (
+                  <a
+                    href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}&encomenda=1`}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-90"
+                    style={{ background: 'linear-gradient(135deg, #1e40af, #3b82f6)', color: '#fff', boxShadow: '0 2px 12px rgba(59,130,246,0.3)' }}
+                  >
+                    Solicitar
+                  </a>
                 ) : (
                   <a
                     href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-90"
                     style={{ background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', color: '#fff', boxShadow: '0 2px 12px rgba(124,58,237,0.3)' }}
                   >
                     Comprar

@@ -5,27 +5,28 @@ import { CheckoutForm }     from './CheckoutForm'
 export default async function CheckoutPage({
   searchParams,
 }: {
-  searchParams: Promise<{ productId?: string; catalogSlug?: string; qty?: string }>
+  searchParams: Promise<{ productId?: string; catalogSlug?: string; qty?: string; encomenda?: string }>
 }) {
-  const { productId, catalogSlug, qty } = await searchParams
+  const { productId, catalogSlug, qty, encomenda } = await searchParams
+  const isEncomenda = encomenda === '1'
 
   if (!productId || !catalogSlug) notFound()
 
   const admin = getSupabaseAdmin()
 
-  // Fetch product (name + price only — never trust client-supplied price)
   const { data: product } = await admin
     .from('products')
     .select('id, name, sale_price')
     .eq('id', productId)
     .maybeSingle()
 
-  if (!product || Number(product.sale_price ?? 0) <= 0) notFound()
+  // Encomenda permite sale_price = 0 (produto sem preço ainda)
+  if (!product) notFound()
+  if (!isEncomenda && Number(product.sale_price ?? 0) <= 0) notFound()
 
-  // Fetch catalog (must be public)
   const { data: catalog } = await admin
     .from('catalogs')
-    .select('id, name')
+    .select('id, name, whatsapp')
     .eq('slug', catalogSlug)
     .eq('is_public', true)
     .maybeSingle()
@@ -38,10 +39,12 @@ export default async function CheckoutPage({
     <CheckoutForm
       productId={productId}
       productName={product.name}
-      salePrice={Number(product.sale_price)}
+      salePrice={Number(product.sale_price ?? 0)}
       catalogSlug={catalogSlug}
       catalogName={catalog.name}
+      catalogWhatsapp={catalog.whatsapp ?? undefined}
       initialQty={initialQty}
+      isEncomenda={isEncomenda}
     />
   )
 }
