@@ -7,7 +7,24 @@ export function ShareButton() {
   const [copied, setCopied] = useState(false)
 
   function handleCopy() {
-    navigator.clipboard.writeText(window.location.href)
+    const url = window.location.href
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      }).catch(() => fallback(url))
+    } else {
+      fallback(url)
+    }
+  }
+
+  function fallback(url: string) {
+    const el = document.createElement('textarea')
+    el.value = url
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
