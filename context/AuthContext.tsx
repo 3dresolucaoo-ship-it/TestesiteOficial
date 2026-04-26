@@ -134,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
     setUser(null)
     setSession(null)
     setRole(null)
