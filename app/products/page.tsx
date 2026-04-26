@@ -680,6 +680,31 @@ export default function ProductsPage() {
     ? statsWithOrders.reduce((s, p) => s + p.avgMargin, 0) / statsWithOrders.length
     : 0
 
+  // Se o usuário não preencheu preço manual, usa custo + margem como sale_price
+  function resolvePrice(data: FormData): number {
+    const manual = parseFloat(data.salePrice) || 0
+    if (manual > 0) return manual
+    const filamentItems = data.inventoryItemId
+      ? inventory.filter(i => i.id === data.inventoryItemId)
+      : []
+    const breakdown = calcUnitCost(
+      {
+        id: '', projectId: '', name: '', notes: '',
+        materialGrams:     parseFloat(data.materialGrams)     || 0,
+        printTimeHours:    parseFloat(data.printTimeHours)    || 0,
+        failureRate:       (parseFloat(data.failureRate)      || 0) / 100,
+        energyCostPerHour: parseFloat(data.energyCostPerHour) || 0.5,
+        supportCost:       parseFloat(data.supportCost)       || 0,
+        marginPercentage:  (parseFloat(data.marginPercentage) || 30) / 100,
+        salePrice:         0,
+        inventoryItemId:   data.inventoryItemId || undefined,
+      },
+      filamentItems,
+    )
+    const margin = (parseFloat(data.marginPercentage) || 30) / 100
+    return Math.round(breakdown.totalCost * (1 + margin) * 100) / 100
+  }
+
   function handleCreate(data: FormData) {
     dispatch({
       type: 'ADD_PRODUCT',
@@ -693,7 +718,7 @@ export default function ProductsPage() {
         energyCostPerHour: parseFloat(data.energyCostPerHour) || 0.5,
         supportCost:       parseFloat(data.supportCost)       || 0,
         marginPercentage:  (parseFloat(data.marginPercentage) || 30) / 100,
-        salePrice:         parseFloat(data.salePrice)         || 0,
+        salePrice:         resolvePrice(data),
         inventoryItemId:   data.inventoryItemId || undefined,
         notes:             data.notes.trim(),
         imageUrl:          data.imageUrl || undefined,
@@ -715,7 +740,7 @@ export default function ProductsPage() {
         energyCostPerHour: parseFloat(data.energyCostPerHour) || 0.5,
         supportCost:       parseFloat(data.supportCost)       || 0,
         marginPercentage:  (parseFloat(data.marginPercentage) || 30) / 100,
-        salePrice:         parseFloat(data.salePrice)         || 0,
+        salePrice:         resolvePrice(data),
         inventoryItemId:   data.inventoryItemId || undefined,
         notes:             data.notes.trim(),
         imageUrl:          data.imageUrl || undefined,
