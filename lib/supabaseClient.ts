@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL  ?? ''
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
@@ -7,14 +7,10 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey)
 
 /**
- * Supabase browser client.
- *
- * The client is always instantiated so it can be imported at module level,
- * but all actual query calls must be guarded by `isSupabaseConfigured`.
- * When env vars are missing we pass a placeholder URL so the constructor
- * does not throw during static build/SSR.
+ * Supabase browser client (uses @supabase/ssr so auth is stored in cookies,
+ * not localStorage — this lets the middleware read the session server-side).
  */
-export const supabase = createClient(
+export const supabase = createBrowserClient(
   supabaseUrl  || 'https://placeholder.supabase.co',
   supabaseKey  || 'placeholder-anon-key',
 )
