@@ -162,7 +162,7 @@ function ListTemplate({
                     </span>
                   ) : (
                     <span className="text-xs italic" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                      Preço a consultar
+                      Indisponível
                     </span>
                   )}
                 </div>
@@ -172,21 +172,33 @@ function ListTemplate({
             {/* Buy button (desktop) */}
             {showPrice && (
               <div className="pr-4 hidden sm:block flex-shrink-0">
-                <a
-                  href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all"
-                  style={{
-                    background: noStock
-                      ? 'rgba(255,255,255,0.05)'
-                      : 'linear-gradient(135deg, #7c3aed, #6d28d9)',
-                    color:     noStock ? 'rgba(255,255,255,0.25)' : '#fff',
-                    cursor:    noStock ? 'not-allowed' : 'pointer',
-                    pointerEvents: noStock ? 'none' : 'auto',
-                    boxShadow: noStock ? 'none' : '0 2px 12px rgba(124,58,237,0.3)',
-                  }}
-                >
-                  {noStock ? 'Indisponível' : 'Comprar'}
-                </a>
+                {(() => {
+                  const disabled = noStock || p.salePrice <= 0
+                  return disabled ? (
+                    <span
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold"
+                      style={{
+                        background: 'rgba(255,255,255,0.05)',
+                        color:      'rgba(255,255,255,0.25)',
+                        cursor:     'not-allowed',
+                      }}
+                    >
+                      Indisponível
+                    </span>
+                  ) : (
+                    <a
+                      href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all"
+                      style={{
+                        background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+                        color:      '#fff',
+                        boxShadow:  '0 2px 12px rgba(124,58,237,0.3)',
+                      }}
+                    >
+                      Comprar
+                    </a>
+                  )
+                })()}
               </div>
             )}
           </div>
@@ -243,7 +255,7 @@ function MinimalTemplate({
             </div>
 
             <div className="flex items-center gap-3 flex-shrink-0">
-              {showPrice && p.salePrice > 0 && (
+              {showPrice && (p.salePrice > 0 ? (
                 <span
                   className="text-base font-bold"
                   style={{
@@ -254,8 +266,12 @@ function MinimalTemplate({
                 >
                   R$ {p.salePrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
-              )}
-              {showPrice && !noStock && (
+              ) : (
+                <span className="text-xs italic" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                  Indisponível
+                </span>
+              ))}
+              {showPrice && !noStock && p.salePrice > 0 && (
                 <a
                   href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
                   className="flex items-center justify-center w-8 h-8 rounded-xl transition-all"

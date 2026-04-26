@@ -119,9 +119,9 @@ export function ProductCard({ product, showPrice, catalogSlug, stockQty }: Props
           </div>
         )}
 
-        {showPrice && product.salePrice === 0 && (
+        {showPrice && product.salePrice <= 0 && (
           <p className="text-xs italic" style={{ color: 'rgba(255,255,255,0.25)' }}>
-            Preço a consultar
+            Indisponível
           </p>
         )}
 
@@ -140,7 +140,7 @@ export function ProductCard({ product, showPrice, catalogSlug, stockQty }: Props
         <div className="flex-1" />
 
         {showPrice && (
-          <BuyButton productId={product.id} catalogSlug={catalogSlug} outOfStock={noStock} />
+          <BuyButton productId={product.id} catalogSlug={catalogSlug} outOfStock={noStock || product.salePrice <= 0} />
         )}
       </div>
     </div>
