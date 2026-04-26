@@ -47,7 +47,9 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/)",
       "Skill(update-config)",
       "Skill(update-config:*)",
-      "Bash(node -e \"const f = require\\('fs'\\).readFileSync\\('.claude/settings.local.json','utf8'\\); const j = JSON.parse\\(f\\); console.log\\(j.hooks.Stop[0].hooks[0].command\\)\")"
+      "Bash(node -e \"const f = require\\('fs'\\).readFileSync\\('.claude/settings.local.json','utf8'\\); const j = JSON.parse\\(f\\); console.log\\(j.hooks.Stop[0].hooks[0].command\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   },
   "hooks": {
