@@ -75,20 +75,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }, 12_000)
 
-    // Restore existing session (handles page refresh).
-    // setLoading(false) is called IMMEDIATELY after the local session read
-    // so the app renders without waiting for the profile network call.
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Validate session against Supabase server (getUser makes a network round-trip,
+    // unlike getSession which reads the local cookie without verifying expiry).
+    // This ensures client and middleware use the same auth source of truth.
+    supabase.auth.getUser().then(async ({ data: { user: validUser } }) => {
       sessionResolved = true
       clearTimeout(safetyTimer)
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)                                    // ← unblocks the UI instantly
-      if (session?.user) loadProfile(session.user.id)    // ← background, no await
+      if (validUser) {
+        const { data: { session } } = await supabase.auth.getSession()
+        setSession(session)
+        setUser(validUser)
+        loadProfile(validUser.id)    // ← background, no await
+      } else {
+        setSession(null)
+        setUser(null)
+      }
+      setLoading(false)
     }).catch(err => {
       sessionResolved = true
       clearTimeout(safetyTimer)
-      console.error('[Auth] getSession failed:', err?.message)
+      console.error('[Auth] getUser failed:', err?.message)
       setLoading(false)
     })
 
@@ -128,12 +134,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const signOut = useCallback(async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) console.error('[Auth] signOut failed:', error.message)
+  const signOut = useCallback(() => {
     setUser(null)
     setSession(null)
     setRole(null)
+    supabase.auth.signOut().catch(err =>
+      console.error('[Auth] signOut cleanup failed:', err?.message)
+    )
+    window.location.replace('/login')
   }, [])
 
   return (

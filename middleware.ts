@@ -55,7 +55,11 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
   } catch {
-    // On any middleware error, pass through to avoid breaking all pages
+    if (!isPublicPath(request.nextUrl.pathname)) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/login'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse
