@@ -160,6 +160,7 @@ function ProductForm({
     },
   )
   const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pendingProductId = useRef<string>(uid())
 
@@ -170,12 +171,19 @@ function ProductForm({
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
-    if (!file || !isSupabaseConfigured) return
+    if (!file) return
+    if (!isSupabaseConfigured) {
+      setUploadError('Supabase não configurado.')
+      return
+    }
     setUploading(true)
+    setUploadError(null)
     try {
       const url = await productsService.uploadImage(pendingProductId.current, file)
       setData(p => ({ ...p, imageUrl: url }))
     } catch (err) {
+      const msg = (err as { message?: string })?.message ?? 'Erro ao enviar imagem.'
+      setUploadError(msg)
       console.error('[uploadImage]', err)
     } finally {
       setUploading(false)
@@ -355,6 +363,9 @@ function ProductForm({
             className="hidden"
             onChange={handleImageUpload}
           />
+          {uploadError && (
+            <p className="text-xs text-red-400 mt-1">{uploadError}</p>
+          )}
         </div>
       )}
 
