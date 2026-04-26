@@ -88,27 +88,30 @@ function ProjectForm({ initial, onSave, onClose }: { initial?: FormData; onSave:
 }
 
 export function ProjectsView({ initialProjects }: { initialProjects: Project[] }) {
-  const { state, loading, dispatch } = useStore()
+  const { state, dispatch } = useStore()
+  const [projects, setProjects] = useState(initialProjects)
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<Project | null>(null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
 
-  // Use SSR data while the store hydrates, then seamlessly switch to live store state
-  const projects = loading ? initialProjects : state.projects
-
   function handleCreate(data: FormData) {
     const modules = PROJECT_MODULES_BY_TYPE[data.type]
-    dispatch({ type: 'ADD_PROJECT', payload: { id: uid(), ...data, modules } })
+    const newProject = { id: uid(), ...data, modules }
+    setProjects(prev => [...prev, newProject])
+    dispatch({ type: 'ADD_PROJECT', payload: newProject })
   }
 
   function handleEdit(data: FormData) {
     if (!editing) return
     const modules = PROJECT_MODULES_BY_TYPE[data.type]
-    dispatch({ type: 'UPDATE_PROJECT', payload: { ...editing, ...data, modules } })
+    const updated = { ...editing, ...data, modules }
+    setProjects(prev => prev.map(p => p.id === editing.id ? updated : p))
+    dispatch({ type: 'UPDATE_PROJECT', payload: updated })
     setEditing(null)
   }
 
   function handleDelete(id: string) {
+    setProjects(prev => prev.filter(p => p.id !== id))
     dispatch({ type: 'DELETE_PROJECT', payload: id })
     setMenuOpen(null)
   }
