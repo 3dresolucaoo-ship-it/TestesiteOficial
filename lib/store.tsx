@@ -393,19 +393,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function hydrate() {
       if (isSupabaseConfigured) {
-        // loadFromSupabase uses safeLoad per-table, so it always resolves.
-        // We never fall back to localStorage here — that would mix mock data
-        // with whatever is in Supabase and cause ghost records.
-        const timeout = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('timeout')), 10_000)
-        )
+        // loadFromSupabase uses safeLoad per-table, so it always resolves —
+        // never throws. HYDRATE must always fire so pages don't render the
+        // pre-hydration EMPTY_STATE as if it were real data after F5.
         try {
-          const data = await Promise.race([loadFromSupabase(), timeout])
+          const data = await loadFromSupabase()
           dispatch({ type: 'HYDRATE', payload: data })
         } catch (err) {
-          const isTimeout = (err as Error)?.message === 'timeout'
           console.error('[BVaz] Supabase hydration error:', err)
-          if (!isTimeout) setDbError('Erro ao carregar dados do Supabase.')
+          setDbError('Erro ao carregar dados do Supabase.')
+          dispatch({ type: 'HYDRATE', payload: EMPTY_STATE })
         } finally {
           setLoading(false)
         }

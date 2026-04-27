@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  createContext, useContext, useEffect, useState, useCallback,
+  createContext, useContext, useEffect, useState, useCallback, useRef,
   type ReactNode,
 } from 'react'
 import type { User, Session, AuthError } from '@supabase/supabase-js'
@@ -70,8 +70,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const safetyTimer = setTimeout(() => {
       if (!sessionResolved) {
         console.warn('[Auth] getSession timed out — unblocking UI (no session confirmed)')
+        // role left as 'user' so admin-gated paths fall through to redirect
+        // instead of getting stuck in <LoadingScreen /> forever.
+        setRole('user')
         setLoading(false)
-        // user stays null → AppShell will redirect to /login (correct safe-fail behavior)
       }
     }, 12_000)
 
@@ -134,13 +136,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const signingOutRef = useRef(false)
   const signOut = useCallback(async () => {
+    // Idempotent guard so rapid double-clicks don't race the auth.signOut() call
+    // (which was the cause of "had to click logout multiple times after F5").
+    if (signingOutRef.current) return
+    signingOutRef.current = true
+    try {
+      // Wait for Supabase to clear cookies BEFORE redirecting. If we cleared
+      // local state first and signOut failed, cookies would survive and the
+      // next F5 would resurrect the session.
+      await supabase.auth.signOut()
+    } catch (err) {
+      console.error('[Auth] signOut failed:', (err as Error)?.message)
+    }
     setUser(null)
     setSession(null)
     setRole(null)
-    try { await supabase.auth.signOut() } catch (err) {
-      console.error('[Auth] signOut cleanup failed:', (err as Error)?.message)
-    }
     window.location.replace('/login')
   }, [])
 
