@@ -7,6 +7,7 @@ import { StoreProvider, useStore } from '@/lib/store'
 import { Sidebar, BottomNav } from '@/components/Sidebar'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import { AlertTriangle, X } from 'lucide-react'
+import type { AppState } from '@/lib/types'
 
 // ─── Loading screen ───────────────────────────────────────────────────────────
 
@@ -109,7 +110,15 @@ const ADMIN_PATHS = ['/settings']
 
 // ─── App Shell ────────────────────────────────────────────────────────────────
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  initialState,
+}: {
+  children: ReactNode
+  /** SSR-fetched store state injected by RootLayout. Eliminates the F5 flash
+   *  of empty data on pages that read directly from useStore(). */
+  initialState?: AppState | null
+}) {
   const { user, role, loading } = useAuth()
   const pathname                = usePathname()
   const router                  = useRouter()
@@ -162,7 +171,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (isSupabaseConfigured && isAdminPath && role !== 'admin') return null
 
   return (
-    <StoreProvider>
+    <StoreProvider initialState={initialState}>
       <Sidebar />
       <div className="sidebar-content flex flex-col min-h-screen">
         <TopBar />

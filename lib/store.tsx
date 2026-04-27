@@ -378,11 +378,23 @@ const StoreContext = createContext<CtxType | null>(null)
 const STORAGE_KEY  = 'bvaz-hub-v2'
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-export function StoreProvider({ children }: { children: ReactNode }) {
-  // When Supabase is configured start with blank state so users never see stale
-  // mock data flickering before real data arrives from the database.
-  const [state, dispatch]     = useReducer(reducer, isSupabaseConfigured ? EMPTY_STATE : initialData)
-  const [loading, setLoading] = useState(isSupabaseConfigured)   // true only when we have a DB to load from
+export function StoreProvider({
+  children,
+  initialState,
+}: {
+  children: ReactNode
+  /** SSR-fetched state injected by the root layout. When provided, the client
+   *  starts already populated and skips the async hydration step entirely —
+   *  pages that read `state` directly never see a flash of EMPTY_STATE. */
+  initialState?: AppState | null
+}) {
+  // SSR state takes priority. Falls back to EMPTY_STATE when Supabase is
+  // configured (so users never see stale mock data) or to mock initialData
+  // for local-only mode.
+  const seed = initialState ?? (isSupabaseConfigured ? EMPTY_STATE : initialData)
+  const [state, dispatch] = useReducer(reducer, seed)
+  // Loading is false when we already have SSR state — there is nothing to wait for.
+  const [loading, setLoading] = useState(isSupabaseConfigured && !initialState)
   const [dbError, setDbError] = useState<string | null>(null)
 
   // Stable ref so syncDispatch closure is never stale
@@ -391,13 +403,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   // ── Hydration ──────────────────────────────────────────────────────────────
   useEffect(() => {
+    // SSR already populated the store — skip client-side hydration entirely.
+    if (initialState) return
     async function hydrate() {
       if (isSupabaseConfigured) {
-        // loadFromSupabase uses safeLoad per-table, so it always resolves —
-        // never throws. HYDRATE must always fire so pages don't render the
-        // pre-hydration EMPTY_STATE as if it were real data after F5.
+        // Race against a fallback timer that RESOLVES (not rejects) with
+        // EMPTY_STATE. Whichever wins, HYDRATE always fires and loading
+        // always becomes false — pages never get stuck in `if (loading)
+        // return null` and never render the pre-hydration empty state as
+        // if it were real data.
+        const fallback = new Promise<AppState>(resolve =>
+          setTimeout(() => {
+            console.warn('[BVaz] hydration timed out — committing empty state')
+            resolve(EMPTY_STATE)
+          }, 15_000),
+        )
         try {
-          const data = await loadFromSupabase()
+          const data = await Promise.race([loadFromSupabase(), fallback])
           dispatch({ type: 'HYDRATE', payload: data })
         } catch (err) {
           console.error('[BVaz] Supabase hydration error:', err)
@@ -416,6 +438,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
     }
     hydrate()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ── localStorage persistence (local-only mode — never runs when Supabase configured) ──

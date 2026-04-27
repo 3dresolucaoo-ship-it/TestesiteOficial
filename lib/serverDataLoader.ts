@@ -1,4 +1,4 @@
-import type { AppState, Project, Transaction, Order, ProductionItem, InventoryItem, Lead, ContentItem, Catalog } from './types'
+import type { AppState, Project, Transaction, Order, ProductionItem, InventoryItem, Lead, Affiliate, ContentItem, Decision, StockMovement, Catalog } from './types'
 import type { Product } from '@/core/products/types'
 import { DEFAULT_ADMIN_CONFIG } from '@/core/admin/config'
 import { createServerClient } from './supabaseServer'
@@ -12,14 +12,17 @@ export async function loadInitialState(
   supabase: DbClient,
   userId:   string,
 ): Promise<AppState> {
-  const [p, tx, ord, prod, inv, lds, cnt, prods, cats, cfg] = await Promise.all([
+  const [p, tx, ord, prod, inv, lds, aff, cnt, dec, mvs, prods, cats, cfg] = await Promise.all([
     supabase.from('projects').select('*').eq('user_id', userId).order('created_at'),
     supabase.from('transactions').select('*').eq('user_id', userId).order('date', { ascending: false }),
     supabase.from('orders').select('*').eq('user_id', userId).order('date', { ascending: false }),
     supabase.from('production').select('*').eq('user_id', userId),
     supabase.from('inventory').select('*').eq('user_id', userId).order('name'),
     supabase.from('leads').select('*').eq('user_id', userId),
+    supabase.from('affiliates').select('*').eq('user_id', userId),
     supabase.from('content').select('*').eq('user_id', userId),
+    supabase.from('decisions').select('*').eq('user_id', userId).order('date', { ascending: false }),
+    supabase.from('movements').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
     supabase.from('products').select('*').eq('user_id', userId).order('name'),
     supabase.from('catalogs').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
     supabase.from('config').select('data').eq('user_id', userId).maybeSingle(),
@@ -158,9 +161,39 @@ export async function loadInitialState(
       createdAt:     r.created_at,
     })),
 
-    decisions:  [],
-    affiliates: [],
-    movements:  [],
+    decisions: safe(dec.data).map((r): Decision => ({
+      id:        r.id,
+      projectId: r.project_id,
+      decision:  r.decision,
+      impact:    r.impact ?? '',
+      date:      r.date,
+      status:    r.status,
+    })),
+
+    affiliates: safe(aff.data).map((r): Affiliate => ({
+      id:         r.id,
+      projectId:  r.project_id,
+      name:       r.name,
+      platform:   r.platform   ?? '',
+      code:       r.code       ?? '',
+      totalSales: Number(r.total_sales ?? 0),
+      commission: Number(r.commission  ?? 15),
+      status:     r.status,
+      date:       r.date,
+    })),
+
+    movements: safe(mvs.data).map((r): StockMovement => ({
+      id:        r.id,
+      projectId: r.project_id,
+      itemId:    r.item_id,
+      type:      r.type,
+      quantity:  Number(r.quantity),
+      reason:    r.reason,
+      orderId:   r.order_id ?? undefined,
+      date:      r.date,
+      notes:     r.notes ?? '',
+    })),
+
     config: cfg.data?.data
       ? { ...DEFAULT_ADMIN_CONFIG, ...(cfg.data.data as object) }
       : DEFAULT_ADMIN_CONFIG,
