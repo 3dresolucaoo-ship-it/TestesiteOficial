@@ -41,9 +41,10 @@ const MODULE_ICONS: Partial<Record<ProjectModule, React.ElementType>> = {
 export default function ProjectDashboardPage() {
   const params = useParams()
   const projectId = params.projectId as string
-  const { state } = useStore()
+  const { state, loading } = useStore()
 
   const project = state.projects.find(p => p.id === projectId)
+  if (loading) return null
   if (!project) return (
     <div className="max-w-4xl mx-auto py-24 text-center space-y-4">
       <p className="text-[#ebebeb] text-lg font-semibold">Projeto não encontrado</p>

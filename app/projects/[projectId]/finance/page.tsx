@@ -98,7 +98,7 @@ function TxForm({ initial, onSave, onClose }: {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ProjectFinancePage() {
   const { projectId } = useParams() as { projectId: string }
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<Transaction | null>(null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
@@ -169,6 +169,7 @@ export default function ProjectFinancePage() {
     ? Object.entries(EXPENSE_CATEGORY_LABELS)
     : Object.entries(ALL_LABELS)
 
+  if (loading) return null
   return (
     <div className="max-w-4xl mx-auto space-y-5">
 

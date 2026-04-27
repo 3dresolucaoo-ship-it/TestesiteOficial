@@ -98,7 +98,7 @@ function ContentForm({ projects, initial, onSave, onClose }: {
 }
 
 export default function ContentPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<ContentItem | null>(null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
@@ -134,6 +134,7 @@ export default function ContentPage() {
   const totalViews = byProject.filter(c => c.status === 'posted').reduce((s, c) => s + c.views, 0)
   const totalLeads = byProject.filter(c => c.status === 'posted').reduce((s, c) => s + c.leads, 0)
 
+  if (loading) return null
   return (
     <div className="max-w-4xl mx-auto space-y-5">
       <div className="flex items-center justify-between">

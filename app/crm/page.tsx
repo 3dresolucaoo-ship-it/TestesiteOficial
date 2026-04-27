@@ -141,7 +141,7 @@ function deriveClients(orders: Order[], leads: Lead[]): Client[] {
 type Tab = 'pipeline' | 'clients'
 
 export default function GlobalCrmPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [tab,         setTab]         = useState<Tab>('pipeline')
   const [view,        setView]        = useState<'list' | 'kanban'>('kanban')
   const [filterProj,  setFilterProj]  = useState<string>('all')
@@ -202,6 +202,7 @@ export default function GlobalCrmPage() {
 
   const fmt = (v: number) => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
 
+  if (loading) return null
   return (
     <div className="max-w-6xl mx-auto space-y-5">
       {/* Header */}

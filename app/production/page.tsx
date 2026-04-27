@@ -275,7 +275,7 @@ function ProductionForm({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ProductionPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [creating,      setCreating]      = useState(false)
   const [editing,       setEditing]       = useState<ProductionItem | null>(null)
   const [menuOpen,      setMenuOpen]      = useState<string | null>(null)
@@ -388,6 +388,7 @@ export default function ProductionPage() {
 
   const totalEstimatedHours = active.reduce((s, p) => s + p.estimatedHours, 0)
 
+  if (loading) return null
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="max-w-4xl mx-auto space-y-5">

@@ -28,7 +28,7 @@ function daysAgo(n: number): string {
 }
 
 export default function MetricsPage() {
-  const { state } = useStore()
+  const { state, loading } = useStore()
   const [period, setPeriod] = useState<Period>('30d')
   const [projectId, setProjectId] = useState<string>('all')
 
@@ -129,6 +129,7 @@ export default function MetricsPage() {
     'all': 'Tudo',
   }
 
+  if (loading) return null
   return (
     <div className="max-w-6xl mx-auto space-y-5">
       {/* Header */}

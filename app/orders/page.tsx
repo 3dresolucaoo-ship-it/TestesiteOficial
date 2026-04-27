@@ -297,7 +297,7 @@ function OrderForm({ projects, inventory, products, initial, onSave, onClose }: 
 const ALL = 'all'
 
 export default function OrdersPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [creating, setCreating] = useState(false)
   const [editing,  setEditing]  = useState<Order | null>(null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
@@ -406,6 +406,7 @@ export default function OrdersPage() {
     setMenuOpen(null)
   }
 
+  if (loading) return null
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="max-w-5xl mx-auto space-y-5">

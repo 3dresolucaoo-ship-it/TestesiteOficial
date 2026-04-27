@@ -93,7 +93,7 @@ function ProdForm({ orders, onSave, onClose }: { orders: Order[]; onSave: (d: Fo
 export default function ProjectOperationsPage() {
   const params = useParams()
   const projectId = params.projectId as string
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [creating, setCreating] = useState(false)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
 
@@ -125,6 +125,7 @@ export default function ProjectOperationsPage() {
   const bambuBusy = printing.find(p => p.printer === 'bambu')
   const ffBusy    = printing.find(p => p.printer === 'flashforge')
 
+  if (loading) return null
   return (
     <div className="max-w-4xl mx-auto space-y-5">
       <div className="flex items-center justify-between">

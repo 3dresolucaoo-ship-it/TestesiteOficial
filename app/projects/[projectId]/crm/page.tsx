@@ -133,7 +133,7 @@ type LeadsView = 'list' | 'kanban'
 export default function ProjectCrmPage() {
   const params = useParams()
   const projectId = params.projectId as string
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [tab, setTab] = useState<Tab>('leads')
   const [leadsView, setLeadsView] = useState<LeadsView>('list')
   const [creating, setCreating] = useState(false)
@@ -178,6 +178,7 @@ export default function ProjectCrmPage() {
   const totalLeadValue = leads.filter(l => l.status === 'won').reduce((s, l) => s + l.value, 0)
   const totalAffSales  = affiliates.reduce((s, a) => s + a.totalSales, 0)
 
+  if (loading) return null
   return (
     <div className="max-w-4xl mx-auto space-y-5">
       {/* Header */}

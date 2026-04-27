@@ -216,7 +216,7 @@ function MovementForm({ items, defaultItemId, defaultType, onSave, onClose }: {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ProjectInventoryPage() {
   const { projectId } = useParams() as { projectId: string }
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
 
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<InventoryItem | null>(null)
@@ -316,6 +316,7 @@ export default function ProjectInventoryPage() {
 
   const itemName = (id: string) => items.find(i => i.id === id)?.name ?? id
 
+  if (loading) return null
   return (
     <div className="max-w-4xl mx-auto space-y-5">
 

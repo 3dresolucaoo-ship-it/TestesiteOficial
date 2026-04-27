@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data: { session } } = await supabase.auth.getSession()
         setSession(session)
         setUser(validUser)
-        loadProfile(validUser.id)    // ← background, no await
+        await loadProfile(validUser.id)
       } else {
         setSession(null)
         setUser(null)
@@ -138,9 +138,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
     setSession(null)
     setRole(null)
-    supabase.auth.signOut().catch(err =>
-      console.error('[Auth] signOut cleanup failed:', err?.message)
-    )
+    try { await supabase.auth.signOut() } catch (err) {
+      console.error('[Auth] signOut cleanup failed:', (err as Error)?.message)
+    }
     window.location.replace('/login')
   }, [])
 

@@ -651,7 +651,7 @@ function ProductCard({
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function ProductsPage() {
-  const { state, dispatch, dbError } = useStore()
+  const { state, dispatch, dbError, loading } = useStore()
   const [creating, setCreating] = useState(false)
   const [editing,  setEditing]  = useState<Product | null>(null)
   const [filterProject, setFilterProject] = useState('all')
@@ -760,6 +760,7 @@ export default function ProductsPage() {
       : undefined
   const getStats     = (id: string) => productStats.find(s => s.product.id === id)
 
+  if (loading) return null
   if (projects.length === 0) {
     return (
       <div className="max-w-4xl mx-auto flex flex-col items-center justify-center py-24 text-center">

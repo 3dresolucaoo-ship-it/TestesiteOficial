@@ -74,7 +74,7 @@ function DecisionForm({ projects, initial, onSave, onClose }: {
 }
 
 export default function DecisionsPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<Decision | null>(null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
@@ -108,6 +108,7 @@ export default function DecisionsPage() {
   if (filterProject !== 'all') items = items.filter(d => d.projectId === filterProject)
   const sorted = [...items].sort((a, b) => b.date.localeCompare(a.date))
 
+  if (loading) return null
   return (
     <div className="max-w-4xl mx-auto space-y-5">
       <div className="flex items-center justify-between">

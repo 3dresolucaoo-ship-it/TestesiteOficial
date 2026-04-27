@@ -829,7 +829,7 @@ function ItemCard({
 
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function InventoryPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, loading } = useStore()
 
   const [creating, setCreating]       = useState(false)
   const [editing, setEditing]         = useState<InventoryItem | null>(null)
@@ -978,6 +978,7 @@ export default function InventoryPage() {
   }
 
   // ── Empty state ───────────────────────────────────────────────────────────────
+  if (loading) return null
   if (projects.length === 0) {
     return (
       <div className="max-w-4xl mx-auto">
