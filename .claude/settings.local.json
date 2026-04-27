@@ -51,7 +51,8 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(git push *)",
-      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__list_deployments"
+      "mcp__d0953062-de31-423c-b70a-f6d232abf90f__list_deployments",
+      "Bash(xargs grep *)"
     ]
   },
   "hooks": {

@@ -1,4 +1,4 @@
-import type { AppState, Project, Transaction, Order, ProductionItem, InventoryItem, Lead, ContentItem } from './types'
+import type { AppState, Project, Transaction, Order, ProductionItem, InventoryItem, Lead, ContentItem, Catalog } from './types'
 import type { Product } from '@/core/products/types'
 import { DEFAULT_ADMIN_CONFIG } from '@/core/admin/config'
 import { createServerClient } from './supabaseServer'
@@ -12,7 +12,7 @@ export async function loadInitialState(
   supabase: DbClient,
   userId:   string,
 ): Promise<AppState> {
-  const [p, tx, ord, prod, inv, lds, cnt, prods] = await Promise.all([
+  const [p, tx, ord, prod, inv, lds, cnt, prods, cats, cfg] = await Promise.all([
     supabase.from('projects').select('*').eq('user_id', userId).order('created_at'),
     supabase.from('transactions').select('*').eq('user_id', userId).order('date', { ascending: false }),
     supabase.from('orders').select('*').eq('user_id', userId).order('date', { ascending: false }),
@@ -21,6 +21,8 @@ export async function loadInitialState(
     supabase.from('leads').select('*').eq('user_id', userId),
     supabase.from('content').select('*').eq('user_id', userId),
     supabase.from('products').select('*').eq('user_id', userId).order('name'),
+    supabase.from('catalogs').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
+    supabase.from('config').select('data').eq('user_id', userId).maybeSingle(),
   ])
 
   return {
@@ -140,10 +142,27 @@ export async function loadInitialState(
       imageUrl:          r.image_url          ?? undefined,
     })),
 
+    catalogs: safe(cats.data).map((r): Catalog => ({
+      id:            r.id,
+      userId:        r.user_id,
+      projectId:     r.project_id,
+      name:          r.name,
+      slug:          r.slug,
+      mode:          r.mode,
+      template:      r.template ?? 'grid',
+      productIds:    r.product_ids ?? [],
+      logoUrl:       r.logo_url       ?? undefined,
+      whatsapp:      r.whatsapp       ?? undefined,
+      portfolioSlug: r.portfolio_slug ?? undefined,
+      isPublic:      r.is_public,
+      createdAt:     r.created_at,
+    })),
+
     decisions:  [],
     affiliates: [],
     movements:  [],
-    catalogs:   [],
-    config:     DEFAULT_ADMIN_CONFIG,
+    config: cfg.data?.data
+      ? { ...DEFAULT_ADMIN_CONFIG, ...(cfg.data.data as object) }
+      : DEFAULT_ADMIN_CONFIG,
   }
 }
