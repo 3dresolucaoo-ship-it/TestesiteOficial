@@ -87,9 +87,21 @@ function ProjectForm({ initial, onSave, onClose }: { initial?: FormData; onSave:
   )
 }
 
-export function ProjectsView({ initialProjects }: { initialProjects: Project[] }) {
-  const { state, dispatch } = useStore()
-  const [projects, setProjects] = useState(initialProjects)
+type AppState = ReturnType<typeof useStore>['state']
+
+export function ProjectsView({
+  initialProjects,
+  initialTransactions,
+  initialOrders,
+}: {
+  initialProjects:    Project[]
+  initialTransactions: AppState['transactions']
+  initialOrders:      AppState['orders']
+}) {
+  const { dispatch } = useStore()
+  const [projects, setProjects]       = useState(initialProjects)
+  const [allTransactions]             = useState(initialTransactions)
+  const [allOrders]                   = useState(initialOrders)
   const [creating, setCreating] = useState(false)
   const [editing, setEditing] = useState<Project | null>(null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
@@ -121,9 +133,9 @@ export function ProjectsView({ initialProjects }: { initialProjects: Project[] }
 
   function ProjectCard({ p }: { p: Project }) {
     const color   = getProjectColor(p)
-    const revenue = calcRevenue(state.transactions, p.id)
-    const profit  = calcProfit(state.transactions, p.id)
-    const orders  = state.orders.filter(o => o.projectId === p.id).length
+    const revenue = calcRevenue(allTransactions, p.id)
+    const profit  = calcProfit(allTransactions, p.id)
+    const orders  = allOrders.filter(o => o.projectId === p.id).length
 
     return (
       <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-5 hover:border-[#3a3a3a] transition-colors group relative">

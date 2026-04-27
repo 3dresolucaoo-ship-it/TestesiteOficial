@@ -177,8 +177,10 @@ function DashboardSkeleton() {
 }
 
 // ─── Dashboard view ───────────────────────────────────────────────────────────
-export function DashboardView() {
-  const { state, loading } = useStore()
+type AppState = ReturnType<typeof useStore>['state']
+
+export function DashboardView({ initialState }: { initialState: AppState }) {
+  const [state] = useState(initialState)
 
   // All hooks must be called unconditionally before any early return
   const stats     = getGlobalStats(state)
@@ -235,8 +237,6 @@ export function DashboardView() {
         .slice(0, 5),
     [state.inventory],
   )
-
-  if (loading) return <DashboardSkeleton />
 
   const alerts: string[] = []
   if (stats.lowStock > 0) alerts.push(`${stats.lowStock} item(s) com estoque baixo`)
