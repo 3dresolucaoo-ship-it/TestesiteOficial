@@ -2,8 +2,7 @@
  * /api/payment-configs
  *
  * Authenticated API for managing the current user's payment gateway configs.
- * Credentials are stored masked in DB; full values never leave the server
- * except when creating the gateway preference (server-side only).
+ * Uses the session-based Supabase client (RLS) — no service role key needed.
  *
  *   GET    → list configs for current user (masked)
  *   POST   → upsert (create or update by id)
@@ -13,6 +12,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getUser }                   from '@/lib/auth'
+import { createServerClient }        from '@/lib/supabaseServer'
 import {
   paymentConfigService,
   type PaymentProviderName,
@@ -27,7 +27,8 @@ export async function GET() {
   const user = await getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const configs = await paymentConfigService.listForDisplay(user.id)
+  const client = await createServerClient()
+  const configs = await paymentConfigService.listForDisplay(user.id, client)
   return NextResponse.json({ configs })
 }
 
@@ -52,12 +53,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'accessToken is required (min 8 chars)' }, { status: 400 })
   }
 
-  // Reject mask placeholders coming back from the client unchanged
   if (body.accessToken.startsWith('****')) {
     return NextResponse.json({ error: 'accessToken still masked — paste the real value' }, { status: 400 })
   }
 
   try {
+    const client = await createServerClient()
     await paymentConfigService.upsertConfig(user.id, {
       id:            body.id,
       provider:      body.provider,
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest) {
       publicKey:     body.publicKey?.trim()     || undefined,
       webhookSecret: body.webhookSecret?.trim() || undefined,
       sandbox:       Boolean(body.sandbox),
-    })
+    }, client)
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Save failed'
     return NextResponse.json({ error: msg }, { status: 500 })
@@ -92,7 +93,8 @@ export async function PATCH(req: NextRequest) {
   }
 
   try {
-    await paymentConfigService.setActiveProvider(user.id, body.id)
+    const client = await createServerClient()
+    await paymentConfigService.setActiveProvider(user.id, body.id, client)
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Activate failed'
     return NextResponse.json({ error: msg }, { status: 500 })
@@ -111,7 +113,8 @@ export async function DELETE(req: NextRequest) {
   if (!id) return NextResponse.json({ error: 'id query param required' }, { status: 400 })
 
   try {
-    await paymentConfigService.deleteConfig(user.id, id)
+    const client = await createServerClient()
+    await paymentConfigService.deleteConfig(user.id, id, client)
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Delete failed'
     return NextResponse.json({ error: msg }, { status: 500 })

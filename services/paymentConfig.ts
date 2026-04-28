@@ -5,11 +5,15 @@
  * Uses per-merchant in-memory cache (60 s TTL) to avoid querying on every
  * checkout/webhook request. Cache is invalidated on every write.
  *
- * NEVER import this file from a client component — it uses the admin client
- * (service role key) and exposes raw credentials internally.
+ * NEVER import this file from a client component.
+ *
+ * Usage:
+ *   - API routes (user session): pass `client` from createServerClient() → uses RLS
+ *   - Webhooks / checkout:       omit `client` → falls back to admin (service role key)
  */
 
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin'
+import type { SupabaseClient } from '@supabase/supabase-js'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -102,29 +106,29 @@ function toDisplay(c: PaymentConfig): PaymentConfigDisplay {
   }
 }
 
+/** Returns admin client if no client provided, otherwise uses the given client. */
+function resolveClient(client?: SupabaseClient): SupabaseClient {
+  return client ?? getSupabaseAdmin()
+}
+
 // ─── Service ──────────────────────────────────────────────────────────────────
 
 export const paymentConfigService = {
   /**
    * Returns the active payment config for a merchant.
-   *
-   * @param userId      - merchant's user_id
-   * @param bypassCache - when true, skips the 60 s cache and queries the DB
-   *                      directly. Use in webhook handlers to avoid stale creds.
-   *
-   * Returns null if no active config — caller should fall back to env vars.
+   * Omit `client` in webhook/checkout contexts (uses admin, bypasses RLS).
    */
   async getActiveConfig(
     userId: string,
-    options?: { bypassCache?: boolean },
+    options?: { bypassCache?: boolean; client?: SupabaseClient },
   ): Promise<PaymentConfig | null> {
     if (!options?.bypassCache) {
       const cached = _cache.get(userId)
       if (cached && isFresh(cached)) return cached.config
     }
 
-    const admin = getSupabaseAdmin()
-    const { data, error } = await admin
+    const db = resolveClient(options?.client)
+    const { data, error } = await db
       .from('payment_configs')
       .select('*')
       .eq('user_id', userId)
@@ -133,19 +137,17 @@ export const paymentConfigService = {
 
     if (error) {
       console.error('[paymentConfig] getActiveConfig error:', error.message)
-      // Don't cache errors — next request will retry the DB
       return null
     }
 
     const config = data ? fromDB(data) : null
 
-    // Only populate cache on normal (non-bypass) reads
     if (!options?.bypassCache) {
       _cache.set(userId, { config, ts: Date.now() })
     }
 
     if (!config) {
-      console.warn(`[paymentConfig] No active config for merchant ${userId} — caller should use env fallback`)
+      console.warn(`[paymentConfig] No active config for merchant ${userId}`)
     }
 
     return config
@@ -153,11 +155,11 @@ export const paymentConfigService = {
 
   /**
    * Lists all configs for a user with sensitive fields masked.
-   * Safe to return from an API route to the frontend.
+   * Pass `client` from createServerClient() to use RLS (no service role key needed).
    */
-  async listForDisplay(userId: string): Promise<PaymentConfigDisplay[]> {
-    const admin = getSupabaseAdmin()
-    const { data, error } = await admin
+  async listForDisplay(userId: string, client?: SupabaseClient): Promise<PaymentConfigDisplay[]> {
+    const db = resolveClient(client)
+    const { data, error } = await db
       .from('payment_configs')
       .select('*')
       .eq('user_id', userId)
@@ -173,11 +175,10 @@ export const paymentConfigService = {
 
   /**
    * Create or update a payment config.
-   * On UPDATE: only updates credential/sandbox fields — is_active is untouched.
-   * Invalidates cache after write.
+   * Pass `client` from createServerClient() to use RLS (no service role key needed).
    */
-  async upsertConfig(userId: string, input: UpsertPaymentConfigInput): Promise<void> {
-    const admin = getSupabaseAdmin()
+  async upsertConfig(userId: string, input: UpsertPaymentConfigInput, client?: SupabaseClient): Promise<void> {
+    const db = resolveClient(client)
 
     const row = {
       user_id:        userId,
@@ -190,14 +191,13 @@ export const paymentConfigService = {
 
     let error
     if (input.id) {
-      ;({ error } = await admin
+      ;({ error } = await db
         .from('payment_configs')
         .update(row)
         .eq('id', input.id)
         .eq('user_id', userId))
     } else {
-      // New config starts inactive — admin must explicitly activate it
-      ;({ error } = await admin
+      ;({ error } = await db
         .from('payment_configs')
         .insert({ ...row, is_active: false }))
     }
@@ -212,18 +212,12 @@ export const paymentConfigService = {
 
   /**
    * Activates one config and deactivates all others for the same merchant.
-   *
-   * Delegates to the `set_active_payment_config` Postgres function which runs
-   * both UPDATEs inside a single transaction — no intermediate inconsistent
-   * state and no partial-index violation window.
-   *
-   * Raises if configId does not belong to userId (enforced in the DB function).
-   * Invalidates cache after write.
+   * Pass `client` from createServerClient() to use RLS (no service role key needed).
    */
-  async setActiveProvider(userId: string, configId: string): Promise<void> {
-    const admin = getSupabaseAdmin()
+  async setActiveProvider(userId: string, configId: string, client?: SupabaseClient): Promise<void> {
+    const db = resolveClient(client)
 
-    const { error } = await admin.rpc('set_active_payment_config', {
+    const { error } = await db.rpc('set_active_payment_config', {
       p_user_id:   userId,
       p_config_id: configId,
     })
@@ -238,13 +232,11 @@ export const paymentConfigService = {
 
   /**
    * Permanently deletes a payment config.
-   * If the deleted config was active, no config is active afterwards — caller
-   * should prompt the admin to activate another one.
-   * Invalidates cache after write.
+   * Pass `client` from createServerClient() to use RLS (no service role key needed).
    */
-  async deleteConfig(userId: string, configId: string): Promise<void> {
-    const admin = getSupabaseAdmin()
-    const { error } = await admin
+  async deleteConfig(userId: string, configId: string, client?: SupabaseClient): Promise<void> {
+    const db = resolveClient(client)
+    const { error } = await db
       .from('payment_configs')
       .delete()
       .eq('id', configId)
