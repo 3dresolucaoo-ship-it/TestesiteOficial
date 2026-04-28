@@ -167,10 +167,17 @@ export function FinanceView({
   initialTransactions: Transaction[]
   initialProjects:     Project[]
 }) {
-  const { dispatch } = useStore()
+  const { state, dispatch } = useStore()
 
-  const [transactions, setTransactions] = useState(initialTransactions)
-  const [projects]                       = useState(initialProjects)
+  // Read from the shared store so adds/edits/deletes survive navigation. Fall
+  // back to SSR-supplied initial data only when the store hasn't hydrated yet
+  // (e.g. very first render before useEffect populates it).
+  const transactions = state.transactions.length > 0 || initialTransactions.length === 0
+    ? state.transactions
+    : initialTransactions
+  const projects     = state.projects.length > 0 || initialProjects.length === 0
+    ? state.projects
+    : initialProjects
 
   const [creating,  setCreating]  = useState(false)
   const [editing,   setEditing]   = useState<Transaction | null>(null)
@@ -235,18 +242,15 @@ export function FinanceView({
 
   function handleCreate(data: FormData) {
     const newTx = { id: uid(), ...data, value: parseFloat(data.value) || 0 }
-    setTransactions(prev => [newTx, ...prev])
     dispatch({ type: 'ADD_TRANSACTION', payload: newTx })
   }
   function handleEdit(data: FormData) {
     if (!editing) return
     const updated = { ...editing, ...data, value: parseFloat(data.value) || 0 }
-    setTransactions(prev => prev.map(t => t.id === editing.id ? updated : t))
     dispatch({ type: 'UPDATE_TRANSACTION', payload: updated })
     setEditing(null)
   }
   function handleDelete(id: string) {
-    setTransactions(prev => prev.filter(t => t.id !== id))
     dispatch({ type: 'DELETE_TRANSACTION', payload: id })
     setMenuOpen(null)
   }
@@ -284,7 +288,9 @@ export function FinanceView({
           </button>
           <button
             onClick={() => setCreating(true)}
-            className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium px-3 py-2 rounded-lg transition-all shadow-[0_0_16px_rgba(124,58,237,0.3)] hover:shadow-[0_0_24px_rgba(124,58,237,0.4)]"
+            disabled={projects.length === 0}
+            title={projects.length === 0 ? 'Crie um projeto antes de registrar transações' : ''}
+            className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium px-3 py-2 rounded-lg transition-all shadow-[0_0_16px_rgba(124,58,237,0.3)] hover:shadow-[0_0_24px_rgba(124,58,237,0.4)]"
           >
             <Plus size={15} /> Transação
           </button>

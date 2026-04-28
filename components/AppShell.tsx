@@ -5,7 +5,6 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { StoreProvider, useStore } from '@/lib/store'
 import { Sidebar, BottomNav } from '@/components/Sidebar'
-import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import { AlertTriangle, X } from 'lucide-react'
 import type { AppState } from '@/lib/types'
 
@@ -104,10 +103,6 @@ function DbErrorToast() {
 
 import { TopBar } from '@/components/TopBar'
 
-// ─── Admin-only paths ─────────────────────────────────────────────────────────
-
-const ADMIN_PATHS = ['/settings']
-
 // ─── App Shell ────────────────────────────────────────────────────────────────
 
 export function AppShell({
@@ -119,7 +114,7 @@ export function AppShell({
    *  of empty data on pages that read directly from useStore(). */
   initialState?: AppState | null
 }) {
-  const { user, role, loading } = useAuth()
+  const { user, loading } = useAuth()
   const pathname                = usePathname()
   const router                  = useRouter()
 
@@ -130,7 +125,6 @@ export function AppShell({
     pathname.startsWith('/catalogo/')         ||
     pathname.startsWith('/portfolio/')        ||
     pathname.startsWith('/checkout')
-  const isAdminPath  = ADMIN_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
 
   // Redirect unauthenticated users to /login.
   // Guard runs regardless of isSupabaseConfigured — if env vars are missing in
@@ -141,20 +135,6 @@ export function AppShell({
     }
   }, [user, loading, isPublicPath, router])
 
-  // Redirect non-admin users away from admin paths (fallback guard)
-  useEffect(() => {
-    if (
-      isSupabaseConfigured &&
-      !loading &&
-      user &&
-      isAdminPath &&
-      role !== null &&
-      role !== 'admin'
-    ) {
-      router.replace('/dashboard')
-    }
-  }, [user, loading, role, isAdminPath, router])
-
   // Public pages (login): render without chrome
   if (isPublicPath) return <>{children}</>
 
@@ -163,9 +143,6 @@ export function AppShell({
 
   // Unauthenticated: blank while redirect fires
   if (!user) return null
-
-  // Admin path + non-admin: blank while redirect fires (role was validated server-side)
-  if (isSupabaseConfigured && isAdminPath && role !== null && role !== 'admin') return null
 
   return (
     <StoreProvider initialState={initialState}>

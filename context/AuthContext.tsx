@@ -138,18 +138,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signingOutRef = useRef(false)
   const signOut = useCallback(async () => {
-    // Idempotent guard so rapid double-clicks don't race the auth.signOut() call
-    // (which was the cause of "had to click logout multiple times after F5").
+    // Idempotent guard so rapid double-clicks don't race the auth.signOut() call.
     if (signingOutRef.current) return
     signingOutRef.current = true
+
+    // Race signOut against a 3 s timeout. If Supabase is unreachable we still
+    // forcibly clear local state and redirect — the user must always be able
+    // to log out, even when offline. scope:'local' avoids the global revoke
+    // network round-trip that was making logout hang.
     try {
-      // Wait for Supabase to clear cookies BEFORE redirecting. If we cleared
-      // local state first and signOut failed, cookies would survive and the
-      // next F5 would resurrect the session.
-      await supabase.auth.signOut()
+      await Promise.race([
+        supabase.auth.signOut({ scope: 'local' }),
+        new Promise(resolve => setTimeout(resolve, 3000)),
+      ])
     } catch (err) {
       console.error('[Auth] signOut failed:', (err as Error)?.message)
     }
+
+    // Force-expire any leftover Supabase auth cookies in case signOut was a
+    // no-op (e.g. timed out). Without this, middleware would still see the
+    // user authenticated on the next request and bounce us back to /dashboard.
+    if (typeof document !== 'undefined') {
+      document.cookie.split(';').forEach(c => {
+        const name = c.split('=')[0].trim()
+        if (name.startsWith('sb-')) {
+          document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+        }
+      })
+    }
+
     setUser(null)
     setSession(null)
     setRole(null)
