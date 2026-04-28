@@ -57,7 +57,8 @@
       "mcp__Claude_in_Chrome__browser_batch",
       "Bash(vercel whoami *)",
       "Bash(vercel env *)",
-      "Bash(git commit -m 'feat: Mercado Pago OAuth2 integration *)"
+      "Bash(git commit -m 'feat: Mercado Pago OAuth2 integration *)",
+      "Bash(vercel ls *)"
     ]
   },
   "hooks": {
