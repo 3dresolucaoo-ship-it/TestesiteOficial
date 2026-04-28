@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useStore } from '@/lib/store'
 import { useAuth } from '@/context/AuthContext'
 import type { AdminConfig } from '@/lib/types'
@@ -178,8 +178,36 @@ export function SettingsView({
   const { role } = useAuth()
   const [tab, setTab] = useState<SettingsTab>('general')
   const [saved, setSaved] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   const [draft, setDraft] = useState<AdminConfig>(initialConfig)
+
+  // ── Payment configs (DB-backed, separate from AdminConfig jsonb) ────────────
+  type RemoteConfig = {
+    id: string
+    provider: 'mercadopago' | 'stripe' | 'infinitypay'
+    accessToken: string   // masked from server
+    publicKey?: string
+    sandbox: boolean
+    isActive: boolean
+  }
+  const [remoteConfigs, setRemoteConfigs] = useState<RemoteConfig[]>([])
+  const mpRemote     = remoteConfigs.find(c => c.provider === 'mercadopago')
+  const stripeRemote = remoteConfigs.find(c => c.provider === 'stripe')
+
+  async function refreshRemoteConfigs() {
+    try {
+      const res  = await fetch('/api/payment-configs', { cache: 'no-store' })
+      const json = await res.json()
+      if (res.ok && Array.isArray(json.configs)) {
+        setRemoteConfigs(json.configs)
+      }
+    } catch {
+      // silent — UI degrades gracefully
+    }
+  }
+
+  useEffect(() => { refreshRemoteConfigs() }, [])
 
   function updateFinance(patch: Partial<AdminConfig['finance']>) {
     setDraft(d => ({ ...d, finance: { ...d.finance, ...patch } }))
@@ -200,10 +228,86 @@ export function SettingsView({
     setDraft(d => ({ ...d, storefront: { ...d.storefront, ...patch } }))
   }
 
-  function save() {
-    dispatch({ type: 'UPDATE_CONFIG', payload: draft })
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+  async function persistGatewayCredentials() {
+    // Send Mercado Pago / Stripe creds to /api/payment-configs when filled.
+    // Empty fields → skip. Already-masked values → skip (user didn't change).
+    const sf = draft.storefront
+    const tasks: Array<{ provider: 'mercadopago' | 'stripe'; token: string; pub?: string; existingId?: string }> = []
+
+    if (sf.mpAccessToken && !sf.mpAccessToken.startsWith('****')) {
+      tasks.push({
+        provider:   'mercadopago',
+        token:      sf.mpAccessToken,
+        pub:        sf.mpPublicKey || undefined,
+        existingId: mpRemote?.id,
+      })
+    }
+    if (sf.stripeSecretKey && !sf.stripeSecretKey.startsWith('****')) {
+      tasks.push({
+        provider:   'stripe',
+        token:      sf.stripeSecretKey,
+        pub:        sf.stripePublicKey || undefined,
+        existingId: stripeRemote?.id,
+      })
+    }
+
+    for (const t of tasks) {
+      const res = await fetch('/api/payment-configs', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id:          t.existingId,
+          provider:    t.provider,
+          accessToken: t.token,
+          publicKey:   t.pub,
+          sandbox:     false,
+        }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(`${t.provider}: ${err.error ?? res.statusText}`)
+      }
+    }
+
+    // Activate the selected provider (if it now exists in DB)
+    if (sf.paymentProvider !== 'none') {
+      await refreshRemoteConfigs()
+      const fresh = await (await fetch('/api/payment-configs', { cache: 'no-store' })).json()
+      const target = (fresh.configs as RemoteConfig[]).find(c => c.provider === sf.paymentProvider)
+      if (target && !target.isActive) {
+        await fetch('/api/payment-configs', {
+          method:  'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ id: target.id }),
+        })
+      }
+    }
+  }
+
+  async function save() {
+    setSaveError(null)
+    try {
+      // 1. Persist gateway credentials to payment_configs (server-side, masked)
+      await persistGatewayCredentials()
+      // 2. Strip raw secrets before saving the AdminConfig jsonb (jsonb is not the
+      //    source of truth for gateway creds anymore — payment_configs is).
+      const sanitized: AdminConfig = {
+        ...draft,
+        storefront: {
+          ...draft.storefront,
+          mpAccessToken:   '',
+          stripeSecretKey: '',
+        },
+      }
+      dispatch({ type: 'UPDATE_CONFIG', payload: sanitized })
+      setDraft(sanitized)
+      await refreshRemoteConfigs()
+
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Erro ao salvar')
+    }
   }
 
   function reset() {
@@ -245,6 +349,12 @@ export function SettingsView({
           </button>
         </div>
       </div>
+
+      {saveError && (
+        <div className="bg-[#ef444408] border border-[#ef444433] rounded-xl px-4 py-3">
+          <p className="text-[#ef4444] text-xs">⚠️ {saveError}</p>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex items-center gap-1 flex-wrap">
@@ -675,12 +785,25 @@ export function SettingsView({
           {draft.storefront.paymentProvider === 'mercadopago' && (
             <SectionCard title="Mercado Pago">
               <div className="space-y-3">
+                {/* Connection status (from payment_configs) */}
+                <div className="flex items-center justify-between bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${mpRemote?.isActive ? 'bg-[#10b981]' : mpRemote ? 'bg-[#f59e0b]' : 'bg-[#555555]'}`} />
+                    <span className="text-[#ebebeb] text-xs font-medium">
+                      {mpRemote?.isActive ? 'Conectado e ativo' : mpRemote ? 'Salvo, inativo' : 'Não conectado'}
+                    </span>
+                  </div>
+                  {mpRemote && (
+                    <span className="text-[#555555] text-xs font-mono">{mpRemote.accessToken}</span>
+                  )}
+                </div>
+
                 <div>
                   <FieldLabel>Chave Pública (Public Key)</FieldLabel>
                   <TextInput
                     value={draft.storefront.mpPublicKey}
                     onChange={v => updateStorefront({ mpPublicKey: v })}
-                    placeholder="APP_USR-..."
+                    placeholder={mpRemote?.publicKey ?? 'APP_USR-...'}
                   />
                 </div>
                 <div>
@@ -688,10 +811,10 @@ export function SettingsView({
                   <SecretInput
                     value={draft.storefront.mpAccessToken}
                     onChange={v => updateStorefront({ mpAccessToken: v })}
-                    placeholder="APP_USR-... (token de produção)"
+                    placeholder={mpRemote ? mpRemote.accessToken + ' (deixe em branco para manter)' : 'APP_USR-... (token de produção)'}
                   />
                   <p className="text-[#3a3a3a] text-xs mt-1">
-                    ⚠️ Armazenado no banco. Prefira usar variável de ambiente <code className="text-[#a78bfa]">MP_ACCESS_TOKEN</code> em produção.
+                    Token salvo de forma segura em <code className="text-[#a78bfa]">payment_configs</code> (RLS por usuário). Webhook: <code className="text-[#a78bfa]">/api/webhooks/payment?merchant={'<id>'}</code>
                   </p>
                 </div>
               </div>
@@ -765,8 +888,10 @@ export function SettingsView({
             },
             {
               name: 'Mercado Pago',
-              description: 'Receba pagamentos via PIX, cartão e boleto. Configure as chaves na aba Vitrine.',
-              status: draft.storefront.mpAccessToken ? 'configured' : 'not_configured',
+              description: mpRemote?.isActive
+                ? `Ativo • ${mpRemote.accessToken} • PIX, cartão e boleto.`
+                : 'Receba pagamentos via PIX, cartão e boleto. Configure as chaves na aba Vitrine.',
+              status: mpRemote?.isActive ? 'configured' : mpRemote ? 'inactive' : 'not_configured',
               color: '#00b1ea',
               docs: 'https://www.mercadopago.com.br/developers/pt/docs',
             },
@@ -791,9 +916,11 @@ export function SettingsView({
                   <span className={`text-xs px-2 py-0.5 rounded-md border ${
                     integration.status === 'configured'
                       ? 'text-[#10b981] bg-[#10b9811a] border-[#10b98133]'
+                      : integration.status === 'inactive'
+                      ? 'text-[#f59e0b] bg-[#f59e0b1a] border-[#f59e0b33]'
                       : 'text-[#555555] bg-[#1c1c1c] border-[#2a2a2a]'
                   }`}>
-                    {integration.status === 'configured' ? 'Configurado' : 'Em breve'}
+                    {integration.status === 'configured' ? 'Conectado' : integration.status === 'inactive' ? 'Inativo' : 'Em breve'}
                   </span>
                 </div>
                 <p className="text-[#555555] text-xs">{integration.description}</p>
