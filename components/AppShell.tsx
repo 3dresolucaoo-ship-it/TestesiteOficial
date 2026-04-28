@@ -141,7 +141,7 @@ export function AppShell({
     }
   }, [user, loading, isPublicPath, router])
 
-  // Redirect non-admin users away from admin paths
+  // Redirect non-admin users away from admin paths (fallback guard)
   useEffect(() => {
     if (
       isSupabaseConfigured &&
@@ -164,11 +164,8 @@ export function AppShell({
   // Unauthenticated: blank while redirect fires
   if (!user) return null
 
-  // Admin path: blank while role is still loading
-  if (isSupabaseConfigured && isAdminPath && role === null) return <LoadingScreen />
-
-  // Admin path + non-admin: blank while redirect fires
-  if (isSupabaseConfigured && isAdminPath && role !== 'admin') return null
+  // Admin path + non-admin: blank while redirect fires (role was validated server-side)
+  if (isSupabaseConfigured && isAdminPath && role !== null && role !== 'admin') return null
 
   return (
     <StoreProvider initialState={initialState}>

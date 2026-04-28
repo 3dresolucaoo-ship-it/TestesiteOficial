@@ -53,7 +53,8 @@
       "Bash(git push *)",
       "mcp__d0953062-de31-423c-b70a-f6d232abf90f__list_deployments",
       "Bash(xargs grep *)",
-      "mcp__f9d4fcd2-1da8-4791-9f28-fb62b088f4bb__get_advisors"
+      "mcp__f9d4fcd2-1da8-4791-9f28-fb62b088f4bb__get_advisors",
+      "mcp__Claude_in_Chrome__browser_batch"
     ]
   },
   "hooks": {
