@@ -188,12 +188,16 @@ export function SettingsView({
     provider: 'mercadopago' | 'stripe' | 'infinitypay'
     accessToken: string   // masked from server
     publicKey?: string
+    mpUserId?: string
+    hasRefreshToken: boolean
+    tokenExpiresAt?: string
     sandbox: boolean
     isActive: boolean
   }
   const [remoteConfigs, setRemoteConfigs] = useState<RemoteConfig[]>([])
   const mpRemote     = remoteConfigs.find(c => c.provider === 'mercadopago')
   const stripeRemote = remoteConfigs.find(c => c.provider === 'stripe')
+  const [mpManual, setMpManual] = useState(false)
 
   async function refreshRemoteConfigs() {
     try {
@@ -785,12 +789,16 @@ export function SettingsView({
           {draft.storefront.paymentProvider === 'mercadopago' && (
             <SectionCard title="Mercado Pago">
               <div className="space-y-3">
-                {/* Connection status (from payment_configs) */}
+                {/* Connection status */}
                 <div className="flex items-center justify-between bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 py-2">
                   <div className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${mpRemote?.isActive ? 'bg-[#10b981]' : mpRemote ? 'bg-[#f59e0b]' : 'bg-[#555555]'}`} />
                     <span className="text-[#ebebeb] text-xs font-medium">
-                      {mpRemote?.isActive ? 'Conectado e ativo' : mpRemote ? 'Salvo, inativo' : 'Não conectado'}
+                      {mpRemote?.isActive
+                        ? mpRemote.hasRefreshToken
+                          ? `Conectado via OAuth${mpRemote.mpUserId ? ` · conta ${mpRemote.mpUserId}` : ''}`
+                          : 'Conectado e ativo'
+                        : mpRemote ? 'Salvo, inativo' : 'Não conectado'}
                     </span>
                   </div>
                   {mpRemote && (
@@ -798,25 +806,65 @@ export function SettingsView({
                   )}
                 </div>
 
-                <div>
-                  <FieldLabel>Chave Pública (Public Key)</FieldLabel>
-                  <TextInput
-                    value={draft.storefront.mpPublicKey}
-                    onChange={v => updateStorefront({ mpPublicKey: v })}
-                    placeholder={mpRemote?.publicKey ?? 'APP_USR-...'}
-                  />
-                </div>
-                <div>
-                  <FieldLabel>Access Token</FieldLabel>
-                  <SecretInput
-                    value={draft.storefront.mpAccessToken}
-                    onChange={v => updateStorefront({ mpAccessToken: v })}
-                    placeholder={mpRemote ? mpRemote.accessToken + ' (deixe em branco para manter)' : 'APP_USR-... (token de produção)'}
-                  />
-                  <p className="text-[#3a3a3a] text-xs mt-1">
-                    Token salvo de forma segura em <code className="text-[#a78bfa]">payment_configs</code> (RLS por usuário). Webhook: <code className="text-[#a78bfa]">/api/webhooks/payment?merchant={'<id>'}</code>
-                  </p>
-                </div>
+                {/* OAuth connect / disconnect */}
+                {!mpRemote ? (
+                  <a
+                    href="/api/integrations/mercadopago/connect"
+                    className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-[#009ee3] hover:bg-[#007ec1] text-white text-sm font-medium transition-colors"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                    </svg>
+                    Conectar com Mercado Pago
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!mpRemote) return
+                      await fetch(`/api/payment-configs?id=${mpRemote.id}`, { method: 'DELETE' })
+                      await refreshRemoteConfigs()
+                    }}
+                    className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg border border-[#2a2a2a] hover:border-[#ef4444] text-[#888] hover:text-[#ef4444] text-xs font-medium transition-colors"
+                  >
+                    Desconectar Mercado Pago
+                  </button>
+                )}
+
+                {/* Webhook info */}
+                <p className="text-[#3a3a3a] text-xs">
+                  Webhook: <code className="text-[#a78bfa]">/api/webhooks/payment?merchant={'<seu-user-id>'}</code>
+                </p>
+
+                {/* Manual token fallback */}
+                <button
+                  type="button"
+                  onClick={() => setMpManual(v => !v)}
+                  className="text-[#555] hover:text-[#888] text-xs underline-offset-2 hover:underline transition-colors"
+                >
+                  {mpManual ? 'Ocultar campos manuais' : 'Inserir token manualmente'}
+                </button>
+
+                {mpManual && (
+                  <div className="space-y-3 pt-1 border-t border-[#1a1a1a]">
+                    <div>
+                      <FieldLabel>Chave Pública (Public Key)</FieldLabel>
+                      <TextInput
+                        value={draft.storefront.mpPublicKey}
+                        onChange={v => updateStorefront({ mpPublicKey: v })}
+                        placeholder={mpRemote?.publicKey ?? 'APP_USR-...'}
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel>Access Token</FieldLabel>
+                      <SecretInput
+                        value={draft.storefront.mpAccessToken}
+                        onChange={v => updateStorefront({ mpAccessToken: v })}
+                        placeholder={mpRemote ? mpRemote.accessToken + ' (deixe em branco para manter)' : 'APP_USR-... (token de produção)'}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </SectionCard>
           )}
