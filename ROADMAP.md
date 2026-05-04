@@ -14,9 +14,12 @@
 - [x] **Aplicar as 3 migrations no Supabase** ✅ 2026-05-04
 
 ### Configuração / Deploy
-- [ ] Atualizar `NEXT_PUBLIC_APP_URL` no `.env.local` e Vercel para domínio público real (`https://bvaz-hub.vercel.app`)
-- [ ] Criar **app Marketplace** no Mercado Pago Developer Portal (atual é CheckoutPro — OAuth rejeita)
+- [x] Atualizar `NEXT_PUBLIC_APP_URL` no `.env.local` ✅ 2026-05-04
+- [ ] Atualizar `NEXT_PUBLIC_APP_URL` no Vercel Dashboard (manual)
+- [x] **Código Marketplace MP** — `marketplace_fee` em `payments/mercadopago.ts` + `ProviderCredentials` ✅ 2026-05-04
+- [ ] Criar **app Marketplace** no Mercado Pago Developer Portal (manual — atual é CheckoutPro)
 - [ ] Configurar redirect URI no app MP: `https://bvaz-hub.vercel.app/api/integrations/mercadopago/callback`
+- [ ] Atualizar `MP_CLIENT_ID` + `MP_CLIENT_SECRET` no Vercel com credenciais do novo app
 
 ### Segurança
 - [ ] Validação de input via Zod em `/api/checkout`, `/api/encomenda` (XSS possível em `clientName`)

@@ -26,6 +26,8 @@ export interface ProviderCredentials {
   webhookSecret?: string
   publicKey?:     string
   sandbox:        boolean
+  /** Marketplace fee in BRL cents charged by BVaz per transaction (MP only). */
+  marketplaceFee?: number
 }
 
 // ─── Provider interface ───────────────────────────────────────────────────────

@@ -22,7 +22,7 @@ const MP_BASE_URL = 'https://api.mercadopago.com'
 // ─── Factory ──────────────────────────────────────────────────────────────────
 
 export function mercadoPagoProvider(creds: ProviderCredentials): PaymentProviderClient {
-  const { accessToken, webhookSecret, sandbox } = creds
+  const { accessToken, webhookSecret, sandbox, marketplaceFee } = creds
 
   // ── createPayment ──────────────────────────────────────────────────────────
 
@@ -58,6 +58,7 @@ export function mercadoPagoProvider(creds: ProviderCredentials): PaymentProvider
       },
       auto_return: 'approved',
       notification_url: input.notificationUrl ?? undefined,
+      ...(marketplaceFee ? { marketplace_fee: marketplaceFee / 100 } : {}),
     }
 
     const res = await fetch(`${MP_BASE_URL}/checkout/preferences`, {

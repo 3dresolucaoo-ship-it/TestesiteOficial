@@ -29,13 +29,13 @@
 | content.ts | 114 | content | ✅ |
 | decisions.ts | 72 | decisions | ✅ |
 | finance.ts | 76 | transactions | ✅ |
-| inventory.ts | 280 | inventory + movements | ⚠️ usa `image_url` ausente no schema |
+| inventory.ts | 280 | inventory + movements | ✅ (`image_url` adicionado em migration 20260504) |
 | leads.ts | — | leads + affiliates | ✅ |
 | mpTokenRefresh.ts | 92 | payment_configs | ✅ refresh OAuth MP |
-| orders.ts | 96 | orders | ❌ usa colunas e-commerce inexistentes (B1) |
+| orders.ts | 96 | orders | ✅ (colunas e-commerce adicionadas em migration 20260504) |
 | paymentConfig.ts | 316 | payment_configs | ✅ robusto, com cache + auto-refresh |
 | payments.ts | 198 | (abstração) | ✅ resolve provider via DB ou env |
-| portfolios.ts | 172 | portfolios + portfolio_items | ❌ tabelas não existem no DB (B2) |
+| portfolios.ts | 172 | portfolios + portfolio_items | ✅ (tabelas criadas em migration 20260504) |
 | production.ts | — | production | ✅ |
 | products.ts | 126 | products | ⚠️ console.log linha 75 |
 | profiles.ts | 46 | profiles | ✅ |
@@ -43,9 +43,9 @@
 
 ## Issues conhecidos
 
-- ❌ `orders.ts:30-52` insere em colunas que não existem no schema — quebra criação via catálogo
-- ❌ `portfolios.ts` inteiro depende de tabelas inexistentes
-- ❌ `inventory.ts:23,41` usa `image_url` ausente no schema
+- ✅ ~~`orders.ts` colunas e-commerce~~ — migration aplicada 2026-05-04
+- ✅ ~~`portfolios.ts` tabelas inexistentes~~ — migration aplicada 2026-05-04
+- ✅ ~~`inventory.ts` image_url ausente~~ — migration aplicada 2026-05-04
 - ⚠️ `products.ts:75,83` tem console.log/error que deveriam usar `serviceError`
 - ⚠️ `paymentConfig.ts:78` cache in-memory pode vazar entre requests no Fluid Compute
 - ⚠️ Todos os services dependem de `requireUserId` (lib/getUser.ts) que faz 2 chamadas auth
