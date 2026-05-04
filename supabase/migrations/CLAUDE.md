@@ -32,7 +32,7 @@
 - ✅ ~~Migration faltando — colunas e-commerce em `orders`~~ → `20260504_orders_ecommerce_columns.sql`
 - ✅ ~~Migration faltando — tabelas `portfolios` + `portfolio_items`~~ → `20260504_portfolios.sql`
 - ✅ ~~Migration faltando — `inventory.image_url`~~ → `20260504_inventory_image_url.sql`
-- ⚠️ **Pendente**: aplicar as 3 migrations no Supabase (SQL Editor ou `supabase db push`)
+- ✅ Todas as migrations foram aplicadas no Supabase em 2026-05-04
 
 ## Template pra nova migration
 

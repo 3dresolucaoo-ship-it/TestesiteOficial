@@ -11,7 +11,7 @@
 - [x] **Migration `orders` e-commerce columns**: `20260504_orders_ecommerce_columns.sql` ✅ 2026-05-04
 - [x] **Criar tabelas `portfolios` + `portfolio_items`**: `20260504_portfolios.sql` ✅ 2026-05-04
 - [x] **Adicionar `inventory.image_url`**: `20260504_inventory_image_url.sql` ✅ 2026-05-04
-- [ ] ⚠️ **Aplicar as 3 migrations acima no Supabase** (SQL Editor ou `supabase db push`)
+- [x] **Aplicar as 3 migrations no Supabase** ✅ 2026-05-04
 
 ### Configuração / Deploy
 - [ ] Atualizar `NEXT_PUBLIC_APP_URL` no `.env.local` e Vercel para domínio público real (`https://bvaz-hub.vercel.app`)
