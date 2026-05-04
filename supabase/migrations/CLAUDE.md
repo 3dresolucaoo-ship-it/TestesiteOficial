@@ -19,6 +19,9 @@
 | `20260425_inventory_filament_uso.sql` | Adiciona `inventory.filament_uso` |
 | `20260428_payment_configs.sql` | Cria `payment_configs` + RPC `set_active_payment_config` |
 | `20260428_payment_configs_oauth.sql` | Adiciona `refresh_token`, `token_expires_at`, `mp_user_id` |
+| `20260504_orders_ecommerce_columns.sql` | Adiciona `source`, `catalog_slug`, `payment_id`, `payment_status`, `customer_whatsapp` + UNIQUE(payment_id) |
+| `20260504_portfolios.sql` | Cria `portfolios` + `portfolio_items` com RLS |
+| `20260504_inventory_image_url.sql` | Adiciona `inventory.image_url` |
 
 ## Schema base
 
@@ -26,19 +29,10 @@
 
 ## Issues críticos
 
-- ❌ **Migration faltando** — colunas e-commerce em `orders` (B1):
-  ```sql
-  ALTER TABLE orders
-    ADD COLUMN IF NOT EXISTS source            text,
-    ADD COLUMN IF NOT EXISTS catalog_slug      text,
-    ADD COLUMN IF NOT EXISTS payment_id        text,
-    ADD COLUMN IF NOT EXISTS payment_status    text,
-    ADD COLUMN IF NOT EXISTS customer_whatsapp text;
-  CREATE UNIQUE INDEX IF NOT EXISTS orders_payment_id_uniq
-    ON orders(payment_id) WHERE payment_id IS NOT NULL;
-  ```
-- ❌ **Migration faltando** — tabelas `portfolios` + `portfolio_items` (B2)
-- ❌ **Migration faltando** — `inventory.image_url` (B3)
+- ✅ ~~Migration faltando — colunas e-commerce em `orders`~~ → `20260504_orders_ecommerce_columns.sql`
+- ✅ ~~Migration faltando — tabelas `portfolios` + `portfolio_items`~~ → `20260504_portfolios.sql`
+- ✅ ~~Migration faltando — `inventory.image_url`~~ → `20260504_inventory_image_url.sql`
+- ⚠️ **Pendente**: aplicar as 3 migrations no Supabase (SQL Editor ou `supabase db push`)
 
 ## Template pra nova migration
 

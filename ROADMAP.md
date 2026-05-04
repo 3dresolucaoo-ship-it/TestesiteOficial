@@ -8,9 +8,10 @@
 ## 🔴 CRÍTICOS — fazer ASAP
 
 ### Schema do banco
-- [ ] **Migration `orders` e-commerce columns**: adicionar `source`, `catalog_slug`, `payment_id`, `payment_status`, `customer_whatsapp` + `UNIQUE(payment_id)`
-- [ ] **Criar tabelas `portfolios` + `portfolio_items`** (referenciadas em código mas inexistentes no DB)
-- [ ] **Adicionar `inventory.image_url`** (referenciada em service, ausente no schema)
+- [x] **Migration `orders` e-commerce columns**: `20260504_orders_ecommerce_columns.sql` ✅ 2026-05-04
+- [x] **Criar tabelas `portfolios` + `portfolio_items`**: `20260504_portfolios.sql` ✅ 2026-05-04
+- [x] **Adicionar `inventory.image_url`**: `20260504_inventory_image_url.sql` ✅ 2026-05-04
+- [ ] ⚠️ **Aplicar as 3 migrations acima no Supabase** (SQL Editor ou `supabase db push`)
 
 ### Configuração / Deploy
 - [ ] Atualizar `NEXT_PUBLIC_APP_URL` no `.env.local` e Vercel para domínio público real (`https://bvaz-hub.vercel.app`)
