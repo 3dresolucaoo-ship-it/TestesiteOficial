@@ -30,19 +30,19 @@
 ## 🟧 IMPORTANTES — próximas semanas
 
 ### Limpar código morto
-- [ ] Deletar pastas vazias: `Testesite3/`, `Testesite3dresolução/`, `desktop-tutorial/`
-- [ ] Deletar `AGENTS.md` (redundante com CLAUDE.md)
+- [x] Deletar pastas vazias: `Testesite3/`, `Testesite3dresolução/`, `desktop-tutorial/` ✅ 2026-05-04
+- [x] Deletar `AGENTS.md` ✅ 2026-05-04
 - [ ] Substituir `README.md` template por descrição real do projeto
-- [ ] Deletar `core/finance/invoice.ts` (não importado)
-- [ ] Deletar `core/integrations/{bling,instagram,youtube}Adapter.ts` (stubs vazios — recriar quando integrar de verdade)
-- [ ] Deletar `core/integrations/stripe.ts` legacy + `app/api/webhooks/stripe/route.ts` (substituídos por `payments/stripe.ts` + `/api/webhooks/payment`)
+- [x] Deletar `core/finance/invoice.ts` ✅ 2026-05-04
+- [ ] Deletar `core/integrations/{bling,instagram,youtube}Adapter.ts` (stubs — usados em IntegrationsTab, deletar quando implementar de verdade)
+- [x] Deletar `core/integrations/stripe.ts` legacy + `app/api/webhooks/stripe/route.ts` ✅ 2026-05-04
 - [ ] Avaliar `app/showcase/page.tsx` — remover se não usado
-- [ ] Remover `console.log` em `services/products.ts:75`
+- [x] Remover `console.log` em `services/products.ts` ✅ 2026-05-04
 - [ ] Avaliar `lib/mockData.ts` — remover ou enxugar pra dev-only
 
 ### Refatorar arquivos gigantes
-- [ ] Quebrar `components/SettingsView.tsx` (999 linhas) em `SettingsView/{General,Finance,CRM,Inventory,Storefront}.tsx`
-- [ ] Quebrar `components/DashboardView.tsx` (804 linhas) em widgets
+- [x] Quebrar `SettingsView.tsx` (999→220 linhas) em `components/settings/` (8 sub-tabs) ✅ 2026-05-04
+- [x] Quebrar `DashboardView.tsx` (804→483 linhas) — shared extraído em `components/dashboard/shared.tsx` ✅ 2026-05-04
 - [ ] Mover `app/inventory/page.tsx` (1472 linhas) → componente
 - [ ] Mover `app/products/page.tsx` (1028 linhas) → componente
 - [ ] Mover `app/orders/page.tsx` (668 linhas) → componente

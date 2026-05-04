@@ -18,7 +18,7 @@
 | `analytics/` | engines de cálculo (finance, content, production) | ✅ |
 | `catalog/` | types de catálogo (templates) | ✅ |
 | `crm/` | types CRM (Lead, Affiliate, stages) | ✅ |
-| `finance/` | types + engine + invoice (não usado) | ⚠️ `invoice.ts` é dead code |
+| `finance/` | types + engine | ✅ (`invoice.ts` deletado) |
 | `flows/` | orquestração `processOrder` (UI + admin) | ✅ |
 | `integrations/` | adapters externos (Stripe, Bling, IG, YT) | ⚠️ vários stubs vazios |
 | `inventory/` | types inventory + filament_uso | ✅ |
@@ -29,8 +29,8 @@
 
 ## Issues conhecidos
 
-- ❌ `core/finance/invoice.ts` — não importado em lugar nenhum (dead code)
-- ❌ `core/integrations/stripe.ts` — legado, substituído por `payments/stripe.ts`
+- ✅ ~~`core/finance/invoice.ts`~~ — deletado em 2026-05-04
+- ✅ ~~`core/integrations/stripe.ts`~~ — deletado em 2026-05-04
 - ❌ `core/integrations/blingAdapter.ts` — stub vazio (todas funções retornam mensagem "em breve")
 - ❌ `core/integrations/instagramAdapter.ts` — stub vazio
 - ❌ `core/integrations/youtubeAdapter.ts` — stub vazio (importado em SettingsView mas não funcional)

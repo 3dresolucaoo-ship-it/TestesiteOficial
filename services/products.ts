@@ -72,15 +72,12 @@ export const productsService = {
     const userId = await requireUserId()
     const { id: _ignored, ...rowWithoutId } = toDB(p, userId)
 
-    console.log('CREATE PRODUCT PAYLOAD', rowWithoutId)
-
     const { data, error } = await supabase
       .from('products')
       .insert(rowWithoutId)
       .select()
       .single()
     if (error) {
-      console.error('[products.create] ERRO DO SUPABASE:', JSON.stringify(error))
       serviceError('productsService.create', error)
     }
     return fromDB(data!)

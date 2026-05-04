@@ -22,7 +22,7 @@
 | `/api/integrations/mercadopago/connect` | GET | ✅ OK |
 | `/api/integrations/mercadopago/callback` | GET | ✅ OK (precisa app Marketplace) |
 | `/api/webhooks/payment` | POST | ❌ depende B1 |
-| `/api/webhooks/stripe` | POST | ⚠️ legado — deletar quando migração concluída |
+| `/api/webhooks/stripe` | POST | ✅ deletado em 2026-05-04 (substituído por `/api/webhooks/payment`) |
 | `/api/content/sync` | POST | ⚠️ usa client browser — refatorar |
 
 ## Issues conhecidos

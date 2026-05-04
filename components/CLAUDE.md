@@ -15,8 +15,8 @@
 
 | Componente | Linhas | Status |
 |---|---|---|
-| SettingsView.tsx | **999** | ❌ refatorar pra `SettingsView/{General,Finance,...}.tsx` |
-| DashboardView.tsx | **804** | ❌ refatorar em widgets |
+| SettingsView.tsx | **220** | ✅ refatorado — tabs em `settings/` (8 sub-componentes) |
+| DashboardView.tsx | **483** | ✅ refatorado — shared em `dashboard/shared.tsx` |
 | Sidebar.tsx | 601 | 🟧 grande, mas ok por enquanto |
 | FinanceView.tsx | 595 | 🟧 grande |
 | FinanceCharts.tsx | 465 | ✅ |
@@ -31,7 +31,7 @@
 
 ## Issues conhecidos
 
-- ❌ `SettingsView.tsx` e `DashboardView.tsx` são gigantes e difíceis de manter
+- ✅ ~~`SettingsView.tsx` e `DashboardView.tsx` gigantes~~ — refatorados em 2026-05-04
 - ❌ Design "sem peso" — ver feedback em `ROADMAP.md` § Design
 - ⚠️ `BuyButton.tsx` pode estar morto
 
