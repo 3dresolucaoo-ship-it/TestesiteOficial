@@ -15,11 +15,12 @@
 
 ### Configuração / Deploy
 - [x] Atualizar `NEXT_PUBLIC_APP_URL` no `.env.local` ✅ 2026-05-04
-- [ ] Atualizar `NEXT_PUBLIC_APP_URL` no Vercel Dashboard (manual)
+- [x] Atualizar `NEXT_PUBLIC_APP_URL` no Vercel Dashboard ✅ 2026-05-05
 - [x] **Código Marketplace MP** — `marketplace_fee` em `payments/mercadopago.ts` + `ProviderCredentials` ✅ 2026-05-04
-- [ ] Criar **app Marketplace** no Mercado Pago Developer Portal (manual — atual é CheckoutPro)
-- [ ] Configurar redirect URI no app MP: `https://bvaz-hub.vercel.app/api/integrations/mercadopago/callback`
-- [ ] Atualizar `MP_CLIENT_ID` + `MP_CLIENT_SECRET` no Vercel com credenciais do novo app
+- [x] Criar app **BVaz Hub** no Mercado Pago Developer Portal (Checkout Pro + OAuth habilitado) ✅ 2026-05-05
+- [x] Configurar redirect URI no app MP: `https://bvaz-hub.vercel.app/api/integrations/mercadopago/callback` ✅ 2026-05-05
+- [ ] Atualizar `MP_CLIENT_ID` + `MP_CLIENT_SECRET` no Vercel com credenciais do novo app (usar teste agora, produtivas após ativar)
+- [ ] Ativar credenciais produtivas no app BVaz Hub (MP Developer Portal → preencher dados do negócio)
 
 ### Segurança
 - [ ] Validação de input via Zod em `/api/checkout`, `/api/encomenda` (XSS possível em `clientName`)
@@ -183,6 +184,8 @@
 > Lista compacta de marcos atingidos:
 
 - 2026-05-05 · Deploy `2c11391` em produção (https://bvaz-hub.vercel.app — refactor stubs)
+- 2026-05-05 · App BVaz Hub criado no MP Developer (OAuth + redirect URI configurados)
+- 2026-05-05 · `NEXT_PUBLIC_APP_URL` atualizado no Vercel
 - 2026-04-28 · OAuth Mercado Pago implementado (callback + refresh + UI Settings)
 - 2026-04-28 · `payment_configs` table + RPC atomic activation
 - 2026-04-25 · Catálogos com 3 templates (grid/list/minimal)
