@@ -182,6 +182,7 @@
 > Quando terminar item, mover daqui pra cima como `[x]`.
 > Lista compacta de marcos atingidos:
 
+- 2026-05-05 · Deploy `2c11391` em produção (https://bvaz-hub.vercel.app — refactor stubs)
 - 2026-04-28 · OAuth Mercado Pago implementado (callback + refresh + UI Settings)
 - 2026-04-28 · `payment_configs` table + RPC atomic activation
 - 2026-04-25 · Catálogos com 3 templates (grid/list/minimal)
