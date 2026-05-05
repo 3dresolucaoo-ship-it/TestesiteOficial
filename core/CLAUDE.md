@@ -20,7 +20,7 @@
 | `crm/` | types CRM (Lead, Affiliate, stages) | ✅ |
 | `finance/` | types + engine | ✅ (`invoice.ts` deletado) |
 | `flows/` | orquestração `processOrder` (UI + admin) | ✅ |
-| `integrations/` | adapters externos (Stripe, Bling, IG, YT) | ⚠️ vários stubs vazios |
+| `integrations/` | adapters externos | ✅ pasta vazia — stubs deletados em 2026-05-04 |
 | `inventory/` | types inventory + filament_uso | ✅ |
 | `operations/` | `costCalculator` (cálculo de custo de impressão) | ✅ |
 | `portfolio/` | types portfolio | ✅ (mas tabelas no DB não existem) |
@@ -31,9 +31,8 @@
 
 - ✅ ~~`core/finance/invoice.ts`~~ — deletado em 2026-05-04
 - ✅ ~~`core/integrations/stripe.ts`~~ — deletado em 2026-05-04
-- ❌ `core/integrations/blingAdapter.ts` — stub vazio (todas funções retornam mensagem "em breve")
-- ❌ `core/integrations/instagramAdapter.ts` — stub vazio
-- ❌ `core/integrations/youtubeAdapter.ts` — stub vazio (importado em SettingsView mas não funcional)
+- ✅ ~~`core/integrations/{bling,instagram,youtube}Adapter.ts`~~ — stubs deletados em 2026-05-04
+- ⏳ Quando implementar integrações de verdade: usar padrão `services/paymentConfig.ts` + OAuth (não singleton in-memory)
 
 ## Padrão de novo engine
 

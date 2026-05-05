@@ -34,7 +34,7 @@
 - [x] Deletar `AGENTS.md` ✅ 2026-05-04
 - [ ] Substituir `README.md` template por descrição real do projeto
 - [x] Deletar `core/finance/invoice.ts` ✅ 2026-05-04
-- [ ] Deletar `core/integrations/{bling,instagram,youtube}Adapter.ts` (stubs — usados em IntegrationsTab, deletar quando implementar de verdade)
+- [x] Deletar `core/integrations/{bling,instagram,youtube}Adapter.ts` (stubs) ✅ 2026-05-04
 - [x] Deletar `core/integrations/stripe.ts` legacy + `app/api/webhooks/stripe/route.ts` ✅ 2026-05-04
 - [ ] Avaliar `app/showcase/page.tsx` — remover se não usado
 - [x] Remover `console.log` em `services/products.ts` ✅ 2026-05-04

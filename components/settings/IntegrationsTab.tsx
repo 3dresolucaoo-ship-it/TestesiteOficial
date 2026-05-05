@@ -1,9 +1,6 @@
 'use client'
 
 import { ExternalLink } from 'lucide-react'
-import * as InstagramAdapter from '@/core/integrations/instagramAdapter'
-import * as YouTubeAdapter from '@/core/integrations/youtubeAdapter'
-import * as BlingAdapter from '@/core/integrations/blingAdapter'
 import type { RemoteConfig } from './types'
 
 interface Props {
@@ -17,21 +14,21 @@ export function IntegrationsTab({ remoteConfigs }: Props) {
     {
       name: 'Instagram',
       description: 'Sincronize métricas de posts automaticamente via Meta Graph API.',
-      status: InstagramAdapter.isConfigured() ? 'configured' : 'not_configured',
+      status: 'not_configured' as const,
       color: '#f59e0b',
       docs: 'https://developers.facebook.com/docs/instagram-api',
     },
     {
       name: 'YouTube',
       description: 'Importe visualizações, likes e comentários via YouTube Data API v3.',
-      status: YouTubeAdapter.isConfigured() ? 'configured' : 'not_configured',
+      status: 'not_configured' as const,
       color: '#ef4444',
       docs: 'https://developers.google.com/youtube/v3',
     },
     {
       name: 'Bling ERP',
       description: 'Sincronize pedidos, produtos e estoque com o Bling via API v3.',
-      status: BlingAdapter.isConfigured() ? 'configured' : 'not_configured',
+      status: 'not_configured' as const,
       color: '#3b82f6',
       docs: 'https://developer.bling.com.br/referencia',
     },
@@ -93,8 +90,7 @@ export function IntegrationsTab({ remoteConfigs }: Props) {
         <p className="text-[#f59e0b] text-sm font-medium mb-0.5">Como configurar integrações</p>
         <p className="text-[#888888] text-xs">
           <strong className="text-[#aaaaaa]">Mercado Pago:</strong> configure as chaves na aba <strong className="text-[#a78bfa]">Vitrine</strong> acima.{' '}
-          <strong className="text-[#aaaaaa]">Instagram / YouTube / Bling:</strong> configure via código nos adapters em{' '}
-          <code className="text-[#a78bfa]">core/integrations/</code>.
+          <strong className="text-[#aaaaaa]">Instagram / YouTube / Bling:</strong> integrações em desenvolvimento.
         </p>
       </div>
     </div>
