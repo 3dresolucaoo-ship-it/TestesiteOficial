@@ -59,7 +59,8 @@
       "Bash(vercel env *)",
       "Bash(git commit -m 'feat: Mercado Pago OAuth2 integration *)",
       "Bash(vercel ls *)",
-      "Bash(dir /B)"
+      "Bash(dir /B)",
+      "Bash(git commit *)"
     ]
   },
   "hooks": {
