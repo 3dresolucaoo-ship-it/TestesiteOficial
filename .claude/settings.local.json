@@ -60,7 +60,10 @@
       "Bash(git commit -m 'feat: Mercado Pago OAuth2 integration *)",
       "Bash(vercel ls *)",
       "Bash(dir /B)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(cat)",
+      "Bash(python3 /tmp/extract_tools.py)",
+      "Bash(node \"C:/Users/infin/AppData/Local/Temp/extract_tools.js\")"
     ]
   },
   "hooks": {
