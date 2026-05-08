@@ -143,12 +143,13 @@ export function DashboardView({ initialState }: { initialState: AppState }) {
         </div>
       )}
 
-      {/* ── Finance ──────────────────────────────────────────────────────────── */}
+      {/* ── Finance (FONTE: tabela transactions — receita/despesa registradas) ── */}
       <Section title="Visão Financeira" icon={TrendingUp} iconColor="text-[#10b981]" href="/finance">
+        <p className="text-[#444455] text-[11px] mb-3 -mt-1">📒 fonte: lançamentos financeiros (transações)</p>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
-          <StatCard label="Receita Total" value={fmt(stats.revenue)} sub={`${state.transactions.filter(t => t.type === 'income').length} transações`} icon={TrendingUp} accentColor="#10b981" sparkData={revenueSparkData} sparkColor="#10b981" />
+          <StatCard label="Receita (transações)" value={fmt(stats.revenue)} sub={`${state.transactions.filter(t => t.type === 'income').length} transações`} icon={TrendingUp} accentColor="#10b981" sparkData={revenueSparkData} sparkColor="#10b981" />
           <StatCard label="Despesas" value={fmt(stats.expenses)} sub="todas as categorias" icon={TrendingDown} accentColor="#ef4444" sparkData={expenseSparkData} sparkColor="#ef4444" />
-          <StatCard label="Lucro Líquido" value={fmt(stats.profit)} sub={stats.profit >= 0 ? 'resultado positivo' : 'resultado negativo'} icon={DollarSign} accentColor={stats.profit >= 0 ? '#10b981' : '#ef4444'} sparkData={profitSparkData} sparkColor={stats.profit >= 0 ? '#10b981' : '#ef4444'} />
+          <StatCard label="Lucro Líquido" value={fmt(stats.profit)} sub={stats.profit >= 0 ? 'receita − despesas' : 'resultado negativo'} icon={DollarSign} accentColor={stats.profit >= 0 ? '#10b981' : '#ef4444'} sparkData={profitSparkData} sparkColor={stats.profit >= 0 ? '#10b981' : '#ef4444'} />
           <StatCard label="Pedidos Ativos" value={String(stats.activeOrders)} sub={`${state.orders.length} total`} icon={ShoppingCart} accentColor="#3b82f6" />
         </div>
         {monthly.length >= 2 && (
@@ -290,16 +291,17 @@ export function DashboardView({ initialState }: { initialState: AppState }) {
         </Section>
       )}
 
-      {/* ── Production Intelligence ──────────────────────────────────────────── */}
+      {/* ── Production Intelligence (FONTE: orders × products × inventory) ──── */}
       {hasProdData && (
         <Section title="Inteligência de Produção" icon={Cpu} iconColor="text-[#7c3aed]" href="/products" collapsible>
+          <p className="text-[#444455] text-[11px] mb-3 -mt-1">⚙️ fonte: pedidos pagos × custo de impressão (operacional, não inclui ads/frete/software)</p>
           <div className="space-y-4">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { label: 'Custo Produção',   value: fmt(prodIntel.totalProductionCost), color: '#f59e0b', icon: Zap },
-                { label: 'Receita Produtos', value: fmt(prodIntel.totalRevenue),        color: '#10b981', icon: TrendingUp },
-                { label: 'Lucro Produtos',   value: fmt(prodIntel.totalProfit),         color: prodIntel.totalProfit >= 0 ? '#10b981' : '#ef4444', icon: DollarSign },
-                { label: 'Margem Geral',     value: `${prodIntel.overallMargin.toFixed(1)}%`, color: prodIntel.overallMargin >= 40 ? '#a78bfa' : prodIntel.overallMargin >= 20 ? '#f59e0b' : '#ef4444', icon: Flame },
+                { label: 'Custo de Produção',  value: fmt(prodIntel.totalProductionCost), color: '#f59e0b', icon: Zap },
+                { label: 'Receita de Pedidos', value: fmt(prodIntel.totalRevenue),        color: '#10b981', icon: TrendingUp },
+                { label: 'Lucro Operacional',  value: fmt(prodIntel.totalProfit),         color: prodIntel.totalProfit >= 0 ? '#10b981' : '#ef4444', icon: DollarSign },
+                { label: 'Margem Operacional', value: `${prodIntel.overallMargin.toFixed(1)}%`, color: prodIntel.overallMargin >= 40 ? '#a78bfa' : prodIntel.overallMargin >= 20 ? '#f59e0b' : '#ef4444', icon: Flame },
               ].map(({ label, value, color, icon: Icon }) => (
                 <div key={label} className="rounded-2xl p-4 transition-all duration-200 hover:scale-[1.02]" style={{ background: `${color}0d`, border: `1px solid ${color}22`, boxShadow: `0 4px 20px rgba(0,0,0,0.3)` }}>
                   <div className="flex items-center justify-between mb-2">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useStore, uid } from '@/lib/store'
 import type { Transaction, TransactionType, TransactionCategory, IncomeCategory, ExpenseCategory, Project } from '@/lib/types'
 import { INCOME_CATEGORY_LABELS, EXPENSE_CATEGORY_LABELS } from '@/lib/types'
@@ -8,12 +8,19 @@ import {
   calcRevenue, calcExpenses, calcProfit, monthlyBreakdown,
   exportCsv, downloadCsv, categoryBreakdown, profitMargin,
 } from '@/core/finance/engine'
+import { calcBreakEvenSummary } from '@/core/finance/breakEvenEngine'
 import { MonthlyChart, CategoryBars, type ChartMode } from '@/components/FinanceCharts'
 import {
   Plus, Download, TrendingUp, TrendingDown, DollarSign, Percent,
-  Trash2, MoreHorizontal, Pencil, Search, BarChart3,
+  Trash2, MoreHorizontal, Pencil, Search, BarChart3, RefreshCw,
+  Target, Calculator, AlertCircle, CheckCircle2, Info,
 } from 'lucide-react'
 import { Modal, FormField, Input, Select, SubmitButton } from '@/components/Modal'
+
+type FinanceTab = 'overview' | 'breakeven'
+
+const STORAGE_KEY_FIXED_COST  = 'bvaz.finance.fixedCost'
+const STORAGE_KEY_PROFIT_GOAL = 'bvaz.finance.profitGoal'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -158,6 +165,220 @@ function TransactionForm({
   )
 }
 
+// ─── Break-even section ───────────────────────────────────────────────────────
+
+import type { BreakEvenSummary } from '@/core/finance/breakEvenEngine'
+
+function BreakEvenSection({
+  summary,
+  fixedCost,
+  profitGoal,
+  onFixedCostChange,
+  onProfitGoalChange,
+  hasProducts,
+}: {
+  summary:             BreakEvenSummary
+  fixedCost:           number
+  profitGoal:          number
+  onFixedCostChange:   (v: number) => void
+  onProfitGoalChange:  (v: number) => void
+  hasProducts:         boolean
+}) {
+  const noFixedCost = fixedCost <= 0
+  const noProducts  = !hasProducts || summary.products.length === 0
+
+  return (
+    <div className="space-y-5">
+
+      {/* Educational header */}
+      <div className="bg-[rgba(124,58,237,0.05)] border border-[#7c3aed33] rounded-xl p-4 flex gap-3">
+        <Info size={16} className="text-[#a78bfa] shrink-0 mt-0.5" />
+        <div className="text-xs text-[#888888] leading-relaxed">
+          <p className="text-[#f0f0f5] font-medium mb-1">O que é Ponto de Equilíbrio?</p>
+          <p>
+            É quanto você precisa <strong className="text-[#a78bfa]">vender por mês</strong> pra <strong>não ter prejuízo</strong>.
+            Calculado a partir dos seus <strong>custos fixos</strong> (aluguel, DAS-MEI, internet…) divididos pela
+            <strong> margem de contribuição</strong> (preço − custo variável) de cada produto.
+          </p>
+        </div>
+      </div>
+
+      {/* Inputs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4">
+          <label className="text-[#555555] text-xs uppercase tracking-wide font-medium mb-2 flex items-center gap-1.5">
+            <Calculator size={12} />
+            Custo fixo mensal (R$)
+          </label>
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={fixedCost || ''}
+            onChange={e => onFixedCostChange(parseFloat(e.target.value) || 0)}
+            placeholder="Ex: 1500"
+            className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] tabular-nums"
+          />
+          <p className="text-[#444455] text-[11px] mt-2">
+            Aluguel + internet + DAS + software + assinaturas. Tudo que paga mesmo sem vender.
+          </p>
+        </div>
+
+        <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4">
+          <label className="text-[#555555] text-xs uppercase tracking-wide font-medium mb-2 flex items-center gap-1.5">
+            <Target size={12} />
+            Meta de lucro mensal (R$)
+          </label>
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={profitGoal || ''}
+            onChange={e => onProfitGoalChange(parseFloat(e.target.value) || 0)}
+            placeholder="Ex: 3000"
+            className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] tabular-nums"
+          />
+          <p className="text-[#444455] text-[11px] mt-2">
+            Quanto você quer levar pra casa por mês depois de pagar tudo.
+          </p>
+        </div>
+      </div>
+
+      {noFixedCost && (
+        <div className="bg-[#f59e0b1a] border border-[#f59e0b33] rounded-xl p-4 flex gap-3">
+          <AlertCircle size={16} className="text-[#f59e0b] shrink-0 mt-0.5" />
+          <p className="text-xs text-[#f59e0b]">
+            Informe seu <strong>custo fixo mensal</strong> acima pra calcular o ponto de equilíbrio.
+          </p>
+        </div>
+      )}
+
+      {noProducts && !noFixedCost && (
+        <div className="bg-[#f59e0b1a] border border-[#f59e0b33] rounded-xl p-4 flex gap-3">
+          <AlertCircle size={16} className="text-[#f59e0b] shrink-0 mt-0.5" />
+          <p className="text-xs text-[#f59e0b]">
+            Você precisa cadastrar <strong>produtos</strong> com preço de venda em <a href="/products" className="underline">/products</a> pra calcular margem por unidade.
+          </p>
+        </div>
+      )}
+
+      {!noFixedCost && !noProducts && (
+        <>
+          {/* Big result cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="bg-gradient-to-br from-[#7c3aed1a] to-[#7c3aed05] border border-[#7c3aed33] rounded-xl p-5">
+              <p className="text-[#a78bfa] text-[11px] uppercase tracking-wide font-semibold mb-2">Ponto de Equilíbrio</p>
+              <p className="text-[#f0f0f5] text-3xl font-bold tabular-nums mb-1">{fmt(summary.breakEvenRevenue)}</p>
+              <p className="text-[#888888] text-xs mb-4">precisa vender esse mês pra não ter prejuízo</p>
+              <ProgressBar value={summary.breakEvenProgress} colorActive="#a78bfa" colorBg="#7c3aed22" />
+              <p className="text-[#555555] text-[11px] mt-2">
+                Hoje: <span className="text-[#a78bfa] font-medium tabular-nums">{fmt(summary.currentMonthRevenue)}</span>
+                {' '}({summary.breakEvenProgress.toFixed(0)}%)
+              </p>
+            </div>
+
+            {profitGoal > 0 && (
+              <div className="bg-gradient-to-br from-[#10b9811a] to-[#10b98105] border border-[#10b98133] rounded-xl p-5">
+                <p className="text-[#10b981] text-[11px] uppercase tracking-wide font-semibold mb-2">Meta de Lucro {fmt(profitGoal)}</p>
+                <p className="text-[#f0f0f5] text-3xl font-bold tabular-nums mb-1">{fmt(summary.goalRevenue)}</p>
+                <p className="text-[#888888] text-xs mb-4">precisa vender pra atingir a meta</p>
+                <ProgressBar value={summary.goalProgress} colorActive="#10b981" colorBg="#10b98122" />
+                <p className="text-[#555555] text-[11px] mt-2">
+                  Hoje: <span className="text-[#10b981] font-medium tabular-nums">{fmt(summary.currentMonthRevenue)}</span>
+                  {' '}({summary.goalProgress.toFixed(0)}%)
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Average MC% */}
+          <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4 flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-[#555555] text-[11px] uppercase tracking-wide font-medium">Margem de Contribuição Média</p>
+              <p className="text-[#f0f0f5] text-2xl font-bold tabular-nums">{summary.avgContributionPct.toFixed(1)}%</p>
+            </div>
+            <div className="text-[#888888] text-xs max-w-md">
+              Ponderada pelo preço dos seus {summary.products.length} produto(s). Quanto maior, menos unidades você precisa vender pra cobrir o custo fixo.
+            </div>
+          </div>
+
+          {/* Per-product breakdown */}
+          <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl overflow-hidden">
+            <div className="px-5 py-3 border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between">
+              <p className="text-[#f0f0f5] text-sm font-medium">Por Produto</p>
+              <p className="text-[#444455] text-[11px]">unidades necessárias pra break-even / meta</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[rgba(255,255,255,0.05)]">
+                    {['Produto', 'Preço', 'Custo Var.', 'MC un.', 'MC %', 'Break-even', profitGoal > 0 ? 'Meta' : ''].filter(Boolean).map(h => (
+                      <th key={h} className="text-left py-2.5 px-4 text-[#555555] text-xs font-medium uppercase tracking-wide first:pl-5 last:pr-5">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {summary.products.map(p => {
+                    const isLoss = p.contributionMargin <= 0
+                    return (
+                      <tr key={p.productId} className="border-b border-[rgba(255,255,255,0.03)] last:border-0 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                        <td className="py-3 px-4 first:pl-5 text-[#f0f0f5] text-xs">{p.productName}</td>
+                        <td className="py-3 px-4 text-[#10b981] text-xs tabular-nums">{fmt(p.salePrice)}</td>
+                        <td className="py-3 px-4 text-[#ef4444] text-xs tabular-nums">{fmt(p.variableCost)}</td>
+                        <td className={`py-3 px-4 text-xs font-semibold tabular-nums ${isLoss ? 'text-[#ef4444]' : 'text-[#a78bfa]'}`}>
+                          {fmt(p.contributionMargin)}
+                        </td>
+                        <td className={`py-3 px-4 text-xs font-medium ${p.contributionPct >= 30 ? 'text-[#10b981]' : p.contributionPct >= 15 ? 'text-[#f59e0b]' : 'text-[#ef4444]'}`}>
+                          {p.contributionPct.toFixed(1)}%
+                        </td>
+                        <td className="py-3 px-4 text-[#f0f0f5] text-xs font-semibold tabular-nums">
+                          {isFinite(p.unitsToBreakEven) ? `${p.unitsToBreakEven} un` : '— prejuízo'}
+                        </td>
+                        {profitGoal > 0 && (
+                          <td className="py-3 px-4 last:pr-5 text-[#10b981] text-xs font-semibold tabular-nums">
+                            {isFinite(p.unitsToReachGoal) ? `${p.unitsToReachGoal} un` : '—'}
+                          </td>
+                        )}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Educational footer */}
+          <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl p-4 text-xs text-[#666666] space-y-2">
+            <p><strong className="text-[#888888]">📐 Fórmulas usadas:</strong></p>
+            <p><span className="text-[#a78bfa]">Margem de Contribuição</span> = Preço de Venda − Custo Variável (filamento + energia + falha)</p>
+            <p><span className="text-[#a78bfa]">Ponto de Equilíbrio (un.)</span> = Custo Fixo ÷ MC Unitária</p>
+            <p><span className="text-[#a78bfa]">Meta (un.)</span> = (Custo Fixo + Lucro Desejado) ÷ MC Unitária</p>
+            <p className="pt-1 text-[#555555]">
+              💡 Em breve: cadastrar custos fixos por categoria (DAS, aluguel…) e separar pessoa física/jurídica. Hoje os valores ficam salvos só no seu navegador.
+            </p>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function ProgressBar({ value, colorActive, colorBg }: { value: number; colorActive: string; colorBg: string }) {
+  const clamped = Math.min(Math.max(value, 0), 100)
+  return (
+    <div className="h-2 rounded-full overflow-hidden" style={{ background: colorBg }}>
+      <div
+        className="h-full rounded-full transition-all duration-500"
+        style={{
+          width: `${clamped}%`,
+          background: `linear-gradient(90deg, ${colorActive}cc, ${colorActive})`,
+          boxShadow: `0 0 12px ${colorActive}66`,
+        }}
+      />
+    </div>
+  )
+}
+
 // ─── Finance view ─────────────────────────────────────────────────────────────
 
 export function FinanceView({
@@ -190,6 +411,38 @@ export function FinanceView({
   const [dateFrom,       setDateFrom]       = useState('')
   const [dateTo,         setDateTo]         = useState('')
   const [search,         setSearch]         = useState('')
+
+  // ── Tabs ────────────────────────────────────────────────────────────────────
+  const [activeTab, setActiveTab] = useState<FinanceTab>('overview')
+
+  // ── Reconciliação ───────────────────────────────────────────────────────────
+  const [reconciling, setReconciling] = useState(false)
+  const [reconcileMsg, setReconcileMsg] = useState<{ kind: 'success' | 'error'; text: string } | null>(null)
+
+  // ── Break-even (persistido em localStorage) ─────────────────────────────────
+  const [fixedCost, setFixedCost]   = useState<number>(0)
+  const [profitGoal, setProfitGoal] = useState<number>(0)
+
+  useEffect(() => {
+    const fc = Number(localStorage.getItem(STORAGE_KEY_FIXED_COST)  ?? '0')
+    const pg = Number(localStorage.getItem(STORAGE_KEY_PROFIT_GOAL) ?? '0')
+    setFixedCost(isFinite(fc) ? fc : 0)
+    setProfitGoal(isFinite(pg) ? pg : 0)
+  }, [])
+
+  function updateFixedCost(v: number) {
+    setFixedCost(v)
+    localStorage.setItem(STORAGE_KEY_FIXED_COST, String(v))
+  }
+  function updateProfitGoal(v: number) {
+    setProfitGoal(v)
+    localStorage.setItem(STORAGE_KEY_PROFIT_GOAL, String(v))
+  }
+
+  const breakEven = useMemo(
+    () => calcBreakEvenSummary(state.products, state.inventory, transactions, fixedCost, profitGoal),
+    [state.products, state.inventory, transactions, fixedCost, profitGoal],
+  )
 
   const projectId = filterProject === 'all' ? undefined : filterProject
 
@@ -262,6 +515,26 @@ export function FinanceView({
     downloadCsv(csv, name)
   }
 
+  async function handleReconcile() {
+    if (reconciling) return
+    setReconciling(true)
+    setReconcileMsg(null)
+    try {
+      const res = await fetch('/api/admin/reconcile-transactions', { method: 'POST' })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error ?? 'Falha na reconciliação')
+      setReconcileMsg({ kind: 'success', text: json.message ?? 'Reconciliado' })
+      // Recarrega a página depois de 1.5s pra puxar transactions novas via SSR
+      if (json.result?.created > 0) {
+        setTimeout(() => window.location.reload(), 1500)
+      }
+    } catch (err) {
+      setReconcileMsg({ kind: 'error', text: err instanceof Error ? err.message : 'Erro desconhecido' })
+    } finally {
+      setReconciling(false)
+    }
+  }
+
   const projectName = (id: string) => projects.find(p => p.id === id)?.name ?? '—'
 
   const categoryOptions =
@@ -279,7 +552,16 @@ export function FinanceView({
           <h2 className="text-[#f0f0f5] font-semibold text-lg">Finanças</h2>
           <p className="text-[#555555] text-sm">{transactions.length} transações registradas</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={handleReconcile}
+            disabled={reconciling}
+            title="Cria transações faltantes para pedidos pagos legacy"
+            className="flex items-center gap-2 text-[#888888] hover:text-[#a78bfa] border border-[rgba(255,255,255,0.07)] hover:border-[#7c3aed55] text-sm px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
+          >
+            <RefreshCw size={14} className={reconciling ? 'animate-spin' : ''} />
+            {reconciling ? 'Reconciliando…' : 'Reconciliar'}
+          </button>
           <button
             onClick={handleExport}
             className="flex items-center gap-2 text-[#888888] hover:text-[#f0f0f5] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] text-sm px-3 py-2 rounded-lg transition-colors"
@@ -297,6 +579,42 @@ export function FinanceView({
         </div>
       </div>
 
+      {reconcileMsg && (
+        <div
+          className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border ${
+            reconcileMsg.kind === 'success'
+              ? 'bg-[#10b9811a] border-[#10b98133] text-[#10b981]'
+              : 'bg-[#ef44441a] border-[#ef444433] text-[#ef4444]'
+          }`}
+        >
+          {reconcileMsg.kind === 'success' ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
+          {reconcileMsg.text}
+        </div>
+      )}
+
+      {/* ── Tab strip ──────────────────────────────────────────────────────── */}
+      <div className="flex items-center gap-1 border-b border-[rgba(255,255,255,0.06)]">
+        {([
+          { id: 'overview' as const,  label: 'Visão Geral',         icon: BarChart3 },
+          { id: 'breakeven' as const, label: 'Ponto de Equilíbrio', icon: Target },
+        ]).map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
+              activeTab === tab.id
+                ? 'text-[#a78bfa] border-[#7c3aed]'
+                : 'text-[#555555] border-transparent hover:text-[#f0f0f5]'
+            }`}
+          >
+            <tab.icon size={14} />
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'overview' && (
+      <>
       <select
         value={filterProject}
         onChange={e => setFilterProject(e.target.value)}
@@ -566,6 +884,19 @@ export function FinanceView({
           </>
         )}
       </div>
+      </>
+      )}
+
+      {activeTab === 'breakeven' && (
+        <BreakEvenSection
+          summary={breakEven}
+          fixedCost={fixedCost}
+          profitGoal={profitGoal}
+          onFixedCostChange={updateFixedCost}
+          onProfitGoalChange={updateProfitGoal}
+          hasProducts={state.products.length > 0}
+        />
+      )}
 
       {creating && (
         <Modal title="Nova Transação" onClose={() => setCreating(false)}>

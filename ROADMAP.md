@@ -61,12 +61,13 @@
 - [ ] Adicionar header `X-Robots-Tag: noindex` em `/api/*`
 
 ### Métricas inconsistentes
-- [ ] **Bug visível**: dashboard mostra "Receita R$ 90, Lucro R$ 270" — lucro maior que receita parece contradição. Investigado em 2026-05-08: cards medem coisas diferentes ("Receita Total" via `transactions` vs "Lucro Produtos" via `orders × products`). Solução: (a) script de reconciliação que cria transactions faltantes pra orders pagos legacy, (b) renomear labels pra "Lucro Operacional" / "Lucro Financeiro" com badge de fonte. Ver `decisions/005-integracoes-futuras.md` § Fase A.
+- [x] **Bug visível "Receita R$ 90, Lucro R$ 270"** — investigado 2026-05-08, cards medem fontes diferentes. Renomeados: "Receita Produtos" → "Receita de Pedidos", "Lucro Produtos" → "Lucro Operacional"; adicionados badges de fonte (📒 transações / ⚙️ pedidos × produção) ✅ 2026-05-08
 
 ### Finanças empresariais (ADR 004 + 005)
-- [ ] **Onda 1** — Renomear cards do dashboard pra evidenciar fonte (operacional vs financeiro)
-- [ ] **Onda 2** — MVP Break-even client-side (custos fixos, MC, ponto de equilíbrio, metas) — ver `decisions/004-financas-empresariais-mvp.md`
-- [ ] **Script de reconciliação** orders ↔ transactions (1 vez, idempotente)
+- [x] **Onda 1** — Renomear cards do dashboard pra evidenciar fonte ✅ 2026-05-08
+- [x] **Onda 2** — MVP Break-even client-side (custos fixos, MC, ponto de equilíbrio, metas) ✅ 2026-05-08 — ver `decisions/004-financas-empresariais-mvp.md`
+- [x] **Script de reconciliação** orders ↔ transactions — `POST /api/admin/reconcile-transactions` + botão "Reconciliar" no FinanceView ✅ 2026-05-08
+- [ ] **Onda 3** — Schema dedicado pra `fixed_costs` e `profit_goals` (hoje persistido em localStorage)
 
 ---
 
@@ -192,6 +193,7 @@
 > Quando terminar item, mover daqui pra cima como `[x]`.
 > Lista compacta de marcos atingidos:
 
+- 2026-05-08 · **Finanças MVP completo** — Onda 1+2+3: rota `/api/admin/reconcile-transactions` (cria tx faltantes pra orders pagos legacy), tab "Ponto de Equilíbrio" no FinanceView com MC por produto + break-even + metas (localStorage), labels do dashboard separados por fonte (📒 transações / ⚙️ produção).
 - 2026-05-07 · **Stripe Connect OAuth** — botão "Conectar com Stripe" um-clique implementado. Rotas `/api/integrations/stripe/connect` e `/callback` seguem mesmo padrão MP. Form manual mantido como fallback "avançado". Requer `STRIPE_CONNECT_CLIENT_ID` (ca_...) do Stripe Dashboard → Connect Settings.
 - 2026-05-07 · **Stripe UI completa** — `StorefrontTab` agora salva/ativa/desconecta credenciais Stripe via `/api/payment-configs`. Inclui toggle test/live mode + webhook secret. Hedging contra bloqueador MP.
 - 2026-05-06 · `MP_CLIENT_ID` + `MP_CLIENT_SECRET` configurados no Vercel (credenciais teste) + redeploy `7efdbf6`
