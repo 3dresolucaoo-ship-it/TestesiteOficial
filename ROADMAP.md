@@ -22,6 +22,7 @@
 - [x] Atualizar `MP_CLIENT_ID` + `MP_CLIENT_SECRET` no Vercel (credenciais teste) ✅ 2026-05-06
 - [ ] Testar fluxo OAuth end-to-end (clicar "Conectar Mercado Pago" em Settings)
 - [ ] Ativar credenciais produtivas no app BVaz Hub (MP Developer Portal → preencher dados do negócio)
+  - ⛔ **BLOQUEADO** (2026-05-07): painel MP `dx-panel-front-applications` quebrado — React error #130 em `/credentials/production` e `/edit-app` (todos os apps). Bug global do MP, status oficial diz "operational". Reproduzido em `BVaz Hub` (6340640476424801) e `lojamercadopago` (5580732761651129). Aguardar correção do MP ou abrir ticket suporte (`/developers/report`).
 - [ ] Atualizar Vercel com credenciais MP produtivas após ativação
 
 ### Segurança
