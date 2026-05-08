@@ -21,6 +21,7 @@ export function StorefrontTab({ draft, setDraft, remoteConfigs, refreshRemoteCon
   const [mpManual, setMpManual] = useState(false)
 
   // ── Stripe local form state (only used until first save) ────────────────────
+  const [stripeManual, setStripeManual] = useState(false)
   const [stripeForm, setStripeForm] = useState({
     publicKey:     '',
     secretKey:     '',
@@ -244,7 +245,9 @@ export function StorefrontTab({ draft, setDraft, remoteConfigs, refreshRemoteCon
                 }`} />
                 <span className="text-[#ebebeb] text-xs font-medium">
                   {stripeRemote?.isActive
-                    ? `Conectado e ativo${stripeRemote.sandbox ? ' · Test mode' : ''}`
+                    ? stripeRemote.hasRefreshToken
+                      ? `Conectado via OAuth${stripeRemote.mpUserId ? ` · ${stripeRemote.mpUserId}` : ''}${stripeRemote.sandbox ? ' · Test' : ''}`
+                      : `Conectado e ativo${stripeRemote.sandbox ? ' · Test mode' : ''}`
                     : stripeRemote ? `Salvo, inativo${stripeRemote.sandbox ? ' · Test mode' : ''}` : 'Não conectado'}
                 </span>
               </div>
@@ -253,74 +256,17 @@ export function StorefrontTab({ draft, setDraft, remoteConfigs, refreshRemoteCon
               )}
             </div>
 
-            {/* Form de credenciais */}
+            {/* Botão one-click "Conectar com Stripe" */}
             {!stripeRemote && (
-              <div className="space-y-3 pt-1 border-t border-[#1a1a1a]">
-                <div>
-                  <FieldLabel>Publishable Key</FieldLabel>
-                  <TextInput
-                    value={stripeForm.publicKey}
-                    onChange={v => setStripeForm(f => ({ ...f, publicKey: v }))}
-                    placeholder={stripeForm.sandbox ? 'pk_test_...' : 'pk_live_...'}
-                  />
-                </div>
-                <div>
-                  <FieldLabel>Secret Key</FieldLabel>
-                  <SecretInput
-                    value={stripeForm.secretKey}
-                    onChange={v => setStripeForm(f => ({ ...f, secretKey: v }))}
-                    placeholder={stripeForm.sandbox ? 'sk_test_...' : 'sk_live_...'}
-                  />
-                  <p className="text-[#3a3a3a] text-xs mt-1">
-                    Encontre em <code className="text-[#a78bfa]">dashboard.stripe.com/apikeys</code>. Armazenada criptografada.
-                  </p>
-                </div>
-                <div>
-                  <FieldLabel>Webhook Secret (opcional)</FieldLabel>
-                  <SecretInput
-                    value={stripeForm.webhookSecret}
-                    onChange={v => setStripeForm(f => ({ ...f, webhookSecret: v }))}
-                    placeholder="whsec_..."
-                  />
-                  <p className="text-[#3a3a3a] text-xs mt-1">
-                    Configure o endpoint <code className="text-[#a78bfa]">/api/webhooks/payment?merchant={'<seu-user-id>'}</code> no painel Stripe e cole o signing secret aqui.
-                  </p>
-                </div>
-
-                {/* Toggle sandbox */}
-                <label className="flex items-center gap-3 cursor-pointer pt-1">
-                  <div
-                    onClick={() => setStripeForm(f => ({ ...f, sandbox: !f.sandbox }))}
-                    className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${
-                      stripeForm.sandbox ? 'bg-[#f59e0b]' : 'bg-[#10b981]'
-                    }`}
-                  >
-                    <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
-                      stripeForm.sandbox ? 'translate-x-0.5' : 'translate-x-4'
-                    }`} />
-                  </div>
-                  <div>
-                    <p className="text-[#ebebeb] text-sm">
-                      {stripeForm.sandbox ? 'Modo Teste (sk_test_)' : 'Modo Produção (sk_live_)'}
-                    </p>
-                    <p className="text-[#555555] text-xs">
-                      {stripeForm.sandbox
-                        ? 'Use cartões de teste do Stripe. Nenhum valor real cobrado.'
-                        : 'Cobranças reais. Garanta que sua conta Stripe está aprovada.'}
-                    </p>
-                  </div>
-                </label>
-
-                <button
-                  type="button"
-                  onClick={saveStripe}
-                  disabled={stripeFb.kind === 'saving' || stripeForm.secretKey.trim().length < 8}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-[#635bff] hover:bg-[#7a73ff] disabled:bg-[#2a2a2a] disabled:text-[#555] text-white text-sm font-medium transition-colors"
-                >
-                  {stripeFb.kind === 'saving' ? <Loader2 size={14} className="animate-spin" /> : null}
-                  {stripeFb.kind === 'saving' ? 'Salvando...' : 'Salvar credenciais Stripe'}
-                </button>
-              </div>
+              <a
+                href="/api/integrations/stripe/connect"
+                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-[#635bff] hover:bg-[#7a73ff] text-white text-sm font-medium transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M13.479 9.883c-1.626-.604-2.512-1.067-2.512-1.803 0-.622.511-.977 1.423-.977 1.667 0 3.379.642 4.558 1.219l.666-4.111c-.935-.446-2.847-1.177-5.49-1.177-1.87 0-3.425.488-4.536 1.4-1.155.954-1.752 2.334-1.752 4 0 3.027 1.847 4.323 4.853 5.415 1.936.703 2.586 1.203 2.586 1.973 0 .748-.637 1.176-1.79 1.176-1.451 0-3.842-.715-5.422-1.629l-.674 4.156c1.357.769 3.864 1.535 6.467 1.535 1.978 0 3.625-.467 4.736-1.355 1.245-.989 1.890-2.448 1.890-4.220 0-3.094-1.890-4.380-4.964-5.602h-.039z"/>
+                </svg>
+                Conectar com Stripe
+              </a>
             )}
 
             {/* Ações quando já tem config salva */}
@@ -365,6 +311,79 @@ export function StorefrontTab({ draft, setDraft, remoteConfigs, refreshRemoteCon
             <p className="text-[#3a3a3a] text-xs pt-1">
               Webhook endpoint: <code className="text-[#a78bfa]">/api/webhooks/payment?merchant={'<seu-user-id>'}</code>
             </p>
+
+            {/* Form manual como fallback */}
+            {!stripeRemote && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setStripeManual(v => !v)}
+                  className="text-[#555] hover:text-[#888] text-xs underline-offset-2 hover:underline transition-colors"
+                >
+                  {stripeManual ? 'Ocultar campos manuais' : 'Inserir chaves manualmente (avançado)'}
+                </button>
+
+                {stripeManual && (
+                  <div className="space-y-3 pt-1 border-t border-[#1a1a1a]">
+                    <div>
+                      <FieldLabel>Publishable Key</FieldLabel>
+                      <TextInput
+                        value={stripeForm.publicKey}
+                        onChange={v => setStripeForm(f => ({ ...f, publicKey: v }))}
+                        placeholder={stripeForm.sandbox ? 'pk_test_...' : 'pk_live_...'}
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel>Secret Key</FieldLabel>
+                      <SecretInput
+                        value={stripeForm.secretKey}
+                        onChange={v => setStripeForm(f => ({ ...f, secretKey: v }))}
+                        placeholder={stripeForm.sandbox ? 'sk_test_...' : 'sk_live_...'}
+                      />
+                      <p className="text-[#3a3a3a] text-xs mt-1">
+                        Encontre em <code className="text-[#a78bfa]">dashboard.stripe.com/apikeys</code>.
+                      </p>
+                    </div>
+                    <div>
+                      <FieldLabel>Webhook Secret (opcional)</FieldLabel>
+                      <SecretInput
+                        value={stripeForm.webhookSecret}
+                        onChange={v => setStripeForm(f => ({ ...f, webhookSecret: v }))}
+                        placeholder="whsec_..."
+                      />
+                    </div>
+
+                    <label className="flex items-center gap-3 cursor-pointer pt-1">
+                      <div
+                        onClick={() => setStripeForm(f => ({ ...f, sandbox: !f.sandbox }))}
+                        className={`w-9 h-5 rounded-full transition-colors relative cursor-pointer ${
+                          stripeForm.sandbox ? 'bg-[#f59e0b]' : 'bg-[#10b981]'
+                        }`}
+                      >
+                        <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
+                          stripeForm.sandbox ? 'translate-x-0.5' : 'translate-x-4'
+                        }`} />
+                      </div>
+                      <div>
+                        <p className="text-[#ebebeb] text-sm">
+                          {stripeForm.sandbox ? 'Modo Teste' : 'Modo Produção'}
+                        </p>
+                      </div>
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={saveStripe}
+                      disabled={stripeFb.kind === 'saving' || stripeForm.secretKey.trim().length < 8}
+                      className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg border border-[#635bff] text-[#635bff] hover:bg-[#635bff1a] disabled:opacity-50 text-xs font-medium transition-colors"
+                    >
+                      {stripeFb.kind === 'saving' ? <Loader2 size={12} className="animate-spin" /> : null}
+                      {stripeFb.kind === 'saving' ? 'Salvando...' : 'Salvar credenciais manuais'}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </SectionCard>
       )}

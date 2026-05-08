@@ -26,13 +26,15 @@ export function IntegrationsTab({ remoteConfigs }: Props) {
     {
       name: 'Stripe',
       description: stripeRemote?.isActive
-        ? `Ativo • ${stripeRemote.accessToken}${stripeRemote.sandbox ? ' • Test mode' : ' • Produção'} • Cartão internacional.`
+        ? stripeRemote.hasRefreshToken
+          ? `Ativo via OAuth${stripeRemote.mpUserId ? ` • ${stripeRemote.mpUserId}` : ''}${stripeRemote.sandbox ? ' • Test' : ''} • Cartão internacional.`
+          : `Ativo • ${stripeRemote.accessToken}${stripeRemote.sandbox ? ' • Test mode' : ' • Produção'} • Cartão internacional.`
         : stripeRemote
           ? `Salvo, inativo${stripeRemote.sandbox ? ' (test mode)' : ''}. Ative na aba Vitrine.`
-          : 'Cartão internacional via Checkout Sessions. Configure na aba Vitrine.',
+          : 'Cartão internacional via Checkout Sessions. Conecte na aba Vitrine.',
       status: stripeRemote?.isActive ? 'configured' : stripeRemote ? 'inactive' : 'not_configured',
       color: '#635bff',
-      docs: 'https://docs.stripe.com/api',
+      docs: 'https://docs.stripe.com/connect',
     },
     {
       name: 'Instagram',
