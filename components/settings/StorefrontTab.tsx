@@ -1,10 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { CheckCircle2, Loader2, AlertCircle } from 'lucide-react'
 import { SectionCard, FieldLabel, TextInput, SecretInput } from './shared'
 import type { AdminConfig } from '@/lib/types'
 import type { SettingsTabProps, RemoteConfig } from './types'
+
+const STRIPE_ERROR_MESSAGES: Record<string, string> = {
+  connect_not_configured: 'Stripe Connect ainda não foi configurado pelo admin. Use as chaves manuais abaixo (avançado), ou configure STRIPE_CONNECT_CLIENT_ID nas env vars do servidor.',
+  platform_key_missing:   'STRIPE_SECRET_KEY (chave da plataforma) não foi configurada no servidor.',
+  invalid_state:          'Sessão expirada ou inválida. Tenta de novo.',
+  missing_params:         'Stripe não retornou os parâmetros esperados.',
+  token_exchange_failed:  'Stripe rejeitou a troca do código por token. Verifique se o redirect URI está cadastrado no painel.',
+  network_error:          'Erro de rede ao falar com o Stripe.',
+  db_error:               'Erro ao salvar credenciais no banco.',
+  access_denied:          'Você cancelou a autorização no Stripe.',
+}
 
 interface Props extends SettingsTabProps {
   remoteConfigs: RemoteConfig[]
@@ -18,6 +30,9 @@ export function StorefrontTab({ draft, setDraft, remoteConfigs, refreshRemoteCon
   const mpRemote     = remoteConfigs.find(c => c.provider === 'mercadopago')
   const stripeRemote = remoteConfigs.find(c => c.provider === 'stripe')
 
+  const router       = useRouter()
+  const searchParams = useSearchParams()
+
   const [mpManual, setMpManual] = useState(false)
 
   // ── Stripe local form state (only used until first save) ────────────────────
@@ -29,6 +44,30 @@ export function StorefrontTab({ draft, setDraft, remoteConfigs, refreshRemoteCon
     sandbox:       true,
   })
   const [stripeFb, setStripeFb] = useState<Feedback>({ kind: 'idle' })
+
+  // ── React to ?stripe=connected|error&detail=... after OAuth callback ────────
+  useEffect(() => {
+    const status = searchParams.get('stripe')
+    if (!status) return
+    if (status === 'connected') {
+      setStripeFb({ kind: 'success', msg: 'Stripe conectado com sucesso!' })
+    } else if (status === 'error') {
+      const detail = searchParams.get('detail') ?? ''
+      setStripeFb({
+        kind: 'error',
+        msg:  STRIPE_ERROR_MESSAGES[detail] ?? `Erro ao conectar Stripe: ${detail || 'desconhecido'}`,
+      })
+      // If error is "connect not configured", auto-open manual fallback so the
+      // user has somewhere to go.
+      if (detail === 'connect_not_configured') setStripeManual(true)
+    }
+    // Clean up URL so refresh doesn't re-trigger the toast
+    const url = new URL(window.location.href)
+    url.searchParams.delete('stripe')
+    url.searchParams.delete('detail')
+    router.replace(url.pathname + url.search, { scroll: false })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function updateStorefront(patch: Partial<AdminConfig['storefront']>) {
     setDraft(d => ({ ...d, storefront: { ...d.storefront, ...patch } }))
