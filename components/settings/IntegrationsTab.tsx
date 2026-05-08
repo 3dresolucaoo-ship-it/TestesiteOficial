@@ -8,9 +8,32 @@ interface Props {
 }
 
 export function IntegrationsTab({ remoteConfigs }: Props) {
-  const mpRemote = remoteConfigs.find(c => c.provider === 'mercadopago')
+  const mpRemote     = remoteConfigs.find(c => c.provider === 'mercadopago')
+  const stripeRemote = remoteConfigs.find(c => c.provider === 'stripe')
 
   const integrations = [
+    {
+      name: 'Mercado Pago',
+      description: mpRemote?.isActive
+        ? `Ativo • ${mpRemote.accessToken} • PIX, cartão e boleto.`
+        : mpRemote
+          ? 'Salvo, inativo. Ative na aba Vitrine.'
+          : 'Receba pagamentos via PIX, cartão e boleto. Configure na aba Vitrine.',
+      status: mpRemote?.isActive ? 'configured' : mpRemote ? 'inactive' : 'not_configured',
+      color: '#00b1ea',
+      docs: 'https://www.mercadopago.com.br/developers/pt/docs',
+    },
+    {
+      name: 'Stripe',
+      description: stripeRemote?.isActive
+        ? `Ativo • ${stripeRemote.accessToken}${stripeRemote.sandbox ? ' • Test mode' : ' • Produção'} • Cartão internacional.`
+        : stripeRemote
+          ? `Salvo, inativo${stripeRemote.sandbox ? ' (test mode)' : ''}. Ative na aba Vitrine.`
+          : 'Cartão internacional via Checkout Sessions. Configure na aba Vitrine.',
+      status: stripeRemote?.isActive ? 'configured' : stripeRemote ? 'inactive' : 'not_configured',
+      color: '#635bff',
+      docs: 'https://docs.stripe.com/api',
+    },
     {
       name: 'Instagram',
       description: 'Sincronize métricas de posts automaticamente via Meta Graph API.',
@@ -31,15 +54,6 @@ export function IntegrationsTab({ remoteConfigs }: Props) {
       status: 'not_configured' as const,
       color: '#3b82f6',
       docs: 'https://developer.bling.com.br/referencia',
-    },
-    {
-      name: 'Mercado Pago',
-      description: mpRemote?.isActive
-        ? `Ativo • ${mpRemote.accessToken} • PIX, cartão e boleto.`
-        : 'Receba pagamentos via PIX, cartão e boleto. Configure as chaves na aba Vitrine.',
-      status: mpRemote?.isActive ? 'configured' : mpRemote ? 'inactive' : 'not_configured',
-      color: '#00b1ea',
-      docs: 'https://www.mercadopago.com.br/developers/pt/docs',
     },
     {
       name: 'NFSe',
@@ -89,7 +103,7 @@ export function IntegrationsTab({ remoteConfigs }: Props) {
       <div className="bg-[#f59e0b08] border border-[#f59e0b22] rounded-xl px-4 py-3">
         <p className="text-[#f59e0b] text-sm font-medium mb-0.5">Como configurar integrações</p>
         <p className="text-[#888888] text-xs">
-          <strong className="text-[#aaaaaa]">Mercado Pago:</strong> configure as chaves na aba <strong className="text-[#a78bfa]">Vitrine</strong> acima.{' '}
+          <strong className="text-[#aaaaaa]">Mercado Pago / Stripe:</strong> configure as chaves na aba <strong className="text-[#a78bfa]">Vitrine</strong> acima.{' '}
           <strong className="text-[#aaaaaa]">Instagram / YouTube / Bling:</strong> integrações em desenvolvimento.
         </p>
       </div>

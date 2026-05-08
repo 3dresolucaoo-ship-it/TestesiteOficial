@@ -92,7 +92,7 @@
 
 ### Catálogo → Checkout
 - [x] Checkout via Mercado Pago (preference) — implementado
-- [ ] Checkout Stripe (provider já existe, falta UI)
+- [x] **Checkout Stripe** — UI completa em Settings → Vitrine (save/activate/disconnect/sandbox) ✅ 2026-05-07
 - [ ] Checkout via PIX direto (sem MP/Stripe)
 
 ### Portfólio
@@ -186,6 +186,7 @@
 > Quando terminar item, mover daqui pra cima como `[x]`.
 > Lista compacta de marcos atingidos:
 
+- 2026-05-07 · **Stripe UI completa** — `StorefrontTab` agora salva/ativa/desconecta credenciais Stripe via `/api/payment-configs`. Inclui toggle test/live mode + webhook secret. Hedging contra bloqueador MP.
 - 2026-05-06 · `MP_CLIENT_ID` + `MP_CLIENT_SECRET` configurados no Vercel (credenciais teste) + redeploy `7efdbf6`
 - 2026-05-05 · Deploy `2c11391` em produção (https://bvaz-hub.vercel.app — refactor stubs)
 - 2026-05-05 · App BVaz Hub criado no MP Developer (OAuth + redirect URI configurados)
