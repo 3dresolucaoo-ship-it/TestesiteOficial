@@ -61,7 +61,12 @@
 - [ ] Adicionar header `X-Robots-Tag: noindex` em `/api/*`
 
 ### Métricas inconsistentes
-- [ ] **Bug visível**: dashboard mostra "Receita R$ 90, Lucro R$ 270" — lucro maior que receita não faz sentido. Investigar `core/analytics/engine.ts` e fontes de dados.
+- [ ] **Bug visível**: dashboard mostra "Receita R$ 90, Lucro R$ 270" — lucro maior que receita parece contradição. Investigado em 2026-05-08: cards medem coisas diferentes ("Receita Total" via `transactions` vs "Lucro Produtos" via `orders × products`). Solução: (a) script de reconciliação que cria transactions faltantes pra orders pagos legacy, (b) renomear labels pra "Lucro Operacional" / "Lucro Financeiro" com badge de fonte. Ver `decisions/005-integracoes-futuras.md` § Fase A.
+
+### Finanças empresariais (ADR 004 + 005)
+- [ ] **Onda 1** — Renomear cards do dashboard pra evidenciar fonte (operacional vs financeiro)
+- [ ] **Onda 2** — MVP Break-even client-side (custos fixos, MC, ponto de equilíbrio, metas) — ver `decisions/004-financas-empresariais-mvp.md`
+- [ ] **Script de reconciliação** orders ↔ transactions (1 vez, idempotente)
 
 ---
 
