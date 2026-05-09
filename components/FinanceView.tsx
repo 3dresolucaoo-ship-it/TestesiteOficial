@@ -10,7 +10,6 @@ import {
 } from '@/core/finance/engine'
 import { calcBreakEvenSummary } from '@/core/finance/breakEvenEngine'
 import { fixedCostsService, profitGoalsService } from '@/services/financeConfig'
-import { useAuth } from '@/context/AuthContext'
 import { MonthlyChart, CategoryBars, type ChartMode } from '@/components/FinanceCharts'
 import {
   Plus, Download, TrendingUp, TrendingDown, DollarSign, Percent,
@@ -560,7 +559,6 @@ export function FinanceView({
   initialProjects:     Project[]
 }) {
   const { state, dispatch } = useStore()
-  const { user, loading: authLoading } = useAuth()
 
   // Read from the shared store so adds/edits/deletes survive navigation. Fall
   // back to SSR-supplied initial data only when the store hasn't hydrated yet
@@ -642,17 +640,16 @@ export function FinanceView({
 
       setFixedCosts(migratedCosts)
       setProfitGoal(migratedGoal)
+    } catch (err) {
+      console.error('[FinanceView] loadBreakEvenData failed:', err)
     } finally {
       setBeLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    // Espera auth resolver antes de tocar nos services — senão requireUserId()
-    // chama getSession() que pode travar pendurando o spinner eternamente.
-    if (authLoading || !user || !breakEvenProjectId) return
-    loadBreakEvenData(breakEvenProjectId)
-  }, [breakEvenProjectId, loadBreakEvenData, authLoading, user])
+    if (breakEvenProjectId) loadBreakEvenData(breakEvenProjectId)
+  }, [breakEvenProjectId, loadBreakEvenData])
 
   const totalFixedCost = useMemo(
     () => fixedCosts.reduce((s, c) => s + c.amount, 0),
