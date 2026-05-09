@@ -1,26 +1,28 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useStore, uid } from '@/lib/store'
-import type { Transaction, TransactionType, TransactionCategory, IncomeCategory, ExpenseCategory, Project } from '@/lib/types'
+import type { Transaction, TransactionType, TransactionCategory, IncomeCategory, ExpenseCategory, Project, FixedCost } from '@/lib/types'
 import { INCOME_CATEGORY_LABELS, EXPENSE_CATEGORY_LABELS } from '@/lib/types'
 import {
   calcRevenue, calcExpenses, calcProfit, monthlyBreakdown,
   exportCsv, downloadCsv, categoryBreakdown, profitMargin,
 } from '@/core/finance/engine'
 import { calcBreakEvenSummary } from '@/core/finance/breakEvenEngine'
+import { fixedCostsService, profitGoalsService } from '@/services/financeConfig'
 import { MonthlyChart, CategoryBars, type ChartMode } from '@/components/FinanceCharts'
 import {
   Plus, Download, TrendingUp, TrendingDown, DollarSign, Percent,
   Trash2, MoreHorizontal, Pencil, Search, BarChart3, RefreshCw,
-  Target, Calculator, AlertCircle, CheckCircle2, Info,
+  Target, Calculator, AlertCircle, CheckCircle2, Info, X,
 } from 'lucide-react'
 import { Modal, FormField, Input, Select, SubmitButton } from '@/components/Modal'
 
 type FinanceTab = 'overview' | 'breakeven'
 
-const STORAGE_KEY_FIXED_COST  = 'bvaz.finance.fixedCost'
-const STORAGE_KEY_PROFIT_GOAL = 'bvaz.finance.profitGoal'
+// Migração de localStorage legacy (Onda 2 → Onda 3)
+const LEGACY_STORAGE_FIXED_COST  = 'bvaz.finance.fixedCost'
+const LEGACY_STORAGE_PROFIT_GOAL = 'bvaz.finance.profitGoal'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -171,21 +173,55 @@ import type { BreakEvenSummary } from '@/core/finance/breakEvenEngine'
 
 function BreakEvenSection({
   summary,
-  fixedCost,
+  projects,
+  selectedProjectId,
+  onSelectProject,
+  fixedCosts,
   profitGoal,
-  onFixedCostChange,
+  totalFixedCost,
+  onAddFixedCost,
+  onUpdateFixedCost,
+  onDeleteFixedCost,
   onProfitGoalChange,
   hasProducts,
+  loading,
 }: {
   summary:             BreakEvenSummary
-  fixedCost:           number
+  projects:            { id: string; name: string }[]
+  selectedProjectId:   string
+  onSelectProject:     (id: string) => void
+  fixedCosts:          FixedCost[]
   profitGoal:          number
-  onFixedCostChange:   (v: number) => void
+  totalFixedCost:      number
+  onAddFixedCost:      (label: string, amount: number) => Promise<void>
+  onUpdateFixedCost:   (cost: FixedCost) => Promise<void>
+  onDeleteFixedCost:   (id: string) => Promise<void>
   onProfitGoalChange:  (v: number) => void
   hasProducts:         boolean
+  loading:             boolean
 }) {
-  const noFixedCost = fixedCost <= 0
-  const noProducts  = !hasProducts || summary.products.length === 0
+  const noFixedCost   = totalFixedCost <= 0
+  const noProducts    = !hasProducts || summary.products.length === 0
+  const noProject     = !selectedProjectId
+
+  // Form pra novo custo fixo
+  const [newLabel, setNewLabel]   = useState('')
+  const [newAmount, setNewAmount] = useState('')
+  const [adding, setAdding]       = useState(false)
+
+  async function handleAdd(e: React.FormEvent) {
+    e.preventDefault()
+    const amount = parseFloat(newAmount)
+    if (!newLabel.trim() || !isFinite(amount) || amount <= 0) return
+    setAdding(true)
+    try {
+      await onAddFixedCost(newLabel.trim(), amount)
+      setNewLabel('')
+      setNewAmount('')
+    } finally {
+      setAdding(false)
+    }
+  }
 
   return (
     <div className="space-y-5">
@@ -203,45 +239,113 @@ function BreakEvenSection({
         </div>
       </div>
 
-      {/* Inputs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4">
-          <label className="text-[#555555] text-xs uppercase tracking-wide font-medium mb-2 flex items-center gap-1.5">
-            <Calculator size={12} />
-            Custo fixo mensal (R$)
-          </label>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={fixedCost || ''}
-            onChange={e => onFixedCostChange(parseFloat(e.target.value) || 0)}
-            placeholder="Ex: 1500"
-            className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] tabular-nums"
-          />
-          <p className="text-[#444455] text-[11px] mt-2">
-            Aluguel + internet + DAS + software + assinaturas. Tudo que paga mesmo sem vender.
+      {/* Project selector */}
+      <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4 flex items-center gap-3 flex-wrap">
+        <label className="text-[#555555] text-xs uppercase tracking-wide font-medium">
+          Projeto
+        </label>
+        <select
+          value={selectedProjectId}
+          onChange={e => onSelectProject(e.target.value)}
+          className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-sm rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] cursor-pointer flex-1 min-w-[200px]"
+        >
+          {projects.length === 0 && <option value="">Sem projetos</option>}
+          {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+        </select>
+        <span className="text-[#444455] text-[11px]">
+          Custos e meta são por projeto.
+        </span>
+      </div>
+
+      {noProject && (
+        <div className="bg-[#f59e0b1a] border border-[#f59e0b33] rounded-xl p-4 flex gap-3">
+          <AlertCircle size={16} className="text-[#f59e0b] shrink-0 mt-0.5" />
+          <p className="text-xs text-[#f59e0b]">
+            Crie um projeto em <a href="/projects" className="underline">/projects</a> pra cadastrar custos fixos.
+          </p>
+        </div>
+      )}
+
+      {!noProject && (
+      <>
+      {/* Lista de custos fixos */}
+      <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl overflow-hidden">
+        <div className="px-5 py-3 border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between gap-3 flex-wrap">
+          <div className="flex items-center gap-2">
+            <Calculator size={14} className="text-[#a78bfa]" />
+            <p className="text-[#f0f0f5] text-sm font-medium">Custos Fixos Mensais</p>
+          </div>
+          <p className="text-[#a78bfa] text-sm font-bold tabular-nums">
+            Total: {fmt(totalFixedCost)}
           </p>
         </div>
 
-        <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4">
-          <label className="text-[#555555] text-xs uppercase tracking-wide font-medium mb-2 flex items-center gap-1.5">
-            <Target size={12} />
-            Meta de lucro mensal (R$)
-          </label>
+        {loading ? (
+          <div className="px-5 py-8 text-center text-[#555555] text-xs">Carregando…</div>
+        ) : fixedCosts.length === 0 ? (
+          <div className="px-5 py-6 text-center text-[#555555] text-xs">
+            Nenhum custo fixo cadastrado. Adicione abaixo (DAS-MEI, aluguel, software…).
+          </div>
+        ) : (
+          <div className="divide-y divide-[rgba(255,255,255,0.04)]">
+            {fixedCosts.map(c => (
+              <FixedCostRow
+                key={c.id}
+                cost={c}
+                onUpdate={onUpdateFixedCost}
+                onDelete={onDeleteFixedCost}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Add form */}
+        <form onSubmit={handleAdd} className="px-5 py-3 border-t border-[rgba(255,255,255,0.05)] flex items-center gap-2 flex-wrap bg-[rgba(255,255,255,0.015)]">
+          <input
+            value={newLabel}
+            onChange={e => setNewLabel(e.target.value)}
+            placeholder="Ex: DAS-MEI"
+            disabled={adding}
+            className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-sm rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] flex-1 min-w-[140px]"
+          />
           <input
             type="number"
             min="0"
             step="0.01"
-            value={profitGoal || ''}
-            onChange={e => onProfitGoalChange(parseFloat(e.target.value) || 0)}
-            placeholder="Ex: 3000"
-            className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] tabular-nums"
+            value={newAmount}
+            onChange={e => setNewAmount(e.target.value)}
+            placeholder="R$"
+            disabled={adding}
+            className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-sm rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] w-32 tabular-nums"
           />
-          <p className="text-[#444455] text-[11px] mt-2">
-            Quanto você quer levar pra casa por mês depois de pagar tudo.
-          </p>
-        </div>
+          <button
+            type="submit"
+            disabled={adding || !newLabel.trim() || !newAmount}
+            className="flex items-center gap-1.5 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium px-3 py-2 rounded-lg transition-all"
+          >
+            <Plus size={14} /> Adicionar
+          </button>
+        </form>
+      </div>
+
+      {/* Profit goal */}
+      <div className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4">
+        <label className="text-[#555555] text-xs uppercase tracking-wide font-medium mb-2 flex items-center gap-1.5">
+          <Target size={12} />
+          Meta de lucro mensal (R$)
+        </label>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          value={profitGoal || ''}
+          onChange={e => onProfitGoalChange(parseFloat(e.target.value) || 0)}
+          placeholder="Ex: 3000"
+          className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] tabular-nums"
+        />
+        <p className="text-[#444455] text-[11px] mt-2">
+          Quanto você quer levar pra casa por mês depois de pagar tudo. Salva automaticamente.
+        </p>
       </div>
 
       {noFixedCost && (
@@ -354,11 +458,77 @@ function BreakEvenSection({
             <p><span className="text-[#a78bfa]">Ponto de Equilíbrio (un.)</span> = Custo Fixo ÷ MC Unitária</p>
             <p><span className="text-[#a78bfa]">Meta (un.)</span> = (Custo Fixo + Lucro Desejado) ÷ MC Unitária</p>
             <p className="pt-1 text-[#555555]">
-              💡 Em breve: cadastrar custos fixos por categoria (DAS, aluguel…) e separar pessoa física/jurídica. Hoje os valores ficam salvos só no seu navegador.
+              💾 Custos fixos e meta agora ficam salvos no banco por projeto. Trocar de browser/dispositivo não perde os dados.
             </p>
           </div>
         </>
       )}
+      </>
+      )}
+    </div>
+  )
+}
+
+function FixedCostRow({
+  cost,
+  onUpdate,
+  onDelete,
+}: {
+  cost:     FixedCost
+  onUpdate: (cost: FixedCost) => Promise<void>
+  onDelete: (id: string) => Promise<void>
+}) {
+  const [label, setLabel]   = useState(cost.label)
+  const [amount, setAmount] = useState(String(cost.amount))
+  const [busy, setBusy]     = useState(false)
+
+  const dirty = label !== cost.label || parseFloat(amount) !== cost.amount
+
+  async function save() {
+    if (!dirty || busy) return
+    const parsed = parseFloat(amount)
+    if (!label.trim() || !isFinite(parsed) || parsed < 0) return
+    setBusy(true)
+    try {
+      await onUpdate({ ...cost, label: label.trim(), amount: parsed })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  async function remove() {
+    if (busy) return
+    setBusy(true)
+    try { await onDelete(cost.id) } finally { setBusy(false) }
+  }
+
+  return (
+    <div className="px-5 py-2.5 flex items-center gap-2 hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+      <input
+        value={label}
+        onChange={e => setLabel(e.target.value)}
+        onBlur={save}
+        disabled={busy}
+        className="bg-transparent text-[#f0f0f5] text-sm rounded-lg px-2 py-1.5 outline-none focus:bg-[rgba(255,255,255,0.04)] flex-1 min-w-[140px]"
+      />
+      <input
+        type="number"
+        min="0"
+        step="0.01"
+        value={amount}
+        onChange={e => setAmount(e.target.value)}
+        onBlur={save}
+        disabled={busy}
+        className="bg-transparent text-[#a78bfa] text-sm font-semibold rounded-lg px-2 py-1.5 outline-none focus:bg-[rgba(255,255,255,0.04)] w-32 text-right tabular-nums"
+      />
+      <button
+        onClick={remove}
+        disabled={busy}
+        title="Remover"
+        className="p-1.5 text-[#3a3a3a] hover:text-[#ef4444] rounded-lg hover:bg-[#ef44441a] transition-colors disabled:opacity-40"
+      >
+        <X size={14} />
+      </button>
     </div>
   )
 }
@@ -419,29 +589,109 @@ export function FinanceView({
   const [reconciling, setReconciling] = useState(false)
   const [reconcileMsg, setReconcileMsg] = useState<{ kind: 'success' | 'error'; text: string } | null>(null)
 
-  // ── Break-even (persistido em localStorage) ─────────────────────────────────
-  const [fixedCost, setFixedCost]   = useState<number>(0)
+  // ── Break-even (persistido no DB por projeto) ──────────────────────────────
+  const [breakEvenProjectId, setBreakEvenProjectId] = useState<string>('')
+  const [fixedCosts, setFixedCosts] = useState<FixedCost[]>([])
   const [profitGoal, setProfitGoal] = useState<number>(0)
+  const [beLoading, setBeLoading]   = useState<boolean>(false)
 
+  // Default: primeiro projeto disponível
   useEffect(() => {
-    const fc = Number(localStorage.getItem(STORAGE_KEY_FIXED_COST)  ?? '0')
-    const pg = Number(localStorage.getItem(STORAGE_KEY_PROFIT_GOAL) ?? '0')
-    setFixedCost(isFinite(fc) ? fc : 0)
-    setProfitGoal(isFinite(pg) ? pg : 0)
+    if (!breakEvenProjectId && projects.length > 0) {
+      setBreakEvenProjectId(projects[0].id)
+    }
+  }, [projects, breakEvenProjectId])
+
+  // Load (e migra localStorage legacy → DB no primeiro carregamento por projeto)
+  const loadBreakEvenData = useCallback(async (pid: string) => {
+    if (!pid) return
+    setBeLoading(true)
+    try {
+      const [costs, goal] = await Promise.all([
+        fixedCostsService.listByProject(pid),
+        profitGoalsService.getByProject(pid),
+      ])
+
+      // Migração one-shot: se DB vazio mas localStorage tem valor, importa
+      let migratedCosts = costs
+      let migratedGoal  = goal?.monthlyTarget ?? 0
+      if (typeof window !== 'undefined') {
+        const legacyFC = Number(localStorage.getItem(LEGACY_STORAGE_FIXED_COST) ?? '0')
+        const legacyPG = Number(localStorage.getItem(LEGACY_STORAGE_PROFIT_GOAL) ?? '0')
+
+        if (costs.length === 0 && isFinite(legacyFC) && legacyFC > 0) {
+          const migrated: FixedCost = {
+            id: uid(),
+            projectId: pid,
+            label: 'Custo fixo (importado)',
+            amount: legacyFC,
+          }
+          await fixedCostsService.create(migrated)
+          migratedCosts = [migrated]
+          localStorage.removeItem(LEGACY_STORAGE_FIXED_COST)
+        }
+
+        if (!goal && isFinite(legacyPG) && legacyPG > 0) {
+          await profitGoalsService.upsert({ projectId: pid, monthlyTarget: legacyPG })
+          migratedGoal = legacyPG
+          localStorage.removeItem(LEGACY_STORAGE_PROFIT_GOAL)
+        }
+      }
+
+      setFixedCosts(migratedCosts)
+      setProfitGoal(migratedGoal)
+    } finally {
+      setBeLoading(false)
+    }
   }, [])
 
-  function updateFixedCost(v: number) {
-    setFixedCost(v)
-    localStorage.setItem(STORAGE_KEY_FIXED_COST, String(v))
+  useEffect(() => {
+    if (breakEvenProjectId) loadBreakEvenData(breakEvenProjectId)
+  }, [breakEvenProjectId, loadBreakEvenData])
+
+  const totalFixedCost = useMemo(
+    () => fixedCosts.reduce((s, c) => s + c.amount, 0),
+    [fixedCosts],
+  )
+
+  async function handleAddFixedCost(label: string, amount: number) {
+    const cost: FixedCost = { id: uid(), projectId: breakEvenProjectId, label, amount }
+    await fixedCostsService.create(cost)
+    setFixedCosts(prev => [...prev, cost])
   }
-  function updateProfitGoal(v: number) {
-    setProfitGoal(v)
-    localStorage.setItem(STORAGE_KEY_PROFIT_GOAL, String(v))
+  async function handleUpdateFixedCost(cost: FixedCost) {
+    await fixedCostsService.update(cost)
+    setFixedCosts(prev => prev.map(c => c.id === cost.id ? cost : c))
+  }
+  async function handleDeleteFixedCost(id: string) {
+    await fixedCostsService.delete(id)
+    setFixedCosts(prev => prev.filter(c => c.id !== id))
   }
 
+  // Salva meta com debounce simples (após pausa do usuário)
+  function handleProfitGoalChange(v: number) {
+    setProfitGoal(v)
+    if (!breakEvenProjectId) return
+    profitGoalsService.upsert({ projectId: breakEvenProjectId, monthlyTarget: v }).catch(err => {
+      console.error('profitGoalsService.upsert failed', err)
+    })
+  }
+
+  // Filtra produtos/transactions pelo projeto selecionado pra break-even
+  const beProducts     = useMemo(
+    () => breakEvenProjectId
+      ? state.products.filter(p => p.projectId === breakEvenProjectId)
+      : [],
+    [state.products, breakEvenProjectId],
+  )
+  const beTransactions = useMemo(
+    () => transactions.filter(t => t.projectId === breakEvenProjectId),
+    [transactions, breakEvenProjectId],
+  )
+
   const breakEven = useMemo(
-    () => calcBreakEvenSummary(state.products, state.inventory, transactions, fixedCost, profitGoal),
-    [state.products, state.inventory, transactions, fixedCost, profitGoal],
+    () => calcBreakEvenSummary(beProducts, state.inventory, beTransactions, totalFixedCost, profitGoal),
+    [beProducts, state.inventory, beTransactions, totalFixedCost, profitGoal],
   )
 
   const projectId = filterProject === 'all' ? undefined : filterProject
@@ -890,11 +1140,18 @@ export function FinanceView({
       {activeTab === 'breakeven' && (
         <BreakEvenSection
           summary={breakEven}
-          fixedCost={fixedCost}
+          projects={projects}
+          selectedProjectId={breakEvenProjectId}
+          onSelectProject={setBreakEvenProjectId}
+          fixedCosts={fixedCosts}
           profitGoal={profitGoal}
-          onFixedCostChange={updateFixedCost}
-          onProfitGoalChange={updateProfitGoal}
-          hasProducts={state.products.length > 0}
+          totalFixedCost={totalFixedCost}
+          onAddFixedCost={handleAddFixedCost}
+          onUpdateFixedCost={handleUpdateFixedCost}
+          onDeleteFixedCost={handleDeleteFixedCost}
+          onProfitGoalChange={handleProfitGoalChange}
+          hasProducts={beProducts.length > 0}
+          loading={beLoading}
         />
       )}
 

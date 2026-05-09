@@ -67,7 +67,7 @@
 - [x] **Onda 1** — Renomear cards do dashboard pra evidenciar fonte ✅ 2026-05-08
 - [x] **Onda 2** — MVP Break-even client-side (custos fixos, MC, ponto de equilíbrio, metas) ✅ 2026-05-08 — ver `decisions/004-financas-empresariais-mvp.md`
 - [x] **Script de reconciliação** orders ↔ transactions — `POST /api/admin/reconcile-transactions` + botão "Reconciliar" no FinanceView ✅ 2026-05-08
-- [ ] **Onda 3** — Schema dedicado pra `fixed_costs` e `profit_goals` (hoje persistido em localStorage)
+- [x] **Onda 3** — Schema dedicado pra `fixed_costs` e `profit_goals` ✅ 2026-05-09 — migration `20260509_finance_config.sql`, service `services/financeConfig.ts`, lista granular de custos fixos por projeto + meta de lucro, com migração one-shot do localStorage legacy
 
 ---
 
@@ -193,6 +193,7 @@
 > Quando terminar item, mover daqui pra cima como `[x]`.
 > Lista compacta de marcos atingidos:
 
+- 2026-05-09 · **Onda 3 — finanças no DB** — `fixed_costs` (lista granular: DAS, aluguel, software…) + `profit_goals` (meta mensal) por projeto, com RLS, FK em `projects`, e migração one-shot do localStorage legacy. UI: project selector + lista editável + total automático. Refator de `BreakEvenSection` em `components/FinanceView.tsx`. Tipos novos em `core/finance/financeConfigTypes.ts`. Service `services/financeConfig.ts`.
 - 2026-05-08 · **Finanças MVP completo** — Onda 1+2+3: rota `/api/admin/reconcile-transactions` (cria tx faltantes pra orders pagos legacy), tab "Ponto de Equilíbrio" no FinanceView com MC por produto + break-even + metas (localStorage), labels do dashboard separados por fonte (📒 transações / ⚙️ produção).
 - 2026-05-07 · **Stripe Connect OAuth** — botão "Conectar com Stripe" um-clique implementado. Rotas `/api/integrations/stripe/connect` e `/callback` seguem mesmo padrão MP. Form manual mantido como fallback "avançado". Requer `STRIPE_CONNECT_CLIENT_ID` (ca_...) do Stripe Dashboard → Connect Settings.
 - 2026-05-07 · **Stripe UI completa** — `StorefrontTab` agora salva/ativa/desconecta credenciais Stripe via `/api/payment-configs`. Inclui toggle test/live mode + webhook secret. Hedging contra bloqueador MP.

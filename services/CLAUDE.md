@@ -29,6 +29,7 @@
 | content.ts | 114 | content | ✅ |
 | decisions.ts | 72 | decisions | ✅ |
 | finance.ts | 76 | transactions | ✅ |
+| financeConfig.ts | 100 | fixed_costs + profit_goals | ✅ Onda 3 (custos fixos + meta por projeto) |
 | inventory.ts | 280 | inventory + movements | ✅ (`image_url` adicionado em migration 20260504) |
 | leads.ts | — | leads + affiliates | ✅ |
 | mpTokenRefresh.ts | 92 | payment_configs | ✅ refresh OAuth MP |

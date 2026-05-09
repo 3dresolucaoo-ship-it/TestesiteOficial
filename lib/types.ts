@@ -13,6 +13,7 @@ export type {
   TransactionType, TransactionCategory, IncomeCategory, ExpenseCategory, Transaction,
 } from '@/core/finance/types'
 export { INCOME_CATEGORY_LABELS, EXPENSE_CATEGORY_LABELS } from '@/core/finance/types'
+export type { FixedCost, ProfitGoal } from '@/core/finance/financeConfigTypes'
 
 export type { LeadStatus, ContactSource, Lead, Affiliate } from '@/core/crm/types'
 export { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/core/crm/types'

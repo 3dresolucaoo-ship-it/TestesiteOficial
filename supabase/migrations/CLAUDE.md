@@ -22,6 +22,7 @@
 | `20260504_orders_ecommerce_columns.sql` | Adiciona `source`, `catalog_slug`, `payment_id`, `payment_status`, `customer_whatsapp` + UNIQUE(payment_id) |
 | `20260504_portfolios.sql` | Cria `portfolios` + `portfolio_items` com RLS |
 | `20260504_inventory_image_url.sql` | Adiciona `inventory.image_url` |
+| `20260509_finance_config.sql` | Cria `fixed_costs` + `profit_goals` (RLS, FK projects) |
 
 ## Schema base
 
@@ -33,6 +34,7 @@
 - ✅ ~~Migration faltando — tabelas `portfolios` + `portfolio_items`~~ → `20260504_portfolios.sql`
 - ✅ ~~Migration faltando — `inventory.image_url`~~ → `20260504_inventory_image_url.sql`
 - ✅ Todas as migrations foram aplicadas no Supabase em 2026-05-04
+- ✅ `20260509_finance_config.sql` aplicada em 2026-05-09
 
 ## Template pra nova migration
 
