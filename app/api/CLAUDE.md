@@ -27,6 +27,7 @@
 | `/api/finance/fixed-costs` | GET, POST | ✅ OK — lista/cria custos fixos por projeto |
 | `/api/finance/fixed-costs/[id]` | PATCH, DELETE | ✅ OK — edita/remove um custo fixo |
 | `/api/finance/profit-goal` | GET, PUT | ✅ OK — lê/upsert meta mensal por projeto |
+| `/api/catalog/quote` | POST | ✅ OK — endpoint público, cria Lead via admin client; resolve dono via catalog.slug (Fase B) |
 | `/api/webhooks/payment` | POST | ❌ depende B1 |
 | `/api/webhooks/stripe` | POST | ✅ deletado em 2026-05-04 (substituído por `/api/webhooks/payment`) |
 | `/api/content/sync` | POST | ⚠️ usa client browser — refatorar |

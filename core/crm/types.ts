@@ -1,5 +1,5 @@
 export type LeadStatus = 'new' | 'contacted' | 'negotiating' | 'won' | 'lost'
-export type ContactSource = 'instagram' | 'whatsapp' | 'facebook' | 'shopee' | 'referral' | 'other'
+export type ContactSource = 'instagram' | 'whatsapp' | 'facebook' | 'shopee' | 'referral' | 'catalog' | 'other'
 
 export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
   new:         'Novo',
@@ -15,6 +15,7 @@ export const CONTACT_SOURCE_LABELS: Record<ContactSource, string> = {
   facebook:  'Facebook',
   shopee:    'Shopee',
   referral:  'Indicação',
+  catalog:   'Catálogo',
   other:     'Outro',
 }
 
