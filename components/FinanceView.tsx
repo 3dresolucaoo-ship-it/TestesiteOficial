@@ -9,7 +9,8 @@ import {
   exportCsv, downloadCsv, categoryBreakdown, profitMargin,
 } from '@/core/finance/engine'
 import { calcBreakEvenSummary } from '@/core/finance/breakEvenEngine'
-import { fixedCostsService, profitGoalsService } from '@/services/financeConfig'
+// Services de DB são consumidos via rotas API (server-side, evita travas
+// de auth.getSession() no cliente browser).
 import { MonthlyChart, CategoryBars, type ChartMode } from '@/components/FinanceCharts'
 import {
   Plus, Download, TrendingUp, TrendingDown, DollarSign, Percent,
@@ -607,14 +608,19 @@ export function FinanceView({
     if (!pid) return
     setBeLoading(true)
     try {
-      const [costs, goal] = await Promise.all([
-        fixedCostsService.listByProject(pid),
-        profitGoalsService.getByProject(pid),
+      const [costsRes, goalRes] = await Promise.all([
+        fetch(`/api/finance/fixed-costs?projectId=${encodeURIComponent(pid)}`),
+        fetch(`/api/finance/profit-goal?projectId=${encodeURIComponent(pid)}`),
       ])
+      if (!costsRes.ok || !goalRes.ok) {
+        throw new Error(`fetch failed: costs=${costsRes.status} goal=${goalRes.status}`)
+      }
+      const costs: FixedCost[] = (await costsRes.json()).items
+      const goalData: { goal: { monthlyTarget: number } | null } = await goalRes.json()
 
       // Migração one-shot: se DB vazio mas localStorage tem valor, importa
       let migratedCosts = costs
-      let migratedGoal  = goal?.monthlyTarget ?? 0
+      let migratedGoal  = goalData.goal?.monthlyTarget ?? 0
       if (typeof window !== 'undefined') {
         const legacyFC = Number(localStorage.getItem(LEGACY_STORAGE_FIXED_COST) ?? '0')
         const legacyPG = Number(localStorage.getItem(LEGACY_STORAGE_PROFIT_GOAL) ?? '0')
@@ -626,13 +632,21 @@ export function FinanceView({
             label: 'Custo fixo (importado)',
             amount: legacyFC,
           }
-          await fixedCostsService.create(migrated)
+          await fetch('/api/finance/fixed-costs', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(migrated),
+          })
           migratedCosts = [migrated]
           localStorage.removeItem(LEGACY_STORAGE_FIXED_COST)
         }
 
-        if (!goal && isFinite(legacyPG) && legacyPG > 0) {
-          await profitGoalsService.upsert({ projectId: pid, monthlyTarget: legacyPG })
+        if (!goalData.goal && isFinite(legacyPG) && legacyPG > 0) {
+          await fetch('/api/finance/profit-goal', {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ projectId: pid, monthlyTarget: legacyPG }),
+          })
           migratedGoal = legacyPG
           localStorage.removeItem(LEGACY_STORAGE_PROFIT_GOAL)
         }
@@ -658,25 +672,40 @@ export function FinanceView({
 
   async function handleAddFixedCost(label: string, amount: number) {
     const cost: FixedCost = { id: uid(), projectId: breakEvenProjectId, label, amount }
-    await fixedCostsService.create(cost)
+    const res = await fetch('/api/finance/fixed-costs', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(cost),
+    })
+    if (!res.ok) throw new Error('Falha ao criar custo fixo')
     setFixedCosts(prev => [...prev, cost])
   }
   async function handleUpdateFixedCost(cost: FixedCost) {
-    await fixedCostsService.update(cost)
+    const res = await fetch(`/api/finance/fixed-costs/${encodeURIComponent(cost.id)}`, {
+      method: 'PATCH',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ label: cost.label, amount: cost.amount }),
+    })
+    if (!res.ok) throw new Error('Falha ao atualizar custo fixo')
     setFixedCosts(prev => prev.map(c => c.id === cost.id ? cost : c))
   }
   async function handleDeleteFixedCost(id: string) {
-    await fixedCostsService.delete(id)
+    const res = await fetch(`/api/finance/fixed-costs/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    })
+    if (!res.ok) throw new Error('Falha ao remover custo fixo')
     setFixedCosts(prev => prev.filter(c => c.id !== id))
   }
 
-  // Salva meta com debounce simples (após pausa do usuário)
+  // Salva meta (síncrono no input, fire-and-log)
   function handleProfitGoalChange(v: number) {
     setProfitGoal(v)
     if (!breakEvenProjectId) return
-    profitGoalsService.upsert({ projectId: breakEvenProjectId, monthlyTarget: v }).catch(err => {
-      console.error('profitGoalsService.upsert failed', err)
-    })
+    fetch('/api/finance/profit-goal', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ projectId: breakEvenProjectId, monthlyTarget: v }),
+    }).catch(err => console.error('profit-goal save failed:', err))
   }
 
   // Filtra produtos/transactions pelo projeto selecionado pra break-even
