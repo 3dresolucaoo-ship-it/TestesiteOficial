@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef } from 'react'
 import { useStore, uid } from '@/lib/store'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
-import type { Product } from '@/lib/types'
+import type { Product, CheckoutMode, ProductVariantGroup } from '@/lib/types'
 import type { InventoryItem } from '@/lib/types'
 import {
   Plus, Pencil, Trash2, MoreHorizontal, Package, Zap,
@@ -51,6 +51,7 @@ function CostPreview({
       id: '', projectId: '', name: '', notes: '',
       materialGrams, printTimeHours, failureRate, energyCostPerHour,
       supportCost, marginPercentage, salePrice,
+      checkoutMode: 'direct', allowsCustom: false,
     },
     filamentItem ? [filamentItem] : [],
   )
@@ -128,6 +129,16 @@ type FormData = {
   inventoryItemId:   string
   notes:             string
   imageUrl:          string
+  checkoutMode:      CheckoutMode
+  variants:          ProductVariantGroup[]
+  allowsCustom:      boolean
+}
+
+const CHECKOUT_MODE_META: Record<CheckoutMode, { label: string; desc: string }> = {
+  direct:       { label: 'Comprar agora',     desc: 'Preço fixo, checkout direto (Stripe / Mercado Pago)' },
+  variant:      { label: 'Personalizar',      desc: 'Cliente escolhe variantes (cor, tamanho…) antes de pagar' },
+  quote:        { label: 'Solicitar orçamento', desc: 'Customizado / projeto — gera Lead no CRM, sem pagamento direto' },
+  contact_only: { label: 'Apenas exibir',     desc: 'Sem botão de compra, só vitrine + WhatsApp' },
 }
 
 function ProductForm({
@@ -157,6 +168,9 @@ function ProductForm({
       inventoryItemId:   '',
       notes:             '',
       imageUrl:          '',
+      checkoutMode:      'direct',
+      variants:          [],
+      allowsCustom:      false,
     },
   )
   const [uploading, setUploading] = useState(false)
@@ -318,6 +332,113 @@ function ProductForm({
         />
       </FormField>
 
+      {/* Checkout mode selector */}
+      <div className="space-y-2">
+        <p className="text-[#555555] text-xs font-medium uppercase tracking-wide">Modo de Venda</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {(Object.keys(CHECKOUT_MODE_META) as CheckoutMode[]).map(mode => {
+            const meta = CHECKOUT_MODE_META[mode]
+            const active = data.checkoutMode === mode
+            return (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setData(p => ({ ...p, checkoutMode: mode }))}
+                className={`text-left rounded-xl border p-3 transition-colors ${
+                  active
+                    ? 'bg-[#7c3aed1a] border-[#7c3aed55]'
+                    : 'bg-[#0f0f0f] border-[#2a2a2a] hover:border-[#3a3a3a]'
+                }`}
+              >
+                <p className={`text-sm font-semibold ${active ? 'text-[#a78bfa]' : 'text-[#ebebeb]'}`}>
+                  {meta.label}
+                </p>
+                <p className="text-[10px] mt-0.5 leading-snug text-[#888888]">
+                  {meta.desc}
+                </p>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Variants editor (only when mode === variant) */}
+      {data.checkoutMode === 'variant' && (
+        <div className="space-y-2 bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl p-3">
+          <div className="flex items-center justify-between">
+            <p className="text-[#ebebeb] text-xs font-semibold">Grupos de Variação</p>
+            <button
+              type="button"
+              onClick={() => setData(p => ({
+                ...p,
+                variants: [...p.variants, { name: '', options: [] }],
+              }))}
+              className="text-[11px] text-[#a78bfa] hover:text-[#c4b5fd]"
+            >
+              + adicionar grupo
+            </button>
+          </div>
+          {data.variants.length === 0 && (
+            <p className="text-[#555555] text-xs">Ex: Cor (Roxo, Verde) · Tamanho (P, M, G).</p>
+          )}
+          {data.variants.map((g, gIdx) => (
+            <div key={gIdx} className="space-y-1.5 border-t border-[#1c1c1c] pt-2">
+              <div className="flex items-center gap-2">
+                <Input
+                  value={g.name}
+                  onChange={e => setData(p => ({
+                    ...p,
+                    variants: p.variants.map((v, i) => i === gIdx ? { ...v, name: e.target.value } : v),
+                  }))}
+                  placeholder="Nome do grupo (ex: Cor)"
+                />
+                <button
+                  type="button"
+                  onClick={() => setData(p => ({
+                    ...p,
+                    variants: p.variants.filter((_, i) => i !== gIdx),
+                  }))}
+                  className="p-1.5 text-[#888888] hover:text-[#ef4444]"
+                  aria-label="Remover grupo"
+                >
+                  <Trash2 size={13} />
+                </button>
+              </div>
+              <Input
+                value={g.options.join(', ')}
+                onChange={e => setData(p => ({
+                  ...p,
+                  variants: p.variants.map((v, i) =>
+                    i === gIdx
+                      ? { ...v, options: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }
+                      : v,
+                  ),
+                }))}
+                placeholder="Opções separadas por vírgula (ex: Roxo, Verde, Azul)"
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* allowsCustom checkbox — disponível em direct/variant */}
+      {(data.checkoutMode === 'direct' || data.checkoutMode === 'variant') && (
+        <label className="flex items-start gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={data.allowsCustom}
+            onChange={e => setData(p => ({ ...p, allowsCustom: e.target.checked }))}
+            className="mt-0.5 accent-[#7c3aed]"
+          />
+          <div>
+            <p className="text-[#ebebeb] text-xs font-medium">Aceita pedido customizado em paralelo</p>
+            <p className="text-[10px] text-[#555555]">
+              Mostra também botão &quot;Solicitar orçamento&quot; no catálogo público.
+            </p>
+          </div>
+        </label>
+      )}
+
       {/* Live cost preview */}
       <CostPreview
         materialGrams={parseFloat(data.materialGrams) || 0}
@@ -429,13 +550,18 @@ function CatalogCard({
           </div>
         )}
 
-        <div className="absolute top-2 left-2">
+        <div className="absolute top-2 left-2 flex flex-col items-start gap-1">
           <span
             className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wide"
             style={{ background: 'var(--t-accent-soft)', color: 'var(--t-accent)' }}
           >
             {projectName}
           </span>
+          {product.checkoutMode && product.checkoutMode !== 'direct' && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-black/60 text-white/90 border border-white/10">
+              {CHECKOUT_MODE_META[product.checkoutMode].label}
+            </span>
+          )}
         </div>
 
         <div className="absolute inset-x-0 bottom-0 p-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-t from-black/75 to-transparent">
@@ -698,11 +824,21 @@ export default function ProductsPage() {
         marginPercentage:  (parseFloat(data.marginPercentage) || 30) / 100,
         salePrice:         0,
         inventoryItemId:   data.inventoryItemId || undefined,
+        checkoutMode:      'direct',
+        allowsCustom:      false,
       },
       filamentItems,
     )
     const margin = (parseFloat(data.marginPercentage) || 30) / 100
     return Math.round(breakdown.totalCost * (1 + margin) * 100) / 100
+  }
+
+  function sanitizeVariants(mode: CheckoutMode, raw: ProductVariantGroup[]): ProductVariantGroup[] | undefined {
+    if (mode !== 'variant') return undefined
+    const cleaned = raw
+      .map(g => ({ name: g.name.trim(), options: g.options.map(o => o.trim()).filter(Boolean) }))
+      .filter(g => g.name && g.options.length > 0)
+    return cleaned.length > 0 ? cleaned : undefined
   }
 
   function handleCreate(data: FormData) {
@@ -722,6 +858,11 @@ export default function ProductsPage() {
         inventoryItemId:   data.inventoryItemId || undefined,
         notes:             data.notes.trim(),
         imageUrl:          data.imageUrl || undefined,
+        checkoutMode:      data.checkoutMode,
+        variants:          sanitizeVariants(data.checkoutMode, data.variants),
+        allowsCustom:      data.checkoutMode === 'direct' || data.checkoutMode === 'variant'
+                             ? data.allowsCustom
+                             : false,
       },
     })
   }
@@ -744,6 +885,11 @@ export default function ProductsPage() {
         inventoryItemId:   data.inventoryItemId || undefined,
         notes:             data.notes.trim(),
         imageUrl:          data.imageUrl || undefined,
+        checkoutMode:      data.checkoutMode,
+        variants:          sanitizeVariants(data.checkoutMode, data.variants),
+        allowsCustom:      data.checkoutMode === 'direct' || data.checkoutMode === 'variant'
+                             ? data.allowsCustom
+                             : false,
       },
     })
     setEditing(null)
@@ -1017,6 +1163,9 @@ export default function ProductsPage() {
               inventoryItemId:   editing.inventoryItemId ?? '',
               notes:             editing.notes,
               imageUrl:          editing.imageUrl ?? '',
+              checkoutMode:      editing.checkoutMode ?? 'direct',
+              variants:          editing.variants ?? [],
+              allowsCustom:      editing.allowsCustom ?? false,
             }}
             onSave={handleEdit}
             onClose={() => setEditing(null)}

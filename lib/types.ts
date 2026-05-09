@@ -2,7 +2,7 @@
 export type { AdminConfig } from '@/core/admin/config'
 export { DEFAULT_ADMIN_CONFIG } from '@/core/admin/config'
 
-export type { Product } from '@/core/products/types'
+export type { Product, CheckoutMode, ProductVariantGroup } from '@/core/products/types'
 export type { Catalog } from '@/core/catalog/types'
 export type { Portfolio, PortfolioItem } from '@/core/portfolio/types'
 

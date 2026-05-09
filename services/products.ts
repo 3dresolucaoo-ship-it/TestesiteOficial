@@ -1,10 +1,13 @@
 import { supabase } from '@/lib/supabaseClient'
 import { serviceError, validateRequired } from '@/lib/serviceError'
 import { requireUserId } from '@/lib/getUser'
-import type { Product } from '@/core/products/types'
+import type { Product, CheckoutMode, ProductVariantGroup } from '@/core/products/types'
+
+const VALID_MODES: CheckoutMode[] = ['direct', 'variant', 'quote', 'contact_only']
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fromDB(r: any): Product {
+  const mode = VALID_MODES.includes(r.checkout_mode) ? r.checkout_mode : 'direct'
   return {
     id:                r.id,
     projectId:         r.project_id,
@@ -19,6 +22,9 @@ function fromDB(r: any): Product {
     inventoryItemId:   r.inventory_item_id ?? undefined,
     notes:             r.notes ?? '',
     imageUrl:          r.image_url ?? undefined,
+    checkoutMode:      mode as CheckoutMode,
+    variants:          Array.isArray(r.variants) ? r.variants as ProductVariantGroup[] : undefined,
+    allowsCustom:      Boolean(r.allows_custom ?? false),
   }
 }
 
@@ -37,6 +43,9 @@ function toDB(p: Product, userId: string) {
     inventory_item_id:    p.inventoryItemId   ?? null,
     notes:                p.notes,
     image_url:            p.imageUrl          ?? null,
+    checkout_mode:        p.checkoutMode      ?? 'direct',
+    variants:             p.variants && p.variants.length > 0 ? p.variants : null,
+    allows_custom:        p.allowsCustom      ?? false,
     user_id:              userId,
   }
 }

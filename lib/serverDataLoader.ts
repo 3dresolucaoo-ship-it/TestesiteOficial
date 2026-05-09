@@ -143,6 +143,9 @@ export async function loadInitialState(
       inventoryItemId:   r.inventory_item_id  ?? undefined,
       notes:             r.notes              ?? '',
       imageUrl:          r.image_url          ?? undefined,
+      checkoutMode:      (r.checkout_mode ?? 'direct') as Product['checkoutMode'],
+      variants:          Array.isArray(r.variants) ? r.variants : undefined,
+      allowsCustom:      Boolean(r.allows_custom ?? false),
     })),
 
     catalogs: safe(cats.data).map((r): Catalog => ({

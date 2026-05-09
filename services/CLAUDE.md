@@ -38,7 +38,7 @@
 | payments.ts | 198 | (abstração) | ✅ resolve provider via DB ou env |
 | portfolios.ts | 172 | portfolios + portfolio_items | ✅ (tabelas criadas em migration 20260504) |
 | production.ts | — | production | ✅ |
-| products.ts | 126 | products | ⚠️ console.log linha 75 |
+| products.ts | 134 | products | ⚠️ console.log linha 75 · ✅ checkout_mode/variants/allows_custom (Fase B) |
 | profiles.ts | 46 | profiles | ✅ |
 | projects.ts | 72 | projects | ✅ |
 

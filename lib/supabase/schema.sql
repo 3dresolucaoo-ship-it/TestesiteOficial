@@ -241,12 +241,21 @@ CREATE TABLE IF NOT EXISTS products (
   inventory_item_id    text          REFERENCES inventory(id) ON DELETE SET NULL,
   notes                text          NOT NULL DEFAULT '',
   image_url            text,
+  checkout_mode        text          NOT NULL DEFAULT 'direct'
+                                     CHECK (checkout_mode IN ('direct', 'variant', 'quote', 'contact_only')),
+  variants             jsonb,
+  allows_custom        boolean       NOT NULL DEFAULT false,
   created_at           timestamptz   NOT NULL DEFAULT now()
 );
 ALTER TABLE products ADD COLUMN IF NOT EXISTS user_id           uuid          REFERENCES auth.users(id) ON DELETE CASCADE;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS support_cost      numeric(12,2) NOT NULL DEFAULT 0;
 ALTER TABLE products ADD COLUMN IF NOT EXISTS margin_percentage numeric(6,4)  NOT NULL DEFAULT 0.30;
-CREATE INDEX IF NOT EXISTS products_user_id_idx ON products(user_id);
+ALTER TABLE products ADD COLUMN IF NOT EXISTS checkout_mode     text          NOT NULL DEFAULT 'direct'
+                                                                              CHECK (checkout_mode IN ('direct', 'variant', 'quote', 'contact_only'));
+ALTER TABLE products ADD COLUMN IF NOT EXISTS variants          jsonb;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS allows_custom     boolean       NOT NULL DEFAULT false;
+CREATE INDEX IF NOT EXISTS products_user_id_idx       ON products(user_id);
+CREATE INDEX IF NOT EXISTS products_checkout_mode_idx ON products(checkout_mode);
 
 -- ─── Config (per-user) ────────────────────────────────────────────────────────
 -- Supports auth mode (user_id key) and local-dev mode (legacy id=1 row).

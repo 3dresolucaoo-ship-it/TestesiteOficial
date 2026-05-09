@@ -23,6 +23,7 @@
 | `20260504_portfolios.sql` | Cria `portfolios` + `portfolio_items` com RLS |
 | `20260504_inventory_image_url.sql` | Adiciona `inventory.image_url` |
 | `20260509_finance_config.sql` | Cria `fixed_costs` + `profit_goals` (RLS, FK projects) |
+| `20260509_product_checkout_modes.sql` | Adiciona `products.checkout_mode` + `variants` (jsonb) + `allows_custom` (Fase B / ADR 005) |
 
 ## Schema base
 
@@ -35,6 +36,7 @@
 - ✅ ~~Migration faltando — `inventory.image_url`~~ → `20260504_inventory_image_url.sql`
 - ✅ Todas as migrations foram aplicadas no Supabase em 2026-05-04
 - ✅ `20260509_finance_config.sql` aplicada em 2026-05-09
+- ✅ `20260509_product_checkout_modes.sql` aplicada em 2026-05-09
 
 ## Template pra nova migration
 
