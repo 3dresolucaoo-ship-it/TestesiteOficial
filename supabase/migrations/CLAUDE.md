@@ -24,6 +24,7 @@
 | `20260504_inventory_image_url.sql` | Adiciona `inventory.image_url` |
 | `20260509_finance_config.sql` | Cria `fixed_costs` + `profit_goals` (RLS, FK projects) |
 | `20260509_product_checkout_modes.sql` | Adiciona `products.checkout_mode` + `variants` (jsonb) + `allows_custom` (Fase B / ADR 005) |
+| `20260509_catalog_quote_lead_rpc.sql` | RPC `create_catalog_lead` (SECURITY DEFINER) — endpoint público de orçamento bypassa RLS sem expor service_role |
 
 ## Schema base
 

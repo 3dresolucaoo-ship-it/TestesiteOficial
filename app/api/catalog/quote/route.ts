@@ -16,7 +16,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabaseAdmin'
+import { createClient } from '@supabase/supabase-js'
 
 interface QuoteBody {
   productId:    string
@@ -29,8 +29,11 @@ interface QuoteBody {
   referenceUrl?: string
 }
 
-function genId() {
-  return `lead-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`
+function getAnonClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!url || !key) throw new Error('[catalog/quote] Missing Supabase env vars')
+  return createClient(url, key, { auth: { persistSession: false } })
 }
 
 export async function POST(req: NextRequest) {
@@ -62,40 +65,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'productId é obrigatório' }, { status: 400 })
   }
 
-  const supabase = getSupabaseAdmin()
-
-  // 1. Resolve catálogo (precisa do user_id e project_id pra criar o Lead)
-  const { data: catalog, error: catErr } = await supabase
-    .from('catalogs')
-    .select('id, user_id, project_id, name')
-    .eq('slug', body.catalogSlug)
-    .maybeSingle()
-
-  if (catErr) {
-    console.error('[/api/catalog/quote] catalog lookup error', catErr)
-    return NextResponse.json({ error: 'Erro ao buscar catálogo' }, { status: 500 })
-  }
-  if (!catalog) {
-    return NextResponse.json({ error: 'Catálogo não encontrado' }, { status: 404 })
-  }
-
-  // 2. Resolve produto (validação + busca do nome pra incluir no Lead)
-  const { data: product, error: prodErr } = await supabase
-    .from('products')
-    .select('id, name, user_id')
-    .eq('id', body.productId)
-    .eq('user_id', catalog.user_id)
-    .maybeSingle()
-
-  if (prodErr) {
-    console.error('[/api/catalog/quote] product lookup error', prodErr)
-    return NextResponse.json({ error: 'Erro ao buscar produto' }, { status: 500 })
-  }
-  if (!product) {
-    return NextResponse.json({ error: 'Produto não pertence a este catálogo' }, { status: 400 })
-  }
-
-  // 3. Monta contato em uma string só (CRM atual usa campo único)
+  // Monta contato em string única (CRM atual usa campo único)
   const contactParts: string[] = []
   if (whatsapp) contactParts.push(`WhatsApp: ${whatsapp}`)
   if (email)    contactParts.push(`Email: ${email}`)
@@ -108,9 +78,8 @@ export async function POST(req: NextRequest) {
   }
   const urgency = urgencyLabel[body.urgency ?? 'normal'] ?? 'Próximas semanas'
 
-  // 4. Notes acumula tudo (descrição + urgência + ref + produto)
+  // notes acumula urgência + ref + descrição (produto é resolvido server-side via RPC)
   const notesParts = [
-    `Produto: ${product.name}`,
     `Urgência: ${urgency}`,
     body.referenceUrl ? `Referência: ${body.referenceUrl}` : null,
     '',
@@ -118,25 +87,25 @@ export async function POST(req: NextRequest) {
   ].filter(Boolean)
   const notes = notesParts.join('\n')
 
-  // 5. Cria Lead via admin client (bypass RLS — endpoint público)
-  const leadRow = {
-    id:         genId(),
-    user_id:    catalog.user_id,
-    project_id: catalog.project_id,
-    name,
-    contact,
-    source:     'catalog',
-    status:     'new',
-    value:      0,
-    notes,
-    date:       new Date().toISOString().slice(0, 10),
+  // Chama RPC SECURITY DEFINER (bypass RLS sem expor service_role)
+  const supabase = getAnonClient()
+  const { data: leadId, error } = await supabase.rpc('create_catalog_lead', {
+    p_catalog_slug: body.catalogSlug,
+    p_product_id:   body.productId,
+    p_name:         name,
+    p_contact:      contact,
+    p_notes:        notes,
+  })
+
+  if (error) {
+    console.error('[/api/catalog/quote] rpc error', error)
+    // Erros de validação da RPC vêm com mensagens em PT-BR já formatadas
+    const msg = error.message?.includes('Catálogo')  ? 'Catálogo não encontrado' :
+                error.message?.includes('Produto')   ? 'Produto não pertence a este catálogo' :
+                error.message ?? 'Erro ao salvar orçamento'
+    const status = error.message?.includes('Catálogo') || error.message?.includes('Produto') ? 400 : 500
+    return NextResponse.json({ error: msg }, { status })
   }
 
-  const { error: insErr } = await supabase.from('leads').insert(leadRow)
-  if (insErr) {
-    console.error('[/api/catalog/quote] insert lead error', insErr)
-    return NextResponse.json({ error: 'Erro ao salvar orçamento' }, { status: 500 })
-  }
-
-  return NextResponse.json({ success: true, leadId: leadRow.id })
+  return NextResponse.json({ success: true, leadId })
 }
