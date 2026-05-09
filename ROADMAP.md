@@ -69,6 +69,12 @@
 - [x] **Script de reconciliação** orders ↔ transactions — `POST /api/admin/reconcile-transactions` + botão "Reconciliar" no FinanceView ✅ 2026-05-08
 - [x] **Onda 3** — Schema dedicado pra `fixed_costs` e `profit_goals` ✅ 2026-05-09 — migration `20260509_finance_config.sql`, rotas API server-side em `app/api/finance/{fixed-costs,profit-goal}/route.ts` (services client-side travavam por bug intermitente do supabase `getSession()`), lista granular de custos fixos por projeto + meta de lucro, com migração one-shot do localStorage legacy
 
+### Catálogo evoluído (ADR 005 — Fase B)
+- [x] **Etapa 1** — Schema `products.checkout_mode` + `variants` (jsonb) + `allows_custom` (migration `20260509_product_checkout_modes.sql`); UI admin com seletor de modo (4 cards) + editor de variantes ✅ 2026-05-09
+- [x] **Etapa 2** — Catálogo público renderiza por modo via `CatalogActionButton` (4 modos: direct/variant/quote/contact_only); `QuoteModal` com form completo; `BuyButton` removido ✅ 2026-05-09
+- [x] **Etapa 3** — `POST /api/catalog/quote` (público, sem auth) → cria Lead via admin client; `ContactSource` ganha `'catalog'` (label "Catálogo") ✅ 2026-05-09
+- [x] **Etapa 4** — `FloatingWhatsApp` button (fixed bottom-right, pulse animation, deeplink com contexto do catálogo) ✅ 2026-05-09
+
 ---
 
 ## 🎨 DESIGN — peso visual & UX
@@ -194,6 +200,7 @@
 > Lista compacta de marcos atingidos:
 
 - 2026-05-09 · **Onda 3 — finanças no DB** — `fixed_costs` (lista granular: DAS, aluguel, software…) + `profit_goals` (meta mensal) por projeto, com RLS, FK em `projects`, e migração one-shot do localStorage legacy. UI: project selector + lista editável + total automático. Refator de `BreakEvenSection` em `components/FinanceView.tsx`. Tipos novos em `core/finance/financeConfigTypes.ts`. Service `services/financeConfig.ts`.
+- 2026-05-09 · **Fase B Catálogo evoluído (ADR 005)** — 4 etapas em sequência: (1) schema `products.checkout_mode/variants/allows_custom` + UI admin; (2) `CatalogActionButton` dispatcher + `QuoteModal` no catálogo público (4 modos: direct/variant/quote/contact_only) + remoção do `BuyButton`; (3) `POST /api/catalog/quote` (público) cria Lead com `source='catalog'`; (4) `FloatingWhatsApp` fixo no canto da vitrine. `ContactSource` extendido com `'catalog'`.
   - **Bug encontrado e corrigido**: services client-side (`fixedCostsService.listByProject`) ficavam pendurados em "Carregando…" eterno porque `requireUserId()` chamava `supabase.auth.getSession()` que trava intermitentemente em produção (mesmo bug que causa `[Auth] getSession timed out` no AuthContext). **Fix definitivo**: migrar pra rotas API server-side (`/api/finance/fixed-costs/{,[id]}`, `/api/finance/profit-goal`) que resolvem auth via `getUser()` cookies-based. Mesmo padrão do `/api/admin/reconcile-transactions` que funciona.
 - 2026-05-08 · **Finanças MVP completo** — Onda 1+2+3: rota `/api/admin/reconcile-transactions` (cria tx faltantes pra orders pagos legacy), tab "Ponto de Equilíbrio" no FinanceView com MC por produto + break-even + metas (localStorage), labels do dashboard separados por fonte (📒 transações / ⚙️ produção).
 - 2026-05-07 · **Stripe Connect OAuth** — botão "Conectar com Stripe" um-clique implementado. Rotas `/api/integrations/stripe/connect` e `/callback` seguem mesmo padrão MP. Form manual mantido como fallback "avançado". Requer `STRIPE_CONNECT_CLIENT_ID` (ca_...) do Stripe Dashboard → Connect Settings.

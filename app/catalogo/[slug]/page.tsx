@@ -7,6 +7,7 @@ import { ShareButton } from '@/components/ShareButton'
 import { ProductCard } from './ProductCard'
 import { ListTemplate } from './ListTemplate'
 import { MinimalTemplate } from './MinimalTemplate'
+import { FloatingWhatsApp } from './FloatingWhatsApp'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 async function getProducts(ids: string[]): Promise<Product[]> {
@@ -311,6 +312,11 @@ export default async function CatalogPublicPage({
           </p>
         </div>
       </div>
+
+      {/* Floating WhatsApp button */}
+      {catalog.whatsapp && (
+        <FloatingWhatsApp whatsapp={catalog.whatsapp} catalogName={catalog.name} />
+      )}
     </div>
   )
 }
