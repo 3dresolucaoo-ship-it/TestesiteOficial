@@ -24,6 +24,9 @@
 | `/api/integrations/stripe/connect` | GET | ✅ OK (requer `STRIPE_CONNECT_CLIENT_ID` no env) |
 | `/api/integrations/stripe/callback` | GET | ✅ OK — Stripe Connect Standard, troca code por access_token via `connect.stripe.com/oauth/token` |
 | `/api/admin/reconcile-transactions` | POST | ✅ OK — cria transactions faltantes pra orders pagos legacy (idempotente) |
+| `/api/finance/fixed-costs` | GET, POST | ✅ OK — lista/cria custos fixos por projeto |
+| `/api/finance/fixed-costs/[id]` | PATCH, DELETE | ✅ OK — edita/remove um custo fixo |
+| `/api/finance/profit-goal` | GET, PUT | ✅ OK — lê/upsert meta mensal por projeto |
 | `/api/webhooks/payment` | POST | ❌ depende B1 |
 | `/api/webhooks/stripe` | POST | ✅ deletado em 2026-05-04 (substituído por `/api/webhooks/payment`) |
 | `/api/content/sync` | POST | ⚠️ usa client browser — refatorar |
