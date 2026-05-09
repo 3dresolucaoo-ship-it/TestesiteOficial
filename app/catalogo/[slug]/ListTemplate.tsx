@@ -1,15 +1,17 @@
 'use client'
 
 import type { Product } from '@/lib/types'
+import { CatalogActionButton } from './CatalogActionButton'
 
 interface Props {
   products:    Product[]
   showPrice:   boolean
   catalogSlug: string
+  whatsapp?:   string | null
   stockMap:    Record<string, number | null>
 }
 
-export function ListTemplate({ products, showPrice, catalogSlug, stockMap }: Props) {
+export function ListTemplate({ products, showPrice, catalogSlug, whatsapp, stockMap }: Props) {
   return (
     <div className="flex flex-col gap-3">
       {products.map(p => {
@@ -95,30 +97,14 @@ export function ListTemplate({ products, showPrice, catalogSlug, stockMap }: Pro
             {/* Buy button (desktop) */}
             {showPrice && (
               <div className="pr-4 hidden sm:block flex-shrink-0">
-                {noPrice ? (
-                  <span
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold"
-                    style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.25)', cursor: 'not-allowed' }}
-                  >
-                    Indisponível
-                  </span>
-                ) : noStock ? (
-                  <a
-                    href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}&encomenda=1`}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-90"
-                    style={{ background: 'linear-gradient(135deg, #1e40af, #3b82f6)', color: '#fff', boxShadow: '0 2px 12px rgba(59,130,246,0.3)' }}
-                  >
-                    Solicitar
-                  </a>
-                ) : (
-                  <a
-                    href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-opacity hover:opacity-90"
-                    style={{ background: 'linear-gradient(135deg, #7c3aed, #6d28d9)', color: '#fff', boxShadow: '0 2px 12px rgba(124,58,237,0.3)' }}
-                  >
-                    Comprar
-                  </a>
-                )}
+                <CatalogActionButton
+                  product={p}
+                  catalogSlug={catalogSlug}
+                  whatsapp={whatsapp}
+                  noPrice={noPrice && p.checkoutMode !== 'quote' && p.checkoutMode !== 'contact_only'}
+                  outOfStock={noStock}
+                  size="compact"
+                />
               </div>
             )}
           </div>

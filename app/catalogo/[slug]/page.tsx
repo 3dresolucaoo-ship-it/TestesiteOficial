@@ -60,9 +60,9 @@ function EmptyState() {
 
 // ─── Grid template (default) ──────────────────────────────────────────────────
 function GridTemplate({
-  products, showPrice, catalogSlug, stockMap,
+  products, showPrice, catalogSlug, whatsapp, stockMap,
 }: {
-  products: Product[]; showPrice: boolean; catalogSlug: string; stockMap: Record<string, number | null>
+  products: Product[]; showPrice: boolean; catalogSlug: string; whatsapp: string | null; stockMap: Record<string, number | null>
 }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
@@ -72,6 +72,7 @@ function GridTemplate({
           product={p}
           showPrice={showPrice}
           catalogSlug={catalogSlug}
+          whatsapp={whatsapp}
           stockQty={p.inventoryItemId ? stockMap[p.id] : undefined}
         />
       ))}
@@ -224,6 +225,7 @@ export default async function CatalogPublicPage({
             products={products}
             showPrice={showPrice}
             catalogSlug={slug}
+            whatsapp={catalog.whatsapp ?? null}
             stockMap={stockMap}
           />
         ) : template === 'minimal' ? (
@@ -231,6 +233,7 @@ export default async function CatalogPublicPage({
             products={products}
             showPrice={showPrice}
             catalogSlug={slug}
+            whatsapp={catalog.whatsapp ?? null}
             stockMap={stockMap}
           />
         ) : (
@@ -238,6 +241,7 @@ export default async function CatalogPublicPage({
             products={products}
             showPrice={showPrice}
             catalogSlug={slug}
+            whatsapp={catalog.whatsapp ?? null}
             stockMap={stockMap}
           />
         )}

@@ -27,13 +27,12 @@
 | TopBar.tsx | 154 | ✅ |
 | Modal.tsx | 68 | ✅ helpers de form |
 | ShareButton.tsx | 46 | ✅ |
-| BuyButton.tsx | 44 | ⚠️ verificar se ainda usado |
 
 ## Issues conhecidos
 
 - ✅ ~~`SettingsView.tsx` e `DashboardView.tsx` gigantes~~ — refatorados em 2026-05-04
 - ❌ Design "sem peso" — ver feedback em `ROADMAP.md` § Design
-- ⚠️ `BuyButton.tsx` pode estar morto
+- ✅ ~~`BuyButton.tsx` pode estar morto~~ — removido em 2026-05-09; substituído por `app/catalogo/[slug]/CatalogActionButton.tsx` (4 modos: direct/variant/quote/contact_only)
 
 ## Pendências de design (do usuário)
 

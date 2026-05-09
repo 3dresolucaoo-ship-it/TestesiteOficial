@@ -1,15 +1,17 @@
 'use client'
 
 import type { Product } from '@/lib/types'
+import { CatalogActionButton } from './CatalogActionButton'
 
 interface Props {
   products:    Product[]
   showPrice:   boolean
   catalogSlug: string
+  whatsapp?:   string | null
   stockMap:    Record<string, number | null>
 }
 
-export function MinimalTemplate({ products, showPrice, catalogSlug, stockMap }: Props) {
+export function MinimalTemplate({ products, showPrice, catalogSlug, whatsapp, stockMap }: Props) {
   return (
     <div
       className="rounded-3xl overflow-hidden"
@@ -56,30 +58,15 @@ export function MinimalTemplate({ products, showPrice, catalogSlug, stockMap }: 
                   Sem preço
                 </span>
               ))}
-              {showPrice && p.salePrice > 0 && (
-                noStock ? (
-                  <a
-                    href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}&encomenda=1`}
-                    className="flex items-center justify-center px-2.5 h-8 rounded-xl transition-opacity hover:opacity-90 text-xs font-bold"
-                    style={{ background: 'rgba(59,130,246,0.2)', color: '#93c5fd', border: '1px solid rgba(59,130,246,0.3)' }}
-                    title="Solicitar encomenda"
-                  >
-                    Solicitar
-                  </a>
-                ) : (
-                  <a
-                    href={`/checkout?productId=${p.id}&catalogSlug=${catalogSlug}`}
-                    className="flex items-center justify-center w-8 h-8 rounded-xl transition-all"
-                    style={{ background: 'rgba(124,58,237,0.2)', color: '#a78bfa', border: '1px solid rgba(124,58,237,0.25)' }}
-                    title="Comprar"
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-                      <line x1="3" y1="6" x2="21" y2="6"/>
-                      <path d="M16 10a4 4 0 01-8 0"/>
-                    </svg>
-                  </a>
-                )
+              {showPrice && (p.salePrice > 0 || p.checkoutMode === 'quote' || p.checkoutMode === 'contact_only') && (
+                <CatalogActionButton
+                  product={p}
+                  catalogSlug={catalogSlug}
+                  whatsapp={whatsapp}
+                  noPrice={p.salePrice <= 0 && p.checkoutMode !== 'quote' && p.checkoutMode !== 'contact_only'}
+                  outOfStock={noStock}
+                  size="compact"
+                />
               )}
             </div>
           </div>

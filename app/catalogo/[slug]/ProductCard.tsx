@@ -1,16 +1,17 @@
 'use client'
 
 import type { Product } from '@/lib/types'
-import { BuyButton } from '@/components/BuyButton'
+import { CatalogActionButton } from './CatalogActionButton'
 
 interface Props {
   product:     Product
   showPrice:   boolean
   catalogSlug: string
+  whatsapp?:   string | null
   stockQty?:   number | null
 }
 
-export function ProductCard({ product, showPrice, catalogSlug, stockQty }: Props) {
+export function ProductCard({ product, showPrice, catalogSlug, whatsapp, stockQty }: Props) {
   const hasStock   = stockQty != null && stockQty > 0
   const noStock    = stockQty === 0
   const stockKnown = stockQty != null
@@ -140,11 +141,13 @@ export function ProductCard({ product, showPrice, catalogSlug, stockQty }: Props
         <div className="flex-1" />
 
         {showPrice && (
-          <BuyButton
-            productId={product.id}
+          <CatalogActionButton
+            product={product}
             catalogSlug={catalogSlug}
-            noPrice={product.salePrice <= 0}
+            whatsapp={whatsapp}
+            noPrice={product.salePrice <= 0 && product.checkoutMode !== 'quote' && product.checkoutMode !== 'contact_only'}
             outOfStock={noStock}
+            size="full"
           />
         )}
       </div>
