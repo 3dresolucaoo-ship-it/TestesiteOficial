@@ -183,6 +183,74 @@
 
 ---
 
+## 🚀 VISION — Mapa de Inteligência do Negócio (ADR 006)
+
+> **6 pilares + 1 paralelo · ordem rígida · 1 wave por vez · ritual de uso real entre cada wave.**
+> Especificação completa: `decisions/006-mapa-inteligencia-negocio.md`
+> Padrão de UI: `decisions/007-padrao-manual-com-lembrete-forte.md`
+
+### Wave 0 — Fundação (sem feature visível)
+- [ ] Migration `revenue_kind` em `products` (physical_print/filament_resale/service/accessory/digital/rental)
+- [ ] Migration `inventory_movements` (histórico in/out, motivo, ref_order_id)
+- [ ] Migration `customers` consolidada (com `organization_id nullable` desde já)
+- [ ] Todas as tabelas novas com `organization_id uuid NULL` (preparando multi-tenant)
+
+### Wave 1 — Pilar 3: Mapa dos Clientes
+- [ ] Tela `/customers` com LTV por cliente, top N, sumiram há X dias, frequência média
+- [ ] Detalhe do cliente (histórico, ticket médio, valor total)
+- [ ] **Ritual de uso real (3-5 dias) antes de Wave 2**
+
+### Wave 2 — Suppliers + Pilar 1 Evoluído
+- [ ] Schema `suppliers` (nome, contato, MOQ, prazo)
+- [ ] Schema `supplier_prices` time-series
+- [ ] FK `inventory.supplier_id` (nullable)
+- [ ] Tela `/suppliers` (CRUD)
+- [ ] Recalcular margem por produto com custo médio ponderado real
+- [ ] FinanceView ganha cards "Mapa do Dinheiro" (lucro real, projeção, alertas)
+- [ ] **Ritual de uso real antes de Wave 3**
+
+### Wave 3 — Pilar 4: Mapa do Estoque/Produção
+- [ ] Popular `inventory_movements` em vendas/produção/compras
+- [ ] Alertas de estoque baixo com previsão ("acaba em N dias")
+- [ ] Capital parado (filamento sem venda há X dias)
+- [ ] Fila de produção
+- [ ] **Ritual de uso real antes de Wave 4**
+
+### Wave 4a — Pilar 2: Mapa do Tempo (input manual)
+- [ ] Campo `production_hours` em orders (quick-input ao marcar produzido)
+- [ ] Captura de turno (`working_session`)
+- [ ] "Sua hora vale R$ X" + "hora paga por produto" + ociosidade da impressora
+- [ ] Padrão "manual com lembrete forte" (ADR 007) aplicado
+- [ ] **Ritual de uso real antes de Wave 4b ou 5**
+
+### Wave 4b — Integração Bambu Lab MQTT (upgrade opcional)
+- [ ] Conexão MQTT (host:port + access code)
+- [ ] Webhooks job start/end → popula `production_hours` automático
+- [ ] Status em tempo real
+- [ ] Substitui input manual da Wave 4a quando ativo
+
+### Wave 5 — Pilar 5: Mapa do Crescimento
+- [ ] Comparativos period-on-period (mês, trimestre)
+- [ ] Meta vs real (expandir `profit_goals` da ADR 004)
+- [ ] Tendências de margem/receita
+- [ ] "Oportunidades na mesa" (alta margem + baixo volume)
+- [ ] **Ritual de uso real antes de Wave 6**
+
+### Wave 6 — Pilar 6: Guia / Copiloto (a coroa)
+- [ ] Engine de regras determinísticas que cruza todos os pilares
+- [ ] Card "3 ações de maior alavancagem hoje"
+- [ ] Alertas priorizados (estoque, cliente sumindo, meta atrasada)
+- [ ] Sugestões com cálculo embutido (mostra a lógica)
+- [ ] Dispensar com motivo (loop de feedback)
+
+### Wave 7 — Market Intel (paralelo, low-priority)
+- [ ] `competitors` + `competitor_observations` (URL, preço, snapshot date)
+- [ ] `social_snapshots` (platform, followers, engagement, source manual|api)
+- [ ] Banner forte se >90d sem atualização (concorrentes) / >45d (social)
+- [ ] Migration path: manual → API quando integração IG/YT pronta
+
+---
+
 ## 🎯 ESCALA — quando o produto crescer
 
 - [ ] **Multi-tenant via `organization_id`** (hoje só `user_id` — não suporta times)
