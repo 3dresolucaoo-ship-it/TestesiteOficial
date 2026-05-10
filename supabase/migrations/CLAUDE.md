@@ -26,6 +26,9 @@
 | `20260509_product_checkout_modes.sql` | Adiciona `products.checkout_mode` + `variants` (jsonb) + `allows_custom` (Fase B / ADR 005) |
 | `20260509_catalog_quote_lead_rpc.sql` | RPC `create_catalog_lead` (SECURITY DEFINER) — endpoint público de orçamento bypassa RLS sem expor service_role |
 | `20260510_catalog_quote_lead_rpc_fix.sql` | Fix da RPC: `products.id` é uuid, comparação com `p_product_id` (text) falhava com `operator does not exist: uuid = text`. Adicionado cast explícito + validação prévia de formato uuid pra dar erro PT-BR amigável. |
+| `20260510_products_revenue_kind.sql` | **Wave 0 (1/3)** — Adiciona `products.revenue_kind` (CHECK 6 valores: physical_print, filament_resale, service, accessory, digital, rental). Default `'physical_print'` cobre dados existentes. Base do Pilar 1 do ADR 006. |
+| `20260510_movements_extend.sql` | **Wave 0 (2/3)** — Estende `movements` (tabela já existia, só agora vai ser usada pra valer): `unit_cost numeric(12,2) NULL`, `organization_id uuid NULL`, CHECK em `type` (`'in','out'`) e `reason` (`purchase|sale|printing|damage|adjustment`, alinhado com TS `MovementReason`). Não popula nada — Wave 3 cuida. |
+| `20260510_customers_table.sql` | **Wave 0 (3/3)** — Cria `customers` (id, user_id, organization_id, project_id, name, whatsapp, email, notes, created_at, updated_at) com RLS, partial UNIQUE em (user_id, whatsapp), trigger updated_at com search_path imutável. Adiciona `orders.customer_id text NULL REFERENCES customers(id) ON DELETE SET NULL`. Tabela vazia — migração de dados (dedup de orders.client_*) fica pra Wave 1. |
 
 ## Schema base
 
@@ -39,6 +42,16 @@
 - ✅ Todas as migrations foram aplicadas no Supabase em 2026-05-04
 - ✅ `20260509_finance_config.sql` aplicada em 2026-05-09
 - ✅ `20260509_product_checkout_modes.sql` aplicada em 2026-05-09
+- ✅ `20260510_*` (Wave 0 — fix RPC catálogo + 3 migrations Fundação ADR 006) aplicadas em 2026-05-10
+
+## ⚠️ Schema.sql está stale (2026-05-10)
+
+`lib/supabase/schema.sql` reflete o schema antigo em alguns pontos importantes:
+
+- `products.id` → schema.sql diz `text`, DB real é `uuid` (gerado por `uuid_generate_v4()`)
+- `orders.product_id` → schema.sql diz `text`, DB real é `uuid` (alinhado com products.id)
+
+**Fonte de verdade = migrations + DB**, não o schema.sql. Antes de criar RPC ou query nova, rodar `\d <tabela>` no SQL Editor pra confirmar tipos reais. Bug 2026-05-10 da catalog quote (uuid=text) veio de confiar no schema.sql stale.
 
 ## Template pra nova migration
 

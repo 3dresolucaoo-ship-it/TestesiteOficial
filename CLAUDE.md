@@ -69,6 +69,7 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - **Bugs críticos abertos**: ver `ROADMAP.md` § "🔴 Críticos"
 - **Pendência prioritária #1**: app Mercado Pago Marketplace (OAuth atual rejeita CheckoutPro)
 - **Pendência prioritária #2**: migration unificada com colunas faltantes em `orders`, `inventory`, criar `portfolios`/`portfolio_items`
+- **Em curso**: VISION ADR 006 — Wave 0 (Fundação) ✅ aplicada 2026-05-10. Próximo passo: ritual de uso real (3-5 dias) e depois Wave 1 (Pilar 3 — Mapa dos Clientes).
 
 ---
 

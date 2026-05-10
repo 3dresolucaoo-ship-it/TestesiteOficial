@@ -46,13 +46,14 @@ A ordem foi escolhida por critérios objetivos:
 - **(b) Dados existentes**: o que já dá pra fazer com schema atual
 - **(c) Massa crítica baixa**: qual pilar gera valor com poucos dados
 
-### Wave 0 — Fundação *(1 sessão)*
+### Wave 0 — Fundação *(1 sessão)* ✅ 2026-05-10
 Sem feature visível. Sem isso, qualquer pilar precisa ser refatorado depois.
-- Migration `revenue_kind` em `products`: `'physical_print' | 'filament_resale' | 'service' | 'accessory' | 'digital' | 'rental'`
-- Migration `inventory_movements` (histórico in/out com motivo)
-- Migration `customers` consolidada (hoje cliente é só campo livre em orders)
-- ADR 007 escrito (padrão "manual com lembrete forte")
-- Todas as tabelas novas com `organization_id nullable` (preparando multi-tenant — ver ROADMAP "Escala")
+- ✅ Migration `revenue_kind` em `products`: `'physical_print' | 'filament_resale' | 'service' | 'accessory' | 'digital' | 'rental'`
+- ✅ ~~Migration `inventory_movements`~~ → **descoberta na execução**: tabela `movements` já existia no schema (com 0 linhas). Plano ajustado pra **estender** `movements` (adicionar `unit_cost`, `organization_id`, CHECK em type/reason alinhados com TS `MovementReason`) em vez de criar duplicada. Wave 3 popula.
+- ✅ Migration `customers` consolidada (hoje cliente é só campo livre em orders) com partial UNIQUE em whatsapp + trigger updated_at + FK opcional em orders. Migração de dados (dedup) **não foi feita na Wave 0** — fica pra Wave 1 com UI "Importar de pedidos existentes" (UX > migration silenciosa).
+- ✅ ADR 007 escrito (padrão "manual com lembrete forte")
+- ✅ Todas as tabelas/colunas novas com `organization_id nullable` (preparando multi-tenant — ver ROADMAP "Escala")
+- ⚠️ **Bonus**: descoberto que `lib/supabase/schema.sql` está stale (ex.: `products.id` real é `uuid`, não `text`). Documentado em `supabase/migrations/CLAUDE.md`. Antes de criar RPC nova, sempre conferir tipos no DB real.
 
 ### Wave 1 — Pilar 3 (Clientes) *(2-3 sessões)*
 **Por que primeiro**: usa orders + leads que JÁ existem; massa crítica baixa (5+ clientes); efeito "uau" alto (você nunca viu isso consolidado).

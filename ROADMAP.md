@@ -189,11 +189,13 @@
 > Especificação completa: `decisions/006-mapa-inteligencia-negocio.md`
 > Padrão de UI: `decisions/007-padrao-manual-com-lembrete-forte.md`
 
-### Wave 0 — Fundação (sem feature visível)
-- [ ] Migration `revenue_kind` em `products` (physical_print/filament_resale/service/accessory/digital/rental)
-- [ ] Migration `inventory_movements` (histórico in/out, motivo, ref_order_id)
-- [ ] Migration `customers` consolidada (com `organization_id nullable` desde já)
-- [ ] Todas as tabelas novas com `organization_id uuid NULL` (preparando multi-tenant)
+### Wave 0 — Fundação (sem feature visível) ✅ 2026-05-10
+- [x] Migration `revenue_kind` em `products` (physical_print/filament_resale/service/accessory/digital/rental) → `20260510_products_revenue_kind.sql`
+- [x] ~~Migration `inventory_movements`~~ → reaproveitada `movements` que já existia. Estendida com `unit_cost`, `organization_id`, CHECK em type/reason → `20260510_movements_extend.sql`
+- [x] Migration `customers` consolidada com partial UNIQUE em (user_id, whatsapp), trigger updated_at, FK `orders.customer_id` ON DELETE SET NULL → `20260510_customers_table.sql`
+- [x] Todas as tabelas/colunas novas com `organization_id uuid NULL` (preparando multi-tenant)
+- [x] Smoke test em prod: SQL CHECKs validados, /crm e /finance carregam sem erro
+- [ ] **Ritual de uso real antes de Wave 1**: 3-5 dias usando o app normalmente; objetivo é sentir se algo quebrou silenciosamente. Nenhuma feature nova exposta — só observar.
 
 ### Wave 1 — Pilar 3: Mapa dos Clientes
 - [ ] Tela `/customers` com LTV por cliente, top N, sumiram há X dias, frequência média
