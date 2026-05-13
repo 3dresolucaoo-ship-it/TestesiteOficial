@@ -69,7 +69,7 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - **Bugs críticos abertos**: ver `ROADMAP.md` § "🔴 Críticos"
 - **Pendência prioritária #1**: app Mercado Pago Marketplace (OAuth atual rejeita CheckoutPro)
 - **Pendência prioritária #2**: migration unificada com colunas faltantes em `orders`, `inventory`, criar `portfolios`/`portfolio_items`
-- **Em curso**: VISION ADR 006 — Wave 0 (Fundação) ✅ aplicada 2026-05-10. Próximo passo: ritual de uso real (3-5 dias) e depois Wave 1 (Pilar 3 — Mapa dos Clientes).
+- **Em curso**: **Fase 1 — LANÇAMENTO PÚBLICO 04/07/2026** (8 semanas). Semana 1: landing + waitlist + lead magnet + CRM schema. Time G7 criado em ADR 008. Painel central: `CEO_COMMAND.md` na raiz.
 
 ---
 
@@ -114,9 +114,24 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 ### Skills de marca
 - `/brand:update` — atualizar `brand/BRIEF.md`
 
-### Skills oficiais externas (em `.claude/skills/`)
-- `frontend-design` (Anthropic) — anti-estética IA
+### Skills externas (em `.claude/skills/`) — 11 skills
+
+#### Anti-IA + Design Premium (núcleo)
+- `frontend-design` (Anthropic) — anti-estética IA, design philosophy
 - `humanize-writing` (lguz) — remove sinais de IA do texto
+- `ui-ux-pro-max` (nextlevelbuilder) — 161 paletas, 57 fontes, 99 UX rules
+- `taste` (Leonxlnx) — senior UX, anti-AI slop, metric-based
+- `soft-design` (Leonxlnx) — high-end agency feel
+- `redesign-audit` (Leonxlnx) — audita AI patterns genéricos
+- `minimalist` (Leonxlnx) — clean editorial vibe
+
+#### Implementação
+- `design-tokens` (ui-ux-pro) — token architecture 3 camadas
+- `ui-styling` (ui-ux-pro) — shadcn/ui + Tailwind + a11y helper
+- `image-to-code` (Leonxlnx) — screenshot → código
+
+#### Utilidade
+- `pdftk` (awesome-copilot) — manipulação PDF avançada
 
 Skills = **métodos** (como agir). CLAUDE.md = **estado** (o que existe). Não misturar.
 

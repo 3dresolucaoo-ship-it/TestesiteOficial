@@ -5,6 +5,95 @@
 
 ---
 
+## 🚀 FASE 1 — LANÇAMENTO PÚBLICO (13/05 → 04/07/2026)
+
+> **8 semanas** · Decisão fechada em ADR 008 (Time G7) + sessão de planejamento 13/05/2026.
+
+### Semana 1 (13-19/05) — Foundation Marketing
+- [ ] Landing page (hero + features + social proof + CTA)
+- [ ] Waitlist form etapa 1 (email + nome + WhatsApp)
+- [ ] Tela "obrigado" + form etapa 2 (qualificação opcional)
+- [ ] Tabela `waitlist_leads` no Supabase + RLS
+- [ ] Captura UTM/referrer/IP/device automática
+- [ ] Lead magnet definido + criado
+- [ ] Design system shadcn instalado + tokens (`brand/design-system.md` aplicado)
+- [ ] Marketing diário: primeiro post LinkedIn anunciando "em breve"
+
+### Semana 2 (20-26/05) — Segurança Tier 1
+- [ ] Zod em todos os forms
+- [ ] Rate limit (Upstash Redis) global + por endpoint
+- [ ] HSTS + headers de segurança em next.config.ts
+- [ ] Idempotência em fluxos críticos (`webhook_events` table)
+- [ ] Verificação de webhook signature (Stripe + MP)
+- [ ] Erro genérico no login (anti-enumeração)
+- [ ] Staging branch separada em Vercel
+
+### Semana 3 (27/05-02/06) — LGPD + Email + MP Marketplace
+- [ ] Política de Privacidade publicada
+- [ ] Termos de Uso publicados
+- [ ] Checkbox de consentimento no form de captura
+- [ ] Direito de deleção (endpoint DELETE /api/me)
+- [ ] Vercel BotID ativado no form
+- [ ] Resend configurado (domínio + SPF/DKIM/DMARC)
+- [ ] Email de boas-vindas (double opt-in)
+- [ ] MP OAuth Marketplace E2E (resolver bloqueio atual)
+
+### Semana 4 (03-09/06) — Wave 1 — Customers
+- [ ] Tela `/customers` (lista + busca + filtros)
+- [ ] Perfil individual `/customers/[id]`
+- [ ] Métricas: top clientes, LTV, "sumiu há X dias"
+- [ ] Service `services/customers.ts` completo
+- [ ] Dashboard inicial com widgets de customers
+
+### Semana 5 (10-16/06) — Admin Completo
+- [ ] Rota `/admin` protegida (flag is_admin)
+- [ ] Lista de usuários (filtros: waitlist/ativos/pagantes/inadimplentes)
+- [ ] Perfil individual de user + ações (pausar, reativar, banir)
+- [ ] Lista de waitlist com export CSV
+- [ ] Métricas: signups, conversão, MRR, churn
+- [ ] Tabela `audit_log` + log de ações sensíveis
+- [ ] Email em massa por segmento
+
+### Semana 6 (17-23/06) — PWA + Mobile + Polish
+- [ ] manifest.json configurado
+- [ ] Service Worker registrado
+- [ ] Ícones (192, 512 maskable, apple-touch-icon)
+- [ ] Offline fallback page
+- [ ] Mobile audit em TODAS as telas (320-768px)
+- [ ] Catálogo + Orçamento polidos (bugs reais reportados)
+
+### Semana 7 (24-30/06) — Onboarding + Observability + Soft Launch
+- [ ] Empty states em todas as telas vazias
+- [ ] First-time experience (setup mínimo 3 telas)
+- [ ] Tooltips contextuais (≥10s parado)
+- [ ] Sentry instalado + capturando
+- [ ] Vercel Analytics ativo
+- [ ] Rolling Releases configurado
+- [ ] Sequência de email transacional pós-cadastro
+- [ ] Soft launch para os primeiros 50-100 waitlist
+- [ ] Atendimento pelos primeiros bugs reais
+
+### Semana 8 (01-04/07) — QA + LAUNCH PÚBLICO
+- [ ] Rodar `/launch:checklist` (todos os squads)
+- [ ] Otávio: auditoria Tier 1 final
+- [ ] Júlia: QA completa golden path + edge cases mobile
+- [ ] Sofia: UX audit primeira experiência
+- [ ] Ricardo: smoke test prod + rollback testado
+- [ ] Paulo: pagamento E2E sandbox + prod
+- [ ] Lia: docs atualizados, ADRs criados
+- [ ] **🚀 LANÇAMENTO PÚBLICO — 04/07/2026 (quinta-feira)**
+
+---
+
+## 🎯 PRÓXIMAS FASES (resumo)
+
+- **Fase 2 — Estabilização** (jul-set/2026, 10 sem): testes, Sentry, otimização funil, suporte estruturado
+- **Fase 3 — Crescimento** (set-dez/2026, 12 sem): Wave 2 (Pilar Produtos), tiers, integrações WhatsApp/Instagram
+- **Fase 4 — Maturidade** (dez/2026-mar/2027, 12 sem): Wave 3 (Mapa Financeiro), automações marketing, talvez primeira contratação
+- **Fase 5 — Expansão** (mar-mai/2027, 10 sem): Wave 4 (Mapa Operacional), Heshiley começa em paralelo
+
+---
+
 ## 🔴 CRÍTICOS — fazer ASAP
 
 ### Schema do banco
