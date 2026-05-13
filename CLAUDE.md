@@ -94,9 +94,67 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 ## 🧠 SKILLS DISPONÍVEIS
 
+### Skills do projeto (operacionais)
 `/bug:fix` · `/feature:create` · `/ui:improve` · `/db:sync` · `/deploy:check` · `/catalog:improve` · `/product:flow` · `/stock:sync` · `/sales:setup` · `/mode:fast` · `/mode:analyze`
 
+### Skills G7 (time + processos)
+- `/council` — reunião de 3 agentes pra decisão grande
+- `/team:meeting` — reunião informal de squad
+- `/team:status` — status semanal
+
+### Skills de design
+- `/design:component` — cria componente (Diego + Carla + Felipe)
+- `/design:audit` — audita visual + UX + QA
+
+### Skills de segurança e launch
+- `/security:check` — auditoria Tier 1 (Otávio)
+- `/pwa:test` — valida PWA
+- `/launch:checklist` — pre-launch completo (todos os squads)
+
+### Skills de marca
+- `/brand:update` — atualizar `brand/BRIEF.md`
+
+### Skills oficiais externas (em `.claude/skills/`)
+- `frontend-design` (Anthropic) — anti-estética IA
+- `humanize-writing` (lguz) — remove sinais de IA do texto
+
 Skills = **métodos** (como agir). CLAUDE.md = **estado** (o que existe). Não misturar.
+
+---
+
+## 👥 TIME G7 (subagents em `.claude/agents/`)
+
+15 agentes especializados. Chama por nome ou via `/team:*`.
+
+### Squad Estratégia
+- **helena-strategy** — Diretora, mão direita do CEO
+
+### Squad Produto
+- **diego-designer** · **felipe-frontend** · **bruna-backend** · **julia-qa**
+
+### Squad Operação
+- **otavio-security** · **ricardo-devops** · **paulo-financial** · **lia-docs**
+
+### Squad Crescimento
+- **carla-copy** · **marcos-marketing** · **sofia-cs**
+
+### Squad Council (invocado por `/council`)
+- **critic-user** · **critic-claude** · **external-researcher**
+
+### Doc completa do time
+- `brand/BRIEF.md` — marca consolidada
+- `~/OneDrive/Documentos/Contextos Projetos/G7-CONTEXTO-COMPLETO.md` — contexto empresa-casa
+
+---
+
+## 🔌 MCPs ativos (`.mcp.json`)
+
+- **shadcn** — instala componentes shadcn/ui via prompt
+- **magicui** — animações Magic UI via prompt
+- **context7** — docs atualizadas em tempo real (Next.js, React, Tailwind, Supabase)
+- *(já instalados antes)* Supabase MCP · Vercel MCP
+
+⚠️ MCPs novos exigem reiniciar Claude Code pra carregar.
 
 ---
 
