@@ -1,7 +1,15 @@
-# BVaz Hub — Design System
+# BVaz Hub — Design System (v1, histórico)
+
+> ⚠️ **DOCUMENTO HISTÓRICO** · v1 da Paleta B (premium escuro azul) foi substituída em 14/05/2026.
+>
+> 👉 **Fonte da verdade atual: [`brand/visual-system-v2.md`](./visual-system-v2.md)** (paleta night/petrol/fog/ember + Fraunces serif + grain anti-IA).
+>
+> Mantido aqui pra registro histórico da decisão original A/B. NÃO usar como referência ao criar componente novo.
+
+---
 
 > Tokens vivos. Fonte da verdade para Diego (designer) e Felipe (frontend).
-> Versão 1.0 · 13/05/2026
+> Versão 1.0 · 13/05/2026 · **substituída por v2 em 14/05/2026**
 
 ---
 

@@ -3,6 +3,8 @@
 > Documento de marca consolidado. Versão 1.0 · 13/05/2026 · Mantido por: Gabriel (CEO) + Carla (Copywriter G7).
 >
 > **Use este arquivo como fonte da verdade** ao escrever copy, criar visual, definir tom ou tomar decisão de posicionamento.
+>
+> 🎨 **Visual / design tokens**: ver [`brand/visual-system-v2.md`](./visual-system-v2.md) (linha editorial oficial desde 14/05/2026 — paleta night/petrol/fog/ember + Fraunces + grain anti-IA).
 
 ---
 
