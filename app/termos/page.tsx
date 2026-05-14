@@ -2,8 +2,8 @@ import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 
 export const metadata = {
-  title: 'Termos de Uso — BVaz Hub',
-  description: 'Termos de uso da lista de espera e do produto BVaz Hub.',
+  title: 'Termos de Uso — Hayzer',
+  description: 'Termos de uso da lista de espera e do produto Hayzer.',
 }
 
 export default function TermosPage() {
@@ -16,14 +16,14 @@ export default function TermosPage() {
 
         <h2>1. O que estes termos cobrem</h2>
         <p>
-          Estes termos se aplicam à lista de espera do BVaz Hub e, futuramente,
+          Estes termos se aplicam à lista de espera do Hayzer e, futuramente,
           ao produto quando lançar (previsão: 04 de julho de 2026).
         </p>
 
         <h2>2. Sobre a lista de espera</h2>
         <ul>
           <li>Entrar na lista é gratuito.</li>
-          <li>Você só recebe emails relacionados ao BVaz Hub.</li>
+          <li>Você só recebe emails relacionados ao Hayzer.</li>
           <li>Pode sair da lista a qualquer momento — basta responder qualquer email pedindo descadastro, ou usar o link no final do email.</li>
           <li>Não garantimos data de lançamento exata, embora trabalhemos pra 04/07/2026.</li>
         </ul>
@@ -43,7 +43,7 @@ export default function TermosPage() {
         <h2>5. Contato</h2>
         <p>
           Qualquer dúvida, manda pra{' '}
-          <a href="mailto:ola@bvaz-hub.com">ola@bvaz-hub.com</a>.
+          <a href="mailto:ola@hayzer.com.br">ola@hayzer.com.br</a>.
         </p>
       </article>
       <Footer />

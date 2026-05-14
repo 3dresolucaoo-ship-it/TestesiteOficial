@@ -117,7 +117,7 @@ export function Step2Form() {
 
             <div>
               <Label htmlFor="source" className="mb-1.5 block text-xs text-muted-foreground">
-                Como descobriu o BVaz?
+                Como descobriu o Hayzer?
               </Label>
               <select
                 id="source"

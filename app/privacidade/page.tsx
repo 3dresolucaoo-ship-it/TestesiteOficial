@@ -2,7 +2,7 @@ import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 
 export const metadata = {
-  title: 'Política de Privacidade — BVaz Hub',
+  title: 'Política de Privacidade — Hayzer',
   description: 'Como tratamos seus dados em conformidade com a LGPD.',
 }
 
@@ -16,7 +16,7 @@ export default function PrivacidadePage() {
 
         <h2>1. Quem somos</h2>
         <p>
-          BVaz Hub é uma ferramenta de gestão para pequenos negócios brasileiros.
+          Hayzer é uma ferramenta de gestão para pequenos negócios brasileiros.
           Esta política descreve como coletamos, usamos e protegemos seus dados.
         </p>
 
@@ -29,7 +29,7 @@ export default function PrivacidadePage() {
 
         <h2>3. Para que usamos</h2>
         <ul>
-          <li>Te avisar quando o BVaz Hub abrir.</li>
+          <li>Te avisar quando o Hayzer abrir.</li>
           <li>Entender quem está esperando — pra adaptar o produto à realidade.</li>
           <li>Métricas agregadas (sem identificar você individualmente).</li>
         </ul>
@@ -48,13 +48,13 @@ export default function PrivacidadePage() {
         </ul>
         <p>
           Pra exercer qualquer direito, mande email pra{' '}
-          <a href="mailto:privacidade@bvaz-hub.com">privacidade@bvaz-hub.com</a> com o
+          <a href="mailto:privacidade@hayzer.com.br">privacidade@hayzer.com.br</a> com o
           assunto "LGPD" e o pedido. Respondemos em até 15 dias.
         </p>
 
         <h2>5. Quem tem acesso</h2>
         <p>
-          Hoje, apenas o time interno do BVaz Hub. Não vendemos, alugamos ou
+          Hoje, apenas o time interno do Hayzer. Não vendemos, alugamos ou
           compartilhamos seus dados com terceiros pra publicidade.
         </p>
         <p>
@@ -79,7 +79,7 @@ export default function PrivacidadePage() {
         <h2>8. Contato</h2>
         <p>
           Encarregado de Dados (DPO):{' '}
-          <a href="mailto:privacidade@bvaz-hub.com">privacidade@bvaz-hub.com</a>
+          <a href="mailto:privacidade@hayzer.com.br">privacidade@hayzer.com.br</a>
         </p>
       </article>
       <Footer />

@@ -6,8 +6,8 @@ import { ThankYouHero } from '@/components/landing/ThankYouHero'
 import { Step2Form } from '@/components/landing/Step2Form'
 
 export const metadata = {
-  title: 'Você entrou. Bem-vindo. — BVaz Hub',
-  description: 'Você está na lista de espera do BVaz Hub. A gente avisa quando abrir.',
+  title: 'Você entrou. Bem-vindo. — Hayzer',
+  description: 'Você está na lista de espera do Hayzer. A gente avisa quando abrir.',
 }
 
 export default async function ObrigadoPage() {

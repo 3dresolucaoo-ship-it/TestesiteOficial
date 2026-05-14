@@ -1,19 +1,23 @@
-# BVaz Hub — Brand Brief
+# Hayzer — Brand Brief
 
-> Documento de marca consolidado. Versão 1.0 · 13/05/2026 · Mantido por: Gabriel (CEO) + Carla (Copywriter G7).
+> Documento de marca consolidado. Versão 2.0 · 14/05/2026 · Mantido por: Gabriel (CEO) + Carla (Copywriter G7).
 >
 > **Use este arquivo como fonte da verdade** ao escrever copy, criar visual, definir tom ou tomar decisão de posicionamento.
 >
 > 🎨 **Visual / design tokens**: ver [`brand/visual-system-v2.md`](./visual-system-v2.md) (linha editorial oficial desde 14/05/2026 — paleta night/petrol/fog/ember + Fraunces + grain anti-IA).
+> 📐 **Decisão de nome**: ver [`decisions/009-naming-hayzer.md`](../decisions/009-naming-hayzer.md) (processo completo de naming, validações INPI + domínio, decisão final 14/05/2026).
 
 ---
 
 ## 🏷️ NOME
 
-- **Atual (provisório)**: BVaz Hub
-- **Origem**: "B" vem de "Borges Vaz" (sobrenome da família da esposa)
-- **Decisão**: nome final será revisitado em sessão dedicada de naming (pós-launch ou na semana 5)
-- **Candidatos avaliados**: Borvaz · Centra · Klar · Beva · Bora
+- **Oficial (14/05/2026)**: **Hayzer**
+- **Pronúncia**: "ai-zer" (H mudo em PT-BR)
+- **Conceito**: A raiz do seu negócio. O H estilizado como núcleo/raiz no logo. Storytelling: cuida das raízes (estoque, vendas, clientes, financeiro) que sustentam tudo.
+- **Decisão**: 14/05/2026 após sessão completa de naming (3 agentes G7 + 2 rodadas Carla + research INPI + 9 domínios validados)
+- **Por que Hayzer**: domínio livre (hayzer.com.br · R$ 50/ano), INPI 100% limpo (zero processos), distintividade alta, preserva som "ai-zer" do candidato emocional original (Rayzer) e o conceito de raiz
+- **Por que NÃO Rayzer**: 11 processos INPI em conflito (3 ativos em classes adjacentes), rayzer.com.br em parking especulativo (R$ 2.5-15k), risco médio-alto de oposição da Razer Inc, custo total estimado R$ 5.3-17.5k
+- **Histórico provisório anterior**: "BVaz Hub" (placeholder de Borges+Vaz, descartado)
 
 ---
 
@@ -23,10 +27,13 @@
 > Substitui gambiarra, planilha perdida e desorganização por controle real — tudo num lugar só.
 
 ### Em 2 frases (post-mortem)
-> Enquanto outros sistemas parecem feitos pra contador ou empresa grande, o BVaz Hub é simples, direto e útil pra quem toca o negócio no dia a dia. Tudo num só lugar — estoque, checkout, financeiro, clientes — sem precisar assinar 5 apps separados.
+> Enquanto outros sistemas parecem feitos pra contador ou empresa grande, o Hayzer é simples, direto e útil pra quem toca o negócio no dia a dia. Tudo num só lugar — estoque, checkout, financeiro, clientes — sem precisar assinar 5 apps separados.
 
 ### Em 1 linha curta (hero)
-> O centro do seu negócio.
+> A raiz do seu negócio.
+
+### Slogan principal (mantido da v1)
+> Seu negócio, sem caos.
 
 ---
 
@@ -38,7 +45,7 @@ A maioria dos concorrentes te força a:
 - Assinar Nuvemshop pra checkout
 - E nada conversa entre si
 
-**BVaz Hub é tudo num só.** Esse é o diferencial duro — não é marketing, é arquitetura.
+**Hayzer é tudo num só.** Esse é o diferencial duro — não é marketing, é arquitetura.
 
 Outros pontos:
 - Pensado pra **pequeno negócio brasileiro real**, não pra contador nem pra empresa enterprise
@@ -57,7 +64,7 @@ Outros pontos:
 - Sente que o negócio depende demais da cabeça dele
 - Tem ~25k-50k/mês de faturamento
 
-### Fase 2 (set/2026 — após launch BVaz)
+### Fase 2 (set/2026 — após launch Hayzer)
 **Heshiley / Ybera Paris** — gestoras de afiliadas de cosméticos
 - Precisam: vídeo aulas organizadas, materiais centralizados, visão de vendas das afiliadas, gestão hierárquica
 

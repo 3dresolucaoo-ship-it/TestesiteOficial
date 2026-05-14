@@ -16,7 +16,7 @@ export function Footer() {
           <div className="lg:col-span-5">
             <Logo size="sm" />
             <p className="mt-4 max-w-[320px] text-[13.5px] leading-[1.55] text-muted-foreground">
-              O centro do seu negócio. Estoque, vendas, clientes, financeiro num só lugar.
+              A raiz do seu negócio. Estoque, vendas, clientes, financeiro num só lugar.
             </p>
           </div>
 
@@ -71,7 +71,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:ola@bvaz-hub.com"
+                  href="mailto:ola@hayzer.com.br"
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Contato
@@ -95,7 +95,7 @@ export function Footer() {
             color: 'hsl(var(--fog-400))',
           }}
         >
-          <span>© {new Date().getFullYear()} BVaz Hub.</span>
+          <span>© {new Date().getFullYear()} Hayzer.</span>
           <span style={{ fontFamily: 'ui-monospace, "Geist Mono", monospace' }}>v0.3 · waitlist</span>
         </div>
       </div>

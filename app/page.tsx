@@ -9,9 +9,9 @@ import { FinalCTA } from '@/components/landing/FinalCTA'
 import { Footer } from '@/components/landing/Footer'
 
 export const metadata = {
-  title: 'BVaz Hub — O centro do seu negócio',
+  title: 'Hayzer — A raiz do seu negócio',
   description:
-    'Substitui gambiarra, planilha perdida e desorganização por controle real. Tudo num lugar só — estoque, vendas, clientes, financeiro.',
+    'Substitui gambiarra, planilha perdida e desorganização por controle real. Estoque, vendas, clientes, financeiro num lugar só. A raiz firme que sustenta tudo.',
 }
 
 export default async function HomePage() {

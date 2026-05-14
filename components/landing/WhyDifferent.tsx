@@ -9,7 +9,7 @@ const today = [
   { label: 'Mais 2 planilhas que ninguém atualiza', price: 'tempo' },
 ]
 
-const withBvaz = [
+const withHayzer = [
   { strong: 'Estoque integrado', sub: 'sem assinar separado' },
   { strong: 'Financeiro que vê o dinheiro real do mês', sub: 'não o bruto' },
   { strong: 'Checkout que conversa com estoque', sub: 'pedido baixa peça' },
@@ -86,7 +86,7 @@ export function WhyDifferent() {
             </ul>
           </motion.div>
 
-          {/* COM BVAZ (direita) — bg gradient verde-petróleo sutil */}
+          {/* COM HAYZER (direita) — bg gradient verde-petróleo sutil */}
           <motion.div
             initial={{ opacity: 0, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -102,16 +102,16 @@ export function WhyDifferent() {
               style={{ borderColor: 'hsl(var(--petrol-300) / 0.20)' }}
             >
               <h3 className="display-h2 text-[20px]" style={{ color: 'hsl(var(--petrol-300))' }}>
-                Com BVaz Hub
+                Com Hayzer
               </h3>
               <span className="tag">um lugar só</span>
             </div>
             <ul className="space-y-4">
-              {withBvaz.map((row, i) => (
+              {withHayzer.map((row, i) => (
                 <li
                   key={row.strong}
-                  className={i < withBvaz.length - 1 ? 'border-b pb-4' : 'pb-1'}
-                  style={{ borderColor: i < withBvaz.length - 1 ? 'hsl(var(--petrol-300) / 0.15)' : 'transparent' }}
+                  className={i < withHayzer.length - 1 ? 'border-b pb-4' : 'pb-1'}
+                  style={{ borderColor: i < withHayzer.length - 1 ? 'hsl(var(--petrol-300) / 0.15)' : 'transparent' }}
                 >
                   <div className="text-[15px] font-medium text-foreground">{row.strong}</div>
                   <div

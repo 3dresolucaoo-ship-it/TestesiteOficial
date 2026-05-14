@@ -6,14 +6,17 @@ interface LogoProps {
   size?: 'sm' | 'lg'
   /** Animação pulse-glow no mark (só faz sentido no 'lg' do hero) */
   pulse?: boolean
-  /** Esconde o texto "BVaz Hub", deixa só o quadrado B */
+  /** Esconde o texto "Hayzer", deixa só o quadrado H */
   iconOnly?: boolean
 }
 
 /**
- * Logo BVaz Hub — duas variantes:
- * - sm: 32px quadrado + "BVaz Hub" pequeno (header e footer)
- * - lg: 80-96px quadrado + "BVaz Hub" Fraunces + tag "v0.3 · waitlist aberta" (Hero, vira identidade da página)
+ * Logo Hayzer — duas variantes:
+ * - sm: 32px quadrado + "Hayzer" pequeno (header e footer)
+ * - lg: 80-96px quadrado + "Hayzer" Fraunces + tag "v0.3 · waitlist aberta" (Hero, vira identidade da página)
+ *
+ * Conceito: H estilizado como núcleo/raiz. Pronúncia "ai-zer" (H mudo em PT-BR).
+ * Decisão de naming registrada em decisions/009-naming-hayzer.md.
  */
 export function Logo({ className, size = 'sm', pulse = false, iconOnly = false }: LogoProps) {
   if (size === 'lg') {
@@ -26,12 +29,12 @@ export function Logo({ className, size = 'sm', pulse = false, iconOnly = false }
             pulse && 'logo-pulse',
           )}
         >
-          B
+          H
         </div>
         {!iconOnly && (
           <div className="flex flex-col gap-1">
             <span className="tag">v0.3 · waitlist aberta</span>
-            <span className="display-h2 text-2xl text-foreground md:text-3xl">BVaz Hub</span>
+            <span className="display-h2 text-2xl text-foreground md:text-3xl">Hayzer</span>
           </div>
         )}
       </div>
@@ -45,10 +48,10 @@ export function Logo({ className, size = 'sm', pulse = false, iconOnly = false }
         aria-hidden
         className="logo-mark grid h-9 w-9 place-items-center rounded-[6px] text-base"
       >
-        B
+        H
       </div>
       {!iconOnly && (
-        <span className="text-[15px] font-medium tracking-tight">BVaz Hub</span>
+        <span className="text-[15px] font-medium tracking-tight">Hayzer</span>
       )}
     </div>
   )

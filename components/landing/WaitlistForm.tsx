@@ -128,7 +128,7 @@ export function WaitlistForm() {
           style={{ accentColor: 'hsl(var(--petrol-400))' }}
         />
         <span className="text-[12.5px] leading-[1.5] text-muted-foreground">
-          Concordo em receber emails sobre o BVaz Hub. Posso sair quando quiser.{' '}
+          Concordo em receber emails sobre o Hayzer. Posso sair quando quiser.{' '}
           <a href="/privacidade" className="underline underline-offset-2 hover:text-foreground">
             Política de Privacidade
           </a>.
