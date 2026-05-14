@@ -39,6 +39,16 @@ export const waitlistStep1Schema = z.object({
     }),
 })
 
+// ─── Bot guards (não vão pro DB) ─────────────────────────────────────────────
+// Honeypot: campo invisível, humano nunca preenche, bot que varre forms preenche.
+// Time check: timestamp do render — submit < 2.5s = robô (humano demora a ler).
+// Server Action faz parse separado, falha silenciosa pra não dar dica pro bot.
+
+export const waitlistBotGuardSchema = z.object({
+  website:  z.string().max(0).optional().or(z.literal('')), // honeypot
+  _t:       z.coerce.number().int().nonnegative().optional(),
+})
+
 export type WaitlistLeadStep1 = z.infer<typeof waitlistStep1Schema>
 
 // ─── Etapa 2 — qualificação opcional ────────────────────────────────────────
@@ -100,6 +110,7 @@ export interface LeadCaptureMeta {
   ip_country?:   string
   ip_region?:    string
   ip_city?:      string
+  ip_hash?:      string
   user_agent?:   string
   device?:       'mobile' | 'desktop' | 'tablet'
 }

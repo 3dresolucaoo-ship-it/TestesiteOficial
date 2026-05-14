@@ -21,9 +21,12 @@
 
 - ✅ Funcionando: todas as seções da landing renderizam, mobile responsivo OK, dark mode Paleta B aplicada
 - ✅ Forms: etapa 1 valida Zod, redireciona pra /obrigado; etapa 2 opcional
-- ⏳ Pendente: aplicar migration `20260513_waitlist_leads.sql` no Supabase prod
+- ✅ Migration `20260513_waitlist_leads.sql` aplicada em prod 2026-05-13
+- ✅ Defesa anti-bot ativa (2026-05-13): honeypot (campo `website` invisível) + time-check (≥2.5s entre render e submit) + rate-limit por IP hash (3 leads/24h, salt em `WAITLIST_IP_SALT`). Falhas de bot retornam `success` fake pra não vazar dica.
+- ✅ Security headers globais via `next.config.ts`: HSTS, X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy.
 - ⏳ Pendente: configurar Resend pra email de confirmação (semana 3)
-- ⏳ Pendente: ativar Vercel BotID no form (semana 1-2)
+- ⏳ Pendente: ativar Vercel BotID toggle no Dashboard Vercel + integrar SDK `botid` na action (semana 2)
+- ⏳ Pendente: trocar rate-limit pra Upstash Redis quando volume > 100 leads/dia
 
 ## 📐 Convenções
 

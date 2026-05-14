@@ -27,7 +27,7 @@ export type UpdateLeadResult =
 
 /**
  * Cria novo lead na waitlist com dados mínimos da etapa 1
- * + meta capturada automaticamente do request (UTM, referrer, geo, device).
+ * + meta capturada automaticamente do request (UTM, referrer, geo, device, ip_hash).
  *
  * Idempotente por email: se já existe, retorna `already_registered`.
  */
@@ -57,6 +57,7 @@ export async function addLeadStep1(
         ip_country:   meta.ip_country   || null,
         ip_region:    meta.ip_region    || null,
         ip_city:      meta.ip_city      || null,
+        ip_hash:      meta.ip_hash      || null,
         user_agent:   meta.user_agent   || null,
         device:       meta.device       || null,
       })

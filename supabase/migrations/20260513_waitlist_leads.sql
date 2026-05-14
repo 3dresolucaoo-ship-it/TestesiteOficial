@@ -10,6 +10,7 @@
 -- ─────────────────────────────────────────────────────────────────────────────
 
 create extension if not exists "pgcrypto";
+create extension if not exists "citext";
 
 -- ─── Tabela ──────────────────────────────────────────────────────────────────
 create table if not exists public.waitlist_leads (
@@ -38,6 +39,7 @@ create table if not exists public.waitlist_leads (
   ip_country      text,
   ip_region       text,
   ip_city         text,
+  ip_hash         text,         -- SHA-256(ip + WAITLIST_IP_SALT) — rate-limit por IP sem armazenar IP cru (LGPD)
   user_agent      text,
   device          text,         -- 'mobile' | 'desktop' | 'tablet'
 
@@ -69,9 +71,6 @@ create table if not exists public.waitlist_leads (
   constraint waitlist_leads_email_unique unique (email)
 );
 
--- ─── Habilita citext pra email case-insensitive ─────────────────────────────
-create extension if not exists "citext";
-
 -- ─── Trigger updated_at automático ──────────────────────────────────────────
 create or replace function public.update_waitlist_leads_updated_at()
 returns trigger language plpgsql as $$
@@ -92,6 +91,7 @@ create index if not exists idx_waitlist_leads_status     on public.waitlist_lead
 create index if not exists idx_waitlist_leads_segment    on public.waitlist_leads(segment) where segment is not null;
 create index if not exists idx_waitlist_leads_created_at on public.waitlist_leads(created_at desc);
 create index if not exists idx_waitlist_leads_email      on public.waitlist_leads(email);
+create index if not exists idx_waitlist_leads_ip_hash    on public.waitlist_leads(ip_hash, created_at desc) where ip_hash is not null;
 
 -- ─── RLS ────────────────────────────────────────────────────────────────────
 alter table public.waitlist_leads enable row level security;

@@ -29,6 +29,8 @@
 | `20260510_products_revenue_kind.sql` | **Wave 0 (1/3)** — Adiciona `products.revenue_kind` (CHECK 6 valores: physical_print, filament_resale, service, accessory, digital, rental). Default `'physical_print'` cobre dados existentes. Base do Pilar 1 do ADR 006. |
 | `20260510_movements_extend.sql` | **Wave 0 (2/3)** — Estende `movements` (tabela já existia, só agora vai ser usada pra valer): `unit_cost numeric(12,2) NULL`, `organization_id uuid NULL`, CHECK em `type` (`'in','out'`) e `reason` (`purchase|sale|printing|damage|adjustment`, alinhado com TS `MovementReason`). Não popula nada — Wave 3 cuida. |
 | `20260510_customers_table.sql` | **Wave 0 (3/3)** — Cria `customers` (id, user_id, organization_id, project_id, name, whatsapp, email, notes, created_at, updated_at) com RLS, partial UNIQUE em (user_id, whatsapp), trigger updated_at com search_path imutável. Adiciona `orders.customer_id text NULL REFERENCES customers(id) ON DELETE SET NULL`. Tabela vazia — migração de dados (dedup de orders.client_*) fica pra Wave 1. |
+| `20260513_waitlist_leads.sql` | **Fase 1 — landing pré-launch.** Cria `waitlist_leads` (~30 colunas: etapa 1, etapa 2, UTM/geo, `ip_hash` SHA-256 pra rate-limit LGPD-friendly, status CRM, double opt-in). 5 índices, trigger updated_at, 4 policies RLS (insert público, select/update/delete admin via `raw_app_meta_data->>'is_admin'`). Extensions `pgcrypto` + `citext` (email case-insensitive). |
+| `20260513_waitlist_updated_at_search_path_fix` (inline) | Fix `update_waitlist_leads_updated_at` com `set search_path = ''` + `pg_catalog.now()`. Mesma defesa aplicada em `customers_function_search_path_fix`. Resolve advisor `function_search_path_mutable`. |
 
 ## Schema base
 
@@ -43,6 +45,7 @@
 - ✅ `20260509_finance_config.sql` aplicada em 2026-05-09
 - ✅ `20260509_product_checkout_modes.sql` aplicada em 2026-05-09
 - ✅ `20260510_*` (Wave 0 — fix RPC catálogo + 3 migrations Fundação ADR 006) aplicadas em 2026-05-10
+- ✅ `20260513_waitlist_leads.sql` + fix search_path da trigger function aplicadas em 2026-05-13 (Fase 1 — landing pré-launch)
 
 ## ⚠️ Schema.sql está stale (2026-05-10)
 

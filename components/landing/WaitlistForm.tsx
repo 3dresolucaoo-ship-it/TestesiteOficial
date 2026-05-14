@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useRef } from 'react'
+import { useActionState, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { submitWaitlistStep1, type WaitlistStep1State } from '@/app/waitlist/actions'
 import { Input } from '@/components/ui/input'
@@ -15,6 +15,13 @@ export function WaitlistForm() {
   const [state, action, pending] = useActionState(submitWaitlistStep1, initial)
   const formRef = useRef<HTMLFormElement>(null)
 
+  // Otávio (Security): timestamp do render pro time-check anti-bot.
+  // Começa em 0 no SSR (evita hydration mismatch), useEffect seta após mount.
+  const [renderedAt, setRenderedAt] = useState(0)
+  useEffect(() => {
+    setRenderedAt(Date.now())
+  }, [])
+
   // Sucesso → vai pra /waitlist/obrigado
   useEffect(() => {
     if (state.status === 'success') {
@@ -28,6 +35,33 @@ export function WaitlistForm() {
       action={action}
       className="mx-auto flex w-full max-w-md flex-col gap-3 text-left"
     >
+      {/* Honeypot — humano nunca preenche, bot que varre form preenche.
+          Posicionado fora da tela com aria-hidden + tabIndex=-1 (não foca via teclado). */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: 0,
+          height: 0,
+          overflow: 'hidden',
+        }}
+      >
+        <label>
+          Não preencha este campo:
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            defaultValue=""
+          />
+        </label>
+      </div>
+
+      {/* Time-check — render < 2.5s antes do submit = robô */}
+      <input type="hidden" name="_t" value={renderedAt} />
+
       {/* UTM hidden — captura automática */}
       <input type="hidden" name="utm_source"   value={searchParams.get('utm_source')   || ''} />
       <input type="hidden" name="utm_medium"   value={searchParams.get('utm_medium')   || ''} />

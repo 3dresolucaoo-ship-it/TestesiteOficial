@@ -7,6 +7,11 @@ import {
   type LeadCaptureMeta,
 } from '@/services/waitlistSchema'
 import { addLeadStep1, updateLeadStep2 } from '@/services/waitlist'
+import { checkWaitlistIpRateLimit } from '@/services/waitlistRateLimit'
+
+// Tempo mínimo entre render do form e submit. Humano demora a ler/preencher;
+// bot que automatiza POST mando em <100ms. 2.5s é folgado pra humano lento.
+const MIN_FORM_FILL_MS = 2500
 
 // ─── Helpers de extração de meta do request ─────────────────────────────────
 
@@ -17,7 +22,13 @@ function detectDevice(ua: string): LeadCaptureMeta['device'] {
   return 'desktop'
 }
 
-async function buildCaptureMeta(formData: FormData): Promise<LeadCaptureMeta> {
+function extractIp(h: Headers): string {
+  const xff = h.get('x-forwarded-for')
+  if (xff) return xff.split(',')[0]!.trim()
+  return h.get('x-real-ip') || h.get('cf-connecting-ip') || 'unknown'
+}
+
+async function buildCaptureMeta(formData: FormData, ipHash: string): Promise<LeadCaptureMeta> {
   const h = await headers()
 
   return {
@@ -30,6 +41,7 @@ async function buildCaptureMeta(formData: FormData): Promise<LeadCaptureMeta> {
     ip_country:   h.get('x-vercel-ip-country') || undefined,
     ip_region:    h.get('x-vercel-ip-country-region') || undefined,
     ip_city:      h.get('x-vercel-ip-city') ? decodeURIComponent(h.get('x-vercel-ip-city')!) : undefined,
+    ip_hash:      ipHash || undefined,
     user_agent:   h.get('user-agent') || undefined,
     device:       detectDevice(h.get('user-agent') || ''),
   }
@@ -46,7 +58,45 @@ export async function submitWaitlistStep1(
   _prevState: WaitlistStep1State,
   formData: FormData
 ): Promise<WaitlistStep1State> {
-  // Parse e validação Zod
+  // ─── Guard 1: Honeypot ─────────────────────────────────────────────────
+  // Campo 'website' é invisível pro humano. Se veio preenchido, é bot.
+  // Retorna sucesso fake — bot não fica refinando ataque.
+  const honeypot = String(formData.get('website') || '').trim()
+  if (honeypot !== '') {
+    return {
+      status: 'success',
+      leadId: 'honeypot-blocked',
+      email:  String(formData.get('email') || ''),
+    }
+  }
+
+  // ─── Guard 2: Time-check ───────────────────────────────────────────────
+  // Render + submit em <2.5s = bot. Mesma resposta fake.
+  // _t = 0 significa useEffect ainda não rodou (improvável) — deixa passar.
+  const renderTime = Number(formData.get('_t') || 0)
+  if (renderTime > 0) {
+    const elapsed = Date.now() - renderTime
+    if (elapsed < MIN_FORM_FILL_MS) {
+      return {
+        status: 'success',
+        leadId: 'time-check-blocked',
+        email:  String(formData.get('email') || ''),
+      }
+    }
+  }
+
+  // ─── Guard 3: Rate limit por IP (3/24h, hash SHA-256) ───────────────────
+  const h = await headers()
+  const ip = extractIp(h)
+  const { allowed, ipHash } = await checkWaitlistIpRateLimit(ip)
+  if (!allowed) {
+    return {
+      status:  'error',
+      message: 'Muitas inscrições do mesmo lugar agora. Tenta de novo daqui umas horas.',
+    }
+  }
+
+  // ─── Parse e validação Zod ─────────────────────────────────────────────
   const parsed = waitlistStep1Schema.safeParse({
     email:        formData.get('email'),
     name:         formData.get('name'),
@@ -63,8 +113,8 @@ export async function submitWaitlistStep1(
     }
   }
 
-  // Meta automática (UTM, geo, device)
-  const meta = await buildCaptureMeta(formData)
+  // Meta automática (UTM, geo, device, ip_hash)
+  const meta = await buildCaptureMeta(formData, ipHash)
 
   // Insere no DB
   const result = await addLeadStep1(parsed.data, meta)

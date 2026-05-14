@@ -41,6 +41,9 @@
 | products.ts | 134 | products | ⚠️ console.log linha 75 · ✅ checkout_mode/variants/allows_custom (Fase B) |
 | profiles.ts | 46 | profiles | ✅ |
 | projects.ts | 72 | projects | ✅ |
+| waitlist.ts | 168 | waitlist_leads | ✅ Fase 1 — landing pré-launch (insert público + update etapa 2 + métricas) |
+| waitlistRateLimit.ts | 85 | waitlist_leads | ✅ hash SHA-256(IP+salt) + count 24h via service_role (fail-open) |
+| waitlistSchema.ts | — | (Zod) | ✅ schemas etapa 1, etapa 2, bot guards (honeypot/time), LeadCaptureMeta |
 
 ## Issues conhecidos
 

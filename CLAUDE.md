@@ -70,6 +70,7 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - **Pendência prioritária #1**: app Mercado Pago Marketplace (OAuth atual rejeita CheckoutPro)
 - **Pendência prioritária #2**: migration unificada com colunas faltantes em `orders`, `inventory`, criar `portfolios`/`portfolio_items`
 - **Em curso**: **Fase 1 — LANÇAMENTO PÚBLICO 04/07/2026** (8 semanas). Semana 1: landing + waitlist + lead magnet + CRM schema. Time G7 criado em ADR 008. Painel central: `CEO_COMMAND.md` na raiz.
+- **Segurança Tier 1 (parcial · 2026-05-13)**: ✅ HSTS + X-Frame-Options DENY + nosniff + Referrer-Policy + Permissions-Policy ✅ honeypot ✅ time-check ≥2.5s ✅ rate-limit por IP hash (3/24h). Pendente: Vercel BotID toggle, idempotência webhook, Upstash quando escalar.
 
 ---
 
