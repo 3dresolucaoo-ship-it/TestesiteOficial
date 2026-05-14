@@ -3,7 +3,7 @@ import { Geist } from 'next/font/google'
 import './globals.css'
 import { AuthProvider }  from '@/context/AuthContext'
 import { ThemeProvider } from '@/context/ThemeContext'
-import { AppShell }      from '@/components/AppShell'
+import { LayoutSwitch }  from '@/components/LayoutSwitch'
 import { getUser }       from '@/lib/auth'
 import { createServerClient } from '@/lib/supabaseServer'
 import { loadInitialState } from '@/lib/serverDataLoader'
@@ -12,23 +12,36 @@ import type { AppState } from '@/lib/types'
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
 
 export const metadata: Metadata = {
-  title: 'BVaz Hub',
-  description: 'Sistema operacional de negócios',
+  title: 'BVaz Hub — O centro do seu negócio',
+  description: 'Substitui gambiarra, planilha perdida e desorganização por controle real. Tudo num lugar só — estoque, vendas, clientes, financeiro.',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bvaz-hub.vercel.app'),
+  openGraph: {
+    title: 'BVaz Hub — O centro do seu negócio',
+    description: 'Substitui gambiarra, planilha perdida e desorganização por controle real.',
+    type: 'website',
+    locale: 'pt_BR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BVaz Hub — O centro do seu negócio',
+    description: 'Substitui gambiarra, planilha perdida e desorganização por controle real.',
+  },
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)',  color: '#0a0a0d' },
+  ],
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Pre-fetch the full app state SSR for authenticated users so the client store
-  // starts already populated. This eliminates the F5 flash of empty data on
-  // pages that read directly from useStore() (decisions, products, inventory,
-  // crm, orders, production, content, metrics).
+  // starts already populated. LayoutSwitch decides whether to wrap with AppShell
+  // (auth) or render naked (landing pública).
   let initialState: AppState | null = null
   try {
     const user = await getUser()
@@ -37,8 +50,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       initialState   = await loadInitialState(supabase, user.id)
     }
   } catch (err) {
-    // Never let a layout-level fetch failure break the entire app —
-    // the client-side fallback hydration in StoreProvider will handle it.
     console.error('[RootLayout] SSR state prefetch failed:', err)
   }
 
@@ -47,9 +58,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <ThemeProvider>
           <AuthProvider>
-            <AppShell initialState={initialState}>
+            <LayoutSwitch initialState={initialState}>
               {children}
-            </AppShell>
+            </LayoutSwitch>
           </AuthProvider>
         </ThemeProvider>
       </body>

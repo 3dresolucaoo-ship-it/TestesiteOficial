@@ -10,13 +10,15 @@
 > **8 semanas** · Decisão fechada em ADR 008 (Time G7) + sessão de planejamento 13/05/2026.
 
 ### Semana 1 (13-19/05) — Foundation Marketing
-- [ ] Landing page (hero + features + social proof + CTA)
-- [ ] Waitlist form etapa 1 (email + nome + WhatsApp)
-- [ ] Tela "obrigado" + form etapa 2 (qualificação opcional)
-- [ ] Tabela `waitlist_leads` no Supabase + RLS
-- [ ] Captura UTM/referrer/IP/device automática
-- [ ] Lead magnet definido + criado
-- [ ] Design system shadcn instalado + tokens (`brand/design-system.md` aplicado)
+- [x] Landing page (hero + features + why-different + CTA + footer) ✅ 2026-05-13
+- [x] Waitlist form etapa 1 (email + nome + WhatsApp + LGPD checkbox) ✅ 2026-05-13
+- [x] Tela "obrigado" + form etapa 2 (qualificação opcional) ✅ 2026-05-13
+- [x] Tabela `waitlist_leads` no Supabase + RLS (migration `20260513_waitlist_leads.sql`) ✅ 2026-05-13
+- [x] Captura UTM/referrer/IP/device automática (via Server Actions) ✅ 2026-05-13
+- [x] Páginas LGPD: `/privacidade` + `/termos` ✅ 2026-05-13
+- [x] Design system shadcn instalado + tokens Paleta B aplicada ✅ 2026-05-13
+- [ ] Lead magnet definido + criado (decidido: nenhum agora, adiciona semana 2-3)
+- [ ] Aplicar migration `20260513_waitlist_leads.sql` no Supabase prod
 - [ ] Marketing diário: primeiro post LinkedIn anunciando "em breve"
 
 ### Semana 2 (20-26/05) — Segurança Tier 1

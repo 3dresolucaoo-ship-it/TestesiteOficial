@@ -10,6 +10,75 @@
   --color-blue:       #3b82f6;
   --font-sans: var(--font-geist-sans);
   --font-mono: ui-monospace, 'Cascadia Code', monospace;
+
+  /* shadcn/ui tokens (semantic) — referenciados como bg-background, text-foreground, etc */
+  --color-background:        var(--background);
+  --color-foreground:        var(--foreground);
+  --color-card:              var(--card);
+  --color-card-foreground:   var(--card-foreground);
+  --color-popover:           var(--popover);
+  --color-popover-foreground:var(--popover-foreground);
+  --color-primary:           var(--primary);
+  --color-primary-foreground:var(--primary-foreground);
+  --color-secondary:         var(--secondary);
+  --color-secondary-foreground:var(--secondary-foreground);
+  --color-muted:             var(--muted);
+  --color-muted-foreground:  var(--muted-foreground);
+  --color-accent-token:      var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive:       var(--destructive);
+  --color-destructive-foreground:var(--destructive-foreground);
+  --color-border:            var(--border);
+  --color-input:             var(--input);
+  --color-ring:              var(--ring);
+}
+
+/* ─── shadcn tokens — Paleta B (premium escuro) ───────────────────────────── */
+:root {
+  /* Light mode (uso eventual) */
+  --background:       0 0% 100%;
+  --foreground:       240 10% 4%;
+  --card:             0 0% 100%;
+  --card-foreground:  240 10% 4%;
+  --popover:          0 0% 100%;
+  --popover-foreground:240 10% 4%;
+  --primary:          221 83% 45%;          /* azul profundo */
+  --primary-foreground: 0 0% 100%;
+  --secondary:        240 5% 96%;
+  --secondary-foreground:240 6% 10%;
+  --muted:            240 5% 96%;
+  --muted-foreground: 240 4% 46%;
+  --accent:           240 5% 96%;
+  --accent-foreground:240 6% 10%;
+  --destructive:      0 84% 60%;
+  --destructive-foreground:0 0% 98%;
+  --border:           240 6% 90%;
+  --input:            240 6% 90%;
+  --ring:             221 83% 45%;
+  --radius:           0.5rem;
+}
+
+.dark {
+  /* Dark — Paleta B premium */
+  --background:        240 10% 4%;          /* #0a0a0d quase preto */
+  --foreground:        0 0% 98%;
+  --card:              240 6% 10%;          /* #18181c */
+  --card-foreground:   0 0% 98%;
+  --popover:           240 6% 10%;
+  --popover-foreground:0 0% 98%;
+  --primary:           221 83% 53%;         /* azul profundo elegante */
+  --primary-foreground:0 0% 100%;
+  --secondary:         240 4% 16%;
+  --secondary-foreground:0 0% 98%;
+  --muted:             240 4% 16%;
+  --muted-foreground:  240 5% 65%;
+  --accent:            240 4% 16%;
+  --accent-foreground: 0 0% 98%;
+  --destructive:       0 63% 50%;
+  --destructive-foreground:0 0% 98%;
+  --border:            240 4% 18%;
+  --input:             240 4% 18%;
+  --ring:              221 83% 53%;
 }
 
 /* ─── Light theme (branco/cinza neutro) ──────────────────────────────────────── */
@@ -137,6 +206,16 @@ body {
 
 * {
   border-color: var(--t-border);
+}
+
+/* ─── Marketing/Landing override — usa tokens shadcn (Paleta B premium) ──── */
+/* Aplicado pelo LayoutSwitch via <html data-layout="marketing"> */
+html[data-layout="marketing"] body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+html[data-layout="marketing"] * {
+  border-color: hsl(var(--border));
 }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */

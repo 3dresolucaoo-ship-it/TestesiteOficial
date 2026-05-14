@@ -9,6 +9,8 @@
 
 **Objetivo único**: Landing + waitlist + lead magnet + CRM schema + design system shadcn
 
+**Status (13/05/2026, dia 1)**: ✅ Landing pronta · ✅ Form 2 etapas · ✅ Schema waitlist_leads · ✅ LGPD · ✅ Design system Paleta B aplicada · ⏳ Falta aplicar migration no Supabase prod · ⏳ Marketing começa amanhã.
+
 **Por que essa semana é decisiva**: marketing começa AGORA. Cada dia sem landing = lead não capturado. Lançamento em 04/07/2026 (~7 semanas).
 
 ---
