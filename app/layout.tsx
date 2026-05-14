@@ -22,7 +22,7 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   title: 'Hayzer — A raiz do seu negócio',
   description: 'Substitui gambiarra, planilha perdida e desorganização por controle real. Estoque, vendas, clientes, financeiro num lugar só. A raiz firme que sustenta tudo.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bvaz-hub.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://hayzer.com.br'),
   openGraph: {
     title: 'Hayzer — A raiz do seu negócio',
     description: 'Substitui gambiarra, planilha perdida e WhatsApp confuso por controle real. A raiz firme do seu negócio.',
