@@ -8,6 +8,7 @@ import {
 } from '@/services/waitlistSchema'
 import { addLeadStep1, updateLeadStep2 } from '@/services/waitlist'
 import { checkWaitlistIpRateLimit } from '@/services/waitlistRateLimit'
+import { sendWaitlistWelcome } from '@/services/email'
 
 // Tempo mínimo entre render do form e submit. Humano demora a ler/preencher;
 // bot que automatiza POST mando em <100ms. 2.5s é folgado pra humano lento.
@@ -144,6 +145,13 @@ export async function submitWaitlistStep1(
   cookieStore.set('waitlist_email', result.email, {
     httpOnly: true, secure: true, sameSite: 'lax', maxAge: 60 * 60,
   })
+
+  // Dispara email de boas-vindas (Resend). Falha silenciosa: lead já tá salvo,
+  // email é nice-to-have. Awaited pra evitar request-die no Vercel Functions.
+  const emailResult = await sendWaitlistWelcome(result.email, parsed.data.name)
+  if (!emailResult.ok) {
+    console.warn('[waitlist] welcome email não enviado:', emailResult.error)
+  }
 
   return { status: 'success', leadId: result.leadId, email: result.email }
 }

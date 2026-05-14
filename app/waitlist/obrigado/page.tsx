@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 import { ThankYouHero } from '@/components/landing/ThankYouHero'
+import { WhatsAppGroupCta } from '@/components/landing/WhatsAppGroupCta'
 import { Step2Form } from '@/components/landing/Step2Form'
 
 export const metadata = {
@@ -23,6 +24,7 @@ export default async function ObrigadoPage() {
     <div className="bg-background text-foreground">
       <Header />
       <ThankYouHero email={email} />
+      <WhatsAppGroupCta />
       <Step2Form />
       <Footer />
     </div>
