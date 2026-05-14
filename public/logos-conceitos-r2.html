@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hayzer — 4 conceitos figurativos (rodada 2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&family=Geist:wght@400;500;700&family=Geist+Mono:wght@400&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --night-950: #07090A;
+    --night-900: #0B0E10;
+    --night-800: #13171A;
+    --fog-50:    #F2EFEA;
+    --fog-200:   #BDB7AB;
+    --fog-300:   #8A8478;
+    --petrol-300:#6FB5A8;
+    --petrol-400:#449586;
+    --petrol-500:#1F7669;
+    --ember-500: #D08A4A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Geist', system-ui, sans-serif;
+    background: var(--night-950);
+    color: var(--fog-50);
+    padding: 48px 32px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    font-variation-settings: 'opsz' 144;
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+  }
+  .subtitle {
+    color: var(--fog-200);
+    margin-bottom: 48px;
+    font-size: 0.95rem;
+    max-width: 800px;
+  }
+  .grid {
+    display: grid;
+    gap: 28px;
+    grid-template-columns: 1fr;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1200px) {
+    .grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .card {
+    background: var(--night-900);
+    border: 1px solid rgba(242, 239, 234, 0.08);
+    border-radius: 14px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .card.recommended {
+    border: 2px solid var(--petrol-500);
+    box-shadow: 0 0 0 4px rgba(31, 118, 105, 0.15);
+  }
+  .card-header { border-bottom: 1px solid rgba(242, 239, 234, 0.08); padding-bottom: 14px; }
+  .tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--petrol-300);
+    background: rgba(31, 118, 105, 0.12);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  .tag.ember {
+    color: var(--ember-500);
+    background: rgba(208, 138, 74, 0.14);
+  }
+  .name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    font-variation-settings: 'opsz' 144;
+    color: var(--fog-50);
+    letter-spacing: -0.02em;
+  }
+  .vibe {
+    color: var(--fog-200);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+  .demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    border-radius: 8px;
+    min-height: 140px;
+  }
+  .demo.dark { background: var(--night-950); border: 1px solid rgba(242, 239, 234, 0.06); }
+  .demo.light { background: var(--fog-50); }
+  .demo-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fog-300);
+    margin-bottom: 6px;
+  }
+  .logo-mark {
+    background: var(--fog-50);
+    color: var(--night-950);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 0 1px rgba(7, 9, 10, 0.08),
+                0 8px 24px -8px rgba(31, 118, 105, 0.35);
+  }
+  .logo-mark.sm { width: 36px; height: 36px; border-radius: 6px; padding: 4px; }
+  .logo-mark.lg { width: 100px; height: 100px; border-radius: 12px; padding: 10px; }
+  .row {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .wordmark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-variation-settings: 'opsz' 144;
+    letter-spacing: -0.02em;
+  }
+  .wordmark.sm { font-size: 1rem; }
+  .wordmark.lg { font-size: 1.5rem; }
+  .wordmark.dark-bg { color: var(--fog-50); }
+  .wordmark.light-bg { color: var(--night-950); }
+  .racional {
+    background: var(--night-800);
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--fog-200);
+    border-left: 2px solid var(--petrol-500);
+  }
+  .recommendation {
+    margin-top: 48px;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, rgba(31, 118, 105, 0.16) 0%, rgba(31, 118, 105, 0.04) 100%);
+    border: 1px solid rgba(111, 181, 168, 0.25);
+    border-radius: 12px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .recommendation h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    color: var(--petrol-300);
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    font-variation-settings: 'opsz' 144;
+  }
+  .recommendation p {
+    color: var(--fog-200);
+    line-height: 1.65;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+  .recommendation strong { color: var(--fog-50); }
+</style>
+</head>
+<body>
+
+<h1>Hayzer — 4 conceitos figurativos</h1>
+<p class="subtitle">
+  Rodada 2. Diego refez baseado nas 5 referências que tu mandou. Cada conceito mostrado em
+  <strong>sm</strong> (36px header) + <strong>lg</strong> (100px hero) + <strong>solto sobre light</strong>.
+  Conceito 4 (H-Raízes) é a recomendação do Diego — único alinhado com o nome Hayzer (raiz, não árvore).
+</p>
+
+<div class="grid">
+
+  <!-- ============== CONCEITO 1: H-GALHO ============== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">conceito 1</span>
+      <div class="name">H-Galho</div>
+      <p class="vibe">Galhada seca brotando do topo direito do H. Vibe editorial masculino, capa de livro Cormac McCarthy. Sem folhas — beleza tá na ramificação geométrica.</p>
+    </div>
+    <div>
+      <div class="demo-label">sm 36px sobre dark — header</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark sm">
+            <svg viewBox="0 0 100 100" width="28" height="28" aria-label="Hayzer">
+              <path d="M 22 18 L 22 82 L 32 82 L 32 18 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 60 18 L 60 82 L 70 82 L 70 18 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 32 46 L 60 46 L 60 54 L 32 54 Z" fill="hsl(43 17% 93%)" />
+              <g fill="none" stroke="hsl(173 39% 41%)" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 65 18 C 66 14, 68 11, 71 8" stroke-width="2.4" />
+                <path d="M 68 12 C 73 9, 79 8, 86 5" stroke-width="1.8" />
+                <path d="M 78 7 C 82 4, 86 3, 89 2" stroke-width="1.1" />
+                <path d="M 67 14 C 64 12, 60 11, 55 11" stroke-width="1.6" />
+                <path d="M 71 8 C 72 5, 73 3, 73 1" stroke-width="1.3" />
+              </g>
+              <circle cx="82" cy="6" r="1.6" fill="hsl(28 60% 55%)" />
+            </svg>
+          </div>
+          <div class="wordmark sm dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg 100px sobre dark — hero</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark lg">
+            <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Hayzer">
+              <path d="M 22 18 L 22 82 L 32 82 L 32 18 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 60 18 L 60 82 L 70 82 L 70 18 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 32 46 L 60 46 L 60 54 L 32 54 Z" fill="hsl(43 17% 93%)" />
+              <g fill="none" stroke="hsl(173 39% 41%)" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 65 18 C 66 14, 68 11, 71 8" stroke-width="2.4" />
+                <path d="M 68 12 C 73 9, 79 8, 86 5" stroke-width="1.8" />
+                <path d="M 78 7 C 82 4, 86 3, 89 2" stroke-width="1.1" />
+                <path d="M 84 5 L 88 6" stroke-width="0.9" />
+                <path d="M 67 14 C 64 12, 60 11, 55 11" stroke-width="1.6" />
+                <path d="M 60 11 L 54 9" stroke-width="1" />
+                <path d="M 71 8 C 72 5, 73 3, 73 1" stroke-width="1.3" />
+                <path d="M 73 3 L 76 1" stroke-width="0.8" />
+              </g>
+              <circle cx="82" cy="6" r="1.6" fill="hsl(28 60% 55%)" />
+            </svg>
+          </div>
+          <div class="wordmark lg dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg solto sobre light</div>
+      <div class="demo light">
+        <svg viewBox="0 0 100 100" width="100" height="100" aria-label="Hayzer">
+          <path d="M 22 18 L 22 82 L 32 82 L 32 18 Z" fill="hsl(200 11% 3%)" />
+          <path d="M 60 18 L 60 82 L 70 82 L 70 18 Z" fill="hsl(200 11% 3%)" />
+          <path d="M 32 46 L 60 46 L 60 54 L 32 54 Z" fill="hsl(200 11% 3%)" />
+          <g fill="none" stroke="hsl(173 58% 28%)" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 65 18 C 66 14, 68 11, 71 8" stroke-width="2.4" />
+            <path d="M 68 12 C 73 9, 79 8, 86 5" stroke-width="1.8" />
+            <path d="M 78 7 C 82 4, 86 3, 89 2" stroke-width="1.1" />
+            <path d="M 84 5 L 88 6" stroke-width="0.9" />
+            <path d="M 67 14 C 64 12, 60 11, 55 11" stroke-width="1.6" />
+            <path d="M 60 11 L 54 9" stroke-width="1" />
+            <path d="M 71 8 C 72 5, 73 3, 73 1" stroke-width="1.3" />
+          </g>
+          <circle cx="82" cy="6" r="1.6" fill="hsl(28 60% 55%)" />
+        </svg>
+      </div>
+    </div>
+    <div class="racional">
+      <strong style="color: var(--fog-50);">Racional Diego:</strong> responde refs 1 e 2 (galho seco lateral). Galho fundindo com haste direita. Ember dot = "seiva viva no galho seco" (Hayzer raiz dormente que sustenta). Risco: pode ler como cervejaria artesanal se H não tiver peso.
+    </div>
+  </div>
+
+  <!-- ============== CONCEITO 2: H-FOLHADA ============== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">conceito 2</span>
+      <div class="name">H-Folhada</div>
+      <p class="vibe">Árvore folhada crescendo entre as hastes do H. Travessão do H = galho horizontal. Hospitality premium, retiro maduro.</p>
+    </div>
+    <div>
+      <div class="demo-label">sm 36px sobre dark — header</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark sm">
+            <svg viewBox="0 0 100 100" width="28" height="28" aria-label="Hayzer">
+              <path d="M 20 16 L 20 84 L 30 84 L 30 16 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 70 16 L 70 84 L 80 84 L 80 16 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 48 84 C 49 75, 49 65, 50 55 L 50 40 C 50 38, 51 35, 52 32"
+                    fill="none" stroke="hsl(173 58% 28%)" stroke-width="2.6" stroke-linecap="round" />
+              <path d="M 30 50 C 38 49, 46 50, 50 50 C 55 50, 62 49, 70 50"
+                    fill="none" stroke="hsl(173 58% 28%)" stroke-width="1.8" stroke-linecap="round" />
+              <g fill="hsl(173 30% 57%)">
+                <ellipse cx="40" cy="34" rx="6" ry="4" transform="rotate(-15 40 34)" />
+                <ellipse cx="60" cy="32" rx="6.5" ry="4.2" transform="rotate(12 60 32)" />
+                <ellipse cx="50" cy="22" rx="7" ry="5" />
+              </g>
+              <circle cx="53" cy="24" r="1.7" fill="hsl(28 60% 55%)" />
+            </svg>
+          </div>
+          <div class="wordmark sm dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg 100px sobre dark — hero</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark lg">
+            <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Hayzer">
+              <path d="M 20 16 L 20 84 L 30 84 L 30 16 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 70 16 L 70 84 L 80 84 L 80 16 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 48 84 C 49 75, 49 65, 50 55 L 50 40 C 50 38, 51 35, 52 32"
+                    fill="none" stroke="hsl(173 58% 28%)" stroke-width="2.6" stroke-linecap="round" />
+              <path d="M 30 50 C 38 49, 46 50, 50 50 C 55 50, 62 49, 70 50"
+                    fill="none" stroke="hsl(173 58% 28%)" stroke-width="1.8" stroke-linecap="round" />
+              <g fill="none" stroke="hsl(173 39% 41%)" stroke-linecap="round">
+                <path d="M 50 42 C 46 38, 42 36, 38 36" stroke-width="1.2" />
+                <path d="M 51 38 C 55 35, 59 34, 63 34" stroke-width="1.2" />
+                <path d="M 50 30 C 47 27, 44 26, 41 26" stroke-width="1" />
+                <path d="M 52 28 C 56 26, 60 26, 63 26" stroke-width="1" />
+              </g>
+              <g fill="hsl(173 30% 57%)">
+                <ellipse cx="40" cy="34" rx="6" ry="4" transform="rotate(-15 40 34)" />
+                <ellipse cx="60" cy="32" rx="6.5" ry="4.2" transform="rotate(12 60 32)" />
+                <ellipse cx="50" cy="22" rx="7" ry="5" />
+                <ellipse cx="44" cy="24" rx="4" ry="3" transform="rotate(-20 44 24)" />
+                <ellipse cx="57" cy="20" rx="4.5" ry="3.2" transform="rotate(18 57 20)" />
+                <ellipse cx="42" cy="47" rx="5" ry="3.5" transform="rotate(-8 42 47)" />
+                <ellipse cx="60" cy="47" rx="5.2" ry="3.6" transform="rotate(10 60 47)" />
+              </g>
+              <circle cx="53" cy="24" r="1.7" fill="hsl(28 60% 55%)" />
+            </svg>
+          </div>
+          <div class="wordmark lg dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg solto sobre light</div>
+      <div class="demo light">
+        <svg viewBox="0 0 100 100" width="100" height="100" aria-label="Hayzer">
+          <path d="M 20 16 L 20 84 L 30 84 L 30 16 Z" fill="hsl(200 11% 3%)" />
+          <path d="M 70 16 L 70 84 L 80 84 L 80 16 Z" fill="hsl(200 11% 3%)" />
+          <path d="M 48 84 C 49 75, 49 65, 50 55 L 50 40 C 50 38, 51 35, 52 32"
+                fill="none" stroke="hsl(173 58% 28%)" stroke-width="2.6" stroke-linecap="round" />
+          <path d="M 30 50 C 38 49, 46 50, 50 50 C 55 50, 62 49, 70 50"
+                fill="none" stroke="hsl(173 58% 28%)" stroke-width="1.8" stroke-linecap="round" />
+          <g fill="hsl(173 30% 57%)">
+            <ellipse cx="40" cy="34" rx="6" ry="4" transform="rotate(-15 40 34)" />
+            <ellipse cx="60" cy="32" rx="6.5" ry="4.2" transform="rotate(12 60 32)" />
+            <ellipse cx="50" cy="22" rx="7" ry="5" />
+            <ellipse cx="44" cy="24" rx="4" ry="3" transform="rotate(-20 44 24)" />
+            <ellipse cx="57" cy="20" rx="4.5" ry="3.2" transform="rotate(18 57 20)" />
+          </g>
+          <circle cx="53" cy="24" r="1.7" fill="hsl(28 60% 55%)" />
+        </svg>
+      </div>
+    </div>
+    <div class="racional">
+      <strong style="color: var(--fog-50);">Racional Diego:</strong> responde refs 3 e 4 (folha integrada). Travessão do H vira galho horizontal da árvore. <strong style="color: var(--ember-500);">Risco mais alto:</strong> pode cair em "yoga studio" / "blog mãe-natureza". Diego não defende esse.
+    </div>
+  </div>
+
+  <!-- ============== CONCEITO 3: H-PINHEIROS ============== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">conceito 3</span>
+      <div class="name">H-Pinheiros</div>
+      <p class="vibe">H outline + 4 pinheiros emergindo do topo (1 em ember pra contraste). Vibe escandinavo minimal, Aesop/Norse Projects.</p>
+    </div>
+    <div>
+      <div class="demo-label">sm 36px sobre dark — header</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark sm">
+            <svg viewBox="0 0 100 100" width="28" height="28" aria-label="Hayzer">
+              <g fill="none" stroke="hsl(200 11% 3%)" stroke-width="2.4" stroke-linejoin="miter">
+                <path d="M 22 35 L 22 84" />
+                <path d="M 70 35 L 70 84" />
+                <path d="M 22 58 L 70 58" />
+              </g>
+              <g fill="hsl(173 58% 28%)">
+                <path d="M 22 32 L 17 28 L 27 28 Z" />
+                <path d="M 22 27 L 18 22 L 26 22 Z" />
+                <path d="M 22 21 L 19 16 L 25 16 Z" />
+                <path d="M 46 34 L 39 30 L 53 30 Z" />
+                <path d="M 46 29 L 41 24 L 51 24 Z" />
+                <path d="M 46 23 L 42 17 L 50 17 Z" />
+                <path d="M 46 16 L 43.5 11 L 48.5 11 Z" />
+              </g>
+              <g fill="hsl(28 60% 55%)">
+                <path d="M 70 36 L 65 33 L 75 33 Z" />
+                <path d="M 70 32 L 66 28 L 74 28 Z" />
+                <path d="M 70 27 L 67.5 23 L 72.5 23 Z" />
+              </g>
+            </svg>
+          </div>
+          <div class="wordmark sm dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg 100px sobre dark — hero</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark lg">
+            <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Hayzer">
+              <g fill="none" stroke="hsl(200 11% 3%)" stroke-width="2.4" stroke-linejoin="miter">
+                <path d="M 22 35 L 22 84" />
+                <path d="M 70 35 L 70 84" />
+                <path d="M 22 58 L 70 58" />
+              </g>
+              <g fill="hsl(200 11% 3%)">
+                <rect x="18" y="82" width="8" height="2.5" />
+                <rect x="66" y="82" width="8" height="2.5" />
+              </g>
+              <g fill="hsl(173 58% 28%)">
+                <rect x="21" y="32" width="2" height="4" />
+                <path d="M 22 32 L 17 28 L 27 28 Z" />
+                <path d="M 22 27 L 18 22 L 26 22 Z" />
+                <path d="M 22 21 L 19 16 L 25 16 Z" />
+                <path d="M 22 15 L 20.5 11 L 23.5 11 Z" />
+                <rect x="45" y="34" width="2" height="3" />
+                <path d="M 46 34 L 39 30 L 53 30 Z" />
+                <path d="M 46 29 L 41 24 L 51 24 Z" />
+                <path d="M 46 23 L 42 17 L 50 17 Z" />
+                <path d="M 46 16 L 43.5 11 L 48.5 11 Z" />
+                <path d="M 46 10 L 44.5 6 L 47.5 6 Z" />
+              </g>
+              <g fill="hsl(28 60% 55%)">
+                <rect x="69" y="36" width="2" height="3" />
+                <path d="M 70 36 L 65 33 L 75 33 Z" />
+                <path d="M 70 32 L 66 28 L 74 28 Z" />
+                <path d="M 70 27 L 67.5 23 L 72.5 23 Z" />
+                <path d="M 70 22 L 68.5 19 L 71.5 19 Z" />
+              </g>
+              <g fill="hsl(173 39% 41%)" opacity="0.7">
+                <rect x="58" y="35" width="1.5" height="3" />
+                <path d="M 58.7 35 L 54 31 L 63.5 31 Z" />
+                <path d="M 58.7 30 L 55 26 L 62.5 26 Z" />
+                <path d="M 58.7 25 L 56 21 L 61.5 21 Z" />
+              </g>
+            </svg>
+          </div>
+          <div class="wordmark lg dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg solto sobre light</div>
+      <div class="demo light">
+        <svg viewBox="0 0 100 100" width="100" height="100" aria-label="Hayzer">
+          <g fill="none" stroke="hsl(200 11% 3%)" stroke-width="2.4" stroke-linejoin="miter">
+            <path d="M 22 35 L 22 84" />
+            <path d="M 70 35 L 70 84" />
+            <path d="M 22 58 L 70 58" />
+          </g>
+          <g fill="hsl(173 58% 28%)">
+            <path d="M 22 32 L 17 28 L 27 28 Z" />
+            <path d="M 22 27 L 18 22 L 26 22 Z" />
+            <path d="M 22 21 L 19 16 L 25 16 Z" />
+            <path d="M 22 15 L 20.5 11 L 23.5 11 Z" />
+            <path d="M 46 34 L 39 30 L 53 30 Z" />
+            <path d="M 46 29 L 41 24 L 51 24 Z" />
+            <path d="M 46 23 L 42 17 L 50 17 Z" />
+            <path d="M 46 16 L 43.5 11 L 48.5 11 Z" />
+            <path d="M 46 10 L 44.5 6 L 47.5 6 Z" />
+          </g>
+          <g fill="hsl(28 60% 55%)">
+            <path d="M 70 36 L 65 33 L 75 33 Z" />
+            <path d="M 70 32 L 66 28 L 74 28 Z" />
+            <path d="M 70 27 L 67.5 23 L 72.5 23 Z" />
+            <path d="M 70 22 L 68.5 19 L 71.5 19 Z" />
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="racional">
+      <strong style="color: var(--fog-50);">Racional Diego:</strong> ref 5 (pinheiros emergindo). H outline mais leve, contrasta com pinheiros sólidos. Pinheiro = raiz profunda (5-12m). Diferencial competitivo forte vs concorrentes BR. Risco: pode evocar "Natal" pra alguns.
+    </div>
+  </div>
+
+  <!-- ============== CONCEITO 4: H-RAÍZES (RECOMENDADO) ============== -->
+  <div class="card recommended">
+    <div class="card-header">
+      <span class="tag ember">conceito 4 · recomendado</span>
+      <div class="name">H-Raízes</div>
+      <p class="vibe">Raízes descendo do BASE do H + ember dot como semente. Único alinhado com o NOME Hayzer (raiz, não árvore subindo). Editorial telúrico, "raiz que sustenta".</p>
+    </div>
+    <div>
+      <div class="demo-label">sm 36px sobre dark — header</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark sm">
+            <svg viewBox="0 0 100 100" width="28" height="28" aria-label="Hayzer">
+              <path d="M 24 14 L 24 56 L 34 56 L 34 14 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 66 14 L 66 56 L 76 56 L 76 14 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 34 35 L 66 35 L 66 42 L 34 42 Z" fill="hsl(43 17% 93%)" />
+              <g fill="none" stroke="hsl(173 58% 28%)" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 29 56 C 28 62, 26 68, 23 74" stroke-width="2.4" />
+                <path d="M 27 65 C 23 67, 19 70, 15 73" stroke-width="1.5" />
+                <path d="M 25 70 C 26 74, 27 78, 28 82" stroke-width="1.3" />
+                <path d="M 71 56 C 72 62, 74 68, 77 74" stroke-width="2.4" />
+                <path d="M 73 65 C 77 67, 81 70, 85 73" stroke-width="1.5" />
+                <path d="M 75 70 C 74 74, 73 78, 72 82" stroke-width="1.3" />
+                <path d="M 50 56 C 50 60, 50 64, 50 68" stroke-width="1.4" />
+              </g>
+              <circle cx="50" cy="70" r="2" fill="hsl(28 60% 55%)" />
+            </svg>
+          </div>
+          <div class="wordmark sm dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg 100px sobre dark — hero</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark lg">
+            <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Hayzer">
+              <path d="M 24 14 L 24 56 L 34 56 L 34 14 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 66 14 L 66 56 L 76 56 L 76 14 Z" fill="hsl(43 17% 93%)" />
+              <path d="M 34 35 L 66 35 L 66 42 L 34 42 Z" fill="hsl(43 17% 93%)" />
+              <line x1="14" y1="60" x2="86" y2="60" stroke="hsl(40 12% 71%)" stroke-width="0.5" stroke-dasharray="2 3" opacity="0.4" />
+              <g fill="none" stroke="hsl(173 58% 28%)" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 29 56 C 28 62, 26 68, 23 74" stroke-width="2.4" />
+                <path d="M 27 65 C 23 67, 19 70, 15 73" stroke-width="1.5" />
+                <path d="M 19 70 C 16 73, 14 76, 12 79" stroke-width="0.9" />
+                <path d="M 23 67 L 19 68" stroke-width="0.8" />
+                <path d="M 25 70 C 26 74, 27 78, 28 82" stroke-width="1.3" />
+                <path d="M 27 78 L 30 82" stroke-width="0.9" />
+                <path d="M 23 74 C 22 78, 21 82, 20 86" stroke-width="1.1" />
+                <path d="M 71 56 C 72 62, 74 68, 77 74" stroke-width="2.4" />
+                <path d="M 73 65 C 77 67, 81 70, 85 73" stroke-width="1.5" />
+                <path d="M 81 70 C 84 73, 86 76, 88 79" stroke-width="0.9" />
+                <path d="M 77 67 L 81 68" stroke-width="0.8" />
+                <path d="M 75 70 C 74 74, 73 78, 72 82" stroke-width="1.3" />
+                <path d="M 73 78 L 70 82" stroke-width="0.9" />
+                <path d="M 77 74 C 78 78, 79 82, 80 86" stroke-width="1.1" />
+              </g>
+              <g fill="none" stroke="hsl(173 39% 41%)" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 50 56 C 50 60, 50 64, 50 68" stroke-width="1.4" />
+                <path d="M 50 64 C 47 68, 44 70, 42 73" stroke-width="0.9" />
+                <path d="M 50 64 C 53 68, 56 70, 58 73" stroke-width="0.9" />
+              </g>
+              <circle cx="50" cy="70" r="3.5" fill="hsl(28 60% 55%)" opacity="0.18" />
+              <circle cx="50" cy="70" r="2" fill="hsl(28 60% 55%)" />
+            </svg>
+          </div>
+          <div class="wordmark lg dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="demo-label">lg solto sobre light</div>
+      <div class="demo light">
+        <svg viewBox="0 0 100 100" width="100" height="100" aria-label="Hayzer">
+          <path d="M 24 14 L 24 56 L 34 56 L 34 14 Z" fill="hsl(200 11% 3%)" />
+          <path d="M 66 14 L 66 56 L 76 56 L 76 14 Z" fill="hsl(200 11% 3%)" />
+          <path d="M 34 35 L 66 35 L 66 42 L 34 42 Z" fill="hsl(200 11% 3%)" />
+          <line x1="14" y1="60" x2="86" y2="60" stroke="hsl(40 12% 71%)" stroke-width="0.5" stroke-dasharray="2 3" opacity="0.5" />
+          <g fill="none" stroke="hsl(173 58% 28%)" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 29 56 C 28 62, 26 68, 23 74" stroke-width="2.4" />
+            <path d="M 27 65 C 23 67, 19 70, 15 73" stroke-width="1.5" />
+            <path d="M 19 70 C 16 73, 14 76, 12 79" stroke-width="0.9" />
+            <path d="M 23 67 L 19 68" stroke-width="0.8" />
+            <path d="M 25 70 C 26 74, 27 78, 28 82" stroke-width="1.3" />
+            <path d="M 23 74 C 22 78, 21 82, 20 86" stroke-width="1.1" />
+            <path d="M 71 56 C 72 62, 74 68, 77 74" stroke-width="2.4" />
+            <path d="M 73 65 C 77 67, 81 70, 85 73" stroke-width="1.5" />
+            <path d="M 81 70 C 84 73, 86 76, 88 79" stroke-width="0.9" />
+            <path d="M 77 67 L 81 68" stroke-width="0.8" />
+            <path d="M 75 70 C 74 74, 73 78, 72 82" stroke-width="1.3" />
+            <path d="M 77 74 C 78 78, 79 82, 80 86" stroke-width="1.1" />
+          </g>
+          <g fill="none" stroke="hsl(173 39% 41%)" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 50 56 C 50 60, 50 64, 50 68" stroke-width="1.4" />
+            <path d="M 50 64 C 47 68, 44 70, 42 73" stroke-width="0.9" />
+            <path d="M 50 64 C 53 68, 56 70, 58 73" stroke-width="0.9" />
+          </g>
+          <circle cx="50" cy="70" r="2" fill="hsl(28 60% 55%)" />
+        </svg>
+      </div>
+    </div>
+    <div class="racional">
+      <strong style="color: var(--ember-500);">Diego DEFENDE este.</strong> Hayzer = raiz. Outros 3 conceitos mostram árvore subindo (qualquer SaaS faz isso). Este mostra raiz descendo — diferencial real. Ember dot = semente/núcleo, vira identidade em favicon. Storytelling pronto: "as raízes que ninguém vê sustentam tudo."
+    </div>
+  </div>
+
+</div>
+
+<div class="recommendation">
+  <h2>Por que Diego defende o Conceito 4 (H-Raízes)</h2>
+  <p>
+    <strong>1. Único alinhado com o NOME.</strong> Hayzer significa raiz. Os outros 3 conceitos mostram árvore subindo — qualquer SaaS vende isso. Este mostra raiz descendo (infraestrutura invisível que sustenta).
+  </p>
+  <p>
+    <strong>2. Diferencial competitivo.</strong> Bling, ContaAzul, Tiny, Omie — nenhum tem marca-mãe com raiz. Todos têm logos abstratos ou wordmark. Raiz literal nos diferencia de cara.
+  </p>
+  <p>
+    <strong>3. Funciona em favicon.</strong> O ember dot central faz o logo ler mesmo em 16-24px. Conceito 2 (folhada) falha aqui.
+  </p>
+  <p>
+    <strong>4. Storytelling pronto.</strong> Post LinkedIn/Instagram explicando: <em>"as raízes que ninguém vê são as que sustentam tudo."</em> Vende sozinho.
+  </p>
+  <p style="margin-top: 14px; color: var(--fog-50);">
+    <strong>Ordem de defesa Diego: 4 &gt; 1 &gt; 3 &gt; 2.</strong> Se 4 não te pegar, o 1 (H-Galho seco) é o backup mais editorial sério.
+  </p>
+</div>
+
+</body>
+</html>
