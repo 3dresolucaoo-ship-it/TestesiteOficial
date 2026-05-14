@@ -7,7 +7,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden pt-20 pb-20 md:pt-32 md:pb-32"
+      className="relative overflow-hidden pt-16 pb-20 md:pt-20 md:pb-24"
     >
       {/* Glow ambiente — sutil, sem cara de IA */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -21,13 +21,13 @@ export function Hero() {
         />
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 text-center">
+      <div className="mx-auto max-w-5xl px-6 text-center">
         {/* Pre-tag */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mb-7 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3.5 py-1.5 text-xs text-muted-foreground backdrop-blur-sm"
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3.5 py-1.5 text-xs text-muted-foreground backdrop-blur-sm"
         >
           <span className="relative flex h-1.5 w-1.5">
             <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-75" />
@@ -41,7 +41,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="text-[2.5rem] font-bold leading-[1.05] tracking-tight md:text-6xl lg:text-7xl"
+          className="text-[2.5rem] font-bold leading-[1.05] tracking-tight md:text-6xl lg:text-[5.5rem]"
         >
           Seu negócio,
           <br />
@@ -61,7 +61,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.12 }}
-          className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
+          className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
         >
           Substitui gambiarra, planilha perdida e WhatsApp confuso por controle real.
           Estoque, vendas, clientes, financeiro. Num lugar só.
@@ -73,7 +73,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           id="waitlist"
-          className="mt-10"
+          className="mt-8 scroll-mt-20"
         >
           <WaitlistForm />
         </motion.div>

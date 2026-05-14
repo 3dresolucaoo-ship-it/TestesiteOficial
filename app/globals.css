@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* ─── Anchor scrolling — compensa header sticky (h-16 = 4rem) ─────────────── */
+/* Sem isso, navegar pra #waitlist deixa o alvo escondido atrás do header. */
+html {
+  scroll-padding-top: 5rem;
+  scroll-behavior: smooth;
+}
+
 /* ─── Tailwind compile-time tokens ─────────────────────────────────────────── */
 @theme inline {
   --color-accent:      #7c3aed;
@@ -210,8 +217,13 @@ body {
 
 /* ─── Marketing/Landing override — usa tokens shadcn (Paleta B premium) ──── */
 /* Aplicado pelo LayoutSwitch via <html data-layout="marketing"> */
+/* Gradient ambiente sutil — dá profundidade ao bg sem perder o premium escuro.
+   Azul tênue no topo, fade pra background sólido. Inspiração Vercel/Linear. */
 html[data-layout="marketing"] body {
-  background: hsl(var(--background));
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, hsl(221 83% 53% / 0.10), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, hsl(221 83% 53% / 0.05), transparent 60%),
+    hsl(var(--background));
   color: hsl(var(--foreground));
 }
 html[data-layout="marketing"] * {
