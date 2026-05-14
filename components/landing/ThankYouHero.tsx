@@ -44,6 +44,7 @@ export function ThankYouHero({ email }: { email: string }) {
         >
           Mandei a confirmação pra <span className="font-medium text-foreground">{email}</span>.
           <br />A gente avisa antes de todo mundo quando abrir.
+          <br /><span className="text-xs">Confere a caixa de spam, vai que cai lá.</span>
         </motion.p>
       </div>
     </section>

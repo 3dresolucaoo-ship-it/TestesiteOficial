@@ -46,7 +46,7 @@ export function Step2Form() {
                 Quer pular a fila quando abrir?
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Me conta um pouco do seu negócio — quem responde aqui ganha acesso antes.
+                Me conta um pouco do seu negócio. Quem responde aqui ganha acesso antes.
                 30 segundos, todos os campos opcionais.
               </p>
             </div>

@@ -7,7 +7,7 @@ const features = [
   {
     icon: Boxes,
     title: 'Estoque que conta certo',
-    body:  'Cada peça impressa, vendida ou perdida — registrada sem você lembrar. Acabou a planilha que ninguém atualiza.',
+    body:  'Cada peça impressa, vendida ou perdida fica registrada sem você lembrar. Acabou a planilha que ninguém atualiza.',
   },
   {
     icon: Receipt,
@@ -16,13 +16,13 @@ const features = [
   },
   {
     icon: Users,
-    title: 'Sabe quem sumiu — e por quê',
+    title: 'Sabe quem sumiu (e por quê)',
     body:  'Cliente que comprava todo mês e parou aparece na sua tela. Antes do prejuízo virar perda real.',
   },
   {
     icon: TrendingUp,
     title: 'O dinheiro real do mês',
-    body:  'Não é "faturamento bruto" — é o que sobrou depois de tudo. Direto, sem precisar abrir Excel.',
+    body:  'Não é "faturamento bruto". É o que sobrou depois de tudo. Direto, sem precisar abrir Excel.',
   },
 ]
 

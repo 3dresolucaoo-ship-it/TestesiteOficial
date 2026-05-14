@@ -24,7 +24,7 @@ export function FinalCTA() {
           transition={{ duration: 0.5, delay: 0.08 }}
           className="mt-5 text-lg text-muted-foreground"
         >
-          Sai quando quiser — sem cartão agora, sem letra miúda.
+          Sai quando quiser. Sem cartão agora, sem letra miúda.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 12 }}

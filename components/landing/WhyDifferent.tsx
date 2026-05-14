@@ -5,20 +5,20 @@ import { X, Check } from 'lucide-react'
 
 const comparisons = [
   {
-    them: 'Bling pro estoque · R$ 119/mês',
+    them: 'Bling pro estoque · 119 reais por mês',
     us:   'Estoque integrado, sem assinar separado',
   },
   {
-    them: 'Conta Azul pro financeiro · R$ 199/mês',
+    them: 'Conta Azul pro financeiro · 199 reais por mês',
     us:   'Financeiro que vê o dinheiro real do mês',
   },
   {
-    them: 'Nuvemshop pro checkout · R$ 89/mês',
+    them: 'Nuvemshop pro checkout · 89 reais por mês',
     us:   'Checkout que conversa com estoque',
   },
   {
     them: 'Mais 2 planilhas que ninguém atualiza',
-    us:   'Tudo num lugar — e ninguém precisa lembrar',
+    us:   'Tudo num lugar. Ninguém precisa lembrar.',
   },
 ]
 

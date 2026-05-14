@@ -64,7 +64,7 @@ export function Hero() {
           className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
         >
           Substitui gambiarra, planilha perdida e WhatsApp confuso por controle real.
-          Estoque, vendas, clientes e financeiro — num lugar só.
+          Estoque, vendas, clientes, financeiro. Num lugar só.
         </motion.p>
 
         {/* Form */}
