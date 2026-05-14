@@ -21,20 +21,15 @@ export function LayoutSwitch({
   const pathname    = usePathname()
   const isMarketing = isMarketingPath(pathname)
 
-  // Marca <html data-layout="marketing"> + força background body via JS
-  // (CSS global ainda carrega gradient roxo legado do dashboard antes do hidrato)
+  // Marca <html data-layout="marketing"> no client. O bg/color em si fica no
+  // CSS (html[data-layout="marketing"] body) — inline style sobrescrevia o
+  // gradient ambiente. Especificidade do seletor já vence o CSS legado.
   useEffect(() => {
     const html = document.documentElement
-    const body = document.body
     if (isMarketing) {
       html.setAttribute('data-layout', 'marketing')
-      // Pinta o body com tokens shadcn (Paleta B) — vence CSS legado
-      body.style.background = 'hsl(var(--background))'
-      body.style.color      = 'hsl(var(--foreground))'
     } else {
       html.removeAttribute('data-layout')
-      body.style.background = ''
-      body.style.color      = ''
     }
   }, [isMarketing])
 
