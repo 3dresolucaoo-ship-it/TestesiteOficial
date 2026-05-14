@@ -26,15 +26,16 @@ export function WhyDifferent() {
           <div className="lg:col-span-5">
             <div className="tag mb-3">por quê</div>
             <h2 className="display-h2 text-[2.5rem] text-foreground md:text-[3.5rem]">
-              Hoje você paga
+              Quatro assinaturas
               <br />
-              por <span className="italic-soft">quatro coisas</span>.
+              pra rodar uma <span className="italic-soft">loja de 3D</span>.
             </h2>
           </div>
           <div className="lg:col-span-7 lg:pt-4">
             <p className="text-[17px] leading-[1.55] text-muted-foreground">
-              Bling, Conta Azul, Nuvemshop, mais duas planilhas. R$ 407 por mês só de assinatura.
-              Nenhuma conversa com a outra. Você cola tudo no susto.
+              Bling, Conta Azul, Nuvemshop e duas planilhas. R$ 407 todo mês, nenhum
+              software fala com o outro, e você termina colando tudo no susto entre
+              uma fornada de peça e outra.
             </p>
           </div>
         </div>
@@ -125,6 +126,22 @@ export function WhyDifferent() {
             </ul>
           </motion.div>
         </div>
+
+        {/* Frase âncora destaque — pull quote pós-tabela (ADR-010) */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-12 md:mt-16"
+        >
+          <p className="display-h2 max-w-[820px] text-[1.75rem] leading-[1.3] text-foreground md:text-[2.25rem]">
+            Quatro sistemas, nenhum conversa.
+            <br />
+            <span className="italic-soft">Aqui é um, e fala </span>
+            <span className="marker">português</span>.
+          </p>
+        </motion.div>
       </div>
     </section>
   )

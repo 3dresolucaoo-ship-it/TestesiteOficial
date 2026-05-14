@@ -148,14 +148,14 @@ export function WaitlistForm() {
           </>
         ) : (
           <>
-            Entrar na lista de espera
+            Quero acesso antecipado
             <ArrowRight className="h-4 w-4" />
           </>
         )}
       </button>
 
       <p className="pt-2 text-center text-[12px] text-muted-foreground/70">
-        Sem cobrança agora. Você recebe um email quando abrir.
+        Sem cartão. Você recebe aviso por email quando abrir.
       </p>
 
       {state.status === 'error' && (

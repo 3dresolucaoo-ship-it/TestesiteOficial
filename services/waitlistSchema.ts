@@ -53,15 +53,16 @@ export type WaitlistLeadStep1 = z.infer<typeof waitlistStep1Schema>
 
 // ─── Etapa 2 — qualificação opcional ────────────────────────────────────────
 
+// Foco Fase 1: maker 3D (ADR-010). Opções refletem variantes 3D + verticals
+// alternativas pra capturar sinal de Ybera/outros sem comprometer mensagem.
 export const SEGMENT_OPTIONS = [
-  { value: '3d-printing', label: 'Impressão 3D' },
-  { value: 'estetica',    label: 'Estética / Beleza' },
-  { value: 'moda',        label: 'Moda / Vestuário' },
-  { value: 'food',        label: 'Alimentação' },
-  { value: 'servicos',    label: 'Serviços' },
-  { value: 'ecommerce',   label: 'E-commerce' },
-  { value: 'consultoria', label: 'Consultoria' },
-  { value: 'outro',       label: 'Outro' },
+  { value: '3d-loja',       label: 'Loja de impressão 3D' },
+  { value: '3d-encomenda',  label: 'Impressão 3D sob encomenda' },
+  { value: '3d-revenda',    label: 'Revenda 3D / filamento' },
+  { value: 'estetica',      label: 'Estética / Salão' },
+  { value: 'loja-fisica',   label: 'Loja física' },
+  { value: 'servico',       label: 'Serviço sob demanda' },
+  { value: 'outro',         label: 'Outro' },
 ] as const
 
 export const SIZE_OPTIONS = [

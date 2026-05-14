@@ -63,13 +63,13 @@ export function Hero() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
-              className="mt-7 max-w-[520px] text-[17px] leading-[1.55] text-muted-foreground md:text-[18px]"
+              className="mt-7 max-w-[540px] text-[17px] leading-[1.55] text-muted-foreground md:text-[18px]"
             >
-              Substitui gambiarra, planilha perdida e WhatsApp confuso por controle real.
-              Estoque, vendas, clientes, financeiro. Num lugar só.
+              Você imprime, posta, vende, envia, cobra, anota. E ainda perde peça,
+              esquece cliente, não sabe o que sobrou. Hayzer junta tudo num lugar só.
             </motion.p>
 
-            {/* Lista "construído para" — prova social qualitativa */}
+            {/* Lista "construído para" — sub-públicos maker 3D (ADR-010) */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -79,15 +79,15 @@ export function Hero() {
               <span className="tag tag-fog">construído para</span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
-                impressão 3D
+                lojas de impressão 3D
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
-                loja de bairro
+                estúdios maker
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
-                serviço sob demanda
+                vendedores de marketplace
               </span>
             </motion.div>
           </div>

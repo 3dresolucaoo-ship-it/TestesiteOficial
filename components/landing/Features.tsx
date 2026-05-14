@@ -13,11 +13,13 @@ interface Feature {
 
 // Ícones SVG duotone custom (não lucide default 24x24) — anti-IA.
 // .icon-bg pega fill petrol/10%, .icon-stroke pega petrol-300 stroke 1.5.
+// Bodies escritos pra maker 3D (ADR-010): filamento, fila de impressão,
+// comissão de marketplace, recompra de maker.
 const features: Feature[] = [
   {
     num: '01 — estoque',
     title: 'Estoque que conta certo.',
-    body: 'Cada peça impressa, vendida ou perdida fica registrada sem você lembrar. Acabou a planilha que ninguém atualiza.',
+    body: 'Cada rolo de filamento, cada peça impressa, cada peça que falhou na hora, tudo entra no sistema sem você anotar. Acabou descobrir no dia 30 que sumiu meio kg de PLA preto.',
     size: 'lg',
     icon: (
       <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none">
@@ -31,7 +33,7 @@ const features: Feature[] = [
   {
     num: '02 — vendas',
     title: 'Venda no mesmo lugar.',
-    body: 'Pedido do WhatsApp vira link de pagamento. Cliente paga, sistema baixa estoque. Você só confirma envio.',
+    body: 'Pedido do WhatsApp vira link de pagamento em dois toques. Cliente paga, o estoque baixa, a peça entra na fila de impressão. Você só confirma o envio.',
     size: 'sm',
     icon: (
       <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none">
@@ -46,7 +48,7 @@ const features: Feature[] = [
   {
     num: '03 — clientes',
     title: 'Sabe quem sumiu.',
-    body: 'Cliente que comprava todo mês e parou aparece na sua tela. Antes do prejuízo virar perda real.',
+    body: 'Cliente que pedia personalizado todo mês e parou aparece na sua tela antes de você esquecer dele. Recompra de maker é ouro, e quase ninguém cuida.',
     size: 'sm',
     icon: (
       <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none">
@@ -61,7 +63,7 @@ const features: Feature[] = [
   {
     num: '04 — financeiro',
     title: 'O dinheiro real do mês.',
-    body: 'Não é "faturamento bruto". É o que sobrou depois de tudo. Direto, sem precisar abrir Excel.',
+    body: 'Tira filamento, luz, comissão do marketplace, taxa de cartão. O que sobra é o que aparece. Sem precisar abrir Excel pra descobrir se foi um mês bom.',
     size: 'lg',
     glow: true,
     icon: (
@@ -91,8 +93,9 @@ export function Features() {
           <h2 className="display-h2 text-[2.5rem] text-foreground md:text-[3.5rem]">
             Quatro coisas. <br />Bem feitas.
           </h2>
-          <p className="mt-5 max-w-[480px] text-[16px] leading-[1.55] text-muted-foreground">
-            Sem 200 botões pra você decifrar. Sem dashboard que ninguém entende. Direto no que muda o dia.
+          <p className="mt-5 max-w-[520px] text-[16px] leading-[1.55] text-muted-foreground">
+            Você toca impressão 3D, não departamento de TI. Aqui é só o que muda
+            seu dia: estoque, venda, cliente, dinheiro.
           </p>
         </div>
 
