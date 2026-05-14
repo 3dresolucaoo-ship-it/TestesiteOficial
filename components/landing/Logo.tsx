@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
 interface LogoProps {
@@ -6,31 +7,37 @@ interface LogoProps {
   size?: 'sm' | 'lg'
   /** Animação pulse-glow no mark (só faz sentido no 'lg' do hero) */
   pulse?: boolean
-  /** Esconde o texto "Hayzer", deixa só o quadrado H */
+  /** Esconde o texto "Hayzer", deixa só o mark */
   iconOnly?: boolean
 }
 
 /**
- * Logo Hayzer — duas variantes:
- * - sm: 32px quadrado + "Hayzer" pequeno (header e footer)
- * - lg: 80-96px quadrado + "Hayzer" Fraunces + tag "v0.3 · waitlist aberta" (Hero, vira identidade da página)
+ * Logo Hayzer — H com raízes orgânicas saindo da haste esquerda.
+ * Conceito: cuidar das raízes do negócio. Pronúncia "ai-zer" (H mudo PT-BR).
  *
- * Conceito: H estilizado como núcleo/raiz. Pronúncia "ai-zer" (H mudo em PT-BR).
- * Decisão de naming registrada em decisions/009-naming-hayzer.md.
+ * PNG tem fundo preto sólido — `mix-blend-screen` faz o preto sumir em qualquer
+ * background escuro (a landing inteira é night #07090A), preservando só o verde.
+ *
+ * Variantes:
+ * - sm: h-9 (36px) — header e footer
+ * - lg: h-20 md:h-24 (80-96px) — Hero, vira identidade da página
  */
 export function Logo({ className, size = 'sm', pulse = false, iconOnly = false }: LogoProps) {
   if (size === 'lg') {
     return (
       <div className={cn('flex items-center gap-4', className)}>
-        <div
-          aria-hidden
+        <Image
+          src="/logo-hayzer.png"
+          alt="Hayzer"
+          width={1536}
+          height={1024}
+          priority
+          sizes="(min-width: 768px) 144px, 120px"
           className={cn(
-            'logo-mark grid h-20 w-20 place-items-center rounded-[10px] text-4xl md:h-24 md:w-24 md:text-5xl',
+            'h-20 w-auto mix-blend-screen md:h-24',
             pulse && 'logo-pulse',
           )}
-        >
-          H
-        </div>
+        />
         {!iconOnly && (
           <div className="flex flex-col gap-1">
             <span className="tag">v0.3 · waitlist aberta</span>
@@ -44,12 +51,14 @@ export function Logo({ className, size = 'sm', pulse = false, iconOnly = false }
   // size === 'sm'
   return (
     <div className={cn('flex items-center gap-2.5', className)}>
-      <div
-        aria-hidden
-        className="logo-mark grid h-9 w-9 place-items-center rounded-[6px] text-base"
-      >
-        H
-      </div>
+      <Image
+        src="/logo-hayzer.png"
+        alt="Hayzer"
+        width={1536}
+        height={1024}
+        sizes="60px"
+        className="h-9 w-auto mix-blend-screen"
+      />
       {!iconOnly && (
         <span className="text-[15px] font-medium tracking-tight">Hayzer</span>
       )}
