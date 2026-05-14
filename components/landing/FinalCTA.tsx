@@ -4,43 +4,75 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
+/**
+ * FinalCTA — encerra a página com pergunta-convite + link de volta pro form do hero.
+ * Diego: vignette + grain-heavy aqui pra fechar com peso visual.
+ */
 export function FinalCTA() {
   return (
-    <section className="border-t border-border/40 py-24 md:py-32">
-      <div className="mx-auto max-w-3xl px-6 text-center">
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl font-bold tracking-tight md:text-5xl"
-        >
-          Bora tirar isso da cabeça?
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.08 }}
-          className="mt-5 text-lg text-muted-foreground"
-        >
-          Sai quando quiser. Sem cartão agora, sem letra miúda.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="mt-9"
-        >
-          <Link
-            href="#waitlist"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-base font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-[0_8px_32px_-8px_hsl(var(--primary)/0.6)]"
+    <section className="vignette grain grain-heavy relative overflow-hidden border-t border-border/40">
+      <div className="container-warm relative mx-auto max-w-[1180px] px-6 py-24 md:px-10 md:py-32">
+        <div className="max-w-[760px]">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="tag mb-5"
           >
-            Entrar na lista de espera
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </motion.div>
+            o convite
+          </motion.div>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="display-h2 text-[2.75rem] text-foreground md:text-[4.25rem]"
+          >
+            Bora tirar isso<br />
+            da <span className="italic-soft">cabeça</span>?
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-6 max-w-[460px] text-[17px] leading-[1.55] text-muted-foreground"
+          >
+            Sai quando quiser. Sem cartão agora, sem letra miúda.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="mt-10"
+          >
+            <Link
+              href="#waitlist"
+              className="btn-light inline-flex items-center gap-2 rounded-md px-6 py-3 text-[14.5px]"
+            >
+              Entrar na lista de espera
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="mt-14 flex items-center gap-3 text-[12px]"
+            style={{ color: 'hsl(var(--fog-400))' }}
+          >
+            <span style={{ fontFamily: 'ui-monospace, "Geist Mono", monospace' }}>04.07.2026</span>
+            <span className="h-px w-8" style={{ background: 'hsl(var(--fog-400) / 0.3)' }} />
+            <span>lançamento público</span>
+          </motion.div>
+        </div>
       </div>
     </section>
   )

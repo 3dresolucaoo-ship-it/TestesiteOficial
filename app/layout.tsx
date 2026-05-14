@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist } from 'next/font/google'
+import { Geist, Fraunces } from 'next/font/google'
 import './globals.css'
 import { AuthProvider }  from '@/context/AuthContext'
 import { ThemeProvider } from '@/context/ThemeContext'
@@ -10,6 +10,14 @@ import { loadInitialState } from '@/lib/serverDataLoader'
 import type { AppState } from '@/lib/types'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
+// Fraunces serif editorial — usada nos headings da landing (Hero h1, h2, watermark).
+// Diego (designer): peso 600 com opsz 144 dá o ar editorial premium anti-IA.
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  axes: ['opsz', 'SOFT'],
+  // Fraunces é variable font — não passar weight (usa variable por padrão).
+})
 
 export const metadata: Metadata = {
   title: 'BVaz Hub — O centro do seu negócio',
@@ -54,7 +62,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html lang="pt-BR" className={`${geist.variable} dark`} suppressHydrationWarning>
+    <html lang="pt-BR" className={`${geist.variable} ${fraunces.variable} dark`} suppressHydrationWarning>
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <ThemeProvider>
           <AuthProvider>

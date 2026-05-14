@@ -1,92 +1,123 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { Clock } from 'lucide-react'
+import { Logo } from './Logo'
 import { WaitlistForm } from './WaitlistForm'
 
+/**
+ * Hero v2 (option-c-hybrid): split layout — logo gigante + headline esquerda,
+ * form em "carta" com sticker direita. Paleta night/petrol/ember. Grain + vignette.
+ *
+ * Diego (designer): estrutura do mockup A + paleta do mockup B.
+ * Carla (copy): mantém literal "Seu negócio, sem caos." com marker no "caos".
+ */
 export function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden pt-16 pb-20 md:pt-20 md:pb-24"
+      className="vignette grain relative overflow-hidden"
     >
-      {/* Glow ambiente — sutil, sem cara de IA */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div
-          aria-hidden
-          className="absolute left-1/2 top-1/3 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.12]"
-          style={{
-            background: 'radial-gradient(circle, hsl(var(--primary)) 0%, transparent 60%)',
-            filter:     'blur(80px)',
-          }}
-        />
-      </div>
+      <div className="container-warm relative mx-auto max-w-[1180px] px-6 pt-16 pb-20 md:px-10 md:pt-24 md:pb-28">
+        <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-8">
 
-      <div className="mx-auto max-w-5xl px-6 text-center">
-        {/* Pre-tag */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3.5 py-1.5 text-xs text-muted-foreground backdrop-blur-sm"
-        >
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
-          </span>
-          Lançamento em 04 de julho · vagas limitadas
-        </motion.div>
+          {/* COLUNA ESQUERDA — identidade + headline + prova social */}
+          <div className="relative lg:col-span-7">
 
-        {/* Headline — Carla: direto, sem cara de IA */}
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="text-[2.5rem] font-bold leading-[1.05] tracking-tight md:text-6xl lg:text-[5.5rem]"
-        >
-          Seu negócio,
-          <br />
-          <span
-            className="bg-clip-text text-transparent"
-            style={{
-              backgroundImage:
-                'linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--muted-foreground)) 100%)',
-            }}
+            {/* Logo gigante — vira identidade visual da landing */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
+              className="mb-10"
+            >
+              <Logo size="lg" pulse />
+            </motion.div>
+
+            {/* Badge sticker âmbar */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 0.61, 0.36, 1] }}
+              className="sticker-amber mb-8 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11.5px] font-medium tracking-wide"
+            >
+              <Clock className="h-3 w-3" strokeWidth={2.5} />
+              Lançamento em 04 de julho · vagas limitadas
+            </motion.div>
+
+            {/* Headline editorial Fraunces com marker handmade no "caos" */}
+            <motion.h1
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 0.61, 0.36, 1] }}
+              className="display-h1 max-w-[680px] text-[3.5rem] text-foreground sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6rem]"
+            >
+              Seu negócio,
+              <br />
+              <span className="italic-soft">sem </span>
+              <span className="marker">caos</span>.
+            </motion.h1>
+
+            {/* Subtítulo */}
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+              className="mt-7 max-w-[520px] text-[17px] leading-[1.55] text-muted-foreground md:text-[18px]"
+            >
+              Substitui gambiarra, planilha perdida e WhatsApp confuso por controle real.
+              Estoque, vendas, clientes, financeiro. Num lugar só.
+            </motion.p>
+
+            {/* Lista "construído para" — prova social qualitativa */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.4, ease: [0.22, 0.61, 0.36, 1] }}
+              className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px]"
+            >
+              <span className="tag tag-fog">construído para</span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
+                impressão 3D
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
+                loja de bairro
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
+                serviço sob demanda
+              </span>
+            </motion.div>
+          </div>
+
+          {/* COLUNA DIREITA — form em "carta" com sticker rotacionado */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+            id="waitlist"
+            className="scroll-mt-20 lg:col-span-5"
           >
-            sem caos.
-          </span>
-        </motion.h1>
+            <div className="card-letter relative rounded-[14px] p-7 md:p-8">
+              {/* Carimbo rotacionado no canto */}
+              <div className="sticker-amber absolute -top-3 -right-3 rotate-6 rounded-sm px-2.5 py-1 text-[10px] font-mono uppercase tracking-widest">
+                acesso antecipado
+              </div>
 
-        {/* Subhead */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.12 }}
-          className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
-        >
-          Substitui gambiarra, planilha perdida e WhatsApp confuso por controle real.
-          Estoque, vendas, clientes, financeiro. Num lugar só.
-        </motion.p>
+              <div className="mb-1 flex items-baseline justify-between">
+                <h3 className="display-h2 text-[22px] text-foreground">Lista de espera</h3>
+                <span className="tag">grátis</span>
+              </div>
+              <p className="mb-6 text-[13.5px] leading-[1.5] text-muted-foreground">
+                Receba o convite quando abrir. Sem cobrança agora.
+              </p>
 
-        {/* Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          id="waitlist"
-          className="mt-8 scroll-mt-20"
-        >
-          <WaitlistForm />
-        </motion.div>
-
-        {/* Social proof inicial — honesto */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-8 text-xs text-muted-foreground/70"
-        >
-          Sem cobrança agora. Você recebe um email quando abrir.
-        </motion.p>
+              <WaitlistForm />
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   )

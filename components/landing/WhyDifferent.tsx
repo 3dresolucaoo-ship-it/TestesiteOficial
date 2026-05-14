@@ -1,82 +1,125 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { X, Check } from 'lucide-react'
 
-const comparisons = [
-  {
-    them: 'Bling pro estoque · 119 reais por mês',
-    us:   'Estoque integrado, sem assinar separado',
-  },
-  {
-    them: 'Conta Azul pro financeiro · 199 reais por mês',
-    us:   'Financeiro que vê o dinheiro real do mês',
-  },
-  {
-    them: 'Nuvemshop pro checkout · 89 reais por mês',
-    us:   'Checkout que conversa com estoque',
-  },
-  {
-    them: 'Mais 2 planilhas que ninguém atualiza',
-    us:   'Tudo num lugar. Ninguém precisa lembrar.',
-  },
+const today = [
+  { label: 'Bling pro estoque',         price: 'R$ 119' },
+  { label: 'Conta Azul pro financeiro', price: 'R$ 199' },
+  { label: 'Nuvemshop pro checkout',    price: 'R$ 89' },
+  { label: 'Mais 2 planilhas que ninguém atualiza', price: 'tempo' },
+]
+
+const withBvaz = [
+  { strong: 'Estoque integrado', sub: 'sem assinar separado' },
+  { strong: 'Financeiro que vê o dinheiro real do mês', sub: 'não o bruto' },
+  { strong: 'Checkout que conversa com estoque', sub: 'pedido baixa peça' },
+  { strong: 'Tudo num lugar só', sub: 'ninguém precisa lembrar' },
 ]
 
 export function WhyDifferent() {
   return (
-    <section id="por-que" className="py-24 md:py-32">
-      <div className="mx-auto max-w-5xl px-6">
-        <div className="mx-auto mb-14 max-w-2xl text-center">
-          <p className="text-xs font-medium uppercase tracking-wider text-primary">
-            Por que diferente
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
-            Outros sistemas parecem feitos pra contador.
-            <br />
-            <span className="text-muted-foreground">Este é pra quem toca o negócio.</span>
-          </h2>
+    <section id="por-que" className="grain-soft grain relative scroll-mt-20">
+      <div className="container-warm relative mx-auto max-w-[1180px] px-6 py-20 md:px-10 md:py-28">
+
+        {/* Cabeçalho 2 colunas — heading esquerda, copy explicativa direita */}
+        <div className="mb-14 grid gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <div className="tag mb-3">por quê</div>
+            <h2 className="display-h2 text-[2.5rem] text-foreground md:text-[3.5rem]">
+              Hoje você paga
+              <br />
+              por <span className="italic-soft">quatro coisas</span>.
+            </h2>
+          </div>
+          <div className="lg:col-span-7 lg:pt-4">
+            <p className="text-[17px] leading-[1.55] text-muted-foreground">
+              Bling, Conta Azul, Nuvemshop, mais duas planilhas. R$ 407 por mês só de assinatura.
+              Nenhuma conversa com a outra. Você cola tudo no susto.
+            </p>
+          </div>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          {/* Hoje */}
+        {/* Tabela comparativa — split com borda divisória */}
+        <div
+          className="grid overflow-hidden rounded-[12px] border lg:grid-cols-2"
+          style={{
+            borderColor: 'hsl(var(--fog-50) / 0.08)',
+            background: 'hsl(var(--night-900) / 0.6)',
+          }}
+        >
+          {/* HOJE (esquerda) — bg neutro escuro */}
           <motion.div
             initial={{ opacity: 0, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-border/40 bg-card/30 p-7"
+            transition={{ duration: 0.5 }}
+            className="grain-soft grain relative border-b p-7 lg:border-b-0 lg:border-r md:p-10"
+            style={{ borderColor: 'hsl(var(--fog-50) / 0.08)' }}
           >
-            <p className="mb-5 text-sm font-medium text-muted-foreground">
-              Hoje você tem
-            </p>
-            <ul className="space-y-3.5">
-              {comparisons.map(c => (
-                <li key={c.them} className="flex items-start gap-3 text-sm">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-destructive/30 text-destructive">
-                    <X className="h-3 w-3" strokeWidth={2.5} />
-                  </span>
-                  <span className="text-muted-foreground">{c.them}</span>
+            <div
+              className="mb-6 flex items-baseline justify-between border-b pb-4"
+              style={{ borderColor: 'hsl(var(--fog-50) / 0.10)' }}
+            >
+              <h3 className="display-h2 text-[20px] text-muted-foreground">Hoje você tem</h3>
+              <span className="tag" style={{ color: 'hsl(var(--ember-400))' }}>R$ 407/mês</span>
+            </div>
+            <ul className="space-y-4">
+              {today.map((row, i) => (
+                <li
+                  key={row.label}
+                  className={i < today.length - 1 ? 'compare-row pb-4' : 'pb-1'}
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-[15px] text-foreground/90">{row.label}</span>
+                    <span
+                      className="text-[13px]"
+                      style={{
+                        fontFamily: 'ui-monospace, "Geist Mono", monospace',
+                        color: 'hsl(var(--fog-300))',
+                      }}
+                    >
+                      {row.price}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
           </motion.div>
 
-          {/* BVaz Hub */}
+          {/* COM BVAZ (direita) — bg gradient verde-petróleo sutil */}
           <motion.div
             initial={{ opacity: 0, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="rounded-2xl border border-primary/30 bg-primary/[0.04] p-7 shadow-[0_0_40px_-12px_hsl(var(--primary)/0.4)]"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="relative p-7 md:p-10"
+            style={{
+              background: 'linear-gradient(135deg, hsl(var(--petrol-500) / 0.14) 0%, hsl(var(--petrol-500) / 0.04) 100%)',
+            }}
           >
-            <p className="mb-5 text-sm font-medium text-primary">Com BVaz Hub</p>
-            <ul className="space-y-3.5">
-              {comparisons.map(c => (
-                <li key={c.us} className="flex items-start gap-3 text-sm">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
-                    <Check className="h-3 w-3" strokeWidth={2.5} />
-                  </span>
-                  <span>{c.us}</span>
+            <div
+              className="mb-6 flex items-baseline justify-between border-b pb-4"
+              style={{ borderColor: 'hsl(var(--petrol-300) / 0.20)' }}
+            >
+              <h3 className="display-h2 text-[20px]" style={{ color: 'hsl(var(--petrol-300))' }}>
+                Com BVaz Hub
+              </h3>
+              <span className="tag">um lugar só</span>
+            </div>
+            <ul className="space-y-4">
+              {withBvaz.map((row, i) => (
+                <li
+                  key={row.strong}
+                  className={i < withBvaz.length - 1 ? 'border-b pb-4' : 'pb-1'}
+                  style={{ borderColor: i < withBvaz.length - 1 ? 'hsl(var(--petrol-300) / 0.15)' : 'transparent' }}
+                >
+                  <div className="text-[15px] font-medium text-foreground">{row.strong}</div>
+                  <div
+                    className="mt-0.5 text-[13px]"
+                    style={{ color: 'hsl(var(--fog-300))' }}
+                  >
+                    {row.sub}
+                  </div>
                 </li>
               ))}
             </ul>

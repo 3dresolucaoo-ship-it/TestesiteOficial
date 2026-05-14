@@ -215,20 +215,267 @@ body {
   border-color: var(--t-border);
 }
 
-/* ─── Marketing/Landing override — usa tokens shadcn (Paleta B premium) ──── */
-/* Aplicado pelo LayoutSwitch via <html data-layout="marketing"> */
-/* Gradient ambiente sutil — dá profundidade ao bg sem perder o premium escuro.
-   Azul tênue no topo, fade pra background sólido. Inspiração Vercel/Linear. */
+/* ─── Marketing/Landing — Paleta v2 (option-c-hybrid) ──────────────────────── */
+/* Diego (designer): override de tokens shadcn SÓ na landing.
+   Dashboard mantém Paleta B (azul). Aplicado via <html data-layout="marketing">.
+   Cores: night (quase-preto) + fog (off-white) + petrol (verde-petróleo) + ember (âmbar). */
+html.dark[data-layout="marketing"],
+html[data-layout="marketing"] {
+  --background:         200 11% 3%;        /* #07090A night-950 */
+  --foreground:         43  17% 93%;       /* #F2EFEA fog-50 */
+  --card:               200 11% 6%;        /* #0B0E10 night-900 */
+  --card-foreground:    43  17% 93%;
+  --popover:            200 11% 6%;
+  --popover-foreground: 43  17% 93%;
+  --primary:            173 58% 28%;       /* #1F7669 petrol-500 */
+  --primary-foreground: 0   0%  100%;
+  --secondary:          200 11% 10%;
+  --secondary-foreground: 43 17% 93%;
+  --muted:              200 11% 10%;
+  --muted-foreground:   40  12% 71%;       /* #BDB7AB fog-200 */
+  --accent:             28  60% 55%;       /* #D08A4A ember-500 */
+  --accent-foreground:  200 11% 3%;
+  --destructive:        0   63% 50%;
+  --destructive-foreground: 0 0% 98%;
+  --border:             43  17% 93% / 0.08;
+  --input:              43  17% 93% / 0.10;
+  --ring:               173 58% 28%;
+
+  /* Tokens custom da landing — não shadcn padrão */
+  --night-950:          200 11% 3%;
+  --night-900:          200 11% 6%;
+  --night-800:          200 10% 9%;
+  --fog-50:             43  17% 93%;
+  --fog-100:            40  21% 86%;
+  --fog-200:            40  12% 71%;
+  --fog-300:            38  7%  51%;
+  --fog-400:            35  9%  33%;
+  --petrol-300:         173 30% 57%;       /* #6FB5A8 — accent visual */
+  --petrol-400:         173 39% 41%;
+  --petrol-500:         173 58% 28%;       /* #1F7669 — primary */
+  --petrol-600:         172 62% 22%;
+  --ember-400:          27  67% 65%;
+  --ember-500:          28  60% 55%;       /* #D08A4A — sticker/marker */
+  --ember-600:          25  56% 42%;
+}
+
+/* Body da landing — ambient verde-petróleo + grain via pseudo-element */
+html.dark[data-layout="marketing"] body,
 html[data-layout="marketing"] body {
   background:
-    radial-gradient(ellipse 90% 60% at 50% -10%, hsl(221 83% 53% / 0.10), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 100% 100%, hsl(221 83% 53% / 0.05), transparent 60%),
-    hsl(var(--background));
+    radial-gradient(ellipse 70% 50% at 15% 10%, hsl(173 58% 28% / 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 85% 5%, hsl(28 60% 55% / 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 40% at 50% 105%, hsl(173 58% 28% / 0.16) 0%, transparent 60%),
+    linear-gradient(180deg, hsl(200 11% 3%) 0%, hsl(200 11% 6%) 100%);
   color: hsl(var(--foreground));
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: 'ss01', 'ss02', 'cv11';
 }
 html[data-layout="marketing"] * {
   border-color: hsl(var(--border));
 }
+
+/* ─── Landing utility classes — Diego's design system ──────────────────────── */
+
+/* Grain texture SVG inline — efeito papel fotográfico anti-IA */
+.grain { position: relative; }
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.45;
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+.grain-heavy::before { opacity: 0.65; }
+.grain-soft::before  { opacity: 0.22; }
+.grain > * { position: relative; z-index: 2; }
+
+/* Vinheta nas bordas — reforça foco no centro */
+.vignette { position: relative; }
+.vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 110% 80% at 50% 40%, transparent 55%, rgba(0,0,0,0.55) 100%);
+  z-index: 3;
+}
+
+/* Display headings com Fraunces + opsz 144 */
+.display-h1 {
+  font-family: var(--font-fraunces), Georgia, serif !important;
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+.display-h2 {
+  font-family: var(--font-fraunces), Georgia, serif !important;
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+.italic-soft {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+}
+
+/* Marker handmade âmbar — efeito marca-texto */
+.marker {
+  background: linear-gradient(180deg, transparent 62%, hsl(var(--ember-500) / 0.55) 62%, hsl(var(--ember-500) / 0.55) 92%, transparent 92%);
+  padding: 0 0.05em;
+}
+
+/* Sticker âmbar — pega vibe handmade */
+.sticker-amber {
+  background: linear-gradient(180deg, hsl(var(--ember-400)) 0%, hsl(var(--ember-600)) 100%);
+  color: hsl(var(--night-800));
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.4) inset,
+    0 1px 2px rgba(0,0,0,0.4),
+    0 0 28px -8px hsl(var(--ember-500) / 0.6);
+}
+
+/* Logo mark — bg claro sobre dark + glow petrol */
+.logo-mark {
+  background: linear-gradient(180deg, hsl(var(--fog-50)) 0%, hsl(var(--fog-100)) 100%);
+  color: hsl(var(--night-950));
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  position: relative;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.4) inset,
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 20px 40px -16px hsl(var(--petrol-500) / 0.4),
+    0 0 60px -10px hsl(var(--petrol-500) / 0.25);
+}
+.logo-mark::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid rgba(7,9,10,0.12);
+  border-radius: inherit;
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 0 0 1px rgba(255,255,255,0.06), 0 20px 40px -16px hsl(var(--petrol-500) / 0.4), 0 0 60px -10px hsl(var(--petrol-500) / 0.25); }
+  50%      { box-shadow: 0 1px 0 rgba(255,255,255,0.4) inset, 0 0 0 1px rgba(255,255,255,0.06), 0 25px 50px -16px hsl(var(--petrol-500) / 0.55), 0 0 90px -10px hsl(var(--petrol-500) / 0.4); }
+}
+.logo-pulse { animation: pulse-glow 5s ease-in-out infinite; }
+
+/* Tag mono — chip pequeno uppercase */
+.tag {
+  font-family: ui-monospace, 'Geist Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: hsl(var(--petrol-300));
+}
+.tag-fog { color: hsl(var(--fog-300)); }
+
+/* Form em "carta" — glassmorphism dark */
+.card-letter {
+  background:
+    linear-gradient(180deg, hsl(var(--fog-50) / 0.045) 0%, hsl(var(--fog-50) / 0.02) 100%);
+  border: 1px solid hsl(var(--fog-50) / 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.06) inset,
+    0 30px 70px -20px rgba(0,0,0,0.6),
+    0 0 60px -20px hsl(var(--petrol-500) / 0.18);
+}
+
+/* Feature card dark */
+.feature-card {
+  background:
+    linear-gradient(180deg, hsl(var(--fog-50) / 0.028) 0%, hsl(var(--fog-50) / 0.01) 100%);
+  border: 1px solid hsl(var(--fog-50) / 0.08);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  transition: all 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top left, hsl(var(--petrol-300) / 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.feature-card:hover {
+  border-color: hsl(var(--petrol-300) / 0.22);
+  background:
+    linear-gradient(180deg, hsl(var(--fog-50) / 0.038) 0%, hsl(var(--fog-50) / 0.015) 100%);
+}
+.feature-card-glow {
+  background:
+    linear-gradient(135deg, hsl(var(--petrol-500) / 0.10) 0%, hsl(var(--fog-50) / 0.02) 60%);
+  border-color: hsl(var(--petrol-300) / 0.20);
+}
+
+/* Ícone duotone — fill petrol + stroke */
+.icon-warm { color: hsl(var(--petrol-300)); }
+.icon-warm .icon-bg     { fill: hsl(var(--petrol-300) / 0.10); }
+.icon-warm .icon-stroke { stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Input dark glass */
+.field-dark {
+  background: hsl(var(--fog-50) / 0.04);
+  border: 1px solid hsl(var(--fog-50) / 0.10);
+  color: hsl(var(--fog-50));
+  transition: all 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.field-dark::placeholder { color: hsl(var(--fog-50) / 0.32); }
+.field-dark:focus {
+  outline: none;
+  border-color: hsl(var(--petrol-300) / 0.5);
+  background: hsl(var(--fog-50) / 0.06);
+  box-shadow: 0 0 0 3px hsl(var(--petrol-500) / 0.18);
+}
+
+/* Botão claro sobre dark — contraste alto estilo Zero */
+.btn-light {
+  background: hsl(var(--fog-50));
+  color: hsl(var(--night-950));
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition: all 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.5) inset, 0 6px 18px -6px hsl(var(--fog-50) / 0.22);
+}
+.btn-light:hover {
+  background: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.7) inset, 0 10px 26px -6px hsl(var(--fog-50) / 0.34);
+}
+
+/* Compare row — borda tracejada */
+.compare-row { border-bottom: 1px dashed hsl(var(--fog-50) / 0.10); }
+.compare-row:last-child { border-bottom: none; }
+
+/* Watermark "feito no brasil" gigante */
+.watermark {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  color: hsl(var(--fog-50) / 0.04);
+  user-select: none;
+}
+
+/* Animação rise */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-rise { animation: rise 700ms cubic-bezier(0.22, 0.61, 0.36, 1) both; }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 4px; height: 4px; }

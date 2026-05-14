@@ -3,9 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { submitWaitlistStep1, type WaitlistStep1State } from '@/app/waitlist/actions'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Loader2 } from 'lucide-react'
+import { Loader2, ArrowRight } from 'lucide-react'
 
 const initial: WaitlistStep1State = { status: 'idle' }
 
@@ -16,7 +14,7 @@ export function WaitlistForm() {
   const formRef = useRef<HTMLFormElement>(null)
 
   // Otávio (Security): timestamp do render pro time-check anti-bot.
-  // Começa em 0 no SSR (evita hydration mismatch), useEffect seta após mount.
+  // SSR começa em 0 (evita hydration mismatch), useEffect seta após mount.
   const [renderedAt, setRenderedAt] = useState(0)
   useEffect(() => {
     setRenderedAt(Date.now())
@@ -33,10 +31,10 @@ export function WaitlistForm() {
     <form
       ref={formRef}
       action={action}
-      className="mx-auto flex w-full max-w-md flex-col gap-3 text-left"
+      className="space-y-3"
     >
       {/* Honeypot — humano nunca preenche, bot que varre form preenche.
-          Posicionado fora da tela com aria-hidden + tabIndex=-1 (não foca via teclado). */}
+          Posicionado fora da tela com aria-hidden + tabIndex=-1. */}
       <div
         aria-hidden="true"
         style={{
@@ -71,64 +69,94 @@ export function WaitlistForm() {
       <input type="hidden" name="referrer"
              value={typeof window !== 'undefined' ? document.referrer : ''} />
 
-      <div className="flex flex-col gap-2 md:flex-row">
-        <Input
-          type="text"
-          name="name"
-          required
-          placeholder="Seu nome"
-          autoComplete="given-name"
-          className="md:flex-1"
-          aria-label="Seu nome"
-        />
-        <Input
-          type="email"
-          name="email"
-          required
-          placeholder="seu@email.com"
-          autoComplete="email"
-          inputMode="email"
-          className="md:flex-1"
-          aria-label="Seu email"
+      {/* Nome + Email lado a lado */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label htmlFor="name" className="tag tag-fog mb-1.5 block">nome</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            required
+            placeholder="Rafael"
+            autoComplete="given-name"
+            className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
+            aria-label="Seu nome"
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className="tag tag-fog mb-1.5 block">email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            required
+            placeholder="voce@email.com"
+            autoComplete="email"
+            inputMode="email"
+            className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
+            aria-label="Seu email"
+          />
+        </div>
+      </div>
+
+      {/* WhatsApp opcional */}
+      <div>
+        <label htmlFor="whatsapp" className="tag tag-fog mb-1.5 block">
+          whatsapp <span className="normal-case opacity-60">(opcional)</span>
+        </label>
+        <input
+          id="whatsapp"
+          type="tel"
+          name="whatsapp"
+          placeholder="(11) 99999-9999"
+          autoComplete="tel"
+          inputMode="tel"
+          className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
+          aria-label="WhatsApp"
         />
       </div>
 
-      <Input
-        type="tel"
-        name="whatsapp"
-        placeholder="WhatsApp (opcional, recebe a novidade antes)"
-        autoComplete="tel"
-        inputMode="tel"
-        aria-label="WhatsApp"
-      />
-
-      <label className="flex items-start gap-2 text-xs text-muted-foreground">
+      {/* Consentimento LGPD */}
+      <label className="flex cursor-pointer items-start gap-2.5 pt-1">
         <input
           type="checkbox"
           name="consent_lgpd"
           required
           defaultChecked
-          className="mt-0.5 h-3.5 w-3.5 rounded border-border bg-background accent-primary"
+          className="mt-0.5 h-4 w-4"
+          style={{ accentColor: 'hsl(var(--petrol-400))' }}
         />
-        <span>
-          Concordo em receber emails sobre o BVaz Hub. Posso sair quando quiser.
-          {' '}
+        <span className="text-[12.5px] leading-[1.5] text-muted-foreground">
+          Concordo em receber emails sobre o BVaz Hub. Posso sair quando quiser.{' '}
           <a href="/privacidade" className="underline underline-offset-2 hover:text-foreground">
             Política de Privacidade
           </a>.
         </span>
       </label>
 
-      <Button type="submit" size="lg" disabled={pending} className="mt-1 w-full">
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={pending}
+        className="btn-light mt-2 flex w-full items-center justify-center gap-2 rounded-md py-3 text-[14.5px] disabled:opacity-60"
+      >
         {pending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
             Entrando...
           </>
         ) : (
-          <>Entrar na lista de espera</>
+          <>
+            Entrar na lista de espera
+            <ArrowRight className="h-4 w-4" />
+          </>
         )}
-      </Button>
+      </button>
+
+      <p className="pt-2 text-center text-[12px] text-muted-foreground/70">
+        Sem cobrança agora. Você recebe um email quando abrir.
+      </p>
 
       {state.status === 'error' && (
         <p className="text-sm text-destructive" role="alert">

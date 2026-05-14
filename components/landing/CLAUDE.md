@@ -75,4 +75,13 @@ Testes manuais:
 
 ## 🔄 Última atualização
 
+2026-05-14 · **Landing v2 (option-c-hybrid)** — Diego refez visual completo após feedback do CEO ("genérico, ar de IA, muito escuro"). Mudanças:
+
+- **Tipografia**: Fraunces (serif editorial) pros h1/h2 + Geist sans body. Variable font axes `opsz` + `SOFT` no `app/layout.tsx`.
+- **Paleta v2**: night (`#07090A` quase-preto) + fog (`#F2EFEA` off-white) + petrol (`#1F7669` verde-petróleo, foge do azul corporativo) + ember (`#D08A4A` âmbar acento). Override de tokens shadcn via `html.dark[data-layout="marketing"]` em `globals.css`.
+- **Layout**: Hero split (col-7 logo+headline / col-5 form em "carta" com glassmorphism + sticker rotacionado). Features asymmetric grid 1.15fr/0.85fr (anti 2x2 padrão). WhyDifferent split com gradient verde-petróleo no lado "Com BVaz Hub".
+- **Detalhes anti-IA**: noise grain via SVG inline (3 níveis: heavy/normal/soft), marker handmade âmbar em "caos", italic-soft com font-variation-settings em "sem"/"quatro coisas"/"cabeça", number stamps font-mono ("01 — estoque"), pulse-glow no logo grande, watermark "feito no brasil." 200px serif no footer, vinheta nas bordas do hero.
+- **Componentes refatorados**: Logo (variants sm/lg+pulse), Header (btn-light), Hero (split + framer-motion staggered), WaitlistForm (dark glass + tag labels uppercase), Features (asymmetric + ícones SVG duotone petrol), WhyDifferent (tabela split), FinalCTA (display-h2 + 04.07.2026 mark), Footer (3 cols + watermark).
+- **Mockups de referência**: `mockups/landing-v2/option-{a,b,c}-*.html` + `README.md` (Diego entregou A+B antes do limit API; C foi composição manual estrutura A + paleta B).
+
 2026-05-13 · Setup inicial (Diego + Carla + Felipe via /design:component)
