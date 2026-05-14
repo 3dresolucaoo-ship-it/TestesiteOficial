@@ -81,9 +81,10 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Watermark tipográfica gigante — peso visual no encerramento */}
+        {/* Watermark tipográfica gigante — peso visual no encerramento.
+            Mobile: text-[3.5rem] cabe sem corte. Desktop: text-[12.5rem] preserva impacto. */}
         <div className="mt-12 overflow-hidden">
-          <div className="watermark whitespace-nowrap text-[7.5rem] leading-none md:text-[12.5rem]">
+          <div className="watermark whitespace-nowrap text-[3.5rem] leading-none sm:text-[5.5rem] md:text-[8.5rem] lg:text-[12.5rem]">
             feito no brasil.
           </div>
         </div>
