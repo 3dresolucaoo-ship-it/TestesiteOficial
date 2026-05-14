@@ -6,6 +6,7 @@
  */
 
 import { createServerClient } from '@/lib/supabaseServer'
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin'
 import {
   type WaitlistLeadStep1,
   type WaitlistLeadStep2,
@@ -36,7 +37,10 @@ export async function addLeadStep1(
   meta: LeadCaptureMeta
 ): Promise<AddLeadResult> {
   try {
-    const supabase = await createServerClient()
+    // Service role: bypass RLS pq anon não tem policy SELECT, e o
+    // .insert().select() do supabase-js precisa de RETURNING (precisa de SELECT).
+    // Insert público continua seguro: Server Action faz Zod + bot guards antes.
+    const supabase = getSupabaseAdmin()
 
     const { data, error } = await supabase
       .from('waitlist_leads')
@@ -103,7 +107,9 @@ export async function updateLeadStep2(
   input: WaitlistLeadStep2
 ): Promise<UpdateLeadResult> {
   try {
-    const supabase = await createServerClient()
+    // Service role: anon não tem policy UPDATE; só admin_update (is_admin=true).
+    // Backend valida o leadId via cookie httpOnly, então é seguro usar admin.
+    const supabase = getSupabaseAdmin()
 
     const { error } = await supabase
       .from('waitlist_leads')
