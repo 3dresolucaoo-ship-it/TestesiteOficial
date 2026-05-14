@@ -19,14 +19,18 @@
 
 ## 🎯 Status
 
-- ✅ Funcionando: todas as seções da landing renderizam, mobile responsivo OK, dark mode Paleta B aplicada
+- ✅ Funcionando: todas as seções da landing renderizam, mobile responsivo OK, dark mode paleta v2 aplicada
 - ✅ Forms: etapa 1 valida Zod, redireciona pra /obrigado; etapa 2 opcional
 - ✅ Migration `20260513_waitlist_leads.sql` aplicada em prod 2026-05-13
-- ✅ Defesa anti-bot ativa (2026-05-13): honeypot (campo `website` invisível) + time-check (≥2.5s entre render e submit) + rate-limit por IP hash (3 leads/24h, salt em `WAITLIST_IP_SALT`). Falhas de bot retornam `success` fake pra não vazar dica.
+- ✅ Defesa anti-bot ativa: honeypot (campo `website` invisível) + time-check (≥2.5s entre render e submit) + rate-limit por IP hash (3 leads/24h, salt random 32 bytes em `WAITLIST_IP_SALT` desde 14/05). Falhas de bot retornam `success` fake.
 - ✅ Security headers globais via `next.config.ts`: HSTS, X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy.
-- ⏳ Pendente: configurar Resend pra email de confirmação (semana 3)
-- ⏳ Pendente: ativar Vercel BotID toggle no Dashboard Vercel + integrar SDK `botid` na action (semana 2)
-- ⏳ Pendente: trocar rate-limit pra Upstash Redis quando volume > 100 leads/dia
+- ✅ Vercel Bot Protection (Firewall) ativo em modo **Log** desde 14/05 (promover pra On após observação).
+- ✅ **Rebranding Hayzer (14/05/2026)**: Logo (B→H), Footer (Hayzer + email contato `ola@hayzer.com.br`), WaitlistForm (texto LGPD), WhyDifferent (Com Hayzer), Step2Form (Como descobriu o Hayzer?), meta tags em `app/layout.tsx`. Ver `decisions/009-naming-hayzer.md`.
+- ✅ **Domínio próprio em prod**: https://hayzer.com.br (registrado, SSL automático Vercel, A record 216.198.79.1).
+- ✅ Fix footer mobile (14/05): watermark "feito no brasil." escala progressiva `text-[3.5rem→12.5rem]` (era 7.5rem fixo, cortava em <600px).
+- ⏳ **Logo definitivo**: CEO vai trazer arte de fora (Freepik/stock ou designer freelancer). 2 rodadas Diego (Cleft + Raízes) rejeitadas por nível ilustrativo. Implementar em `Logo.tsx` quando chegar (~30min).
+- ⏳ **Resend email confirmação**: agora desbloqueado (domínio próprio ativo). ~2h pra configurar DNS+SDK.
+- ⏳ Pendente: trocar rate-limit pra Upstash Redis quando volume > 100 leads/dia.
 
 ## 📐 Convenções
 
@@ -75,11 +79,19 @@ Testes manuais:
 
 ## 🔄 Última atualização
 
-2026-05-14 · **Landing v2 (option-c-hybrid)** — Diego refez visual completo após feedback do CEO ("genérico, ar de IA, muito escuro"). Mudanças:
+2026-05-14 (segunda parte) · **Rebranding Hayzer + domínio próprio em prod + defesa Tier 1 completa**:
+- BVaz Hub → Hayzer (decisão registrada em `decisions/009-naming-hayzer.md`). 11 arquivos da landing atualizados.
+- `hayzer.com.br` registrado, DNS configurado, SSL HTTPS automático Vercel.
+- `WAITLIST_IP_SALT` random 32 bytes setado em prod (era fallback previsível).
+- Vercel Bot Protection (Firewall) ativo em modo Log.
+- Fix footer mobile watermark.
+- 2 rodadas Diego de logo rejeitadas — CEO traz arte de fora.
+
+2026-05-14 (primeira parte) · **Landing v2 (option-c-hybrid)** — Diego refez visual completo após feedback do CEO ("genérico, ar de IA, muito escuro"). Mudanças:
 
 - **Tipografia**: Fraunces (serif editorial) pros h1/h2 + Geist sans body. Variable font axes `opsz` + `SOFT` no `app/layout.tsx`.
 - **Paleta v2**: night (`#07090A` quase-preto) + fog (`#F2EFEA` off-white) + petrol (`#1F7669` verde-petróleo, foge do azul corporativo) + ember (`#D08A4A` âmbar acento). Override de tokens shadcn via `html.dark[data-layout="marketing"]` em `globals.css`.
-- **Layout**: Hero split (col-7 logo+headline / col-5 form em "carta" com glassmorphism + sticker rotacionado). Features asymmetric grid 1.15fr/0.85fr (anti 2x2 padrão). WhyDifferent split com gradient verde-petróleo no lado "Com BVaz Hub".
+- **Layout**: Hero split (col-7 logo+headline / col-5 form em "carta" com glassmorphism + sticker rotacionado). Features asymmetric grid 1.15fr/0.85fr (anti 2x2 padrão). WhyDifferent split com gradient verde-petróleo no lado "Com Hayzer".
 - **Detalhes anti-IA**: noise grain via SVG inline (3 níveis: heavy/normal/soft), marker handmade âmbar em "caos", italic-soft com font-variation-settings em "sem"/"quatro coisas"/"cabeça", number stamps font-mono ("01 — estoque"), pulse-glow no logo grande, watermark "feito no brasil." 200px serif no footer, vinheta nas bordas do hero.
 - **Componentes refatorados**: Logo (variants sm/lg+pulse), Header (btn-light), Hero (split + framer-motion staggered), WaitlistForm (dark glass + tag labels uppercase), Features (asymmetric + ícones SVG duotone petrol), WhyDifferent (tabela split), FinalCTA (display-h2 + 04.07.2026 mark), Footer (3 cols + watermark).
 - **Mockups de referência**: `mockups/landing-v2/option-{a,b,c}-*.html` + `README.md` (Diego entregou A+B antes do limit API; C foi composição manual estrutura A + paleta B).

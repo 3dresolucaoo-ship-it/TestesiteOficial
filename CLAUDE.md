@@ -1,7 +1,9 @@
-# BVaz Hub — Cérebro do Projeto
+# Hayzer — Cérebro do Projeto
 
 > SaaS multi-projeto · Next.js 16 · Supabase · Stripe · Mercado Pago · Vercel
 > **Sempre comece lendo este arquivo.** Ele aponta pra todo o resto.
+>
+> 📝 **Nota de naming**: "Hayzer" é o nome oficial desde 14/05/2026 (ver `decisions/009-naming-hayzer.md`). O nome anterior "BVaz Hub" era placeholder. Domínio: **hayzer.com.br** (registrado, em prod com SSL). Subdomínio Vercel `bvaz-hub.vercel.app` continua ativo até futura migração de infra (Onda 5 pós-launch).
 
 ---
 
@@ -64,14 +66,17 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 ## 🎯 STATUS RÁPIDO
 
-- **Versão**: v0.3
-- **Último audit**: `audits/2026-05-04.md`
+- **Versão**: v0.4
+- **Último audit**: `audits/2026-05-04.md` (próximo audit: ~04/06/2026)
 - **Bugs críticos abertos**: ver `ROADMAP.md` § "🔴 Críticos"
-- **Pendência prioritária #1**: app Mercado Pago Marketplace (OAuth atual rejeita CheckoutPro)
-- **Pendência prioritária #2**: migration unificada com colunas faltantes em `orders`, `inventory`, criar `portfolios`/`portfolio_items`
-- **Em curso**: **Fase 1 — LANÇAMENTO PÚBLICO 04/07/2026** (8 semanas). Semana 1: landing + waitlist + lead magnet + CRM schema. Time G7 criado em ADR 008. Painel central: `CEO_COMMAND.md` na raiz.
-- **Landing v2 (2026-05-14)**: refundação visual após feedback "genérico/IA/escuro". Paleta night+petrol+ember, Fraunces serif, grain SVG, layout split hero, asymmetric features. Mockups em `mockups/landing-v2/`. Override shadcn via `html[data-layout="marketing"]` (dashboard intacto).
-- **Segurança Tier 1 (parcial · 2026-05-13)**: ✅ HSTS + X-Frame-Options DENY + nosniff + Referrer-Policy + Permissions-Policy ✅ honeypot ✅ time-check ≥2.5s ✅ rate-limit por IP hash (3/24h). Pendente: Vercel BotID toggle, idempotência webhook, Upstash quando escalar.
+- **Pendência prioritária #1**: **Logo final Hayzer** — CEO vai fazer/buscar arte (refs Freepik/stock) e me passar; eu implemento em `components/landing/Logo.tsx` em ~30min. SVG manual via agente não chega no nível ilustrativo requerido (2 rodadas Diego rejeitadas).
+- **Pendência prioritária #2**: **Resend + email confirmação waitlist** (~2h) — agora desbloqueado com domínio próprio `hayzer.com.br`. Precisa configurar SPF/DKIM/DMARC + integrar SDK na server action `app/waitlist/actions.ts`.
+- **Pendência prioritária #3**: **Marca INPI** (depositar HAYZER nas classes 35 + 42 — R$ 415-1660 por classe) — proteger antes do post LinkedIn público. Posso guiar via Chrome no gov.br/inpi.
+- **Em curso**: **Fase 1 — LANÇAMENTO PÚBLICO 04/07/2026** (~7 semanas). Semana 2 começou 14/05/2026. Time G7 ativo (ADR 008). Painel central: `CEO_COMMAND.md`.
+- **Landing v2 (2026-05-14)**: paleta night+petrol+ember, Fraunces serif, grain SVG, layout split hero, asymmetric features. Override shadcn via `html[data-layout="marketing"]` (dashboard intacto).
+- **Rebranding Hayzer (2026-05-14)**: BVaz Hub → Hayzer. Domínio `hayzer.com.br` registrado (CEO Gabriel Vaz, exp 14/05/2028) + DNS A record `216.198.79.1` + Vercel SSL automático. 11 arquivos atualizados (Logo, Footer, WaitlistForm, WhyDifferent, Step2Form, layout meta tags, termos, privacidade, obrigado, page, BRIEF). ADR completo em `decisions/009-naming-hayzer.md`. Backend ainda usa "bvaz-hub" como project_id Supabase + URL Vercel default — migração Onda 4/5 pós-launch.
+- **Segurança Tier 1 (completa · 2026-05-14)**: ✅ HSTS + X-Frame-Options DENY + nosniff + Referrer-Policy + Permissions-Policy ✅ honeypot ✅ time-check ≥2.5s ✅ rate-limit por IP hash (3/24h) ✅ `WAITLIST_IP_SALT` random 32 bytes hex em prod (não mais fallback previsível) ✅ Vercel Bot Protection em modo Log no Firewall (promover pra On após 1-2 semanas de observação). Pendente: idempotência webhook, Upstash quando escalar.
+- **Logo (2026-05-14)**: 2 rodadas Diego (rodada 1 abstrata Cleft + rodada 2 figurativa Raízes) **rejeitadas pelo CEO** — refs mostradas são arte de stock Freepik/Shutterstock (nível ilustrativo alto, 30-50 paths Bezier por logo) que SVG manual via agente não reproduz. Decisão: CEO traz arte fora, eu implemento. Mockups históricos: `mockups/logos/conceitos.html` (r1), `public/logos-conceitos-r2.html` (r2 acessível em https://hayzer.com.br/logos-conceitos-r2.html).
 
 ---
 
@@ -79,8 +84,9 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 - `lib/supabase/schema.sql` (sempre via migration nova)
 - `services/paymentConfig.ts` (OAuth + cache — frágil)
-- `middleware.ts` (auth global — quebrar = 100% offline)
+- `middleware.ts` (auth global + matcher recém-ajustado pra liberar `.html` em `public/` — não reverter regex)
 - `lib/store.tsx` (state global — quebrar = UI quebrada)
+- `app/layout.tsx` (Fraunces variable font + `metadataBase` Hayzer + tracking)
 
 ---
 

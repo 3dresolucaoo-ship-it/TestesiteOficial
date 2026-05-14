@@ -1,31 +1,37 @@
-# 👤 CEO Command Center — BVaz Hub
+# 👤 CEO Command Center — Hayzer
 
 > Painel central do CEO. Abra primeiro toda manhã.
-> Atualizado: **13/05/2026** · Próxima revisão: segunda-feira
+> Atualizado: **14/05/2026** (fim do dia) · Próxima revisão: 15/05/2026
 
 ---
 
-## 🎯 Foco da semana 1 (13-19/05/2026)
+## 🎯 Foco da semana 2 (14-19/05/2026)
 
-**Objetivo único**: Landing + waitlist + lead magnet + CRM schema + design system shadcn
+**Status semana 1 (13/05) — FECHADA**: ✅ Landing v2 (paleta night/petrol/ember, Fraunces, grain) ✅ Form 2 etapas ✅ waitlist_leads em prod ✅ LGPD ✅ Defesa Tier 1 completa ✅ **Rebranding BVaz Hub → Hayzer (14/05)** ✅ **Domínio próprio hayzer.com.br no ar com SSL** ✅ NEXT_PUBLIC_APP_URL + metadataBase atualizados.
 
-**Status (13/05/2026, dia 1)**: ✅ Landing pronta · ✅ Form 2 etapas · ✅ Schema waitlist_leads · ✅ LGPD · ✅ Design system Paleta B aplicada · ⏳ Falta aplicar migration no Supabase prod · ⏳ Marketing começa amanhã.
+**Objetivo semana 2**: fechar pendências pré-tração:
+1. **Logo final** — CEO traz arte (Freepik/stock ou designer); Felipe implementa em `Logo.tsx`
+2. **Resend + email confirmação** — domínio próprio desbloqueou; ~2h de config DNS + SDK
+3. **Marca INPI Hayzer** — classes 35 + 42; R$ 415-1660/classe; guia via Chrome no gov.br/inpi
+4. **Post LinkedIn anúncio** — Marcos + Carla; ~30min
 
-**Por que essa semana é decisiva**: marketing começa AGORA. Cada dia sem landing = lead não capturado. Lançamento em 04/07/2026 (~7 semanas).
+**Por que essa semana**: marca registrada antes de divulgação pública mitiga risco de squatter. Email transacional fecha o loop "cliente cadastra → recebe confirmação".
 
 ---
 
 ## 📦 Projeto único ativo
 
-### 🔥 BVaz Hub (toda atenção)
-- **Status**: Wave 0 em prod · iniciando Fase 1
-- **Data lançamento**: 04/07/2026 (sexta seguinte — 8 semanas)
-- **URL**: bvaz-hub.vercel.app
-- **Repo**: C:\Users\infin\OneDrive\Área de Trabalho\bvaz-hub
+### 🔥 Hayzer (toda atenção)
+- **Status**: Wave 0 em prod · Fase 1 em curso (rebrandeado em 14/05)
+- **Data lançamento**: 04/07/2026 (~7 semanas)
+- **URL produção**: https://hayzer.com.br (SSL automático Vercel)
+- **URL Vercel default**: https://bvaz-hub.vercel.app (continua ativa até Onda 5 pós-launch)
+- **Domínio**: Registro.br, exp 14/05/2028 (Gabriel Vaz)
+- **Repo**: C:\Users\infin\OneDrive\Área de Trabalho\bvaz-hub (nome Git mantido até Onda 5)
 - **Branch**: main
 
 ### ⏸️ Pausados
-- Heshiley / Ybera Paris → começa set/2026 (pós-launch BVaz)
+- Heshiley / Ybera Paris → começa set/2026 (pós-launch Hayzer). Research salvo (40k afiliados BR, R$ 200M/ano).
 - VideoEdit → ideia, sem data
 
 ---
