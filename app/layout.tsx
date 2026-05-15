@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Fraunces } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import { AuthProvider }  from '@/context/AuthContext'
 import { ThemeProvider } from '@/context/ThemeContext'
@@ -73,6 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           </AuthProvider>
         </ThemeProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

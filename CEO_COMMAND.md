@@ -1,21 +1,28 @@
 # 👤 CEO Command Center — Hayzer
 
 > Painel central do CEO. Abra primeiro toda manhã.
-> Atualizado: **14/05/2026** (fim do dia) · Próxima revisão: 15/05/2026
+> Atualizado: **15/05/2026** (madrugada) · Próxima revisão: 15/05/2026 (manhã)
 
 ---
 
 ## 🎯 Foco da semana 2 (14-19/05/2026)
 
-**Status semana 1 (13/05) — FECHADA**: ✅ Landing v2 (paleta night/petrol/ember, Fraunces, grain) ✅ Form 2 etapas ✅ waitlist_leads em prod ✅ LGPD ✅ Defesa Tier 1 completa ✅ **Rebranding BVaz Hub → Hayzer (14/05)** ✅ **Domínio próprio hayzer.com.br no ar com SSL** ✅ NEXT_PUBLIC_APP_URL + metadataBase atualizados.
+**Status semana 1 (13/05) — FECHADA**: ✅ Landing v2 ✅ Form 2 etapas ✅ waitlist_leads em prod ✅ LGPD ✅ Defesa Tier 1 ✅ Rebranding Hayzer ✅ Domínio próprio com SSL.
 
-**Objetivo semana 2**: fechar pendências pré-tração:
-1. **Logo final** — CEO traz arte (Freepik/stock ou designer); Felipe implementa em `Logo.tsx`
-2. **Resend + email confirmação** — domínio próprio desbloqueou; ~2h de config DNS + SDK
-3. **Marca INPI Hayzer** — classes 35 + 42; R$ 415-1660/classe; guia via Chrome no gov.br/inpi
-4. **Post LinkedIn anúncio** — Marcos + Carla; ~30min
+**Status sessão 14-15/05 (madrugada) — FECHOU 4 DOS 4 ITENS**:
+1. ✅ **Logo Hayzer** implementada (H+raízes verde, mix-blend-screen)
+2. ✅ **Resend + email confirmação** — código 100% pronto, env vars Vercel setadas, DNS propagado. Aguardando AWS SES verify final (1-24h sozinho). **Email vai sair próximo cadastro pós-verify.**
+3. ⏳ **Marca INPI Hayzer** — não atacado nessa sessão. Próximo passo: gov.br/inpi, classes 35+42
+4. ⏳ **Post LinkedIn anúncio** — Marcos + Carla, ~30min, próxima sessão
 
-**Por que essa semana**: marca registrada antes de divulgação pública mitiga risco de squatter. Email transacional fecha o loop "cliente cadastra → recebe confirmação".
+**Bônus sessão**:
+- ✅ Foco vertical maker 3D (ADR-010) — copy reescrita, frase âncora, CTA novo
+- ✅ Bug RLS waitlist diagnosticado e fixado (ADR-011) — form 100% funcional em prod
+- ✅ WhatsApp CTA na tela /obrigado (testado fim-a-fim)
+- ✅ Vercel Web Analytics + Speed Insights ativados (Marcos pediu)
+
+**Pendências críticas pra rotacionar (5min)**:
+- 🔴 `RESEND_API_KEY` e `SUPABASE_SERVICE_ROLE_KEY` foram expostas no chat. Quando lembrar: gera novas + atualiza Vercel env.
 
 ---
 
