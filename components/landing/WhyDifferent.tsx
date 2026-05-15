@@ -3,9 +3,9 @@
 import { motion } from 'framer-motion'
 
 const today = [
-  { label: 'Bling pro estoque',         price: 'R$ 119' },
-  { label: 'Conta Azul pro financeiro', price: 'R$ 199' },
-  { label: 'Nuvemshop pro checkout',    price: 'R$ 89' },
+  { label: 'Bling para o estoque',         price: 'R$ 119' },
+  { label: 'Conta Azul para o financeiro', price: 'R$ 199' },
+  { label: 'Nuvemshop para o checkout',    price: 'R$ 89' },
   { label: 'Mais 2 planilhas que ninguém atualiza', price: 'tempo' },
 ]
 
@@ -28,7 +28,7 @@ export function WhyDifferent() {
             <h2 className="display-h2 text-[2.5rem] text-foreground md:text-[3.5rem]">
               Quatro assinaturas
               <br />
-              pra rodar uma <span className="italic-soft">loja de 3D</span>.
+              para rodar uma <span className="italic-soft">loja de 3D</span>.
             </h2>
           </div>
           <div className="lg:col-span-7 lg:pt-4">

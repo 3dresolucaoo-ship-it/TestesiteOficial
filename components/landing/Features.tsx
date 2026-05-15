@@ -63,7 +63,7 @@ const features: Feature[] = [
   {
     num: '04 — financeiro',
     title: 'O dinheiro real do mês.',
-    body: 'Tira filamento, luz, comissão do marketplace, taxa de cartão. O que sobra é o que aparece. Sem precisar abrir Excel pra descobrir se foi um mês bom.',
+    body: 'Tira filamento, luz, comissão do marketplace, taxa de cartão. O que sobra é o que aparece. Sem precisar abrir Excel para descobrir se foi um mês bom.',
     size: 'lg',
     glow: true,
     icon: (

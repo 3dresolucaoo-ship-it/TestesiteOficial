@@ -89,7 +89,7 @@ export function CalculadoraForm() {
     const semaforo =
       margemN >= 50 ? { hsl: '--petrol-300',  bg: '--petrol-400', label: 'margem saudável' } :
       margemN >= 20 ? { hsl: '--ember-400',   bg: '--ember-400',  label: 'margem apertada' } :
-                      { hsl: '--ember-500',   bg: '--ember-500',  label: 'tá trabalhando de graça' }
+                      { hsl: '--ember-500',   bg: '--ember-500',  label: 'está trabalhando de graça' }
 
     // Empty state alertas (Sofia): valor zerado ou absurdo
     let alerta: string | null = null
@@ -259,7 +259,7 @@ export function CalculadoraForm() {
                         onChange={e => setMargem(e.target.value)}
                         className="h-2 w-full cursor-pointer appearance-none rounded-full bg-[hsl(var(--fog-50)/0.10)]"
                         style={{ accentColor: `hsl(var(${semaforo.bg}))` }}
-                        aria-label="Margem em porcentagem (arraste pra ajustar)"
+                        aria-label="Margem em porcentagem (arraste para ajustar)"
                       />
                       <div className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                         <span>0% prejuízo</span>
@@ -287,7 +287,7 @@ export function CalculadoraForm() {
                     </div>
                   </div>
                   <p className="mt-2 text-[11.5px] leading-[1.4] text-muted-foreground">
-                    50% é o mínimo. Abaixo, você paga pra trabalhar. Acima de 80%, é premium.
+                    50% é o mínimo. Abaixo, você paga para trabalhar. Acima de 80%, é premium.
                   </p>
                 </div>
               </div>
@@ -377,7 +377,7 @@ export function CalculadoraForm() {
                   ) : (
                     <>
                       <Copy className="h-3.5 w-3.5" strokeWidth={2} />
-                      Copiar pro cliente
+                      Copiar para o cliente
                     </>
                   )}
                 </button>
@@ -454,7 +454,7 @@ export function CalculadoraForm() {
                 Cada marketplace come uma fatia.
               </h3>
               <p className="mt-2 text-[13px] leading-[1.5] text-muted-foreground">
-                A tabela ajusta o preço pra você sair com o lucro de cima,
+                A tabela ajusta o preço para você sair com o lucro de cima,
                 líquido, não importa onde a peça vender.
               </p>
             </div>
@@ -527,7 +527,7 @@ export function CalculadoraForm() {
 
             {/* Frase de conexão (Marcos red flag #7) — fecha o aha-moment com argumento de compra */}
             <p className="mt-4 text-[13px] leading-[1.55] text-foreground/90">
-              Essa conta você fez agora na mão. <span className="font-semibold text-foreground">No Hayzer, ela acontece automática</span> pra cada pedido que entra: filamento, luz, comissão, taxa de cartão. Você só confere.
+              Essa conta você fez agora na mão. <span className="font-semibold text-foreground">No Hayzer, ela acontece automática</span> para cada pedido que entra: filamento, luz, comissão, taxa de cartão. Você só confere.
             </p>
           </div>
         </motion.div>
