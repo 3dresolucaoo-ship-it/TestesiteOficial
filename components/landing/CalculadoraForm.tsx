@@ -30,22 +30,30 @@ const CHANNELS = [
 ] as const
 
 export function CalculadoraForm() {
-  // Defaults sensatos pra maker BR 2026 — ao abrir, calc já mostra algo útil
-  const [precoFilamento, setPrecoFilamento] = useState(110)
-  const [peso, setPeso] = useState(100)
-  const [horas, setHoras] = useState(3)
-  const [consumoW, setConsumoW] = useState(150)
-  const [margem, setMargem] = useState(50)
-  const [precoEnergia] = useState(0.85) // R$/kWh média BR 2026 (Aneel)
+  // State como string pra permitir campo vazio + edição livre (sem voltar pra 0
+  // quando apaga tudo). parseFloat(value) || 0 nos cálculos. UX: onFocus seleciona
+  // tudo, maker digita e substitui sem precisar apagar manualmente.
+  const [precoFilamento, setPrecoFilamento] = useState('110')
+  const [peso, setPeso] = useState('100')
+  const [horas, setHoras] = useState('3')
+  const [consumoW, setConsumoW] = useState('150')
+  const [margem, setMargem] = useState('50')
+  const precoEnergia = 0.85 // R$/kWh média BR 2026 (Aneel) — constante
 
   const { custoFilamento, custoLuz, custoTotal, lucro, precoSugerido } = useMemo(() => {
-    const custoFilamento = (peso / 1000) * precoFilamento
-    const custoLuz = horas * (consumoW / 1000) * precoEnergia
-    const custoTotal = custoFilamento + custoLuz
-    const precoSugerido = custoTotal * (1 + margem / 100)
-    const lucro = precoSugerido - custoTotal
+    const filamentN = parseFloat(precoFilamento) || 0
+    const pesoN     = parseFloat(peso)           || 0
+    const horasN    = parseFloat(horas)          || 0
+    const consumoN  = parseFloat(consumoW)       || 0
+    const margemN   = parseFloat(margem)         || 0
+
+    const custoFilamento = (pesoN / 1000) * filamentN
+    const custoLuz       = horasN * (consumoN / 1000) * precoEnergia
+    const custoTotal     = custoFilamento + custoLuz
+    const precoSugerido  = custoTotal * (1 + margemN / 100)
+    const lucro          = precoSugerido - custoTotal
     return { custoFilamento, custoLuz, custoTotal, lucro, precoSugerido }
-  }, [precoFilamento, peso, horas, consumoW, margem, precoEnergia])
+  }, [precoFilamento, peso, horas, consumoW, margem])
 
   return (
     <section className="grain grain-soft relative overflow-hidden pt-24 pb-24 md:pt-32">
@@ -403,8 +411,8 @@ function Field({
   label: string
   helper: string
   suffix: string
-  value: number
-  onChange: (v: number) => void
+  value: string
+  onChange: (v: string) => void
   step: string
   min: number
 }) {
@@ -418,12 +426,11 @@ function Field({
           type="number"
           inputMode="decimal"
           value={value}
-          onChange={e => {
-            const v = parseFloat(e.target.value)
-            onChange(isNaN(v) ? 0 : v)
-          }}
+          onChange={e => onChange(e.target.value)}
+          onFocus={e => e.target.select()}
           step={step}
           min={min}
+          placeholder="0"
           className="flex h-11 w-full rounded-lg border border-[hsl(var(--fog-50)/0.12)] bg-[hsl(var(--card)/0.7)] px-4 pr-14 text-[15px] text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-400)/0.5)]"
         />
         <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
