@@ -29,7 +29,16 @@ export function WhatsAppGroupCta() {
           href={groupUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative block overflow-hidden rounded-2xl border-2 border-[#25D366]/70 bg-gradient-to-br from-[#25D366]/30 via-[#1DA851]/20 to-[#128C7E]/15 p-6 shadow-[0_0_40px_-8px_rgba(37,211,102,0.5),0_8px_30px_-12px_rgba(37,211,102,0.4)] transition-all hover:border-[#25D366] hover:from-[#25D366]/40 hover:to-[#128C7E]/25 hover:shadow-[0_0_60px_-8px_rgba(37,211,102,0.7),0_12px_40px_-12px_rgba(37,211,102,0.5)] md:p-8"
+          className="group relative block overflow-hidden rounded-2xl border-2 border-[#25D366]/70 bg-gradient-to-br from-[#25D366]/30 via-[#1DA851]/20 to-[#128C7E]/15 p-6 transition-all hover:border-[#25D366] hover:from-[#25D366]/40 hover:to-[#128C7E]/25 md:p-8"
+          style={{
+            boxShadow: '0 0 40px -8px rgba(37, 211, 102, 0.45), 0 8px 30px -12px rgba(37, 211, 102, 0.35)',
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 0 60px -8px rgba(37, 211, 102, 0.65), 0 12px 40px -12px rgba(37, 211, 102, 0.5)'
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 0 40px -8px rgba(37, 211, 102, 0.45), 0 8px 30px -12px rgba(37, 211, 102, 0.35)'
+          }}
         >
           {/* shine sweep no hover */}
           <span
