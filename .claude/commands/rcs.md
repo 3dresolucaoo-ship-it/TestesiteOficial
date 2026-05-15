@@ -101,83 +101,53 @@ Crie `sessions/YYYY-MM-DD-HHmm-{slug}.md` com este formato:
 
 ### 5. Output FINAL no chat — o que mais importa
 
-A última coisa que aparece no chat tem que ser **o bloco copiável dentro de uma code-fence**. Esse é o passe pra próxima sessão.
+A última coisa que aparece no chat tem que ser **o bloco copiável entre divisores `═══` em texto puro** (NÃO dentro de code-fence ``` ``` — CEO copia melhor sem marcador). Formato direto, sem floreio.
 
-Formato exato a entregar:
+**Formato exato a entregar** (substituir {placeholders} com dados reais):
 
----
-
+```
 ✅ Resumo salvo:
-- `sessions/{arquivo-criado}.md`
-- `CLAUDE.md`, `ROADMAP.md`, `<pasta>/CLAUDE.md` atualizados
+  sessions/{arquivo-criado}.md
+  CLAUDE.md + ROADMAP.md + <pasta>/CLAUDE.md atualizados
 
 📊 Estatísticas:
-- {X} arquivos criados/editados nesta sessão
-- {Y} commits
-- {Z} bugs resolvidos / decisões grandes
+  X arquivos criados/editados
+  Y commits relevantes
+  Z agentes G7 envolvidos
 
 ⏭️ Próxima sessão começa em: {ação concreta em 1 frase}
 
-**Pode dar `/clear` agora.** Cola o bloco abaixo no início da próxima sessão pra retomar sem perder contexto:
+═══════════════════════════════════════════════════════════════
+📋 COPIA E COLA ISSO DEPOIS DO /clear PRA PRÓXIMA SESSÃO PEGAR CONTEXTO:
+═══════════════════════════════════════════════════════════════
 
-````
-Continuando trabalho em Hayzer (SaaS multi-projeto · Next.js 16 · React 19 · TypeScript · Tailwind 4 · Supabase · Vercel · domínio hayzer.com.br).
+Continuando trabalho em Hayzer (SaaS Next 16 · Supabase · Vercel · hayzer.com.br · launch 04/07/2026). Lê primeiro nessa ordem:
+1. CLAUDE.md
+2. ROADMAP.md
+3. sessions/{arquivo-criado}.md
+4. decisions/{último ADR relevante}
 
-🗂️ LÊ PRIMEIRO (em ordem, antes de qualquer outra coisa):
-1. CLAUDE.md (raiz) — regras + status atual
-2. sessions/{arquivo-criado}.md — snapshot completo da sessão anterior
-3. ROADMAP.md — items concluídos e pendentes
-4. decisions/{ADRs novos criados} — se houve
+Depois me confirma onde paramos e a próxima ação. Pendente imediato: {ação concreta + contexto curto}.
 
-🎯 ÚLTIMA SESSÃO ({data}, {duração}):
-{resumo executivo em 2-4 frases, o que foi feito de mais importante}
+Estado real em prod: {1-2 frases do que tá vivo}.
 
-✅ ESTADO REAL EM PROD AGORA:
-- {bullet 1, ex: hayzer.com.br/calculadora em prod com 5 inputs + 5 canais marketplace + slider margem + dropdown impressora}
-- {bullet 2, ex: WhatsApp grupo Hayzer Beta criado em https://chat.whatsapp.com/...}
-- {bullet 3, ex: Resend us-east-1 verified, RESEND_API_KEY rotacionada (v2 ativa)}
-- {bullet 4 etc}
+Próximas em fila: {Item B/C/D resumido em 1 linha cada}.
 
-🔴 BLOCKERS / PENDÊNCIAS CRÍTICAS:
-- {bullet, com contexto: bloqueador X, motivo Y, próximo passo Z}
-- {se nada bloqueado, escrever "Nenhum blocker. Próximo: ..."}
+Convenções críticas (não esquece): project_id + user_id em toda query DB, service-first, PT-BR formal ("para" não "pra"), chama G7 ANTES de feature de marketing/visual, risco vem com solução, testa em prod (hayzer.com.br), bug Tailwind 4 bg-X/Y → inline style ou .surface-strong, iOS input precisa text-[16px].
 
-🔐 SEGURANÇA - itens a rotacionar quando lembrar:
-- {lista de chaves expostas no chat anterior que precisam ser rotacionadas, se houver}
+Repo: github.com/3dresolucaoo-ship-it/TestesiteOficial · Último commit: {hash + 1 linha} · G7 em .claude/agents/ (helena/diego/carla/marcos/sofia/etc).
 
-🚀 PRÓXIMA AÇÃO IMEDIATA: {ação concreta em 1 frase}
+═══════════════════════════════════════════════════════════════
 
-📅 PRÓXIMAS AÇÕES FASE 1 (até launch 04/07/2026):
-- {Item B/C/D que tava em fila}
-- {Outras Wave/Semana que vem em sequência}
+Pode dar /clear agora.
+```
 
-⚠️ CONVENÇÕES CRÍTICAS QUE NÃO PODEM ESQUECER:
-- `project_id` obrigatório em toda query DB (multi-projeto)
-- `user_id` obrigatório (RLS) em toda tabela
-- Service-first: lógica DB SEMPRE em services/, nunca direto na page
-- PT-BR brasileiro em UI/copy. Anti-IA: banido "plataforma", "solução", "que ajuda", "revolucionário", "simplifica", "otimiza", "robusto"
-- Em texto INSTRUCIONAL: "para" em vez de "pra/pro" (decisão CEO 15/05)
-- Antes de feature de marketing/visual/estratégia → chama agente G7 ANTES, não depois (decisão CEO 15/05)
-- Risco sempre vem com solução. Não terminar mensagem em "tem problema X e agora?" — terminar em "problema X → solução A vs B"
-- Testar SEMPRE em prod (hayzer.com.br), não localhost
-
-🛠️ STACK:
-- Next.js 16 App Router · React 19 · TypeScript estrito · Tailwind 4 (bug latente: bg-X/Y arbitrary retorna transparente — usar inline style ou .surface-strong)
-- Supabase Postgres + Auth + RLS · service_role em insert public da waitlist (RLS bypass, ADR-011)
-- Vercel Fluid Compute · Node 24 LTS · Web Analytics + Speed Insights ativos
-- Resend (us-east-1) · grupo WhatsApp Hayzer Beta
-
-📂 REPO: github.com/3dresolucaoo-ship-it/TestesiteOficial (main)
-📂 PATH LOCAL: C:\Users\infin\OneDrive\Área de Trabalho\bvaz-hub
-📌 ÚLTIMO COMMIT: {hash + mensagem curta}
-🌐 PROD: https://hayzer.com.br · https://hayzer.com.br/calculadora · https://hayzer.com.br/waitlist/obrigado
-
-👥 TIME G7 (subagents em .claude/agents/) — chamar ANTES de feature em paralelo via Agent(run_in_background:true):
-- helena-strategy (decisão grande), diego-designer (visual), felipe-frontend, bruna-backend, julia-qa
-- otavio-security, ricardo-devops, paulo-financial, lia-docs
-- carla-copy (toda copy), marcos-marketing (canal + funil), sofia-cs (UX leigo)
-- /council pra decisões enormes (3 críticos + external-researcher)
-````
+**Regras do bloco:**
+- Texto puro entre os 2 divisores `═══` (sem code-fence)
+- Direto e conciso — CEO odeia bloat. Máximo ~25 linhas dentro do bloco.
+- A frase "Depois me confirma onde paramos e a próxima ação" é OBRIGATÓRIA — força a próxima sessão a fazer check-in antes de executar.
+- "Pendente imediato" no formato ação + contexto curto, não lista enorme.
+- Convenções críticas em 1 parágrafo só (inline), não bullets gigantes.
 
 ---
 
