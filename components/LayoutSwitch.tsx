@@ -5,7 +5,7 @@ import { useEffect, type ReactNode } from 'react'
 import { AppShell } from '@/components/AppShell'
 import type { AppState } from '@/lib/types'
 
-const MARKETING_PATHS = ['/', '/waitlist', '/privacidade', '/termos']
+const MARKETING_PATHS = ['/', '/waitlist', '/privacidade', '/termos', '/calculadora']
 
 function isMarketingPath(pathname: string) {
   return MARKETING_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
