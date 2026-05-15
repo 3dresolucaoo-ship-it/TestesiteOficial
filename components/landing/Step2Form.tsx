@@ -36,7 +36,7 @@ export function Step2Form() {
   return (
     <section className="pb-24">
       <div className="mx-auto max-w-2xl px-6">
-        <div className="rounded-2xl border border-border/40 bg-card/30 p-6 md:p-10">
+        <div className="surface-strong rounded-2xl p-6 md:p-10">
           <div className="mb-6 flex items-start gap-3">
             <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <Sparkles className="h-4 w-4" />
