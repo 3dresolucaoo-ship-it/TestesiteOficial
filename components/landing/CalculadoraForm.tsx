@@ -33,7 +33,7 @@ export function CalculadoraForm() {
   }, [precoFilamento, peso, horas, consumoW, margem, precoEnergia])
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-24 md:pt-32">
+    <section className="grain grain-soft relative overflow-hidden pt-24 pb-24 md:pt-32">
       <div className="mx-auto max-w-[1180px] px-6 md:px-10">
         {/* Header com badge sticker + h1 */}
         <motion.div
@@ -156,7 +156,7 @@ export function CalculadoraForm() {
                 <div className="mb-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[hsl(var(--petrol-300))]">
                   Preço sugerido
                 </div>
-                <div className="font-[var(--font-serif)] text-[3rem] font-semibold leading-none tracking-tight text-foreground md:text-[3.5rem]">
+                <div className="font-[var(--font-serif)] text-[3rem] font-bold leading-none tracking-[-0.04em] text-foreground md:text-[3.75rem]">
                   {formatBRL(precoSugerido)}
                 </div>
                 <p className="mt-3 text-[13px] leading-[1.5] text-muted-foreground">
@@ -188,8 +188,16 @@ export function CalculadoraForm() {
                   </div>
                 </div>
 
-                <div className="surface-strong rounded-xl p-5">
-                  <div className="mb-1 text-[11px] font-mono uppercase tracking-[0.18em] text-[hsl(var(--ember-400))]">
+                <div
+                  className="rounded-xl p-5"
+                  style={{
+                    background: 'hsl(var(--card) / 0.55)',
+                    border: '1px solid hsl(var(--ember-400) / 0.25)',
+                    boxShadow:
+                      '0 8px 32px -12px rgba(0,0,0,0.55), inset 0 1px 0 hsl(var(--ember-400) / 0.08)',
+                  }}
+                >
+                  <div className="mb-1 text-[11px] font-mono uppercase tracking-[0.18em] text-muted-foreground">
                     Lucro
                   </div>
                   <div className="font-[var(--font-serif)] text-[1.6rem] font-semibold leading-none tracking-tight text-foreground md:text-[1.85rem]">
@@ -211,14 +219,31 @@ export function CalculadoraForm() {
           </motion.div>
         </div>
 
-        {/* CTA Waitlist */}
+        {/* CTA Waitlist — ember container + ember solid button (Diego, Opção A+C) */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 0.61, 0.36, 1] }}
-          className="mt-16 md:mt-20"
+          className="relative mt-16 md:mt-20"
         >
-          <div className="surface-strong relative overflow-hidden rounded-2xl p-8 md:p-10">
+          {/* Watermark "preço justo." atrás do CTA (eco do "feito no brasil" do footer) */}
+          <div
+            aria-hidden
+            className="watermark pointer-events-none absolute -top-6 right-0 hidden select-none leading-none md:block md:text-[7rem] lg:text-[10rem]"
+          >
+            preço<br />justo.
+          </div>
+
+          <div
+            className="relative overflow-hidden rounded-2xl p-8 md:p-10"
+            style={{
+              background:
+                'linear-gradient(135deg, hsl(var(--ember-500) / 0.18) 0%, hsl(var(--petrol-600) / 0.12) 100%)',
+              border: '1px solid hsl(var(--ember-400) / 0.35)',
+              boxShadow:
+                '0 12px 40px -16px hsl(var(--ember-500) / 0.45), inset 0 1px 0 hsl(var(--fog-50) / 0.06)',
+            }}
+          >
             <div className="grid items-center gap-6 md:grid-cols-[1fr_auto]">
               <div>
                 <h3 className="display-h2 text-[24px] text-foreground md:text-[28px]">
@@ -232,10 +257,20 @@ export function CalculadoraForm() {
               </div>
               <Link
                 href="/#waitlist"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-foreground px-6 py-3.5 text-[14.5px] font-semibold text-background transition-colors hover:bg-foreground/90"
+                className="group inline-flex items-center justify-center gap-2 rounded-lg px-7 py-4 text-[15px] font-semibold transition-all hover:-translate-y-0.5"
+                style={{
+                  background:
+                    'linear-gradient(180deg, hsl(var(--ember-400)) 0%, hsl(var(--ember-500)) 100%)',
+                  color: 'hsl(var(--night-950))',
+                  boxShadow:
+                    '0 1px 0 rgba(255,255,255,0.4) inset, 0 8px 24px -8px hsl(var(--ember-500) / 0.55), 0 0 40px -12px hsl(var(--ember-500) / 0.35)',
+                }}
               >
-                Entrar na waitlist
-                <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+                Quero o Hayzer antes
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                  strokeWidth={2.5}
+                />
               </Link>
             </div>
           </div>
