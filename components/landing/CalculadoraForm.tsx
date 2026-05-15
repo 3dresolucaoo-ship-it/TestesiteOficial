@@ -65,17 +65,6 @@ const CHANNELS = [
   { name: 'Americanas',              commission: 16.5, icon: Store },
 ] as const
 
-// ─── Presets clicáveis (Diego + Sofia) ────────────────────────────────────
-// 4 cenários cobrem 80% dos casos do Rafael. Filamento premium PETG/ABS
-// separado pra educar sobre material caro (Sofia red flag #4: leigo não
-// sabe que PETG custa quase 2x PLA).
-const PRESETS = [
-  { emoji: '🔑', label: 'Chaveirinho',     preco: '110', peso: '40',  horas: '1.5', consumo: '150', margem: '70' },
-  { emoji: '🪴', label: 'Vaso médio',      preco: '110', peso: '250', horas: '8',   consumo: '200', margem: '60' },
-  { emoji: '📦', label: 'Peça grande',     preco: '110', peso: '500', horas: '12',  consumo: '250', margem: '50' },
-  { emoji: '🎨', label: 'PETG / ABS',      preco: '180', peso: '120', horas: '5',   consumo: '200', margem: '65' },
-] as const
-
 export function CalculadoraForm() {
   // State como string permite campo vazio + edição livre (não volta pra 0).
   const [precoFilamento, setPrecoFilamento] = useState('110')
@@ -114,22 +103,9 @@ export function CalculadoraForm() {
     return { custoFilamento, custoLuz, custoTotal, lucro, precoSugerido, semaforo, alerta }
   }, [precoFilamento, peso, horas, consumoW, margem])
 
-  function applyPreset(p: typeof PRESETS[number]) {
-    setPrecoFilamento(p.preco)
-    setPeso(p.peso)
-    setHoras(p.horas)
-    setConsumoW(p.consumo)
-    setMargem(p.margem)
-  }
-
   function handleCopy() {
-    const text =
-      `Orçamento da peça 3D:\n` +
-      `Custo: ${formatBRL(custoTotal)}\n` +
-      `Margem: ${margem}%\n` +
-      `Preço final: ${formatBRL(precoSugerido)}\n\n` +
-      `Calculei aqui: hayzer.com.br/calculadora`
-    navigator.clipboard.writeText(text).then(() => {
+    // Só o valor formatado. Cliente não precisa ver o cálculo.
+    navigator.clipboard.writeText(formatBRL(precoSugerido)).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2200)
     })
@@ -179,24 +155,6 @@ export function CalculadoraForm() {
                 <p className="mt-1 text-[13.5px] text-muted-foreground">
                   Ajusta os valores. O resultado atualiza ao vivo.
                 </p>
-              </div>
-
-              {/* Presets — começar com um cenário comum */}
-              <div className="mb-6 flex flex-wrap items-center gap-2">
-                <span className="mr-1 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
-                  Começa com
-                </span>
-                {PRESETS.map(p => (
-                  <button
-                    key={p.label}
-                    type="button"
-                    onClick={() => applyPreset(p)}
-                    className="rounded-full border border-[hsl(var(--fog-50)/0.12)] bg-[hsl(var(--card)/0.5)] px-3 py-1.5 text-[12px] text-foreground transition-all hover:border-[hsl(var(--petrol-400)/0.5)] hover:bg-[hsl(var(--petrol-400)/0.08)]"
-                  >
-                    <span className="mr-1.5">{p.emoji}</span>
-                    {p.label}
-                  </button>
-                ))}
               </div>
 
               <div className="grid gap-5 md:grid-cols-2">
