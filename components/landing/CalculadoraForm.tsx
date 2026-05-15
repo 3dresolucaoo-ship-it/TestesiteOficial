@@ -3,17 +3,32 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Calculator, ArrowRight } from 'lucide-react'
+import { Calculator, ArrowRight, Smartphone, ShoppingBag, Store } from 'lucide-react'
 
 /**
  * Calculadora de custo de impressão 3D — lead magnet pré-launch.
  * Pública em /calculadora. Cálculo 100% client-side, sem backend.
  *
  * Inputs: preço filamento R$/kg, peso peça g, tempo h, consumo W, margem %.
- * Outputs: custo total, lucro, preço sugerido. Atualiza em tempo real.
+ * Outputs: custo total, lucro, preço sugerido + preço por canal de venda.
  *
- * Copy: Carla (G7). Visual: mesma paleta da landing (surface-strong, Fraunces, petrol).
+ * Copy: Carla (G7). Visual: Diego (G7). Dados marketplace: Marcos (G7).
+ * Diferencial vs concorrentes (Custos3D, MakerFlow, 3D Prime): tabela de
+ * "preço por canal" usa gross-up correto preço/(1-comissão) pra manter
+ * lucro líquido constante.
  */
+
+// Canais de venda — comissões médias 2026 BR (pesquisa Marcos, fontes em /memory)
+// ML Clássico: 11-14% (uso 12% média). Shopee acima R$100: 14% (item baixo cai pra 20%).
+// Amazon Casa/Decoração até R$200: 15%. Americanas Hobbies: 16.5%.
+const CHANNELS = [
+  { name: 'WhatsApp / PIX',          commission: 0,    icon: Smartphone,  highlight: true },
+  { name: 'Mercado Livre Clássico',  commission: 12,   icon: ShoppingBag, highlight: false },
+  { name: 'Shopee',                  commission: 14,   icon: Store,       highlight: false },
+  { name: 'Amazon BR',               commission: 15,   icon: ShoppingBag, highlight: false },
+  { name: 'Americanas',              commission: 16.5, icon: Store,       highlight: false },
+] as const
+
 export function CalculadoraForm() {
   // Defaults sensatos pra maker BR 2026 — ao abrir, calc já mostra algo útil
   const [precoFilamento, setPrecoFilamento] = useState(110)
@@ -212,12 +227,106 @@ export function CalculadoraForm() {
               {/* Disclaimer */}
               <p className="px-1 text-[12px] leading-[1.55] text-muted-foreground/80">
                 <span className="italic-soft">Estimativa.</span> Cobre filamento e luz.
-                Não entra desgaste de bico, falha de impressão, frete, embalagem nem
-                comissão de marketplace. Use como base, não como bíblia.
+                Não entra desgaste de bico, falha de impressão, frete nem embalagem.
+                Use como base, não como bíblia.
               </p>
             </div>
           </motion.div>
         </div>
+
+        {/* Tabela: Preço por canal de venda (diferencial vs concorrentes — gross-up correto) */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
+          className="mx-auto mt-16 max-w-[820px]"
+        >
+          <div className="surface-strong rounded-2xl p-6 md:p-8">
+            <div className="mb-5">
+              <div className="mb-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
+                Por onde você vende
+              </div>
+              <h3 className="display-h2 text-[20px] text-foreground md:text-[22px]">
+                Cada marketplace come uma fatia.
+              </h3>
+              <p className="mt-2 text-[13px] leading-[1.5] text-muted-foreground">
+                A tabela ajusta o preço pra você sair com o lucro de cima,
+                líquido, não importa onde a peça vender.
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-xl border border-[hsl(var(--fog-50)/0.06)]">
+              {CHANNELS.map((channel, i) => {
+                const isLast = i === CHANNELS.length - 1
+                const isBest = channel.commission === 0
+                // Gross-up correto: preco / (1 - comissão). Cobrar preço × (1+comissão) é
+                // matemática errada — não repõe o que sai. Detalhe que prova autoridade.
+                const finalPrice = precoSugerido / (1 - channel.commission / 100)
+                const Icon = channel.icon
+
+                return (
+                  <motion.div
+                    key={channel.name}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.35, delay: 0.4 + i * 0.05, ease: 'easeOut' }}
+                    className={`group relative flex items-center gap-4 px-4 py-4 transition-colors hover:bg-[hsl(var(--fog-50)/0.02)] md:px-5 ${
+                      isLast ? '' : 'border-b border-[hsl(var(--fog-50)/0.06)]'
+                    }`}
+                    style={
+                      isBest
+                        ? { boxShadow: 'inset 2px 0 0 hsl(var(--petrol-400))' }
+                        : undefined
+                    }
+                  >
+                    <Icon
+                      className={`h-4 w-4 shrink-0 ${
+                        isBest ? 'text-[hsl(var(--petrol-300))]' : 'text-muted-foreground'
+                      }`}
+                      strokeWidth={2}
+                    />
+
+                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[14px] font-medium text-foreground">
+                          {channel.name}
+                        </span>
+                        {isBest && (
+                          <span
+                            className="font-mono text-[9.5px] uppercase tracking-[0.18em]"
+                            style={{ color: 'hsl(var(--petrol-300))' }}
+                          >
+                            melhor margem
+                          </span>
+                        )}
+                      </div>
+                      <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                        {channel.commission === 0
+                          ? 'sem comissão'
+                          : `${channel.commission}% de comissão`}
+                      </span>
+                    </div>
+
+                    <div className="font-[var(--font-serif)] text-[1.4rem] font-semibold leading-none tracking-tight text-foreground tabular-nums md:text-[1.55rem]">
+                      {formatBRL(finalPrice)}
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+
+            <p className="mt-4 text-[11.5px] leading-[1.55] text-muted-foreground/80">
+              <span className="italic-soft">Comissões médias 2026.</span> Varia por
+              categoria, plano do seller e promoção da casa. Frete e taxa de saque
+              ficam fora, soma à parte quando for fechar.
+            </p>
+
+            <p className="mt-3 text-[12.5px] leading-[1.55] text-foreground/90">
+              No Hayzer, essa conta roda sozinha em cada venda que entra — você
+              só confere.
+            </p>
+          </div>
+        </motion.div>
 
         {/* CTA Waitlist — ember container + ember solid button (Diego, Opção A+C) */}
         <motion.div
