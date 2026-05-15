@@ -28,9 +28,13 @@
 - ✅ **Rebranding Hayzer (14/05/2026)**: Logo (B→H), Footer (Hayzer + email contato `ola@hayzer.com.br`), WaitlistForm (texto LGPD), WhyDifferent (Com Hayzer), Step2Form (Como descobriu o Hayzer?), meta tags em `app/layout.tsx`. Ver `decisions/009-naming-hayzer.md`.
 - ✅ **Domínio próprio em prod**: https://hayzer.com.br (registrado, SSL automático Vercel, A record 216.198.79.1).
 - ✅ Fix footer mobile (14/05): watermark "feito no brasil." escala progressiva `text-[3.5rem→12.5rem]` (era 7.5rem fixo, cortava em <600px).
-- ⏳ **Logo definitivo**: CEO vai trazer arte de fora (Freepik/stock ou designer freelancer). 2 rodadas Diego (Cleft + Raízes) rejeitadas por nível ilustrativo. Implementar em `Logo.tsx` quando chegar (~30min).
-- ⏳ **Resend email confirmação**: agora desbloqueado (domínio próprio ativo). ~2h pra configurar DNS+SDK.
+- ✅ **Logo Hayzer (15/05/2026)**: CEO trouxe PNG 1536x1024 (H verde com raízes orgânicas). Implementado em `Logo.tsx` via `<Image>` Next + `mix-blend-screen` (come o fundo preto da PNG, funciona em qualquer bg dark). Variants `sm` (h-9, 36px) e `lg` (h-20→24 com pulse petrol). Arquivo em `public/logo-hayzer.png`. Pulse migrado de `box-shadow` pra `drop-shadow` (acompanha contorno das raízes).
+- ✅ **Foco vertical maker 3D (15/05/2026, ADR-010)**: Hero, Features, WhyDifferent + CTA reescritos pra Rafael (filamento, fila de impressão, comissão de marketplace, recompra de maker). Frase âncora destaque: "Quatro sistemas, nenhum conversa. Aqui é um, e fala português." CTA: "Quero acesso antecipado". `SEGMENT_OPTIONS` em `services/waitlistSchema.ts` refeitas (3 variants 3D + estética + loja física + serviço + outro).
+- ✅ **WhatsApp CTA na /obrigado (15/05/2026)**: `components/landing/WhatsAppGroupCta.tsx` renderiza botão verde "Entra no grupo Hayzer Beta" entre `ThankYouHero` e `Step2Form`. Lê env var `NEXT_PUBLIC_WHATSAPP_GROUP_URL` — graceful: oculta se vazia. Testado fim-a-fim.
+- ✅ **Resend SDK + email transacional (15/05/2026)**: `services/email.ts` com template HTML+texto (Gabriel CEO 1ª pessoa, signature). Wire-up em `app/waitlist/actions.ts` após `addLeadStep1` ok — falha silenciosa se Resend não configurado (lead persiste). 3 env vars Vercel setadas. DNS records propagados globalmente. Status Resend: `pending` (workflow interno AWS SES, verifica em 1-24h sozinho).
+- ✅ **Bug RLS waitlist FIXADO (15/05/2026, commit `fccd49f`)**: `supabase-js` fazia `INSERT...RETURNING` que precisava de policy SELECT (anon não tem). Fix: `addLeadStep1` + `updateLeadStep2` usam `getSupabaseAdmin()` (service_role bypass). Server Action já valida Zod + bot guards — seguro. Causa adicional: `SUPABASE_SERVICE_ROLE_KEY` faltava no Vercel — adicionada.
 - ⏳ Pendente: trocar rate-limit pra Upstash Redis quando volume > 100 leads/dia.
+- ⏳ Pendente: rotacionar `RESEND_API_KEY` + `SUPABASE_SERVICE_ROLE_KEY` (expostas no chat de 14-15/05).
 
 ## 📐 Convenções
 

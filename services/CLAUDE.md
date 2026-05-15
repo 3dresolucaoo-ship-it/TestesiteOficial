@@ -41,9 +41,10 @@
 | products.ts | 134 | products | ⚠️ console.log linha 75 · ✅ checkout_mode/variants/allows_custom (Fase B) |
 | profiles.ts | 46 | profiles | ✅ |
 | projects.ts | 72 | projects | ✅ |
-| waitlist.ts | 168 | waitlist_leads | ✅ Fase 1 — landing pré-launch (insert público + update etapa 2 + métricas) |
-| waitlistRateLimit.ts | 85 | waitlist_leads | ✅ hash SHA-256(IP+salt) + count 24h via service_role (fail-open) |
-| waitlistSchema.ts | — | (Zod) | ✅ schemas etapa 1, etapa 2, bot guards (honeypot/time), LeadCaptureMeta |
+| email.ts | 143 | (Resend SDK) | ✅ Fase 1 — wrapper Resend, template welcome HTML+texto, graceful sem key (15/05) |
+| waitlist.ts | 174 | waitlist_leads | ✅ Fase 1 — usa service_role no insert/update (RLS+RETURNING fix 15/05, commit `fccd49f`) |
+| waitlistRateLimit.ts | 85 | waitlist_leads | ✅ hash SHA-256(IP+salt) + count 24h via service_role (fail-open). Requer `SUPABASE_SERVICE_ROLE_KEY` no env |
+| waitlistSchema.ts | — | (Zod) | ✅ schemas etapa 1, etapa 2, bot guards (honeypot/time), LeadCaptureMeta. SEGMENT_OPTIONS refeitas (3D-focused, ADR-010) |
 
 ## Issues conhecidos
 
@@ -53,6 +54,7 @@
 - ⚠️ `products.ts:75,83` tem console.log/error que deveriam usar `serviceError`
 - ⚠️ `paymentConfig.ts:78` cache in-memory pode vazar entre requests no Fluid Compute
 - ⚠️ Todos os services dependem de `requireUserId` (lib/getUser.ts) que faz 2 chamadas auth
+- 📌 **Pattern RLS+RETURNING**: tabelas com policy INSERT pra `anon` mas SEM policy SELECT geram erro 42501 ("violates row-level security") quando supabase-js faz `.insert().select()` (RETURNING precisa de SELECT). Solução: usar `getSupabaseAdmin()` no service. Server Action faz validação antes — seguro. Caso registrado em `decisions/011-rls-returning-anon.md` (a criar).
 
 ## Padrão de cliente
 

@@ -18,8 +18,12 @@
 - [x] Páginas LGPD: `/privacidade` + `/termos` ✅ 2026-05-13
 - [x] Design system shadcn instalado + tokens Paleta B aplicada ✅ 2026-05-13
 - [ ] Lead magnet definido + criado (decidido: nenhum agora, adiciona semana 2-3)
-- [ ] Aplicar migration `20260513_waitlist_leads.sql` no Supabase prod
+- [x] Aplicar migration `20260513_waitlist_leads.sql` no Supabase prod ✅ 2026-05-13
 - [ ] Marketing diário: primeiro post LinkedIn anunciando "em breve"
+- [x] Logo Hayzer (H+raízes) implementado ✅ 2026-05-15
+- [x] Foco vertical maker 3D (ADR-010, copy reescrito Hero/Features/WhyDifferent/CTA) ✅ 2026-05-15
+- [x] Bug RLS waitlist fixed (commit `fccd49f`, ADR-011, service_role no insert) ✅ 2026-05-15
+- [x] WhatsApp CTA na tela /obrigado (componente + env var) ✅ 2026-05-15
 
 ### Semana 2 (20-26/05) — Segurança Tier 1
 - [ ] Zod em todos os forms
@@ -31,13 +35,13 @@
 - [ ] Staging branch separada em Vercel
 
 ### Semana 3 (27/05-02/06) — LGPD + Email + MP Marketplace
-- [ ] Política de Privacidade publicada
-- [ ] Termos de Uso publicados
-- [ ] Checkbox de consentimento no form de captura
+- [x] Política de Privacidade publicada ✅ 2026-05-13
+- [x] Termos de Uso publicados ✅ 2026-05-13
+- [x] Checkbox de consentimento no form de captura ✅ 2026-05-13
 - [ ] Direito de deleção (endpoint DELETE /api/me)
 - [ ] Vercel BotID ativado no form
-- [ ] Resend configurado (domínio + SPF/DKIM/DMARC)
-- [ ] Email de boas-vindas (double opt-in)
+- [x] **Resend configurado (domínio + SPF/DKIM/DMARC)** ✅ 2026-05-15 — DNS propagado, aguardando verify final do AWS SES (até 24h sozinho)
+- [x] **Email de boas-vindas** (template HTML+texto, wire-up em actions.ts) ✅ 2026-05-15 — funciona quando Resend verificar
 - [ ] MP OAuth Marketplace E2E (resolver bloqueio atual)
 
 ### Semana 4 (03-09/06) — Wave 1 — Customers
