@@ -71,7 +71,7 @@ export function Step2Form() {
               <select
                 id="segment"
                 name="segment"
-                className="flex h-11 w-full rounded-lg border border-input bg-background/50 px-4 text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex h-11 w-full appearance-none rounded-lg border border-input bg-card/60 px-4 pr-10 text-sm text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring bg-[url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23a1a1aa%22%3E%3Cpath%20d%3D%22M5.5%208l4.5%204.5L14.5%208z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px_18px] bg-[right_12px_center] bg-no-repeat"
                 defaultValue=""
               >
                 <option value="">Selecione...</option>
@@ -88,7 +88,7 @@ export function Step2Form() {
               <select
                 id="size"
                 name="size"
-                className="flex h-11 w-full rounded-lg border border-input bg-background/50 px-4 text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex h-11 w-full appearance-none rounded-lg border border-input bg-card/60 px-4 pr-10 text-sm text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring bg-[url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23a1a1aa%22%3E%3Cpath%20d%3D%22M5.5%208l4.5%204.5L14.5%208z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px_18px] bg-[right_12px_center] bg-no-repeat"
                 defaultValue=""
               >
                 <option value="">Selecione...</option>
@@ -105,7 +105,7 @@ export function Step2Form() {
               <select
                 id="revenue_band"
                 name="revenue_band"
-                className="flex h-11 w-full rounded-lg border border-input bg-background/50 px-4 text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex h-11 w-full appearance-none rounded-lg border border-input bg-card/60 px-4 pr-10 text-sm text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring bg-[url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23a1a1aa%22%3E%3Cpath%20d%3D%22M5.5%208l4.5%204.5L14.5%208z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px_18px] bg-[right_12px_center] bg-no-repeat"
                 defaultValue=""
               >
                 <option value="">Selecione...</option>
@@ -122,7 +122,7 @@ export function Step2Form() {
               <select
                 id="source"
                 name="source"
-                className="flex h-11 w-full rounded-lg border border-input bg-background/50 px-4 text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex h-11 w-full appearance-none rounded-lg border border-input bg-card/60 px-4 pr-10 text-sm text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring bg-[url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23a1a1aa%22%3E%3Cpath%20d%3D%22M5.5%208l4.5%204.5L14.5%208z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px_18px] bg-[right_12px_center] bg-no-repeat"
                 defaultValue=""
               >
                 <option value="">Selecione...</option>

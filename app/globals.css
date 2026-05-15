@@ -768,3 +768,19 @@ tbody tr:nth-child(even) {
   .hover\:bg-white\/\[0\.04\]:hover               { background-color: rgba(0,0,0,0.04) !important; }
 }
 
+/* ─── Native <select> dropdown — força dark scheme + cores legíveis ─────── */
+/* Sem isso, a lista de <option> renderiza branca no Windows/Linux (Chrome/Edge/Firefox)
+   porque o browser usa o tema do SO. color-scheme:dark instrui o browser a usar
+   o tema escuro nativo do dropdown. */
+html.dark select {
+  color-scheme: dark;
+}
+html.dark select option {
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+}
+html.dark select option:checked {
+  background-color: hsl(var(--primary) / 0.2);
+  color: hsl(var(--foreground));
+}
+
