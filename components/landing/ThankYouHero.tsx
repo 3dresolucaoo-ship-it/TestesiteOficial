@@ -33,7 +33,7 @@ export function ThankYouHero({ email }: { email: string }) {
           transition={{ delay: 0.1, duration: 0.4 }}
           className="text-4xl font-bold tracking-tight md:text-5xl"
         >
-          Você entrou <span className="inline-block ml-2 align-baseline">🎉</span>
+          <span className="inline-block mr-2 align-baseline">🥳</span> Você entrou <span className="inline-block ml-2 align-baseline">🎉</span>
         </motion.h1>
 
         <motion.p
