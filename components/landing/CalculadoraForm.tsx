@@ -1,20 +1,20 @@
 'use client'
 
-import { useMemo, useState, type ComponentType, type SVGProps } from 'react'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { Calculator, ArrowRight, Copy, Check } from 'lucide-react'
 import {
-  Calculator,
-  ArrowRight,
-  Smartphone,
-  ShoppingBag,
-  Store,
-  Hourglass,
-  Plug,
-  Sprout,
-  Copy,
-  Check,
-} from 'lucide-react'
+  Disc,           // rolo de filamento (3D look)
+  Cube,           // peça 3D
+  Hourglass,      // tempo de impressão
+  Plug,           // consumo de energia
+  TrendUp,        // margem
+  WhatsappLogo,
+  ShoppingCart,
+  Storefront,
+  type Icon as PhosphorIcon,
+} from '@phosphor-icons/react'
 
 /**
  * Calculadora de custo de impressão 3D — lead magnet pré-launch.
@@ -33,37 +33,20 @@ import {
  * - Botão "Copiar pro cliente" que gera texto pronto pra WhatsApp
  */
 
-// ─── Ícones custom (Diego) ────────────────────────────────────────────────
-// Bobina de filamento — 3 anéis horizontais. Lê como rolo na hora.
-const FilamentIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" {...props}>
-    <ellipse cx="12" cy="6" rx="7" ry="2.2" />
-    <path d="M5 6v12c0 1.2 3.1 2.2 7 2.2s7-1 7-2.2V6" />
-    <path d="M5 10c0 1.2 3.1 2.2 7 2.2s7-1 7-2.2" />
-    <path d="M5 14c0 1.2 3.1 2.2 7 2.2s7-1 7-2.2" />
-    <circle cx="12" cy="13" r="1.2" fill="currentColor" stroke="none" />
-  </svg>
-)
-// Silhueta do Benchy (barquinho de teste) — cultura maker universal.
-const BenchyIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" {...props}>
-    <path d="M3 16l2-5h14l2 5-2 3H5l-2-3z" />
-    <path d="M9 11V6h6v5" />
-    <rect x="11" y="7" width="2" height="2" fill="currentColor" stroke="none" />
-    <path d="M7 16h10" />
-  </svg>
-)
-
 // ─── Canais marketplace (Marcos) ──────────────────────────────────────────
 // Comissões médias 2026 BR. ML Clássico 11-14% (uso 12%). Shopee >R$100: 14%.
 // Amazon Casa/Decoração ≤R$200: 15%. Americanas Hobbies: 16.5%.
-const CHANNELS = [
-  { name: 'WhatsApp / PIX',          commission: 0,    icon: Smartphone },
-  { name: 'Mercado Livre Clássico',  commission: 12,   icon: ShoppingBag },
-  { name: 'Shopee',                  commission: 14,   icon: Store },
-  { name: 'Amazon BR',               commission: 15,   icon: ShoppingBag },
-  { name: 'Americanas',              commission: 16.5, icon: Store },
-] as const
+const CHANNELS: ReadonlyArray<{
+  name: string
+  commission: number
+  icon: PhosphorIcon
+}> = [
+  { name: 'WhatsApp / PIX',          commission: 0,    icon: WhatsappLogo },
+  { name: 'Mercado Livre Clássico',  commission: 12,   icon: ShoppingCart },
+  { name: 'Shopee',                  commission: 14,   icon: Storefront },
+  { name: 'Amazon BR',               commission: 15,   icon: ShoppingCart },
+  { name: 'Americanas',              commission: 16.5, icon: Storefront },
+]
 
 export function CalculadoraForm() {
   // State como string permite campo vazio + edição livre (não volta pra 0).
@@ -159,7 +142,7 @@ export function CalculadoraForm() {
 
               <div className="grid gap-5 md:grid-cols-2">
                 <Field
-                  icon={FilamentIcon}
+                  icon={Disc}
                   label="Preço do filamento"
                   helper="Não sabe? Deixa R$ 110 — preço médio do PLA em 2026."
                   suffix="R$/kg"
@@ -170,7 +153,7 @@ export function CalculadoraForm() {
                 />
 
                 <Field
-                  icon={BenchyIcon}
+                  icon={Cube}
                   label="Peso da peça"
                   helper="Não sabe? Cabe na mão = 50g. Numa xícara = 150g. Maior = 300g+."
                   suffix="g"
@@ -204,7 +187,7 @@ export function CalculadoraForm() {
 
                 <div className="md:col-span-2">
                   <Field
-                    icon={Sprout}
+                    icon={TrendUp}
                     label="Margem que quer ter"
                     helper="50% é o mínimo pra valer a pena. Abaixo disso você paga pra trabalhar. Acima de 80% é premium."
                     suffix="%"
@@ -407,10 +390,11 @@ export function CalculadoraForm() {
                     }
                   >
                     <Icon
-                      className={`h-4 w-4 shrink-0 ${
+                      size={20}
+                      weight="duotone"
+                      className={`shrink-0 ${
                         isBest ? 'text-[hsl(var(--petrol-300))]' : 'text-muted-foreground'
                       }`}
-                      strokeWidth={2}
                     />
 
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -527,7 +511,7 @@ function Field({
   step,
   min,
 }: {
-  icon: ComponentType<SVGProps<SVGSVGElement>>
+  icon: PhosphorIcon
   label: string
   helper: string
   suffix: string
@@ -538,10 +522,10 @@ function Field({
 }) {
   return (
     <div>
-      {/* Ícone contextual + label (Diego) — bloco petrol/0.1 32x32 */}
+      {/* Ícone contextual + label — Phosphor duotone (mais realista, 2 cores) */}
       <div className="mb-2 flex items-center gap-2.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[hsl(var(--petrol-400)/0.10)] text-[hsl(var(--petrol-300))]">
-          <Icon className="h-[18px] w-[18px]" />
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(var(--petrol-400)/0.10)] text-[hsl(var(--petrol-300))]">
+          <Icon size={20} weight="duotone" />
         </div>
         <label className="text-[13px] font-medium tracking-wide text-foreground">
           {label}
