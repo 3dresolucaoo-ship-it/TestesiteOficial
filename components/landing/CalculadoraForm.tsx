@@ -33,6 +33,20 @@ import {
  * - Botão "Copiar pro cliente" que gera texto pronto pra WhatsApp
  */
 
+// ─── Modelos de impressora 3D + consumo W (dropdown rápido pra leigo) ────
+// Watts médios em modo de impressão (não em standby). Cobre 80% dos
+// makers BR em 2026. "Outra" libera input manual.
+const PRINTERS = [
+  { label: 'Ender 3 V2',             watts: '80'  },
+  { label: 'Ender 3 S1',             watts: '120' },
+  { label: 'Bambu Lab A1 / A1 mini', watts: '100' },
+  { label: 'Bambu Lab P1S',          watts: '150' },
+  { label: 'Bambu Lab X1C',          watts: '250' },
+  { label: 'Creality K1 / K1 Max',   watts: '200' },
+  { label: 'Anycubic Kobra 2 Pro',   watts: '130' },
+  { label: 'Prusa i3 MK4',           watts: '120' },
+] as const
+
 // ─── Canais marketplace (Marcos) ──────────────────────────────────────────
 // Comissões médias 2026 BR. ML Clássico 11-14% (uso 12%). Shopee >R$100: 14%.
 // Amazon Casa/Decoração ≤R$200: 15%. Americanas Hobbies: 16.5%.
@@ -174,28 +188,107 @@ export function CalculadoraForm() {
                   min={0}
                 />
 
-                <Field
-                  icon={Plug}
-                  label="Consumo da impressora"
-                  helper="Não sabe e não quer buscar? Deixa 150W. Funciona pra Ender, Bambu, Creality em geral."
-                  suffix="W"
-                  value={consumoW}
-                  onChange={setConsumoW}
-                  step="1"
-                  min={0}
-                />
+                {/* Consumo W: dropdown impressora (atalho leigo) + input manual */}
+                <div>
+                  <div className="mb-2 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(var(--petrol-400)/0.10)] text-[hsl(var(--petrol-300))]">
+                      <Plug size={20} weight="duotone" />
+                    </div>
+                    <label className="text-[13px] font-medium tracking-wide text-foreground">
+                      Consumo da impressora
+                    </label>
+                  </div>
 
+                  {/* Dropdown atalho — escolhe o modelo, preenche W */}
+                  <select
+                    value=""
+                    onChange={e => {
+                      if (e.target.value) setConsumoW(e.target.value)
+                    }}
+                    className="mb-2 flex h-11 w-full appearance-none rounded-lg border border-[hsl(var(--fog-50)/0.12)] bg-[hsl(var(--card)/0.7)] px-4 pr-10 text-[14px] text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-400)/0.5)] bg-[url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22%23a1a1aa%22%3E%3Cpath%20d%3D%22M5.5%208l4.5%204.5L14.5%208z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px_18px] bg-[right_12px_center] bg-no-repeat"
+                  >
+                    <option value="">Ou escolhe sua impressora...</option>
+                    {PRINTERS.map(p => (
+                      <option key={p.label} value={p.watts}>
+                        {p.label} — {p.watts}W
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="relative">
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      value={consumoW}
+                      onChange={e => setConsumoW(e.target.value)}
+                      onFocus={e => e.target.select()}
+                      step="1"
+                      min={0}
+                      placeholder="0"
+                      className="flex h-12 w-full rounded-lg border border-[hsl(var(--fog-50)/0.12)] bg-[hsl(var(--card)/0.7)] px-4 pr-14 text-[16px] text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-400)/0.5)]"
+                    />
+                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                      W
+                    </span>
+                  </div>
+                  <p className="mt-1.5 text-[11.5px] leading-[1.4] text-muted-foreground">
+                    Não acha sua impressora? Deixa 150W ou digita manual.
+                  </p>
+                </div>
+
+                {/* Margem: input + slider combo */}
                 <div className="md:col-span-2">
-                  <Field
-                    icon={TrendUp}
-                    label="Margem que quer ter"
-                    helper="50% é o mínimo pra valer a pena. Abaixo disso você paga pra trabalhar. Acima de 80% é premium."
-                    suffix="%"
-                    value={margem}
-                    onChange={setMargem}
-                    step="1"
-                    min={0}
-                  />
+                  <div className="mb-2 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(var(--petrol-400)/0.10)] text-[hsl(var(--petrol-300))]">
+                      <TrendUp size={20} weight="duotone" />
+                    </div>
+                    <label className="text-[13px] font-medium tracking-wide text-foreground">
+                      Margem que quer ter
+                    </label>
+                  </div>
+
+                  <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+                    {/* Slider visual — usa accent-color do semáforo */}
+                    <div className="flex flex-col justify-center px-1">
+                      <input
+                        type="range"
+                        min={0}
+                        max={200}
+                        step={5}
+                        value={parseFloat(margem) || 0}
+                        onChange={e => setMargem(e.target.value)}
+                        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-[hsl(var(--fog-50)/0.10)]"
+                        style={{ accentColor: `hsl(var(${semaforo.bg}))` }}
+                        aria-label="Margem em porcentagem (arraste pra ajustar)"
+                      />
+                      <div className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                        <span>0% prejuízo</span>
+                        <span>50% saudável</span>
+                        <span>200% premium</span>
+                      </div>
+                    </div>
+
+                    {/* Input número — pra valor exato */}
+                    <div className="relative md:w-32">
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        value={margem}
+                        onChange={e => setMargem(e.target.value)}
+                        onFocus={e => e.target.select()}
+                        step="1"
+                        min={0}
+                        placeholder="0"
+                        className="flex h-12 w-full rounded-lg border border-[hsl(var(--fog-50)/0.12)] bg-[hsl(var(--card)/0.7)] px-4 pr-9 text-center text-[16px] font-semibold text-foreground transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-400)/0.5)]"
+                      />
+                      <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 font-mono text-[12px] text-muted-foreground">
+                        %
+                      </span>
+                    </div>
+                  </div>
+                  <p className="mt-2 text-[11.5px] leading-[1.4] text-muted-foreground">
+                    50% é o mínimo. Abaixo, você paga pra trabalhar. Acima de 80%, é premium.
+                  </p>
                 </div>
               </div>
             </div>
