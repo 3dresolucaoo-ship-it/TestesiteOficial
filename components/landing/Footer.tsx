@@ -47,6 +47,14 @@ export function Footer() {
                   Entrar na lista
                 </a>
               </li>
+              <li>
+                <Link
+                  href="/calculadora"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Calculadora 3D
+                </Link>
+              </li>
             </ul>
           </div>
 

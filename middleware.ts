@@ -11,6 +11,7 @@ const PUBLIC_PATHS = [
   '/waitlist',
   '/privacidade',
   '/termos',
+  '/calculadora',
 ]
 
 function isPublicPath(pathname: string) {
