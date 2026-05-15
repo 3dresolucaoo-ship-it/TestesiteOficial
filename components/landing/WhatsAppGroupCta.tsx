@@ -29,29 +29,34 @@ export function WhatsAppGroupCta() {
           href={groupUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group block rounded-2xl border border-[#25D366]/30 bg-gradient-to-br from-[#25D366]/10 to-[#128C7E]/5 p-6 transition-all hover:border-[#25D366]/60 hover:from-[#25D366]/15 md:p-8"
+          className="group relative block overflow-hidden rounded-2xl border-2 border-[#25D366]/70 bg-gradient-to-br from-[#25D366]/30 via-[#1DA851]/20 to-[#128C7E]/15 p-6 shadow-[0_0_40px_-8px_rgba(37,211,102,0.5),0_8px_30px_-12px_rgba(37,211,102,0.4)] transition-all hover:border-[#25D366] hover:from-[#25D366]/40 hover:to-[#128C7E]/25 hover:shadow-[0_0_60px_-8px_rgba(37,211,102,0.7),0_12px_40px_-12px_rgba(37,211,102,0.5)] md:p-8"
         >
-          <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#25D366] text-white shadow-[0_8px_24px_-8px_rgba(37,211,102,0.6)]">
-              <WhatsAppIcon className="h-6 w-6" />
+          {/* shine sweep no hover */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+          />
+          <div className="relative flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#25D366] to-[#1DA851] text-white shadow-[0_8px_24px_-4px_rgba(37,211,102,0.8),inset_0_1px_0_rgba(255,255,255,0.25)]">
+              <WhatsAppIcon className="h-6 w-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
             </div>
 
             <div className="flex-1">
               <div className="mb-1 flex items-center gap-2">
-                <h2 className="text-lg font-semibold tracking-tight md:text-xl">
+                <h2 className="text-lg font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)] md:text-xl">
                   Entra no grupo Hayzer Beta
                 </h2>
-                <span className="rounded-full bg-[#25D366]/15 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-[#25D366]">
+                <span className="rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-[#128C7E] shadow-sm">
                   agora
                 </span>
               </div>
-              <p className="text-[14.5px] leading-[1.55] text-muted-foreground">
+              <p className="text-[14.5px] leading-[1.55] text-white/85">
                 Conversa com outros makers que entraram. Bastidor do lançamento,
                 novidades antes do email. Sem flood.
               </p>
             </div>
 
-            <div className="hidden shrink-0 items-center text-[#25D366] md:flex">
+            <div className="hidden shrink-0 items-center text-white md:flex">
               <ArrowIcon className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </div>
           </div>

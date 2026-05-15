@@ -21,7 +21,7 @@ export default async function ObrigadoPage() {
   }
 
   return (
-    <div className="bg-background text-foreground">
+    <div className="grain bg-background text-foreground">
       <Header />
       <ThankYouHero email={email} />
       <WhatsAppGroupCta />

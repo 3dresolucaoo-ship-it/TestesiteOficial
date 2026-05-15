@@ -42,7 +42,7 @@ export function ThankYouHero({ email }: { email: string }) {
           transition={{ delay: 0.15, duration: 0.4 }}
           className="mt-5 text-lg leading-relaxed text-muted-foreground"
         >
-          Mandei a confirmação pra <span className="font-medium text-foreground">{email}</span>.
+          Mandei a confirmação para o email: <span className="font-medium text-foreground">{email}</span>.
           <br />A gente avisa antes de todo mundo quando abrir.
           <br /><span className="text-xs">Confere a caixa de spam, vai que cai lá.</span>
         </motion.p>
