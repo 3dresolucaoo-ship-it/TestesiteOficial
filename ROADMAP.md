@@ -24,6 +24,11 @@
 - [x] Foco vertical maker 3D (ADR-010, copy reescrito Hero/Features/WhyDifferent/CTA) ✅ 2026-05-15
 - [x] Bug RLS waitlist fixed (commit `fccd49f`, ADR-011, service_role no insert) ✅ 2026-05-15
 - [x] WhatsApp CTA na tela /obrigado (componente + env var) ✅ 2026-05-15
+- [x] **Resend us-east-1 verified** (recriado, RESEND_API_KEY rotacionada v2) ✅ 2026-05-15
+- [x] **Calculadora 3D Fase 1** em prod (`/calculadora`): 5 inputs + 3 outputs + tabela 5 canais marketplace + slider margem + dropdown impressora + Phosphor icons + copy Carla + visual Diego ✅ 2026-05-15
+- [x] **Fix UI /obrigado**: dropdown selects dark + emoji 🥳/🎉 + WhatsApp glow + grain + surface-strong utility ✅ 2026-05-15
+- [x] **PT-BR formal** em textos instrucionais (decisão CEO) ✅ 2026-05-15
+- [x] **Slash command /rcs** (renomeado de /rc, reforçado pra entregar bloco copiável) ✅ 2026-05-15
 
 ### Semana 2 (20-26/05) — Segurança Tier 1
 - [ ] Zod em todos os forms
@@ -40,8 +45,8 @@
 - [x] Checkbox de consentimento no form de captura ✅ 2026-05-13
 - [ ] Direito de deleção (endpoint DELETE /api/me)
 - [ ] Vercel BotID ativado no form
-- [x] **Resend configurado (domínio + SPF/DKIM/DMARC)** ✅ 2026-05-15 — DNS propagado, aguardando verify final do AWS SES (até 24h sozinho)
-- [x] **Email de boas-vindas** (template HTML+texto, wire-up em actions.ts) ✅ 2026-05-15 — funciona quando Resend verificar
+- [x] **Resend configurado (domínio + SPF/DKIM/DMARC)** ✅ 2026-05-15 — verified us-east-1 (recriado após sa-east-1 travado)
+- [x] **Email de boas-vindas** (template HTML+texto, wire-up em actions.ts) ✅ 2026-05-15 — testado fim-a-fim em prod
 - [ ] MP OAuth Marketplace E2E (resolver bloqueio atual)
 
 ### Semana 4 (03-09/06) — Wave 1 — Customers
