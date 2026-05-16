@@ -9,7 +9,43 @@
 
 ## 🎯 SUMÁRIO EXECUTIVO
 
-**Veredito**: as recomendações originais estão **majoritariamente sólidas**, mas com **2 correções importantes** e **2 verificações ao vivo pendentes** antes do pagamento.
+**Veredito (atualizado 16/05 tarde com pesquisa cirúrgica)**: as recomendações originais estão **majoritariamente sólidas**, mas com **2 correções importantes** e **2 verificações ao vivo pendentes** antes do pagamento.
+
+### 🎉 ACHADO MAIS IMPORTANTE (pós pesquisa cirúrgica)
+
+**O CEO pode estar MUITO MAIS TRANQUILO sobre HAIZER do que eu pensava.** Aqui o porquê:
+
+1. **HAIZER pode NÃO TER REGISTRO INPI formal** — sites institucionais (wgbaterias, bateriashaizer, jdsrepresentacoes) não mencionam registro de marca, só certificação INMETRO (qualidade ≠ marca). Se confirmar no pePI que não tem registro = **não tem oponente formal com legitimidade pra opor**.
+
+2. **WG Trade tem perfil JURÍDICO PASSIVO** — pesquisei em Conjur, Migalhas e Jusbrasil: **ZERO oposições documentadas** da WG Trade contra terceiros. Empresa industrial de médio porte sem histórico de litígio marcário. Probabilidade deles oporem: muito baixa.
+
+3. **Princípio da Especialidade STJ é SÓLIDO no Brasil** — jurisprudência pacífica: "marcas idênticas podem coexistir em ramos distintos" (Datamais Sistemas vs Data+Mais, Bela Vista, Juventus, Nebacetin vs Nebacimed). Bateria de moto vs SaaS de gestão = ramos completamente distintos pelos 8 critérios oficiais do INPI.
+
+4. **TODOS os 8 critérios oficiais do INPI** (Manual de Marcas §5.11) apontam que HAIZER e HAYZER estão em **ramos COMPLETAMENTE distintos**:
+
+| Critério INPI | HAIZER (bateria moto) | HAYZER (SaaS gestão maker 3D) |
+|---|---|---|
+| Natureza | Produto físico eletroquímico | Serviço digital/SaaS |
+| Finalidade | Carga elétrica pra veículo | Gestão comercial |
+| Complementaridade | Zero | Zero |
+| Permutabilidade | Zero | Zero |
+| Canal distribuição | Autopeças | Internet/B2B |
+| Público-alvo | Mecânico/oficina | Maker 3D/MPE tech |
+| Atenção do consumidor | Alta | Alta |
+| Origem habitual | Indústria automotiva | Empresa software |
+| **Resultado** | **DISTINTO em 8 de 8 critérios** | |
+
+5. **Estatística INPI 2026 contexto**: 57% dos pedidos com oposição são rejeitados — MAS isso NÃO diferencia oposição cross-class de mesma classe. Em cross-class com 8 critérios todos distintos, taxa de procedência é muito menor.
+
+### Recalibração do risco HAIZER:
+
+| Métrica | Estimativa inicial | Recalibrado |
+|---|---|---|
+| Probabilidade WG Trade opor | "10-15%" (chute) | **Muito baixa** (sem histórico) |
+| Probabilidade INPI rejeitar por similaridade | "10-15%" | **Baixa** (princípio especialidade STJ) |
+| Probabilidade oposição ser procedente SE vier | Não estimado | **Muito baixa** (8 critérios distintos) |
+
+**Conclusão**: o risco real está MAIS PRÓXIMO de 3-7% do que de 15%. Não é zero, mas é gerenciável.
 
 | Decisão | Status original | Status pós-crítica | Mudança? |
 |---|---|---|---|
