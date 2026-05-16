@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hayzer — 3 conceitos de logo (Diego)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,800&family=Geist:wght@400;500;700&family=Geist+Mono:wght@400&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --night-950: #07090A;
+    --night-900: #0B0E10;
+    --night-800: #13171A;
+    --fog-50:    #F2EFEA;
+    --fog-200:   #BDB7AB;
+    --fog-300:   #8A8478;
+    --petrol-300:#6FB5A8;
+    --petrol-500:#1F7669;
+    --ember-500: #D08A4A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Geist', system-ui, sans-serif;
+    background: var(--night-950);
+    color: var(--fog-50);
+    padding: 48px 32px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+  }
+  .subtitle {
+    color: var(--fog-200);
+    margin-bottom: 48px;
+    font-size: 0.95rem;
+  }
+  .grid {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .card {
+    background: var(--night-900);
+    border: 1px solid rgba(242, 239, 234, 0.08);
+    border-radius: 14px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .card-header {
+    border-bottom: 1px solid rgba(242, 239, 234, 0.08);
+    padding-bottom: 16px;
+  }
+  .tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--petrol-300);
+    background: rgba(31, 118, 105, 0.12);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    color: var(--fog-50);
+    letter-spacing: -0.02em;
+  }
+  .vibe {
+    color: var(--fog-200);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin-top: 6px;
+  }
+
+  /* Demo dark — logo em quadrado claro sobre dark */
+  .demo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    border-radius: 8px;
+    min-height: 180px;
+  }
+  .demo.dark {
+    background: var(--night-950);
+    border: 1px solid rgba(242, 239, 234, 0.06);
+  }
+  .demo.light {
+    background: var(--fog-50);
+    border: 1px solid rgba(7, 9, 10, 0.06);
+  }
+  .demo-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fog-300);
+    margin-bottom: 8px;
+  }
+
+  /* Logo-mark — quadrado off-white com glow petrol (sistema v2 atual) */
+  .logo-mark {
+    background: var(--fog-50);
+    color: var(--night-950);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 0 1px rgba(7, 9, 10, 0.08),
+                0 8px 24px -8px rgba(31, 118, 105, 0.35);
+  }
+  .logo-mark.sm { width: 36px; height: 36px; border-radius: 6px; }
+  .logo-mark.lg { width: 80px; height: 80px; border-radius: 10px; }
+
+  /* Logo sem moldura (variante lg "solta") */
+  .logo-loose {
+    color: var(--fog-50);
+  }
+  .logo-loose.dark-bg { color: var(--fog-50); }
+  .logo-loose.light-bg { color: var(--night-950); }
+
+  .row {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  /* Wordmark "Hayzer" Fraunces */
+  .wordmark {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    letter-spacing: -0.02em;
+  }
+  .wordmark.dark-bg { color: var(--fog-50); }
+  .wordmark.light-bg { color: var(--night-950); }
+
+  .racional {
+    background: var(--night-800);
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--fog-200);
+    border-left: 2px solid var(--petrol-500);
+  }
+  .recommendation {
+    margin-top: 48px;
+    padding: 24px 32px;
+    background: linear-gradient(135deg, rgba(31, 118, 105, 0.14) 0%, rgba(31, 118, 105, 0.04) 100%);
+    border: 1px solid rgba(111, 181, 168, 0.2);
+    border-radius: 12px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .recommendation h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 700;
+    color: var(--petrol-300);
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+  .recommendation p {
+    color: var(--fog-200);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+  .recommendation strong { color: var(--fog-50); }
+</style>
+</head>
+<body>
+
+<h1>Hayzer — 3 conceitos de logo</h1>
+<p class="subtitle">Cada conceito mostrado em <strong>sm</strong> (36px header) e <strong>lg</strong> (80px hero) + variante <strong>solta</strong> sem moldura. Fundos dark + light pra testar contraste.</p>
+
+<div class="grid">
+
+  <!-- ============== CONCEITO 1: H-BEDROCK ============== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">conceito 1</span>
+      <div class="name">H-Bedrock</div>
+      <p class="vibe">Travessa do H descentrada como linha do solo. 2/3 de raiz embaixo + 1/3 superfície em cima.</p>
+    </div>
+
+    <div>
+      <div class="demo-label">sm (36px) sobre dark — header</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark sm">
+            <svg viewBox="0 0 100 100" width="24" height="24" aria-label="Hayzer">
+              <rect x="18" y="14" width="14" height="72" rx="1" fill="currentColor" />
+              <rect x="68" y="14" width="14" height="72" rx="1" fill="currentColor" />
+              <rect x="32" y="42" width="36" height="8" fill="currentColor" />
+            </svg>
+          </div>
+          <div class="wordmark dark-bg" style="font-size: 1rem;">Hayzer</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="demo-label">lg (80px) sobre dark — hero</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark lg">
+            <svg viewBox="0 0 100 100" width="56" height="56" aria-label="Hayzer">
+              <rect x="18" y="14" width="14" height="72" rx="1" fill="currentColor" />
+              <rect x="68" y="14" width="14" height="72" rx="1" fill="currentColor" />
+              <rect x="32" y="42" width="36" height="8" fill="currentColor" />
+              <circle cx="50" cy="72" r="2.5" fill="var(--ember-500)" />
+            </svg>
+          </div>
+          <div class="wordmark dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="demo-label">lg "solto" sobre light</div>
+      <div class="demo light">
+        <div class="logo-loose light-bg">
+          <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Hayzer">
+            <rect x="18" y="14" width="14" height="72" rx="1" fill="currentColor" />
+            <rect x="68" y="14" width="14" height="72" rx="1" fill="currentColor" />
+            <rect x="32" y="42" width="36" height="8" fill="currentColor" />
+            <circle cx="50" cy="72" r="2.5" fill="var(--ember-500)" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="racional">
+      <strong style="color: var(--fog-50);">Racional:</strong> arquitetura, não botânica. A travessa baixa cria assimetria editorial. Funciona em monocromático puro (sem ember). Anti-clichê total de raiz/árvore.
+    </div>
+  </div>
+
+  <!-- ============== CONCEITO 2: H-CLEFT (RECOMENDADO DIEGO) ============== -->
+  <div class="card" style="border-color: var(--petrol-500);">
+    <div class="card-header">
+      <span class="tag" style="background: rgba(208, 138, 74, 0.15); color: var(--ember-500);">conceito 2 · recomendado</span>
+      <div class="name">H-Cleft</div>
+      <p class="vibe">H em Fraunces serif com perna esquerda prolongada abaixo da baseline como raiz primária. Casa com sistema editorial.</p>
+    </div>
+
+    <div>
+      <div class="demo-label">sm (36px) sobre dark — header</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark sm">
+            <svg viewBox="0 0 100 100" width="24" height="24" aria-label="Hayzer">
+              <text x="50" y="68" text-anchor="middle"
+                    font-family="Fraunces, Georgia, serif"
+                    font-weight="700" font-size="86" fill="currentColor"
+                    style="font-variation-settings: 'opsz' 144, 'SOFT' 30;"
+                    letter-spacing="-0.04em">H</text>
+              <rect x="22" y="68" width="9" height="22" fill="currentColor" />
+              <polygon points="22,90 31,90 31,82" fill="var(--fog-50)" />
+            </svg>
+          </div>
+          <div class="wordmark dark-bg" style="font-size: 1rem;">Hayzer</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="demo-label">lg (80px) sobre dark — hero</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark lg">
+            <svg viewBox="0 0 100 100" width="56" height="56" aria-label="Hayzer">
+              <text x="50" y="68" text-anchor="middle"
+                    font-family="Fraunces, Georgia, serif"
+                    font-weight="700" font-size="86" fill="currentColor"
+                    style="font-variation-settings: 'opsz' 144, 'SOFT' 30;"
+                    letter-spacing="-0.04em">H</text>
+              <rect x="22" y="68" width="9" height="22" fill="currentColor" />
+              <polygon points="22,90 31,90 31,82" fill="var(--fog-50)" />
+            </svg>
+          </div>
+          <div class="wordmark dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="demo-label">lg "solto" sobre light</div>
+      <div class="demo light">
+        <div class="logo-loose light-bg">
+          <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Hayzer">
+            <text x="50" y="68" text-anchor="middle"
+                  font-family="Fraunces, Georgia, serif"
+                  font-weight="700" font-size="86" fill="currentColor"
+                  style="font-variation-settings: 'opsz' 144, 'SOFT' 30;"
+                  letter-spacing="-0.04em">H</text>
+            <rect x="22" y="68" width="9" height="22" fill="currentColor" />
+            <polygon points="22,90 31,90 31,82" fill="var(--fog-50)" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="racional">
+      <strong style="color: var(--fog-50);">Racional:</strong> a única letra-marca da landing inteira em Fraunces. Cria sistema, não acessório. Quando o usuário lê o h1 em Fraunces e olha pro logo, é a mesma voz visual. Anti-IA total (IA jamais geraria assimetria intencional).
+    </div>
+  </div>
+
+  <!-- ============== CONCEITO 3: H-SPLIT ============== -->
+  <div class="card">
+    <div class="card-header">
+      <span class="tag">conceito 3</span>
+      <div class="name">H-Split</div>
+      <p class="vibe">H decomposto em 3 zonas: pilares estruturais + travessa petrol (núcleo) + raízes esquemáticas embaixo.</p>
+    </div>
+
+    <div>
+      <div class="demo-label">sm (36px) sobre dark — header</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark sm">
+            <svg viewBox="0 0 100 100" width="24" height="24" aria-label="Hayzer">
+              <rect x="20" y="20" width="10" height="50" fill="currentColor" />
+              <rect x="70" y="20" width="10" height="50" fill="currentColor" />
+              <rect x="30" y="44" width="40" height="8" fill="var(--petrol-500)" />
+              <line x1="22" y1="70" x2="22" y2="82" stroke="currentColor" stroke-width="2" />
+              <line x1="25" y1="70" x2="25" y2="86" stroke="currentColor" stroke-width="2" />
+              <line x1="28" y1="70" x2="28" y2="80" stroke="currentColor" stroke-width="2" />
+              <line x1="72" y1="70" x2="72" y2="80" stroke="currentColor" stroke-width="2" />
+              <line x1="75" y1="70" x2="75" y2="86" stroke="currentColor" stroke-width="2" />
+              <line x1="78" y1="70" x2="78" y2="82" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="wordmark dark-bg" style="font-size: 1rem;">Hayzer</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="demo-label">lg (80px) sobre dark — hero</div>
+      <div class="demo dark">
+        <div class="row">
+          <div class="logo-mark lg">
+            <svg viewBox="0 0 100 100" width="56" height="56" aria-label="Hayzer">
+              <rect x="20" y="20" width="10" height="50" fill="currentColor" />
+              <rect x="70" y="20" width="10" height="50" fill="currentColor" />
+              <rect x="30" y="44" width="40" height="8" fill="var(--petrol-500)" />
+              <circle cx="50" cy="48" r="2" fill="var(--ember-500)" />
+              <line x1="22" y1="70" x2="22" y2="82" stroke="currentColor" stroke-width="2" />
+              <line x1="25" y1="70" x2="25" y2="86" stroke="currentColor" stroke-width="2" />
+              <line x1="28" y1="70" x2="28" y2="80" stroke="currentColor" stroke-width="2" />
+              <line x1="72" y1="70" x2="72" y2="80" stroke="currentColor" stroke-width="2" />
+              <line x1="75" y1="70" x2="75" y2="86" stroke="currentColor" stroke-width="2" />
+              <line x1="78" y1="70" x2="78" y2="82" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="wordmark dark-bg">Hayzer</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="demo-label">lg "solto" sobre light</div>
+      <div class="demo light">
+        <div class="logo-loose light-bg">
+          <svg viewBox="0 0 100 100" width="80" height="80" aria-label="Hayzer">
+            <rect x="20" y="20" width="10" height="50" fill="currentColor" />
+            <rect x="70" y="20" width="10" height="50" fill="currentColor" />
+            <rect x="30" y="44" width="40" height="8" fill="var(--petrol-500)" />
+            <circle cx="50" cy="48" r="2" fill="var(--ember-500)" />
+            <line x1="22" y1="70" x2="22" y2="82" stroke="currentColor" stroke-width="2" />
+            <line x1="25" y1="70" x2="25" y2="86" stroke="currentColor" stroke-width="2" />
+            <line x1="28" y1="70" x2="28" y2="80" stroke="currentColor" stroke-width="2" />
+            <line x1="72" y1="70" x2="72" y2="80" stroke="currentColor" stroke-width="2" />
+            <line x1="75" y1="70" x2="75" y2="86" stroke="currentColor" stroke-width="2" />
+            <line x1="78" y1="70" x2="78" y2="82" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="racional">
+      <strong style="color: var(--fog-50);">Racional:</strong> diagrama abstrato estilo Vercel/Plaid. Petrol na travessa vira signature de cor. Mais ousado dos 3 — afasta de "letra H" e vai pra "símbolo Hayzer". Risco: em tamanhos pequenos pode não ler como H.
+    </div>
+  </div>
+
+</div>
+
+<div class="recommendation">
+  <h2>Recomendação do Diego: Conceito 2 (H-Cleft)</h2>
+  <p>
+    <strong>Unidade tipográfica.</strong> A landing inteira usa Fraunces nos h1/h2. Um logomark que vive na mesma família tipográfica dos headings cria sistema, não acessório.
+    <br /><br />
+    <strong>Conceito raiz sem desenhar raiz.</strong> A perna estendida abaixo da baseline conta a história sem ilustrá-la. É o nível de sutileza do "S vazado" da Stripe.
+    <br /><br />
+    <strong>Anti-IA por design.</strong> IA jamais geraria uma assimetria intencional na <em>letra</em> — é decisão de tipógrafo humano. Isso é exatamente o pitch do visual-system-v2: "feito por gente".
+  </p>
+</div>
+
+</body>
+</html>

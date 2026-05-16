@@ -12,6 +12,7 @@ const PUBLIC_PATHS = [
   '/privacidade',
   '/termos',
   '/calculadora',
+  '/mockups',
 ]
 
 function isPublicPath(pathname: string) {
