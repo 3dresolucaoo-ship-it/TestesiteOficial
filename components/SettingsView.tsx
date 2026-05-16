@@ -176,7 +176,7 @@ export function SettingsView({
             className={`flex items-center gap-2 text-sm font-medium px-3 py-2 rounded-lg transition-colors ${
               saved
                 ? 'bg-[#10b9811a] text-[#10b981] border border-[#10b98133]'
-                : 'bg-[#7c3aed] hover:bg-[#6d28d9] text-white'
+                : 'bg-[hsl(173_58%_28%)] hover:bg-[hsl(173_58%_32%)] text-white'
             }`}
           >
             {saved ? <><Check size={13} /> Salvo!</> : <><Save size={13} /> Salvar</>}
@@ -198,7 +198,7 @@ export function SettingsView({
             onClick={() => setTab(t.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
               tab === t.id
-                ? 'bg-[#7c3aed1a] text-[#a78bfa] border-[#7c3aed33]'
+                ? 'bg-[hsl(173_58%_28%/0.18)] text-[hsl(173_30%_57%)] border-[hsl(173_58%_28%/0.40)]'
                 : 'text-[#888888] hover:text-[#ebebeb] border-transparent'
             }`}
           >

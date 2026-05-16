@@ -5,7 +5,7 @@ import { useStore, uid } from '@/lib/store'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
 import type { Order, OrderStatus, OrderOrigin, InventoryItem } from '@/lib/types'
 import type { Product } from '@/lib/types'
-import { Plus, Pencil, Trash2, MoreHorizontal, Package, Cpu, Zap } from 'lucide-react'
+import { Plus, Pencil, Trash2, MoreHorizontal, Package, Cpu, Zap, ShoppingCart } from 'lucide-react'
 import { Modal, FormField, Input, Select, SubmitButton } from '@/components/Modal'
 import { calcUnitCost } from '@/core/analytics/productionEngine'
 
@@ -473,7 +473,16 @@ export default function OrdersPage() {
       {/* ── Mobile cards ─────────────────────────────────────────────────────── */}
       <div className="sm:hidden space-y-2">
         {sorted.length === 0 && (
-          <p className="text-center text-[#555555] text-sm py-12">Nenhum pedido encontrado.</p>
+          /* Sofia (CS) 2026-05-16: empty state customizado mobile - tom maker BR */
+          <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+            <ShoppingCart size={32} className="text-[hsl(173_30%_57%)] mb-3" />
+            <h3 className="text-base font-semibold text-foreground mb-1.5">
+              Sua primeira venda está esperando
+            </h3>
+            <p className="text-xs text-foreground/65 leading-relaxed max-w-xs">
+              Registre pedidos do WhatsApp, Instagram ou Mercado Livre aqui — o Hayzer conecta o pedido ao produto e desconta o filamento.
+            </p>
+          </div>
         )}
         {sorted.map(o => {
           const pName = productName(o.productId)
@@ -526,8 +535,26 @@ export default function OrdersPage() {
       {/* ── Desktop table ──────────────────────────────────────────────────────── */}
       <div className="hidden sm:block bg-[#141414] border border-[#2a2a2a] rounded-xl overflow-hidden">
         {sorted.length === 0 ? (
-          <div className="py-16 text-center">
-            <p className="text-[#555555] text-sm">Nenhum pedido encontrado.</p>
+          /* Sofia (CS) 2026-05-16: empty state desktop com texto maker BR + benefício */
+          <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto px-6">
+            <div
+              className="w-16 h-16 mb-5 rounded-2xl flex items-center justify-center"
+              style={{
+                background: 'hsl(173 58% 28% / 0.12)',
+                border: '1px solid hsl(173 58% 28% / 0.25)',
+              }}
+            >
+              <ShoppingCart size={28} className="text-[hsl(173_30%_57%)]" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
+              Sua primeira venda está esperando
+            </h3>
+            <p className="text-sm text-foreground/70 leading-relaxed mb-2">
+              Registre pedidos do WhatsApp, Instagram ou Mercado Livre aqui.
+            </p>
+            <p className="text-sm text-foreground/60 leading-relaxed">
+              O Hayzer conecta o pedido ao produto e desconta o filamento do estoque automaticamente.
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">

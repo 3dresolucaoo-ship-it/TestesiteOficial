@@ -62,13 +62,8 @@ export function TopBar() {
         boxShadow:            'var(--t-topbar-shadow)',
       }}
     >
-      {/* Top accent gradient line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
-        style={{
-          background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.4) 25%, rgba(59,130,246,0.35) 75%, transparent)',
-        }}
-      />
+      {/* Diego (2026-05-16): gradient roxo→azul (banido no BRIEF) removido.
+       * Substituído por border simples — sobriedade de Linear/Vercel. */}
 
       <MobileNav />
 

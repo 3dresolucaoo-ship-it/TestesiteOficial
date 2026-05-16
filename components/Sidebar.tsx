@@ -109,20 +109,22 @@ function NavLink({ href, label, icon: Icon, onClick, exact = false, iconOnly = f
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 function Logo({ iconOnly = false }: { iconOnly?: boolean }) {
   const { state } = useStore()
-  const name    = state.config?.companyName || 'BVaz Hub'
+  const name    = state.config?.companyName || 'Hayzer'
   const logoUrl = state.config?.brand?.logoUrl
-  const accent  = state.config?.brand?.accentColor || 'var(--t-accent)'
 
+  // Diego (2026-05-16): se não tem logo customizado, usa o logo oficial Hayzer
+  // (mesmo PNG da landing) em vez do fallback "primeira letra com background accent".
   const avatar = logoUrl ? (
     /* eslint-disable-next-line @next/next/no-img-element */
     <img src={logoUrl} alt={name} className="w-7 h-7 rounded-lg object-cover shrink-0" />
   ) : (
-    <div
-      className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0 transition-colors"
-      style={{ background: accent }}
-    >
-      {name.charAt(0).toUpperCase()}
-    </div>
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
+      src="/logo-hayzer.png"
+      alt="Hayzer"
+      className="w-7 h-7 rounded-lg object-contain shrink-0"
+      style={{ mixBlendMode: 'screen' }}
+    />
   )
 
   if (iconOnly) {

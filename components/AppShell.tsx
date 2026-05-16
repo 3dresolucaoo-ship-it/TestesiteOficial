@@ -33,11 +33,11 @@ function LoadingScreen() {
           className="w-10 h-10 rounded-xl flex items-center justify-center
             text-white font-bold text-lg"
           style={{
-            background: '#7c3aed',
-            boxShadow:  '0 0 30px rgba(124,58,237,0.5)',
+            background: 'hsl(173 58% 28%)',
+            boxShadow:  '0 0 30px hsl(173 58% 28% / 0.5)',
           }}
         >
-          B
+          H
         </div>
         <div className="flex items-center gap-1.5">
           {[0, 1, 2].map(i => (
@@ -45,7 +45,7 @@ function LoadingScreen() {
               key={i}
               className="w-1.5 h-1.5 rounded-full"
               style={{
-                background: '#7c3aed',
+                background: 'hsl(173 58% 28%)',
                 animation:  `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
               }}
             />

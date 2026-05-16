@@ -13,6 +13,7 @@ import {
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
 import { calcUnitCost, filamentCostPerKg, getProductStats } from '@/core/analytics/productionEngine'
 import { productsService } from '@/services/products'
+import { CostPreview } from './_components/CostPreview'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function fmt(v: number) {
@@ -26,94 +27,8 @@ function r2(v: number) {
 }
 
 // ─── Live cost preview component ──────────────────────────────────────────────
-function CostPreview({
-  materialGrams,
-  printTimeHours,
-  failureRate,
-  energyCostPerHour,
-  supportCost,
-  marginPercentage,
-  salePrice,
-  filamentItem,
-}: {
-  materialGrams:     number
-  printTimeHours:    number
-  failureRate:       number
-  energyCostPerHour: number
-  supportCost:       number
-  marginPercentage:  number
-  salePrice:         number
-  filamentItem:      InventoryItem | undefined
-}) {
-  const costPerKg  = filamentCostPerKg(filamentItem)
-  const breakdown  = calcUnitCost(
-    {
-      id: '', projectId: '', name: '', notes: '',
-      materialGrams, printTimeHours, failureRate, energyCostPerHour,
-      supportCost, marginPercentage, salePrice,
-      checkoutMode: 'direct', allowsCustom: false,
-    },
-    filamentItem ? [filamentItem] : [],
-  )
-  // Auto price = cost × (1 + margin); manual price if set
-  const autoPrice  = breakdown.totalCost * (1 + marginPercentage)
-  const effectivePrice = salePrice > 0 ? salePrice : autoPrice
-  const profit     = effectivePrice - breakdown.totalCost
-  const margin     = effectivePrice > 0 ? (profit / effectivePrice) * 100 : 0
-
-  return (
-    <div className="bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl p-4 space-y-3">
-      <p className="text-[#555555] text-xs font-semibold uppercase tracking-wide">
-        Previsão de Custo por Unidade
-      </p>
-
-      <div className="space-y-1.5">
-        {[
-          { label: 'Material',  value: breakdown.materialCost, color: 'text-[#3b82f6]' },
-          { label: 'Energia',   value: breakdown.energyCost,   color: 'text-[#f59e0b]' },
-          { label: 'Falhas',    value: breakdown.failureCost,  color: 'text-[#ef4444]' },
-          ...(supportCost > 0 ? [{ label: 'Suporte / Overhead', value: supportCost, color: 'text-[#a78bfa]' }] : []),
-        ].map(({ label, value, color }) => (
-          <div key={label} className="flex justify-between items-center">
-            <span className="text-[#555555] text-xs">{label}</span>
-            <span className={`text-xs font-medium ${color}`}>{fmt(value)}</span>
-          </div>
-        ))}
-        <div className="border-t border-[#2a2a2a] pt-1.5 flex justify-between items-center">
-          <span className="text-[#888888] text-xs font-semibold">Custo Total</span>
-          <span className="text-[#ebebeb] text-sm font-bold">{fmt(breakdown.totalCost)}</span>
-        </div>
-      </div>
-
-      <div className="border-t border-[#2a2a2a] pt-3 space-y-1.5">
-        <div className="flex justify-between items-center">
-          <span className="text-[#555555] text-xs">
-            {salePrice > 0 ? 'Preço de Venda (manual)' : `Preço Sugerido (+${(marginPercentage * 100).toFixed(0)}%)`}
-          </span>
-          <span className="text-[#ebebeb] text-xs font-medium">{fmt(effectivePrice)}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-[#555555] text-xs">Lucro por Unidade</span>
-          <span className={`text-xs font-semibold ${profit >= 0 ? 'text-[#10b981]' : 'text-[#ef4444]'}`}>
-            {fmt(profit)}
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-[#555555] text-xs">Margem Real</span>
-          <span className={`text-sm font-bold ${margin >= 40 ? 'text-[#10b981]' : margin >= 20 ? 'text-[#a78bfa]' : 'text-[#f59e0b]'}`}>
-            {fmtPct(margin)}
-          </span>
-        </div>
-      </div>
-
-      {filamentItem && (
-        <p className="text-[#3a3a3a] text-[10px]">
-          Filamento: {filamentItem.name} · {fmt(costPerKg)}/kg
-        </p>
-      )}
-    </div>
-  )
-}
+// CostPreview extraído em 2026-05-16 → app/products/_components/CostPreview.tsx
+// + paleta corrigida (Diego audit): azul/amarelo/lilás → petrol/ember/neutro
 
 // ─── Product form ─────────────────────────────────────────────────────────────
 type FormData = {
@@ -1063,22 +978,42 @@ export default function ProductsPage() {
 
       {/* ── Product grid ─────────────────────────────────────────────────── */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <Package size={40} className="text-[#2a2a2a] mb-4" />
-          <p className="text-[#555555] text-sm">
-            {products.length === 0
-              ? 'Nenhum produto cadastrado ainda.'
-              : 'Nenhum produto neste projeto.'}
-          </p>
-          {products.length === 0 && (
+        products.length === 0 ? (
+          /* Sofia (CS) 2026-05-16: explica o que é "produto" no contexto maker 3D + benefício concreto */
+          <div className="flex flex-col items-center justify-center py-24 text-center max-w-md mx-auto px-6">
+            <div
+              className="w-16 h-16 mb-5 rounded-2xl flex items-center justify-center"
+              style={{
+                background: 'hsl(173 58% 28% / 0.12)',
+                border: '1px solid hsl(173 58% 28% / 0.25)',
+              }}
+            >
+              <Package size={28} className="text-[hsl(173_30%_57%)]" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
+              Cadastre o que você vende
+            </h3>
+            <p className="text-sm text-foreground/70 leading-relaxed mb-2">
+              Um produto aqui é qualquer peça que você imprime e vende — suporte de celular, miniatura, peça técnica.
+            </p>
+            <p className="text-sm text-foreground/70 leading-relaxed mb-6">
+              Ao cadastrar, o Hayzer calcula custo de impressão, margem de lucro e preço sugerido por marketplace.
+            </p>
             <button
               onClick={() => setCreating(true)}
-              className="mt-4 flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="flex items-center gap-2 bg-[hsl(173_58%_28%)] hover:bg-[hsl(173_58%_32%)] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
             >
-              <Plus size={15} /> Criar Primeiro Produto
+              <Plus size={15} /> Cadastrar meu primeiro produto
             </button>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <Package size={40} className="text-[#2a2a2a] mb-4" />
+            <p className="text-[#555555] text-sm">
+              Nenhum produto neste projeto.
+            </p>
+          </div>
+        )
       ) : viewMode === 'catalog' ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {filtered.map(product => (

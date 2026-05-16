@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient'
+import { ImageUploader } from './_components/ImageUploader'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function fmt(v: number) {
@@ -58,85 +59,8 @@ function CatBadge({ cat }: { cat: InventoryCategory }) {
 }
 
 // ─── Image uploader ───────────────────────────────────────────────────────────
-function ImageUploader({ value, onChange }: { value: string; onChange: (url: string) => void }) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState('')
-
-  async function handleFile(file: File) {
-    if (!isSupabaseConfigured) {
-      setError('Supabase não configurado — upload indisponível.')
-      return
-    }
-    if (!file.type.startsWith('image/')) {
-      setError('Selecione uma imagem (JPG, PNG, WebP…)')
-      return
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setError('Imagem muito grande. Máximo 5 MB.')
-      return
-    }
-    setError('')
-    setUploading(true)
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      const userId = session?.user?.id ?? 'anon'
-      const ext  = file.name.split('.').pop() ?? 'jpg'
-      const path = `${userId}/${Date.now()}.${ext}`
-      const { error: upErr } = await supabase.storage
-        .from('inventory-images')
-        .upload(path, file, { upsert: true })
-      if (upErr) throw upErr
-      const { data: { publicUrl } } = supabase.storage
-        .from('inventory-images')
-        .getPublicUrl(path)
-      onChange(publicUrl)
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err)
-      setError(`Erro ao enviar: ${msg}`)
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  return (
-    <div className="space-y-2">
-      {value ? (
-        <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-[#2a2a2a] group">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="Foto" className="w-full h-full object-cover" />
-          <button
-            type="button"
-            onClick={() => onChange('')}
-            className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
-          >
-            <XIcon size={18} className="text-white" />
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-dashed border-[#3a3a3a] hover:border-[#7c3aed] text-[#888888] hover:text-[#a78bfa] text-sm transition-colors w-full justify-center disabled:opacity-50"
-        >
-          {uploading
-            ? <><Loader2 size={15} className="animate-spin" /> Enviando…</>
-            : <><ImagePlus size={15} /> Escolher foto</>
-          }
-        </button>
-      )}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
-      />
-      {error && <p className="text-[#ef4444] text-xs">{error}</p>}
-    </div>
-  )
-}
+// ImageUploader extraído em 2026-05-16 → app/inventory/_components/ImageUploader.tsx
+// Mantido import abaixo pra manter código funcionando.
 
 // ─── Item form ────────────────────────────────────────────────────────────────
 type ItemFormData = {
@@ -1263,22 +1187,43 @@ export default function InventoryPage() {
 
       {/* ── Item list ────────────────────────────────────────────────────────── */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <Package size={36} className="text-[#2a2a2a] mb-3" />
-          <p className="text-[#555555] text-sm">
-            {allItems.length === 0
-              ? 'Nenhum item no estoque. Adicione o primeiro!'
-              : 'Nenhum item corresponde aos filtros.'}
-          </p>
-          {allItems.length === 0 && (
+        allItems.length === 0 ? (
+          /* Sofia (CS) 2026-05-16: empty state customizado pro maker 3D —
+           * explica que filamento é o início, mostra benefício direto (cálculo de custo). */
+          <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto px-6">
+            <div
+              className="w-16 h-16 mb-5 rounded-2xl flex items-center justify-center"
+              style={{
+                background: 'hsl(173 58% 28% / 0.12)',
+                border: '1px solid hsl(173 58% 28% / 0.25)',
+              }}
+            >
+              <Package size={28} className="text-[hsl(173_30%_57%)]" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
+              Seu estoque está vazio
+            </h3>
+            <p className="text-sm text-foreground/70 leading-relaxed mb-6">
+              Comece adicionando o filamento que você usa agora. Com ele registrado, o Hayzer calcula automaticamente o custo de cada peça que você imprime.
+            </p>
             <button
               onClick={() => setCreating(true)}
-              className="mt-4 flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="flex items-center gap-2 bg-[hsl(173_58%_28%)] hover:bg-[hsl(173_58%_32%)] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
             >
-              <Plus size={15} /> Adicionar Primeiro Item
+              <Plus size={15} /> Adicionar primeiro filamento
             </button>
-          )}
-        </div>
+            <p className="text-xs text-foreground/50 mt-5 leading-relaxed">
+              Pode cadastrar filamentos, equipamentos e qualquer material que entra no custo da peça.
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Package size={36} className="text-[#2a2a2a] mb-3" />
+            <p className="text-[#555555] text-sm">
+              Nenhum item corresponde aos filtros.
+            </p>
+          </div>
+        )
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map(item => (

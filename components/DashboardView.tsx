@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Section, StatCard, Panel, fmt, fmtFull } from './dashboard/shared'
+import { WelcomeDashboard } from './onboarding/WelcomeDashboard'
 
 function DashboardSkeleton() {
   return (
@@ -34,6 +35,13 @@ type AppState = ReturnType<typeof useStore>['state']
 
 export function DashboardView({ initialState }: { initialState: AppState }) {
   const [state] = useState(initialState)
+
+  // Sofia (CS) 2026-05-16: primeira experiência do maker sem projeto algum.
+  // Em vez de mostrar dashboard zerado com "Performance Intelligence" e dados R$ 0,
+  // mostramos um welcome com 3 passos pra orientar o setup inicial.
+  if (state.projects.length === 0) {
+    return <WelcomeDashboard userName={state.config?.companyName ?? null} />
+  }
 
   const stats     = getGlobalStats(state)
   const byProject = revenuePerProject(state)

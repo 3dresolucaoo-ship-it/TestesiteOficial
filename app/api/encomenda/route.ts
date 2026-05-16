@@ -10,26 +10,18 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin }          from '@/lib/supabaseAdmin'
+import { encomendaSchema, zodErrorToPtBr } from '@/services/apiSchemas'
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json() as {
-      productId?:    string
-      catalogSlug?:  string
-      customerName?: string
-      whatsapp?:     string
-      quantity?:     number
+    // Otávio (Security) 2026-05-16: validação Zod bloqueia XSS + limita payload
+    const rawBody = await req.json()
+    const parsed = encomendaSchema.safeParse(rawBody)
+    if (!parsed.success) {
+      const { message, fields } = zodErrorToPtBr(parsed.error)
+      return NextResponse.json({ error: message, fields }, { status: 400 })
     }
-
-    const { productId, catalogSlug, customerName, whatsapp } = body
-    const quantity = Math.max(1, Math.min(Number(body.quantity) || 1, 999))
-
-    if (!productId || !catalogSlug || !customerName || !whatsapp) {
-      return NextResponse.json(
-        { error: 'Campos obrigatórios: productId, catalogSlug, customerName, whatsapp' },
-        { status: 400 },
-      )
-    }
+    const { productId, catalogSlug, customerName, whatsapp, quantity } = parsed.data
 
     const admin = getSupabaseAdmin()
 

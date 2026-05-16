@@ -17,17 +17,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-
-interface QuoteBody {
-  productId:    string
-  catalogSlug:  string
-  name:         string
-  whatsapp?:    string
-  email?:       string
-  description:  string
-  urgency?:     string
-  referenceUrl?: string
-}
+import { quoteSchema, zodErrorToPtBr } from '@/services/apiSchemas'
 
 function getAnonClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -37,33 +27,21 @@ function getAnonClient() {
 }
 
 export async function POST(req: NextRequest) {
-  let body: QuoteBody
+  // Otávio (Security) 2026-05-16: validação Zod (com refine pra whatsapp || email)
+  // bloqueia XSS no name/description, limita tamanhos, valida URL de referência.
+  let rawBody: unknown
   try {
-    body = await req.json()
+    rawBody = await req.json()
   } catch {
     return NextResponse.json({ error: 'Body inválido (JSON esperado)' }, { status: 400 })
   }
 
-  const name        = (body.name        ?? '').trim()
-  const description = (body.description ?? '').trim()
-  const whatsapp    = (body.whatsapp    ?? '').trim()
-  const email       = (body.email       ?? '').trim()
-
-  if (!name) {
-    return NextResponse.json({ error: 'Nome é obrigatório' }, { status: 400 })
+  const parsed = quoteSchema.safeParse(rawBody)
+  if (!parsed.success) {
+    const { message, fields } = zodErrorToPtBr(parsed.error)
+    return NextResponse.json({ error: message, fields }, { status: 400 })
   }
-  if (!description) {
-    return NextResponse.json({ error: 'Descrição é obrigatória' }, { status: 400 })
-  }
-  if (!whatsapp && !email) {
-    return NextResponse.json({ error: 'Informe WhatsApp ou email pra contato' }, { status: 400 })
-  }
-  if (!body.catalogSlug) {
-    return NextResponse.json({ error: 'catalogSlug é obrigatório' }, { status: 400 })
-  }
-  if (!body.productId) {
-    return NextResponse.json({ error: 'productId é obrigatório' }, { status: 400 })
-  }
+  const { productId, catalogSlug, name, whatsapp, email, description, urgency, referenceUrl } = parsed.data
 
   // Monta contato em string única (CRM atual usa campo único)
   const contactParts: string[] = []
@@ -76,12 +54,12 @@ export async function POST(req: NextRequest) {
     normal:   'Próximas semanas',
     urgent:   'Urgente',
   }
-  const urgency = urgencyLabel[body.urgency ?? 'normal'] ?? 'Próximas semanas'
+  const urgencyText = urgencyLabel[urgency] ?? 'Próximas semanas'
 
   // notes acumula urgência + ref + descrição (produto é resolvido server-side via RPC)
   const notesParts = [
-    `Urgência: ${urgency}`,
-    body.referenceUrl ? `Referência: ${body.referenceUrl}` : null,
+    `Urgência: ${urgencyText}`,
+    referenceUrl ? `Referência: ${referenceUrl}` : null,
     '',
     description,
   ].filter(Boolean)
@@ -90,8 +68,8 @@ export async function POST(req: NextRequest) {
   // Chama RPC SECURITY DEFINER (bypass RLS sem expor service_role)
   const supabase = getAnonClient()
   const { data: leadId, error } = await supabase.rpc('create_catalog_lead', {
-    p_catalog_slug: body.catalogSlug,
-    p_product_id:   body.productId,
+    p_catalog_slug: catalogSlug,
+    p_product_id:   productId,
     p_name:         name,
     p_contact:      contact,
     p_notes:        notes,
