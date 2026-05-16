@@ -14,7 +14,7 @@ function AuthLoadingScreen() {
           className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg"
           style={{ background: 'linear-gradient(135deg,#7c3aed,#6d28d9)', boxShadow: '0 0 30px rgba(124,58,237,0.5)' }}
         >
-          B
+          H
         </div>
         <div className="flex items-center gap-1.5">
           {[0, 1, 2].map(i => (
@@ -131,10 +131,10 @@ export default function LoginPage() {
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7c3aed] to-[#6d28d9]
                 flex items-center justify-center text-white font-bold text-base
                 shadow-[0_0_20px_rgba(124,58,237,0.4)]">
-                B
+                H
               </div>
               <div>
-                <p className="text-[#ebebeb] font-semibold text-sm leading-none">BVaz Hub</p>
+                <p className="text-[#ebebeb] font-semibold text-sm leading-none">Hayzer</p>
                 <p className="text-[#555555] text-[11px] mt-0.5">Sistema Operacional</p>
               </div>
             </div>
@@ -235,7 +235,7 @@ export default function LoginPage() {
           {/* Bottom */}
           <div className="px-8 pb-6">
             <p className="text-center text-[#3a3a3a] text-[11px]">
-              Acesso restrito — BVaz Hub v0.4
+              Acesso restrito — Hayzer v0.4
             </p>
           </div>
         </div>

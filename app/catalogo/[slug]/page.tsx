@@ -308,7 +308,7 @@ export default async function CatalogPublicPage({
         <div className="mt-12 mb-4 text-center">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.15)', letterSpacing: '0.06em' }}>
             Feito com{' '}
-            <span style={{ color: 'rgba(167,139,250,0.4)', fontWeight: 600 }}>BVaz Hub</span>
+            <span style={{ color: 'rgba(167,139,250,0.4)', fontWeight: 600 }}>Hayzer</span>
           </p>
         </div>
       </div>

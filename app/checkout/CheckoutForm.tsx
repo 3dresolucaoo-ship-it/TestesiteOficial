@@ -215,7 +215,7 @@ export function CheckoutForm({
         </form>
 
         <p className="mt-10 text-center text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
-          Feito com BVaz Hub
+          Feito com Hayzer
         </p>
       </div>
     </div>

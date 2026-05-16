@@ -42,7 +42,7 @@ function useTitle(): string {
     return projectName
   }
 
-  return 'BVaz Hub'
+  return 'Hayzer'
 }
 
 export function TopBar() {

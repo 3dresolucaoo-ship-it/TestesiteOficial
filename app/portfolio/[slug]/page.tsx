@@ -192,7 +192,7 @@ export default async function PortfolioPublicPage({
         {/* Footer */}
         <div className="mt-12 text-center">
           <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
-            Feito com BVaz Hub
+            Feito com Hayzer
           </p>
         </div>
       </div>

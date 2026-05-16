@@ -111,9 +111,9 @@ export function GeneralTab({ draft, setDraft, projectsCount, ordersCount, transa
         </div>
       </SectionCard>
 
-      <SectionCard title="Sobre o BVaz Hub">
+      <SectionCard title="Sobre o Hayzer">
         <div className="space-y-2 text-[#555555] text-sm">
-          <p>Sistema Operacional v0.3 — construído para gerenciar múltiplos projetos com finanças, estoque, CRM e conteúdo integrados.</p>
+          <p>Sistema Operacional v0.4 — construído para gerenciar múltiplos projetos com finanças, estoque, CRM e conteúdo integrados.</p>
           <div className="grid grid-cols-3 gap-3 pt-2">
             {[
               ['Projetos', projectsCount],

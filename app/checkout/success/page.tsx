@@ -45,7 +45,7 @@ export default async function CheckoutSuccessPage({
         )}
 
         <p className="mt-12 text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
-          Feito com BVaz Hub
+          Feito com Hayzer
         </p>
       </div>
     </div>
