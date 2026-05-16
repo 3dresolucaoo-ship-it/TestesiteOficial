@@ -72,24 +72,33 @@ Tom: maker BR, parceiro/educador. Resolve FP-01 + FP-02 + FP-03 + FP-05 (Sofia a
 
 ---
 
-## ✅ OPÇÃO 4 — Refactor incremental (iniciado)
+## ✅ OPÇÃO 4 — Refactor COMPLETO
 
-**Aviso honesto**: refactor TOTAL dos 2 arquivos gigantes (inventory 1472 + products 1028 linhas) precisa de sessão dedicada com CEO testando em tempo real. Hoje fiz **2 extrações de demonstração** + correção de paleta:
+CEO presente o tempo todo (eu havia errado o read). Refactor completo executado.
 
-**Inventory**:
-- ✅ Criado `app/inventory/_components/ImageUploader.tsx` (78 linhas extraídas)
-- ✅ Paleta corrigida no extraído (roxo banido → petrol-500/300)
-- ✅ Mensagens de erro reformuladas com tom maker (Sofia)
+### inventory/page.tsx: 1472 → 998 linhas (**-32%**)
 
-**Products**:
-- ✅ Criado `app/products/_components/CostPreview.tsx` (~85 linhas extraídas)
-- ✅ Paleta corrigida (azul/amarelo/lilás aleatórios → petrol/ember/neutro)
-- ✅ Background hardcoded `#0f0f0f` → `bg-card` (token semântico)
+Extraídos pra `app/inventory/_components/`:
+- ✅ `helpers.ts` — fmt, fmtShort, itemProfit, parseDate, CAT_COLORS (paleta marca v2)
+- ✅ `CatBadge.tsx` — badge por categoria
+- ✅ `ImageUploader.tsx` — upload de foto (78 linhas)
+- ✅ `ItemRow.tsx` — linha de listagem (218 linhas)
+- ✅ `ItemCard.tsx` — card grid ecommerce (165 linhas)
 
-**Restante do refactor** (recomendado pra sessão dedicada):
-- ❌ Extrair `ItemRow` (218 linhas) + `ItemCard` (165 linhas) de inventory.tsx
-- ❌ Extrair `ProductForm` (~360 linhas) + `CatalogCard` (~70 linhas) de products.tsx
-- Tempo estimado: 4-6h com CEO testando
+CAT_COLORS remapeado: filament roxo BANIDO → petrol-500, equipment azul → ember-500.
+
+### products/page.tsx: 1113 → 607 linhas (**-45%**)
+
+Extraídos pra `app/products/_components/`:
+- ✅ `CostPreview.tsx` — quebra de custo (azul/amarelo/lilás → petrol/ember/neutro)
+- ✅ `ProductForm.tsx` — formulário completo (357 linhas) + paleta corrigida
+- ✅ `CatalogCard.tsx` — card visual portfolio-style (125 linhas)
+
+### Validação final
+
+- ✅ **TypeScript check passou sem erros** (corrigi 3 imports faltantes: itemProfit, CAT_COLORS, Clock/Flame/DollarSign + 1 bug Zod v4 `invalid_type_error` removido)
+- ✅ **ESLint: ZERO erros, ZERO warnings** nos 11 arquivos novos criados nesta sessão
+- ✅ Bugs pré-existentes em outros arquivos (TopBar.tsx `module` variable, SettingsView useEffect) NÃO foram introduzidos por mim
 
 ---
 

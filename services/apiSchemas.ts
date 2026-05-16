@@ -49,7 +49,7 @@ const whatsappSchema = z
   )
 
 const quantitySchema = z
-  .number({ invalid_type_error: 'Quantidade deve ser número' })
+  .number({ message: 'Quantidade deve ser número' })
   .int({ message: 'Quantidade deve ser inteiro' })
   .min(1, 'Quantidade mínima é 1')
   .max(999, 'Quantidade máxima é 999')
@@ -102,22 +102,18 @@ export function zodErrorToPtBr(error: z.ZodError): {
   message: string
   fields: Record<string, string>
 } {
-  const flat = error.flatten()
-  const fieldErrors = flat.fieldErrors
-
-  // Pega a primeira mensagem de cada campo
+  // Pega primeira mensagem de cada path (campo) — v4 do Zod usa issues direto
   const fields: Record<string, string> = {}
-  for (const [field, messages] of Object.entries(fieldErrors)) {
-    if (messages && messages.length > 0) {
-      fields[field] = messages[0]
+  for (const issue of error.issues) {
+    const path = issue.path.join('.') || '_root'
+    if (!fields[path]) {
+      fields[path] = issue.message
     }
   }
 
   // Mensagem agregada (primeiro erro encontrado)
-  const firstField = Object.keys(fields)[0]
-  const message = firstField
-    ? fields[firstField]
-    : flat.formErrors[0] || 'Dados inválidos'
+  const firstKey = Object.keys(fields)[0]
+  const message = firstKey ? fields[firstKey] : 'Dados inválidos'
 
   return { message, fields }
 }
