@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Sem conexão — Hayzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --night-950: #07090A;
+    --night-900: #0B0E10;
+    --fog-50:    #F2EFEA;
+    --fog-200:   #BDB7AB;
+    --fog-300:   #8A8478;
+    --petrol-500: #1F7669;
+    --ember-500:  #D08A4A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--night-950);
+    color: var(--fog-50);
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    text-align: center;
+  }
+  .container {
+    max-width: 480px;
+  }
+  .tag {
+    display: inline-block;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember-500);
+    border: 1px solid rgba(208, 138, 74, 0.35);
+    background: rgba(208, 138, 74, 0.08);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: clamp(36px, 7vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  h1 em {
+    color: var(--petrol-500);
+    font-style: italic;
+    font-weight: 500;
+  }
+  p {
+    color: var(--fog-200);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fog-50);
+    background: var(--petrol-500);
+    border: 0;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 200ms ease;
+  }
+  button:hover {
+    background: #155A50;
+  }
+  .footer {
+    margin-top: 48px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="tag">sem conexão</div>
+    <h1>Você está <em>offline</em>.</h1>
+    <p>Não conseguimos carregar o Hayzer agora. Quando voltar a internet, é só recarregar.</p>
+    <button onclick="window.location.reload()">Tentar de novo</button>
+    <div class="footer">hayzer.com.br</div>
+  </div>
+</body>
+</html>

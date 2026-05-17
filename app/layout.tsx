@@ -6,6 +6,7 @@ import './globals.css'
 import { AuthProvider }  from '@/context/AuthContext'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { LayoutSwitch }  from '@/components/LayoutSwitch'
+import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister'
 import { getUser }       from '@/lib/auth'
 import { createServerClient } from '@/lib/supabaseServer'
 import { loadInitialState } from '@/lib/serverDataLoader'
@@ -75,6 +76,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
+        <ServiceWorkerRegister />
       </body>
     </html>
   )

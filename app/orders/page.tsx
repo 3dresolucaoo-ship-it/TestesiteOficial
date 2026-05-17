@@ -3,295 +3,20 @@
 import { useState, useMemo } from 'react'
 import { useStore, uid } from '@/lib/store'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
-import type { Order, OrderStatus, OrderOrigin, InventoryItem } from '@/lib/types'
-import type { Product } from '@/lib/types'
-import { Plus, Pencil, Trash2, MoreHorizontal, Package, Cpu, Zap, ShoppingCart } from 'lucide-react'
-import { Modal, FormField, Input, Select, SubmitButton } from '@/components/Modal'
+import type { Order, OrderStatus } from '@/lib/types'
+import { Plus, Pencil, Trash2, MoreHorizontal, Cpu, ShoppingCart } from 'lucide-react'
+import { Modal } from '@/components/Modal'
 import { calcUnitCost } from '@/core/analytics/productionEngine'
 
-// ─── Status / origin config ───────────────────────────────────────────────────
-const statusConfig: Record<OrderStatus, { label: string; color: string }> = {
-  lead:        { label: 'Lead',       color: 'text-[#888888] bg-[#88888818] border-[#88888833]' },
-  quote_sent:  { label: 'Orçamento',  color: 'text-[#f59e0b] bg-[#f59e0b1a] border-[#f59e0b33]' },
-  paid:        { label: 'Pago',       color: 'text-[#10b981] bg-[#10b9811a] border-[#10b98133]' },
-  delivered:   { label: 'Entregue',   color: 'text-[#a78bfa] bg-[#7c3aed1a] border-[#7c3aed33]' },
-}
-
-const originLabels: Record<OrderOrigin, string> = {
-  whatsapp: 'WhatsApp',
-  instagram: 'Instagram',
-  facebook: 'Facebook',
-  other: 'Outro',
-}
-
-const originColors: Record<OrderOrigin, string> = {
-  whatsapp: 'text-[#10b981]',
-  instagram: 'text-[#f59e0b]',
-  facebook: 'text-[#3b82f6]',
-  other: 'text-[#888888]',
-}
-
-function Badge({ status }: { status: OrderStatus }) {
-  const { label, color } = statusConfig[status]
-  return <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${color}`}>{label}</span>
-}
-
-// ─── Inline cost preview (compact) ───────────────────────────────────────────
-function OrderCostPreview({ product, inventory, salePrice }: {
-  product:   Product
-  inventory: InventoryItem[]
-  salePrice: number
-}) {
-  const breakdown = calcUnitCost(product, inventory)
-  const profit    = salePrice - breakdown.totalCost
-  const margin    = salePrice > 0 ? (profit / salePrice) * 100 : 0
-  const fmt       = (v: number) => `R$ ${v.toFixed(2)}`
-
-  return (
-    <div className="bg-[#0d0d0d] border border-[#2a2a2a] rounded-xl px-4 py-3 space-y-2">
-      <div className="flex items-center gap-1.5 mb-1">
-        <Cpu size={11} className="text-[#555555]" />
-        <p className="text-[#555555] text-[10px] font-semibold uppercase tracking-wide">
-          Custo de Produção
-        </p>
-      </div>
-
-      <div className="grid grid-cols-3 gap-2 text-center">
-        {[
-          { label: 'Material', value: breakdown.materialCost, color: 'text-[#3b82f6]' },
-          { label: 'Energia',  value: breakdown.energyCost,   color: 'text-[#f59e0b]' },
-          { label: 'Falha',    value: breakdown.failureCost,  color: 'text-[#ef4444]' },
-        ].map(({ label, value, color }) => (
-          <div key={label}>
-            <p className={`text-xs font-semibold ${color}`}>{fmt(value)}</p>
-            <p className="text-[#3a3a3a] text-[10px]">{label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="border-t border-[#2a2a2a] pt-2 flex items-center justify-between">
-        <div>
-          <span className="text-[#888888] text-xs">Custo total: </span>
-          <span className="text-[#ebebeb] text-xs font-bold">{fmt(breakdown.totalCost)}</span>
-        </div>
-        {salePrice > 0 && (
-          <div className="text-right">
-            <span className="text-[#888888] text-xs">Margem: </span>
-            <span className={`text-xs font-bold ${
-              margin >= 40 ? 'text-[#10b981]' : margin >= 20 ? 'text-[#a78bfa]' : 'text-[#f59e0b]'
-            }`}>
-              {margin.toFixed(1)}%
-            </span>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-// ─── Form ─────────────────────────────────────────────────────────────────────
-type FormData = {
-  projectId:       string
-  clientName:      string
-  origin:          OrderOrigin
-  item:            string
-  value:           string
-  status:          OrderStatus
-  date:            string
-  inventoryItemId: string
-  qtyUsed:         string
-  productId:       string   // product template (optional)
-}
-
-function OrderForm({ projects, inventory, products, initial, onSave, onClose }: {
-  projects:  { id: string; name: string }[]
-  inventory: InventoryItem[]
-  products:  Product[]
-  initial?:  FormData
-  onSave:    (d: FormData) => void
-  onClose:   () => void
-}) {
-  const [data, setData] = useState<FormData>(initial ?? {
-    projectId: projects[0]?.id ?? '', clientName: '', origin: 'whatsapp',
-    item: '', value: '', status: 'lead', date: new Date().toISOString().slice(0, 10),
-    inventoryItemId: '', qtyUsed: '1', productId: '',
-  })
-
-  const set = (k: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-    setData(prev => ({ ...prev, [k]: e.target.value }))
-
-  // ── When project changes, reset linked product + inventory ─────────────────
-  function handleProjectChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    setData(prev => ({ ...prev, projectId: e.target.value, productId: '', inventoryItemId: '', qtyUsed: '1' }))
-  }
-
-  // ── When a product template is selected, auto-fill form fields ─────────────
-  function handleProductChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const pid = e.target.value
-    if (!pid) {
-      setData(prev => ({ ...prev, productId: '' }))
-      return
-    }
-    const product = products.find(p => p.id === pid)
-    if (!product) return
-
-    // Determine auto qty based on inventory unit
-    const filamentItem = product.inventoryItemId
-      ? inventory.find(i => i.id === product.inventoryItemId)
-      : undefined
-    const breakdown = calcUnitCost(product, inventory)
-    let autoQty = '1'
-    if (filamentItem) {
-      autoQty = filamentItem.unit === 'g'
-        ? String(breakdown.filamentUsedGrams)
-        : String(Math.round(breakdown.filamentUsedGrams / 10) / 100)  // kg, 2 d.p.
-    }
-
-    setData(prev => ({
-      ...prev,
-      productId:       pid,
-      item:            product.name,
-      value:           product.salePrice > 0 ? String(product.salePrice) : prev.value,
-      inventoryItemId: product.inventoryItemId ?? '',
-      qtyUsed:         product.inventoryItemId ? autoQty : '1',
-    }))
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!data.clientName.trim() || !data.item.trim()) return
-    onSave(data)
-    onClose()
-  }
-
-  const projectProducts  = products.filter(p => p.projectId === data.projectId)
-  const projectInventory = inventory.filter(i => i.projectId === data.projectId)
-  const selectedProduct  = projectProducts.find(p => p.id === data.productId)
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <FormField label="Projeto">
-        <Select value={data.projectId} onChange={handleProjectChange}>
-          {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </Select>
-      </FormField>
-
-      {/* ── Product template selector (3D print products) ─────────────────── */}
-      {projectProducts.length > 0 && (
-        <div className="border-t border-[#2a2a2a] pt-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <Cpu size={12} className="text-[#7c3aed]" />
-            <p className="text-[#555555] text-xs font-medium uppercase tracking-wide">Produto 3D (opcional)</p>
-          </div>
-          <FormField label="Usar Template de Produto">
-            <Select value={data.productId} onChange={handleProductChange}>
-              <option value="">Pedido avulso (sem template)</option>
-              {projectProducts.map(p => (
-                <option key={p.id} value={p.id}>
-                  {p.name}{p.salePrice > 0 ? ` — R$ ${p.salePrice.toFixed(2)}` : ''}
-                </option>
-              ))}
-            </Select>
-          </FormField>
-          {selectedProduct && (
-            <p className="text-[#555555] text-xs">
-              Item, valor e filamento preenchidos automaticamente. A impressão será agendada ao criar o pedido.
-            </p>
-          )}
-        </div>
-      )}
-
-      <div className="grid grid-cols-2 gap-3">
-        <FormField label="Cliente">
-          <Input value={data.clientName} onChange={set('clientName')} placeholder="Nome do cliente" required />
-        </FormField>
-        <FormField label="Origem">
-          <Select value={data.origin} onChange={set('origin')}>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="instagram">Instagram</option>
-            <option value="facebook">Facebook</option>
-            <option value="other">Outro</option>
-          </Select>
-        </FormField>
-      </div>
-
-      <FormField label="Item / Pedido">
-        <Input value={data.item} onChange={set('item')} placeholder="Descrição do pedido" required />
-      </FormField>
-
-      <div className="grid grid-cols-2 gap-3">
-        <FormField label="Valor (R$)">
-          <Input type="number" value={data.value} onChange={set('value')} placeholder="0" min="0" />
-        </FormField>
-        <FormField label="Status">
-          <Select value={data.status} onChange={set('status')}>
-            <option value="lead">Lead</option>
-            <option value="quote_sent">Orçamento Enviado</option>
-            <option value="paid">Pago</option>
-            <option value="delivered">Entregue</option>
-          </Select>
-        </FormField>
-      </div>
-
-      <FormField label="Data">
-        <Input type="date" value={data.date} onChange={set('date')} />
-      </FormField>
-
-      {/* ── Live cost preview (when product template selected) ────────────── */}
-      {selectedProduct && (
-        <OrderCostPreview
-          product={selectedProduct}
-          inventory={inventory}
-          salePrice={parseFloat(data.value) || 0}
-        />
-      )}
-
-      {/* ── Manual inventory link (only shown when no product template) ────── */}
-      {!selectedProduct && projectInventory.length > 0 && (
-        <div className="border-t border-[#2a2a2a] pt-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <Package size={13} className="text-[#555555]" />
-            <p className="text-[#555555] text-xs font-medium uppercase tracking-wide">Estoque (opcional)</p>
-          </div>
-          <FormField label="Vincular ao Estoque">
-            <Select value={data.inventoryItemId} onChange={set('inventoryItemId')}>
-              <option value="">Não descontar do estoque</option>
-              {projectInventory.map(i => (
-                <option key={i.id} value={i.id}>
-                  {i.name} (disponível: {i.quantity} {i.unit})
-                </option>
-              ))}
-            </Select>
-          </FormField>
-          {data.inventoryItemId && (
-            <FormField label="Quantidade vendida">
-              <Input type="number" value={data.qtyUsed} onChange={set('qtyUsed')} min="0.01" step="0.01" />
-            </FormField>
-          )}
-          {data.inventoryItemId && (
-            <p className="text-[#555555] text-xs">
-              O estoque será decrementado automaticamente quando o pedido for marcado como{' '}
-              <span className="text-[#10b981]">Pago</span>.
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* ── Inventory link info when product template is used ─────────────── */}
-      {selectedProduct && data.inventoryItemId && (
-        <div className="flex items-center gap-2 bg-[#7c3aed0d] border border-[#7c3aed22] rounded-lg px-3 py-2">
-          <Zap size={12} className="text-[#a78bfa] shrink-0" />
-          <p className="text-[#a78bfa] text-xs">
-            {inventory.find(i => i.id === data.inventoryItemId)?.name ?? 'Filamento'} será decrementado
-            em {data.qtyUsed} {inventory.find(i => i.id === data.inventoryItemId)?.unit ?? ''} ao pagar.
-          </p>
-        </div>
-      )}
-
-      <SubmitButton>{initial ? 'Salvar' : 'Criar Pedido'}</SubmitButton>
-    </form>
-  )
-}
+// ─── Componentes extraídos (refactor 2026-05-16 — 695→~415 linhas, -40%) ────
+import {
+  ORDER_STATUS_CONFIG,
+  ORDER_ORIGIN_LABELS,
+  ORDER_ORIGIN_COLORS,
+  type OrderFormData,
+} from './_components/helpers'
+import { OrderStatusBadge } from './_components/Badge'
+import { OrderForm } from './_components/OrderForm'
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 const ALL = 'all'
@@ -312,7 +37,7 @@ export default function OrdersPage() {
   const productName = (id: string | undefined) => id ? state.products.find(p => p.id === id)?.name : undefined
 
   const statusCounts = useMemo(() =>
-    Object.keys(statusConfig).reduce((acc, k) => {
+    Object.keys(ORDER_STATUS_CONFIG).reduce((acc, k) => {
       acc[k] = byProject.filter(o => o.status === k).length
       return acc
     }, {} as Record<string, number>),
@@ -323,7 +48,7 @@ export default function OrdersPage() {
   //   all side effects (production task, transaction, inventory decrement) and
   //   rawDispatches each result to update local state.
   // In local mode: reducer is pure, so we dispatch side effects manually here.
-  function handleCreate(data: FormData) {
+  function handleCreate(data: OrderFormData) {
     const newOrderId = uid()
     const product    = data.productId ? state.products.find(p => p.id === data.productId) : undefined
     const productionCost = product
@@ -373,7 +98,7 @@ export default function OrdersPage() {
   // (no auto-side-effects), so we accept that local mode won't auto-apply
   // inventory/transaction effects on edit — which is acceptable since local mode
   // is only used for development without a real database.
-  function handleEdit(data: FormData) {
+  function handleEdit(data: OrderFormData) {
     if (!editing) return
     const product = data.productId ? state.products.find(p => p.id === data.productId) : undefined
     const productionCost = product
@@ -455,7 +180,7 @@ export default function OrdersPage() {
         >
           Todos <span className="text-[#555555]">{byProject.length}</span>
         </button>
-        {(Object.entries(statusConfig) as [OrderStatus, typeof statusConfig[OrderStatus]][]).map(([s, { label }]) => (
+        {(Object.entries(ORDER_STATUS_CONFIG) as [OrderStatus, typeof ORDER_STATUS_CONFIG[OrderStatus]][]).map(([s, { label }]) => (
           <button
             key={s}
             onClick={() => setFilter(s)}
@@ -507,11 +232,11 @@ export default function OrdersPage() {
                   {o.productionCost != null && (
                     <p className="text-[#555555] text-[10px]">custo R$ {o.productionCost.toFixed(2)}</p>
                   )}
-                  <div className="mt-1"><Badge status={o.status} /></div>
+                  <div className="mt-1"><OrderStatusBadge status={o.status} /></div>
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-[#1c1c1c] pt-3">
-                <span className={`text-xs font-medium ${originColors[o.origin]}`}>{originLabels[o.origin]}</span>
+                <span className={`text-xs font-medium ${ORDER_ORIGIN_COLORS[o.origin]}`}>{ORDER_ORIGIN_LABELS[o.origin]}</span>
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => setEditing(o)}
@@ -586,7 +311,7 @@ export default function OrdersPage() {
                         <span className="text-[#888888] text-sm">{projectName(o.projectId)}</span>
                       </td>
                       <td className="px-4 py-3 hidden md:table-cell">
-                        <span className={`text-sm font-medium ${originColors[o.origin]}`}>{originLabels[o.origin]}</span>
+                        <span className={`text-sm font-medium ${ORDER_ORIGIN_COLORS[o.origin]}`}>{ORDER_ORIGIN_LABELS[o.origin]}</span>
                       </td>
                       <td className="px-4 py-3 hidden lg:table-cell">
                         <div>
@@ -619,7 +344,7 @@ export default function OrdersPage() {
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <Badge status={o.status} />
+                        <OrderStatusBadge status={o.status} />
                       </td>
                       <td className="px-2 py-3 relative">
                         <button

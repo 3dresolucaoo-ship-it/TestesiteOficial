@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Hayzer PWA icon — H com raízes em petrol sobre night-950.
+       Gerado em 2026-05-16. Quando Diego entregar versão polida, substituir. -->
+  <rect width="512" height="512" rx="96" fill="#07090A"/>
+  <!-- Letra H Fraunces-inspired (serif) em petrol-500 -->
+  <g transform="translate(128 96)" fill="#1F7669">
+    <!-- Haste esquerda -->
+    <rect x="0" y="0" width="48" height="320" rx="4"/>
+    <!-- Haste direita -->
+    <rect x="208" y="0" width="48" height="320" rx="4"/>
+    <!-- Travessão -->
+    <rect x="0" y="136" width="256" height="48" rx="4"/>
+    <!-- Serifas topo esquerda -->
+    <rect x="-20" y="0" width="88" height="12" rx="2"/>
+    <!-- Serifas topo direita -->
+    <rect x="188" y="0" width="88" height="12" rx="2"/>
+    <!-- Serifas base esquerda -->
+    <rect x="-20" y="308" width="88" height="12" rx="2"/>
+    <!-- Serifas base direita -->
+    <rect x="188" y="308" width="88" height="12" rx="2"/>
+  </g>
+  <!-- Raízes orgânicas crescendo da base -->
+  <g stroke="#1F7669" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.7">
+    <!-- Raiz central -->
+    <path d="M 256 416 Q 256 432 248 448 Q 240 460 232 472"/>
+    <!-- Raiz esquerda 1 -->
+    <path d="M 152 416 Q 144 432 132 444 Q 120 456 108 464"/>
+    <!-- Raiz esquerda 2 -->
+    <path d="M 152 416 Q 148 428 144 440"/>
+    <!-- Raiz direita 1 -->
+    <path d="M 360 416 Q 368 432 380 444 Q 392 456 404 464"/>
+    <!-- Raiz direita 2 -->
+    <path d="M 360 416 Q 364 428 368 440"/>
+    <!-- Ramificação extra (assimétrica orgânica) -->
+    <path d="M 256 416 Q 264 432 280 440" opacity="0.5"/>
+    <path d="M 256 416 Q 248 432 236 440" opacity="0.5"/>
+  </g>
+</svg>
