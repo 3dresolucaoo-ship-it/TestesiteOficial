@@ -93,19 +93,20 @@
      TOKENS — LIGHT (toggle persiste localStorage)
      ============================================================ */
   :root[data-theme="light"] {
-    /* CEO 17/05 V4.4: light warm white (#FFFFFF puro ofusca em monitor brilhante).
-       Linear/Stripe/Notion light mode usam off-white (#FAFAFA-#F9F9F8) — nunca #FFF. */
-    --night-950: #FDFCF8;
-    --night-900: #FAF7F1;
-    --night-850: #F5F1E9;
-    --night-800: #EDE8DE;
-    --night-700: #DCD5C6;
-    --night-600: #BDB7AB;
+    /* CEO 17/05 V4.6: light WARM PESADO (não papel-de-clínica).
+       Quarta vez que CEO pede peso — aplicado agressivo: papel craft/areia.
+       Refs: Are.na, magazines tipo Apartamento, Kinfolk — peso editorial. */
+    --night-950: #F5EFE2;
+    --night-900: #EFE6D0;
+    --night-850: #E8DCBE;
+    --night-800: #DCD0AE;
+    --night-700: #C8BB99;
+    --night-600: #A8997A;
 
-    --surface-0: #FAF7F1;
-    --surface-1: #F8F5EE;   /* era #FFFFFF puro — agora warm white */
-    --surface-2: #F2EFE7;
-    --surface-3: #EDE8DE;
+    --surface-0: #F5EFE2;   /* bg papel areia leve */
+    --surface-1: #EFE6D0;   /* cards papel craft (era branco — agora WARM PESADO) */
+    --surface-2: #E8DCBE;   /* cards hover bege visível */
+    --surface-3: #DCD0AE;   /* extra destaque */
 
     --fog-50:  #0A0D0F;
     --fog-100: #1B2125;
@@ -114,12 +115,14 @@
     --fog-400: #8A8478;
     --fog-500: #BDB7AB;
 
-    --petrol-200: #155A50;
-    --petrol-300: #1F7669;
+    /* CEO 17/05 V4.6: petrol MANTÉM FORTE em light (não inverte).
+       Antes invertia 200↔700 — perdia identidade de marca. */
+    --petrol-200: #C9E2DC;   /* claro pra bg sutil */
+    --petrol-300: #6FB5A8;
     --petrol-400: #3F9286;
-    --petrol-500: #6FB5A8;
-    --petrol-600: #A6D4CC;
-    --petrol-700: #C9E2DC;
+    --petrol-500: #1F7669;   /* MANTÉM forte — cor de marca não pode lavar */
+    --petrol-600: #155A50;
+    --petrol-700: #0E443D;
 
     --ember-300: #A86A30;
     --ember-400: #D08A4A;
@@ -204,7 +207,9 @@
     mix-blend-mode: screen;
   }
   :root[data-theme="light"] .grain-layer {
-    opacity: 0.13;
+    /* CEO 17/05 V4.6: grain mais visível em light (era 0.13, agora 0.28).
+       Light estava sem peso/textura — agora vibe papel rugoso visível. */
+    opacity: 0.28;
     mix-blend-mode: multiply;
   }
 
@@ -884,7 +889,17 @@
     background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
     border-color: rgba(31, 118, 105, 0.42);
     border-radius: 14px;                /* variar 12→14 (anti uniformidade IA) */
-    box-shadow: inset 0 1px 0 rgba(111, 181, 168, 0.06);
+    /* CEO 17/05 V4.6: glow petrol atrás do KPI Lucro líquido (highlight) */
+    box-shadow:
+      0 0 24px -8px rgba(31, 118, 105, 0.28),
+      0 4px 12px -6px rgba(7, 9, 10, 0.4),
+      inset 0 1px 0 rgba(111, 181, 168, 0.08);
+  }
+  :root[data-theme="light"] .kpi-mini-card.highlight {
+    box-shadow:
+      0 0 22px -6px rgba(21, 90, 80, 0.16),
+      0 4px 10px -6px rgba(58, 53, 45, 0.15),
+      inset 0 1px 0 rgba(31, 118, 105, 0.05);
   }
   .kpi-mini-card::after {
     content: "";
@@ -1154,9 +1169,27 @@
   .bento-card.highlight {
     background: linear-gradient(140deg, var(--surface-2) 0%, var(--surface-1) 80%);
     border-color: rgba(31, 118, 105, 0.42);
+    /* CEO 17/05 V4.6: glow petrol ATRÁS do card highlight.
+       Dá peso visual + ancora atenção no card mais importante. */
     box-shadow:
+      0 0 36px -8px rgba(31, 118, 105, 0.32),
+      0 8px 24px -10px rgba(7, 9, 10, 0.5),
       var(--shadow-card),
-      inset 0 1px 0 rgba(111, 181, 168, 0.08);
+      inset 0 1px 0 rgba(111, 181, 168, 0.10);
+  }
+  :root[data-theme="light"] .bento-card.highlight {
+    box-shadow:
+      0 0 32px -6px rgba(21, 90, 80, 0.18),
+      0 8px 22px -10px rgba(58, 53, 45, 0.18),
+      var(--shadow-card),
+      inset 0 1px 0 rgba(31, 118, 105, 0.06);
+  }
+  .bento-card.highlight:hover {
+    box-shadow:
+      0 0 48px -6px rgba(31, 118, 105, 0.42),
+      0 12px 30px -10px rgba(7, 9, 10, 0.55),
+      var(--shadow-card),
+      inset 0 1px 0 rgba(111, 181, 168, 0.14);
   }
   .bento-card.span-2 { grid-column: span 2; }
   .bento-card.span-3 { grid-column: span 3; }
