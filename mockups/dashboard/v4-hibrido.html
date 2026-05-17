@@ -141,9 +141,9 @@
     --border-md:     rgba(110, 71, 47, 0.28);
     --border-strong: rgba(87, 64, 57, 0.42);
 
-    /* shadows em tom marrom (vibe couro/madeira) */
-    --shadow-card:   0 1px 3px rgba(15, 10, 9, 0.06), 0 8px 24px rgba(87, 64, 57, 0.10);
-    --shadow-petrol: 0 8px 28px -10px rgba(21, 90, 80, 0.30);
+    /* shadows em tom marrom (vibe couro/madeira) — CEO V4.8: subi pra dar peso */
+    --shadow-card:   0 2px 6px rgba(15, 10, 9, 0.10), 0 14px 32px rgba(87, 64, 57, 0.18);
+    --shadow-petrol: 0 10px 32px -10px rgba(21, 90, 80, 0.35);
 
     --logo-blend: multiply;
 
@@ -165,13 +165,25 @@
     font-feature-settings: 'ss01', 'cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: var(--surface-0);
+    /* CEO 17/05 V4.8: body com gradient sutil pra dar PROFUNDIDADE (era flat).
+       Em dark: petrol topo + ember canto. Em light: cocoa topo + sand canto. */
+    background:
+      radial-gradient(ellipse 90% 50% at 50% 0%, rgba(31, 118, 105, 0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 70% 40% at 95% 100%, rgba(208, 138, 74, 0.04) 0%, transparent 60%),
+      var(--surface-0);
     color: var(--fog-50);
     min-height: 100vh;
     line-height: 1.55;
-    font-size: 17px;             /* CEO disse "letras pequenas" — body 17px */
+    font-size: 17px;
     overflow-x: hidden;
     transition: background var(--t-med), color var(--t-med);
+  }
+  :root[data-theme="light"] body {
+    background:
+      radial-gradient(ellipse 90% 50% at 50% 0%, rgba(110, 71, 47, 0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 70% 40% at 95% 100%, rgba(155, 135, 112, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 70% at 5% 50%, rgba(87, 64, 57, 0.06) 0%, transparent 65%),
+      var(--surface-0);
   }
 
   /* tabular nums em TODOS os números */
@@ -229,9 +241,12 @@
       radial-gradient(ellipse 40% 30% at 60% 50%, rgba(31, 118, 105, 0.04) 0%, transparent 50%);
   }
   :root[data-theme="light"] .ambient-glow {
+    /* CEO 17/05 V4.8: light flat sem alma — agora ambient glow PESADO em cocoa
+       (era 0.05-0.06 quase invisível). Dá profundidade tipo o dark. */
     background:
-      radial-gradient(ellipse 60% 50% at 18% 14%, rgba(31, 118, 105, 0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.05) 0%, transparent 55%);
+      radial-gradient(ellipse 70% 55% at 18% 14%, rgba(110, 71, 47, 0.16) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 45% at 92% 88%, rgba(87, 64, 57, 0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 45% 35% at 60% 50%, rgba(155, 135, 112, 0.10) 0%, transparent 50%);
   }
 
   /* ============================================================
@@ -256,6 +271,21 @@
     stroke: var(--petrol-400);
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+  /* CEO 17/05 V4.8: em light, raízes em COCOA (não verde — combina com paleta marrom)
+     + mais opacas pra ficar visível como no dark */
+  :root[data-theme="light"] .root-trunk,
+  :root[data-theme="light"] .root-branch,
+  :root[data-theme="light"] .root-sub {
+    stroke: var(--fog-200);    /* marrom escuro #574039 */
+    opacity: 0.55;
+  }
+  :root[data-theme="light"] .root-trunk { opacity: 0.55; }
+  :root[data-theme="light"] .root-branch { opacity: 0.50; }
+  :root[data-theme="light"] .root-sub { opacity: 0.40; }
+  :root[data-theme="light"] .root-node {
+    fill: var(--fog-200);
+    /* @keyframes nodeFade vai animar opacity → 0.65 */
   }
   .root-trunk {
     stroke-width: 1.6;
@@ -305,8 +335,9 @@
     font-variation-settings: "opsz" 144, "SOFT" 70;
   }
   :root[data-theme="light"] .watermark-raiz {
-    color: var(--fog-100);
-    opacity: 0.06;
+    /* CEO 17/05 V4.8: watermark agora mais visível em light (era 0.06 fantasma) */
+    color: var(--fog-200);      /* marrom escuro pra contrastar com bege */
+    opacity: 0.09;
   }
 
   /* ============================================================
