@@ -93,27 +93,29 @@
      TOKENS — LIGHT (toggle persiste localStorage)
      ============================================================ */
   :root[data-theme="light"] {
-    /* CEO 17/05 V4.6: light WARM PESADO (não papel-de-clínica).
-       Quarta vez que CEO pede peso — aplicado agressivo: papel craft/areia.
-       Refs: Are.na, magazines tipo Apartamento, Kinfolk — peso editorial. */
-    --night-950: #F5EFE2;
-    --night-900: #EFE6D0;
-    --night-850: #E8DCBE;
-    --night-800: #DCD0AE;
-    --night-700: #C8BB99;
-    --night-600: #A8997A;
+    /* CEO 17/05 V4.7: paleta MARROM ELEGANTE (print referência CEO).
+       Faixa 1=off-white bege neutro · 2=sand tostado · 3=cocoa médio
+       · 4=marrom escuro · 5=preto soft. Vibe café/madeira/couro premium.
+       Substitui paleta "craft amarelada" anterior — CEO disse "incomodou". */
+    --night-950: #ECE7DF;   /* faixa 1 — off-white bege neutro */
+    --night-900: #E2DBD0;
+    --night-850: #D5CABA;
+    --night-800: #BFB29D;   /* mid */
+    --night-700: #9B8770;   /* faixa 2 — sand tostado */
+    --night-600: #6E472F;   /* faixa 3 — cocoa */
 
-    --surface-0: #F5EFE2;   /* bg papel areia leve */
-    --surface-1: #EFE6D0;   /* cards papel craft (era branco — agora WARM PESADO) */
-    --surface-2: #E8DCBE;   /* cards hover bege visível */
-    --surface-3: #DCD0AE;   /* extra destaque */
+    --surface-0: #ECE7DF;   /* bg off-white bege NEUTRO (não amarelado) */
+    --surface-1: #E2DBD0;   /* cards bege sutil */
+    --surface-2: #D5CABA;   /* cards hover bege médio */
+    --surface-3: #BFB29D;   /* extra destaque */
 
-    --fog-50:  #0A0D0F;
-    --fog-100: #1B2125;
-    --fog-200: #3A352D;
-    --fog-300: #5B564D;
-    --fog-400: #8A8478;
-    --fog-500: #BDB7AB;
+    /* fog (texto) — agora MARROM elegante (faixas 4-5 do print CEO) */
+    --fog-50:  #0F0A09;     /* faixa 5 — preto soft (texto principal) */
+    --fog-100: #1A100A;
+    --fog-200: #574039;     /* faixa 4 — marrom escuro acinzentado */
+    --fog-300: #6E472F;     /* faixa 3 — cocoa */
+    --fog-400: #9B8770;     /* faixa 2 — sand tostado */
+    --fog-500: #BFB29D;
 
     /* CEO 17/05 V4.6: petrol MANTÉM FORTE em light (não inverte).
        Antes invertia 200↔700 — perdia identidade de marca. */
@@ -124,21 +126,24 @@
     --petrol-600: #155A50;
     --petrol-700: #0E443D;
 
-    --ember-300: #A86A30;
-    --ember-400: #D08A4A;
-    --ember-500: #E0A269;
-    --ember-600: #ECC196;
+    /* ember — adapta pra paleta marrom (mais cocoa/whisky, combina com beiges) */
+    --ember-300: #C49A6D;
+    --ember-400: #A77A4C;
+    --ember-500: #8B5A33;   /* cocoa/whisky — combina com marrom da paleta */
+    --ember-600: #6E472F;
 
     --signal-green: var(--petrol-300);
     --signal-amber: var(--ember-400);
     --signal-red:   #C25E45;
 
-    --border-soft:   rgba(10, 13, 15, 0.12);
-    --border-md:     rgba(10, 13, 15, 0.18);
-    --border-strong: rgba(10, 13, 15, 0.26);
+    /* bordas em tom marrom (combina com paleta cocoa) */
+    --border-soft:   rgba(15, 10, 9, 0.14);
+    --border-md:     rgba(110, 71, 47, 0.28);
+    --border-strong: rgba(87, 64, 57, 0.42);
 
-    --shadow-card:   0 1px 3px rgba(10, 13, 15, 0.04), 0 8px 24px rgba(10, 13, 15, 0.06);
-    --shadow-petrol: 0 8px 28px -10px rgba(31, 118, 105, 0.25);
+    /* shadows em tom marrom (vibe couro/madeira) */
+    --shadow-card:   0 1px 3px rgba(15, 10, 9, 0.06), 0 8px 24px rgba(87, 64, 57, 0.10);
+    --shadow-petrol: 0 8px 28px -10px rgba(21, 90, 80, 0.30);
 
     --logo-blend: multiply;
 
