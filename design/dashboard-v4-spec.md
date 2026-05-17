@@ -17,6 +17,42 @@
 
 ---
 
+## Validações do research externo (17/05)
+
+Pesquisa do external-researcher trouxe fundamentação científica e benchmarks de mercado que confirmam o caminho A:
+
+### Dark suave > dark puro (ciência)
+- Estudo peer-reviewed [Tandfonline/PubMed 40131320 (2025)](https://www.tandfonline.com/doi/full/10.1080/00140139.2025.2483451): contraste alto puro (branco em preto puro) aumenta **inibição cortical luminosa**, desacelerando resposta pré-frontal em até **17%**
+- NASA-TLX consistentemente mostra dark mode como subjetivamente menos desgastante
+- Faixa ótima para sessões 4-8h: `#141A1D` a `#1a1a1a` (meu spec usa `#161B1F` ✅ alinhado)
+- Refs reais: GitHub `#0d1117`, Resend `~#111`, Cal.com `~#1a1a1a`, PostHog dark cinza. **Vercel `#000000` é a exceção** (deploy tool, sessões curtas)
+
+### Animação raíz: CSS puro vence em mobile (benchmark)
+Dados empíricos do [SVG AI Encyclopedia 2025](https://www.svgai.org/blog/research/svg-animation-encyclopedia-complete-guide):
+
+| Técnica | Desktop FPS | CPU Desktop | Mobile FPS | CPU Mobile |
+|---|---|---|---|---|
+| **CSS transform/stroke-dasharray** | 60 | 5% | 55 | 25% |
+| GSAP DrawSVG | 60 | 12% | 48 | 55% |
+| GSAP MorphSVG | 60 | 20% | 28 | 85% |
+| Three.js L-system | 60 | 35% | ~15 | >95% |
+
+**Escolha do V4 (CSS puro stroke-dashoffset) é a única que fecha o triângulo performance/mobile/acessibilidade.** L-system/Three.js descartados — morrem em mobile mid-range.
+
+### PostHog é o melhor mirror do Hayzer
+- Identidade ousada + transparência radical → **$920M valuation, 190k teams, zero outbound sales**
+- Mais próximo do Hayzer em fase (early) + posicionamento (ousado vs genérico)
+- Lição: brand como infraestrutura (designer como employee #5) + consistência total + produto que entrega
+- **Risco**: identidade marcante AJUDA quando produto entrega; vira hollow quando é overlay de marketing
+
+### Tipografia validada
+- Inter aparece em **182 de 500** SaaS top (vs Graphik 21). Geist (escolha Hayzer) é variante autoral Vercel, mesma família de princípio. **Manter Geist** — alinhamento com stack Next/Vercel
+- **Tracking -0.02 a -0.04em** em KPI hero acima de 48px confirmado científico (comprime o número, parece denso/confiante) — meu spec ✅
+- Fraunces ≤15% confirmado (case Mailchimp Means serif: melhora engajamento com serif cirúrgico em editorial)
+- **Tabular figures crítico** (números de largura fixa = colunas não pulsam ao atualizar) — meu spec ✅
+
+---
+
 ## Origem dos elementos (V1 + V3 → V4)
 
 ### Vindos do V1 Dataviz-Rich (gráficos)
@@ -299,17 +335,28 @@ Em cada `.bento-card`, SVG decorativo canto superior esquerdo (40x40px). Raíz "
 
 ---
 
-## 7 mecanismos dopamina-operacional aplicados
+## 9 mecanismos dopamina-operacional aplicados
 
-| # | Mecanismo | Onde aplica no V4 | Implementação técnica |
-|---|---|---|---|
-| 1 | **Variable reward** | KPI hero count-up 0→R$12.480 ao carregar (1.2s easeOutQuart) | JS leve com `requestAnimationFrame` |
-| 2 | **Streak sutil** | "12 dias calculando preço" canto inferior fixo | `<div class="streak-pill">` posição fixed |
-| 3 | **Progress visual** | Gauge meta com glow petrol forte ao passar 100% | CSS class `.gauge.completed` com `filter: drop-shadow(0 0 24px petrol)` |
-| 4 | **Endowment** | (Anotado pra Felipe — drag widgets React, fora do mockup HTML) | placeholder no spec |
-| 5 | **Surprise+delight** | Raízes vivas crescendo hover em cada bento | SVG path stroke-dashoffset (acima) |
-| 6 | **Information scent** | Cores status verde/âmbar/vermelho em cada KPI | CSS classes `.signal-up`, `.signal-warn`, `.signal-down` |
-| 7 | **Live pulse** | Status-dot animado (já temos V1) + delta animations em pílulas | Pulse keyframe + smooth value transitions |
+Validados por research externo (Eyal Hooked, Norman Emotional Design, Kahneman System 1/2, Cialdini, Schwartz Paradox of Choice, Zeigarnik 1927).
+
+| # | Mecanismo | Fundamento | Onde aplica no V4 | Implementação |
+|---|---|---|---|---|
+| 1 | **Variable reward** | Skinner — anticipação > recebimento | KPI hero count-up 0→R$12.480 ao carregar (1.2s easeOutQuart); pílula "novo pedido +R$X" anima | JS leve com `requestAnimationFrame` |
+| 2 | **Zeigarnik / progresso** | Tarefa incompleta fica na memória ativa | Gauge meta com glow petrol ao passar 100%; barra "3 de 5 passos configurados" | CSS `.gauge.completed` com `filter: drop-shadow(0 0 24px petrol)` |
+| 3 | **Salience / número norte** | Kahneman System 1 — números grandes e contrastados capturam antes da leitura consciente | R$ total faturado em 96px no hero — dashboard "fala primeiro" | Fraunces 96px + tabular-nums + tracking -0.04em |
+| 4 | **Loss aversion temporal** | Kahneman — perdas doem 2x mais que ganhos | "+12% vs semana passada" em petrol OU "-8% vs semana passada" em ember (não vermelho — vermelho ativa pânico, não ação) | CSS classes `.delta-up`, `.delta-down` |
+| 5 | **Micro-feedback** | Norman — feedback fecha loop cognitivo | Toast sutil ao salvar pedido; animação check elegante (NÃO confetti — cringe pra B2B adulto) | Linear-style tick rápido |
+| 6 | **Paradoxo escolha reduzida** ⭐ | Schwartz (2004) — menos opções = mais ação | Dashboard mostra **3 ações recomendadas**, não 15 widgets. "Próxima ação sugerida: atualizar estoque PLA" | Card "ações" no topo do bento |
+| 7 | **Streak sutil** | Eyal Hook — investimento aumenta switching cost | "12 dias seguidos no controle" canto inferior fixo, sem badge nem emoji — só fato | `<div class="streak-pill">` posição fixed |
+| 8 | **Surprise+delight** | Eyal — variable reward gera memorabilidade | Raízes vivas crescendo hover em cada bento (CEO pediu) | SVG path stroke-dashoffset (seção acima) |
+| 9 | **Cognitive ease** ⭐ | Kahneman — processamento fácil gera sensação de verdade/confiança | Uma métrica por card, uma ação por tela, sem tooltip obrigatório pra grafico básico (Plausible: "se precisar de hover, o grafico falhou") | Bento layout sem clutter |
+| - | Information scent | Heuristic Evaluation | Cores status verde/âmbar/ember em cada KPI | CSS classes `.signal-up`, `.signal-warn`, `.signal-down` |
+| - | Live pulse | Operant conditioning | Status-dot animado + delta animations | Pulse keyframe + smooth value transitions |
+
+**⭐ Adições do research (não estavam no spec inicial).**
+
+### Adiado pra Onda 5+ (precisa de massa de usuários)
+- **Anchoring de benchmark** (Cialdini social proof): "Maker mediano fatura R$ 2.800/mês. Você está em R$ 4.100 — top 30%". NÃO inventar dado — só mostrar quando houver massa crítica real de usuários. Referência: Baremetrics "Your MRR vs similar businesses".
 
 ---
 
