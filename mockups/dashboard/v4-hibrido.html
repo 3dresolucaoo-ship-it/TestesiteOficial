@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow" />
+<meta name="theme-color" content="#11161A" />
+<title>Hayzer — Dashboard · V4 Híbrido (V1 dataviz + V3 design)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,30..100;1,9..144,300..900,30..100&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     HAYZER · DASHBOARD · V4 HÍBRIDO (definitivo)
+     V1 dataviz (donut + bars + sparkline + gauge) +
+     V3 design (cover + watermark + raízes fundo + bento) +
+     NOVO: dark soft + light toggle + raízes animadas no HOVER.
+     CEO 17/05 — caminho A escolhido. Próximo: Felipe converte React.
+     ============================================================ */
+
+  /* ============================================================
+     TOKENS — DARK (default)
+     soft: 1 step mais claro que V1/V3 (CEO sentiu "muito escuro")
+     ============================================================ */
+  :root[data-theme="dark"], :root {
+    /* night ladder — soft */
+    --night-950: #0A0D0F;
+    --night-900: #11161A;
+    --night-850: #161B1F;
+    --night-800: #1B2125;
+    --night-700: #232A2F;
+    --night-600: #2C343A;
+
+    /* surface ladder */
+    --surface-0: #11161A;     /* main bg */
+    --surface-1: #161B1F;     /* card base */
+    --surface-2: #1F262B;     /* card hover/destaque */
+    --surface-3: #2A3239;     /* extra */
+
+    /* fog (texto) */
+    --fog-50:  #F2EFEA;
+    --fog-100: #E3DED5;
+    --fog-200: #BDB7AB;
+    --fog-300: #8A8478;
+    --fog-400: #5B564D;
+    --fog-500: #3A352D;
+
+    /* petrol — cor de marca */
+    --petrol-200: #A6D4CC;
+    --petrol-300: #6FB5A8;
+    --petrol-400: #3F9286;
+    --petrol-500: #1F7669;
+    --petrol-600: #155A50;
+    --petrol-700: #0E443D;
+
+    /* ember — destaque/atenção */
+    --ember-300: #ECC196;
+    --ember-400: #E0A269;
+    --ember-500: #D08A4A;
+    --ember-600: #A86A30;
+
+    /* signal (information scent) */
+    --signal-green: var(--petrol-300);
+    --signal-amber: var(--ember-400);
+    --signal-red:   #E07A5F;
+
+    /* borders */
+    --border-soft:   rgba(242, 239, 234, 0.08);
+    --border-md:     rgba(242, 239, 234, 0.14);
+    --border-strong: rgba(242, 239, 234, 0.22);
+
+    /* shadows */
+    --shadow-card:   0 1px 0 rgba(242, 239, 234, 0.04) inset, 0 4px 14px rgba(7, 9, 10, 0.45);
+    --shadow-petrol: 0 8px 24px -8px rgba(31, 118, 105, 0.45), 0 2px 4px rgba(7, 9, 10, 0.6);
+
+    --logo-blend: screen;
+
+    --easing: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --t-fast: 180ms var(--easing);
+    --t-med:  320ms var(--easing);
+    --t-slow: 540ms var(--easing);
+
+    --grain-color: 0.95 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.45 0;
+    --grain-opacity: 0.18;
+    --grain-blend: screen;
+
+    color-scheme: dark;
+  }
+
+  /* ============================================================
+     TOKENS — LIGHT (toggle persiste localStorage)
+     ============================================================ */
+  :root[data-theme="light"] {
+    --night-950: #FFFFFF;
+    --night-900: #FAF7F1;
+    --night-850: #F5F1E9;
+    --night-800: #EDE8DE;
+    --night-700: #DCD5C6;
+    --night-600: #BDB7AB;
+
+    --surface-0: #FAF7F1;
+    --surface-1: #FFFFFF;
+    --surface-2: #F5F1E9;
+    --surface-3: #EDE8DE;
+
+    --fog-50:  #0A0D0F;
+    --fog-100: #1B2125;
+    --fog-200: #3A352D;
+    --fog-300: #5B564D;
+    --fog-400: #8A8478;
+    --fog-500: #BDB7AB;
+
+    --petrol-200: #155A50;
+    --petrol-300: #1F7669;
+    --petrol-400: #3F9286;
+    --petrol-500: #6FB5A8;
+    --petrol-600: #A6D4CC;
+    --petrol-700: #C9E2DC;
+
+    --ember-300: #A86A30;
+    --ember-400: #D08A4A;
+    --ember-500: #E0A269;
+    --ember-600: #ECC196;
+
+    --signal-green: var(--petrol-300);
+    --signal-amber: var(--ember-400);
+    --signal-red:   #C25E45;
+
+    --border-soft:   rgba(10, 13, 15, 0.06);
+    --border-md:     rgba(10, 13, 15, 0.12);
+    --border-strong: rgba(10, 13, 15, 0.20);
+
+    --shadow-card:   0 1px 3px rgba(10, 13, 15, 0.04), 0 8px 24px rgba(10, 13, 15, 0.06);
+    --shadow-petrol: 0 8px 28px -10px rgba(31, 118, 105, 0.25);
+
+    --logo-blend: multiply;
+
+    --grain-color: 0.10 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.30 0;
+    --grain-opacity: 0.10;
+    --grain-blend: multiply;
+
+    color-scheme: light;
+  }
+
+  /* ============================================================
+     RESET + GLOBALS
+     ============================================================ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--surface-0);
+    color: var(--fog-50);
+    min-height: 100vh;
+    line-height: 1.55;
+    font-size: 17px;             /* CEO disse "letras pequenas" — body 17px */
+    overflow-x: hidden;
+    transition: background var(--t-med), color var(--t-med);
+  }
+
+  /* tabular nums em TODOS os números */
+  .num, [data-num], .kpi-value, .num-mono, table td, .table-num,
+  .donut-center-value, .gauge-value, .bento-big, .cover-figure,
+  .legend-val, .delta, .meta, .val, .bar-val, .live-row-value {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+
+  /* a11y focus */
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible,
+  .nav-item:focus-visible, .bento-card:focus-visible {
+    outline: 2px solid var(--petrol-300);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  ::selection {
+    background: rgba(31, 118, 105, 0.32);
+    color: var(--fog-50);
+  }
+
+  /* ============================================================
+     AMBIENT — grain SVG + radial glow (fundo)
+     ============================================================ */
+
+  .grain-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.18;
+    mix-blend-mode: screen;
+  }
+  :root[data-theme="light"] .grain-layer {
+    opacity: 0.08;
+    mix-blend-mode: multiply;
+  }
+
+  .ambient-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 18% 14%, rgba(31, 118, 105, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 30% at 60% 50%, rgba(31, 118, 105, 0.04) 0%, transparent 50%);
+  }
+  :root[data-theme="light"] .ambient-glow {
+    background:
+      radial-gradient(ellipse 60% 50% at 18% 14%, rgba(31, 118, 105, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.05) 0%, transparent 55%);
+  }
+
+  /* ============================================================
+     RAÍZ ESTRUTURAL — atravessa canvas (V3 base)
+     ============================================================ */
+
+  .root-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .root-canvas svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .root-trunk, .root-branch, .root-sub {
+    fill: none;
+    stroke: var(--petrol-400);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .root-trunk {
+    stroke-width: 1.6;
+    stroke-dasharray: 2400;
+    stroke-dashoffset: 2400;
+    opacity: 0.36;
+    animation: rootDraw 1800ms var(--easing) forwards;
+  }
+  .root-branch {
+    stroke-width: 1.1;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    opacity: 0.34;
+    animation: rootDraw 1500ms var(--easing) 200ms forwards;
+  }
+  .root-sub {
+    stroke-width: 0.7;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    opacity: 0.26;
+    animation: rootDraw 1400ms var(--easing) 600ms forwards;
+  }
+  .root-node {
+    fill: var(--petrol-400);
+    opacity: 0;
+    animation: nodeFade 600ms var(--easing) 1400ms forwards;
+  }
+  @keyframes rootDraw { to { stroke-dashoffset: 0; } }
+  @keyframes nodeFade { to { opacity: 0.55; } }
+
+  /* watermark Fraunces gigante */
+  .watermark-raiz {
+    position: fixed;
+    bottom: 40px;
+    right: 60px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 240px;
+    line-height: 1;
+    color: var(--fog-50);
+    opacity: 0.022;
+    pointer-events: none;
+    z-index: 1;
+    letter-spacing: -0.03em;
+    user-select: none;
+    font-variation-settings: "opsz" 144, "SOFT" 70;
+  }
+  :root[data-theme="light"] .watermark-raiz {
+    color: var(--fog-100);
+    opacity: 0.06;
+  }
+
+  /* ============================================================
+     STREAK PILL — canto inferior fixed (mecanismo 7 dopamina)
+     ============================================================ */
+
+  .streak-pill {
+    position: fixed;
+    bottom: 22px;
+    left: 270px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px 8px 12px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--fog-200);
+    letter-spacing: 0.06em;
+    z-index: 8;
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(8px);
+    transition: border-color var(--t-fast), color var(--t-fast);
+  }
+  .streak-pill:hover {
+    border-color: var(--petrol-400);
+    color: var(--fog-50);
+  }
+  .streak-pill .streak-num {
+    color: var(--petrol-300);
+    font-weight: 600;
+  }
+  .streak-pill .streak-leaf {
+    width: 14px;
+    height: 14px;
+    color: var(--petrol-400);
+  }
+
+  /* ============================================================
+     SIDEBAR — 248px fixed esquerda (V3 base)
+     ============================================================ */
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 248px;
+    height: 100vh;
+    background: var(--night-900);
+    border-right: 1px solid var(--border-soft);
+    padding: 28px 0 20px 0;
+    z-index: 10;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    transition: background var(--t-med);
+  }
+  :root[data-theme="light"] .sidebar {
+    background: var(--surface-1);
+    border-right-color: var(--border-soft);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 22px;
+    position: relative;
+  }
+  .brand-logo {
+    height: 40px;
+    width: auto;
+    mix-blend-mode: var(--logo-blend);
+    filter: drop-shadow(0 0 8px rgba(31, 118, 105, 0.25));
+    flex-shrink: 0;
+  }
+  .brand-meta { display: flex; flex-direction: column; min-width: 0; }
+  .brand-word {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--fog-50);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .brand-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--petrol-300);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 3px;
+    display: block;
+  }
+
+  .nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .nav-group-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-300);
+    padding: 0 24px 8px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 22px;
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--fog-200);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+    position: relative;
+  }
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    stroke: currentColor;
+  }
+  .nav-item:hover {
+    background: rgba(242, 239, 234, 0.04);
+    color: var(--fog-50);
+  }
+  :root[data-theme="light"] .nav-item:hover {
+    background: rgba(10, 13, 15, 0.04);
+  }
+  .nav-item.active {
+    background: rgba(31, 118, 105, 0.14);
+    color: var(--fog-50);
+    border-left-color: var(--petrol-500);
+  }
+  .nav-item .badge {
+    margin-left: auto;
+    background: var(--ember-500);
+    color: var(--night-950);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 6px;
+    min-width: 22px;
+    text-align: center;
+  }
+  :root[data-theme="light"] .nav-item .badge { color: #FFFFFF; }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 14px 14px 0 14px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background var(--t-fast);
+  }
+  .user-pill:hover { background: rgba(242, 239, 234, 0.04); }
+  :root[data-theme="light"] .user-pill:hover { background: rgba(10, 13, 15, 0.04); }
+  .user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--petrol-500), var(--petrol-700));
+    color: #F2EFEA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .user-info { display: flex; flex-direction: column; min-width: 0; }
+  .user-name {
+    font-size: 14px;
+    color: var(--fog-50);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .user-role {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.10em;
+  }
+
+  /* ============================================================
+     MAIN
+     ============================================================ */
+
+  .main {
+    margin-left: 248px;
+    padding: 36px 40px 120px 40px;
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
+    max-width: 1480px;
+  }
+
+  /* ============================================================
+     TOPBAR
+     ============================================================ */
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 4;
+    flex-wrap: wrap;
+  }
+
+  .project-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px 9px 12px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    border-radius: 999px;
+    color: var(--fog-50);
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color var(--t-fast), background var(--t-fast);
+  }
+  .project-switcher:hover {
+    border-color: var(--petrol-400);
+    background: var(--surface-2);
+  }
+  .project-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--petrol-500), var(--petrol-700));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #F2EFEA;
+  }
+  .project-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.10em;
+  }
+  .chev { color: var(--fog-300); width: 14px; height: 14px; }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px 7px 12px;
+    background: rgba(31, 118, 105, 0.10);
+    border: 1px solid rgba(31, 118, 105, 0.30);
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.10em;
+    color: var(--petrol-200);
+    text-transform: uppercase;
+  }
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--petrol-300);
+    box-shadow: 0 0 0 0 rgba(111, 181, 168, 0.7);
+    animation: pulseDot 1.8s var(--easing) infinite;
+  }
+  @keyframes pulseDot {
+    0%   { box-shadow: 0 0 0 0 rgba(111, 181, 168, 0.55); }
+    70%  { box-shadow: 0 0 0 8px rgba(111, 181, 168, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(111, 181, 168, 0); }
+  }
+
+  .icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border-md);
+    background: var(--surface-1);
+    color: var(--fog-200);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--t-fast);
+    position: relative;
+  }
+  .icon-btn:hover {
+    border-color: var(--petrol-400);
+    color: var(--fog-50);
+    background: var(--surface-2);
+  }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .icon-btn .ind {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ember-500);
+    box-shadow: 0 0 0 2px var(--surface-1);
+  }
+
+  /* THEME TOGGLE (sol/lua) */
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border-md);
+    background: var(--surface-1);
+    color: var(--fog-200);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--t-fast);
+    position: relative;
+    overflow: hidden;
+  }
+  .theme-toggle:hover {
+    border-color: var(--petrol-400);
+    color: var(--petrol-300);
+    background: var(--surface-2);
+  }
+  .theme-toggle svg {
+    width: 18px;
+    height: 18px;
+    transition: opacity var(--t-fast), transform var(--t-fast);
+    position: absolute;
+  }
+  .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+  .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+  :root[data-theme="light"] .theme-toggle .icon-sun { opacity: 1; transform: rotate(0deg) scale(1); }
+  :root[data-theme="light"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.6); }
+
+  /* ============================================================
+     COVER EDITORIAL (V3 base)
+     ============================================================ */
+
+  .cover {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-bottom: 44px;
+    position: relative;
+    z-index: 4;
+  }
+  .cover-left { display: flex; flex-direction: column; gap: 18px; }
+
+  .cover-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-200);
+  }
+  .hairline {
+    width: 96px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--petrol-400) 0%, transparent 100%);
+    opacity: 0.7;
+  }
+  .cover-figure {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 96px;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  .cover-figure .currency {
+    font-style: italic;
+    font-size: 0.42em;
+    color: var(--fog-200);
+    font-weight: 300;
+    position: relative;
+    top: -0.62em;
+    font-variation-settings: "opsz" 60, "SOFT" 70;
+  }
+  .cover-figure .decimal {
+    font-size: 0.40em;
+    color: var(--fog-200);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.02em;
+  }
+  .cover-anchor {
+    font-family: 'Geist', sans-serif;
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--fog-100);
+    max-width: 560px;
+    font-weight: 400;
+  }
+  .cover-anchor em {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.05em;
+    color: var(--fog-50);
+    border-bottom: 2px solid var(--ember-500);
+    padding-bottom: 2px;
+    font-variation-settings: "opsz" 28, "SOFT" 50;
+  }
+  .cover-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px;
+    color: var(--fog-300);
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+  }
+  .cover-meta .sep { color: var(--fog-400); margin: 0 6px; }
+  .cover-meta strong { color: var(--petrol-300); font-weight: 500; }
+
+  /* COVER RIGHT — KPI hero petrol (do V1) */
+  .kpi-hero {
+    background: var(--petrol-500);
+    color: #F2EFEA;
+    border: 1px solid var(--petrol-600);
+    padding: 26px 26px 22px 26px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-petrol);
+    position: relative;
+    overflow: hidden;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow var(--t-med);
+  }
+  .kpi-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, rgba(14, 68, 61, 0.40) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .kpi-hero:hover {
+    box-shadow: var(--shadow-petrol), 0 0 36px -8px rgba(111, 181, 168, 0.45);
+  }
+  .kpi-hero .kpi-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(242, 239, 234, 0.88);
+    position: relative;
+    z-index: 1;
+  }
+  .kpi-hero .kpi-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 12px 0 8px 0;
+    color: #F2EFEA;
+    position: relative;
+    z-index: 1;
+  }
+  .kpi-hero .kpi-anchor {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 60, "SOFT" 70;
+    font-weight: 400;
+    font-size: 18px;
+    color: rgba(242, 239, 234, 0.94);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .kpi-hero .star {
+    color: #F2EFEA;
+    font-size: 14px;
+  }
+  .kpi-hero .kpi-spark {
+    width: 100%;
+    height: 42px;
+    position: relative;
+    z-index: 1;
+    display: block;
+  }
+  .kpi-hero .kpi-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: rgba(242, 239, 234, 0.78);
+    letter-spacing: 0.08em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============================================================
+     BRANCH DIVISOR
+     ============================================================ */
+
+  .branch-divisor {
+    width: 100%;
+    height: 24px;
+    opacity: 0.55;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 4;
+  }
+
+  /* ============================================================
+     KPI MARQUEE — 4 cards secundários
+     ============================================================ */
+
+  .kpi-marquee {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .kpi-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
+    padding: 22px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color var(--t-med), transform var(--t-med), background var(--t-med);
+    overflow: hidden;
+  }
+  .kpi-card:hover {
+    border-color: rgba(31, 118, 105, 0.32);
+    transform: translateY(-2px);
+    background: var(--surface-2);
+  }
+  .kpi-card.highlight {
+    background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
+    border-color: rgba(31, 118, 105, 0.22);
+  }
+  .kpi-card::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(180deg, var(--petrol-400) 0%, transparent 100%);
+    transition: height var(--t-med);
+    transform: translateX(-50%);
+  }
+  .kpi-card:hover::after { height: 10px; }
+  .kpi-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fog-200);
+  }
+  .kpi-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 42px;
+    font-weight: 500;
+    line-height: 1.05;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 72, "SOFT" 40;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    letter-spacing: -0.02em;
+    margin-top: 4px;
+  }
+  .kpi-value-suffix {
+    font-style: italic;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--fog-200);
+  }
+  .kpi-meta {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-300);
+    margin-top: 4px;
+  }
+  .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px 3px 7px;
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 4px;
+    width: fit-content;
+  }
+  .delta.up {
+    background: rgba(31, 118, 105, 0.14);
+    color: var(--petrol-200);
+    border: 1px solid rgba(31, 118, 105, 0.30);
+  }
+  .delta.down {
+    background: rgba(208, 138, 74, 0.12);
+    color: var(--ember-300);
+    border: 1px solid rgba(208, 138, 74, 0.30);
+  }
+  :root[data-theme="light"] .delta.up { color: var(--petrol-300); }
+  :root[data-theme="light"] .delta.down { color: var(--ember-300); }
+
+  /* ============================================================
+     SECTION HEADER
+     ============================================================ */
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+    position: relative;
+    z-index: 4;
+  }
+  .section-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 1.1;
+    color: var(--fog-50);
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 96, "SOFT" 30;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--fog-100);
+  }
+  .section-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fog-300);
+  }
+
+  /* ============================================================
+     BENTO GRID — 4 colunas, vários spans
+     ============================================================ */
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(220px, auto);
+    gap: 18px;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .bento-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
+    padding: 24px 26px 22px 26px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color var(--t-med), transform var(--t-med), background var(--t-med);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .bento-card:hover {
+    border-color: rgba(31, 118, 105, 0.32);
+    transform: translateY(-2px);
+    background: var(--surface-2);
+  }
+  .bento-card.highlight {
+    background: linear-gradient(140deg, var(--surface-2) 0%, var(--surface-1) 80%);
+    border-color: rgba(31, 118, 105, 0.18);
+  }
+  .bento-card.span-2 { grid-column: span 2; }
+  .bento-card.span-3 { grid-column: span 3; }
+  .bento-card.span-4 { grid-column: span 4; }
+
+  /* connector pulse no hover (V3) */
+  .bento-card::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(180deg, var(--petrol-400) 0%, transparent 100%);
+    transition: height var(--t-med);
+    transform: translateX(-50%);
+  }
+  .bento-card:hover::after { height: 12px; }
+
+  .bento-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .card-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fog-200);
+    margin-left: 52px;        /* deixa espaço pra root-hover SVG */
+  }
+  .card-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--fog-50);
+    margin-top: 4px;
+  }
+  .card-action {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--petrol-300);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color var(--t-fast);
+  }
+  .card-action:hover { color: var(--petrol-200); }
+  .card-action.ember { color: var(--ember-400); }
+  .card-action.ember:hover { color: var(--ember-300); }
+
+  .bento-big {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 1.05;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .bento-big .suffix-italic {
+    font-style: italic;
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--fog-200);
+  }
+  .bento-detail {
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--fog-100);
+  }
+  .bento-detail strong {
+    color: var(--petrol-300);
+    font-weight: 500;
+  }
+  .bento-detail.muted { color: var(--fog-200); }
+  .bento-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+  .bento-footer-mono {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fog-300);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .footnote {
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    color: var(--fog-400);
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* ============================================================
+     ★ RAÍZES ANIMADAS NO HOVER (a estrela do V4)
+     SVG 40x40 canto sup esq. stroke-dashoffset cresce CSS puro
+     ============================================================ */
+
+  .root-hover {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 36px;
+    height: 36px;
+    pointer-events: none;
+    z-index: 2;
+    overflow: visible;
+  }
+  .root-hover path {
+    fill: none;
+    stroke: var(--petrol-300);
+    stroke-width: 1.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    filter: drop-shadow(0 0 4px var(--petrol-500));
+    transition: stroke-dashoffset 900ms var(--easing), opacity 250ms ease-out;
+  }
+  .root-hover .rh-trunk    { stroke-dasharray: 80; stroke-dashoffset: 80; }
+  .root-hover .rh-branch-l { stroke-dasharray: 22; stroke-dashoffset: 22; transition-delay: 200ms; }
+  .root-hover .rh-branch-r { stroke-dasharray: 26; stroke-dashoffset: 26; transition-delay: 300ms; }
+  .root-hover .rh-sub-l    { stroke-dasharray: 18; stroke-dashoffset: 18; transition-delay: 500ms; }
+  .root-hover circle {
+    fill: var(--petrol-300);
+    opacity: 0;
+    transition: opacity 400ms ease-out 800ms;
+    filter: drop-shadow(0 0 6px var(--petrol-400));
+  }
+  .bento-card:hover .root-hover path,
+  .bento-card:focus-within .root-hover path {
+    stroke-dashoffset: 0;
+    opacity: 0.95;
+  }
+  .bento-card:hover .root-hover circle,
+  .bento-card:focus-within .root-hover circle {
+    opacity: 0.85;
+  }
+
+  /* ============================================================
+     DONUT CHART (V1 base)
+     ============================================================ */
+
+  .donut-wrap {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 26px;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .donut-svg {
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .donut-svg svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .donut-center .label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .donut-center .value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 30px;
+    color: var(--fog-50);
+    margin-top: 2px;
+    letter-spacing: -0.01em;
+    font-variation-settings: "opsz" 96, "SOFT" 30;
+  }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+  }
+  .legend-row {
+    display: grid;
+    grid-template-columns: 12px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--t-fast);
+  }
+  .legend-row:hover { background: rgba(242, 239, 234, 0.04); }
+  :root[data-theme="light"] .legend-row:hover { background: rgba(10, 13, 15, 0.04); }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+  .legend-name {
+    color: var(--fog-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .legend-val {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--fog-200);
+    font-weight: 500;
+  }
+  .donut-arc {
+    transition: stroke-width var(--t-fast), opacity var(--t-fast);
+    cursor: pointer;
+    stroke-dasharray: var(--len) 226.19;
+    stroke-dashoffset: 226.19;
+    animation: donutGrow 1200ms var(--easing) forwards;
+    animation-delay: var(--delay, 0ms);
+  }
+  .donut-arc:hover { stroke-width: 26; }
+  @keyframes donutGrow {
+    to { stroke-dashoffset: var(--off, 0); }
+  }
+
+  /* ============================================================
+     BAR VERTICAL 6 MESES (V1 base)
+     ============================================================ */
+
+  .bars-vertical {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    height: 210px;
+    align-items: end;
+    padding: 8px 4px 24px 4px;
+    position: relative;
+  }
+  .bars-vertical::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 25%;
+    border-top: 1px dashed rgba(242, 239, 234, 0.06);
+  }
+  :root[data-theme="light"] .bars-vertical::before {
+    border-top-color: rgba(10, 13, 15, 0.06);
+  }
+  .bars-vertical::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    border-top: 1px dashed rgba(242, 239, 234, 0.10);
+  }
+  :root[data-theme="light"] .bars-vertical::after {
+    border-top-color: rgba(10, 13, 15, 0.10);
+  }
+  .bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: end;
+    position: relative;
+  }
+  .bar-val {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fog-200);
+    margin-bottom: 6px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(4px);
+    animation: barVal 600ms var(--easing) forwards;
+  }
+  .bar {
+    width: 100%;
+    max-width: 44px;
+    background: linear-gradient(180deg, var(--petrol-300) 0%, var(--petrol-500) 100%);
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    animation: barGrow 800ms var(--easing) forwards;
+    cursor: pointer;
+    transition: filter var(--t-fast);
+  }
+  .bar:hover { filter: brightness(1.15); }
+  .bar.current {
+    background: linear-gradient(180deg, var(--ember-400) 0%, var(--ember-600) 100%);
+    box-shadow: 0 0 18px -4px rgba(208, 138, 74, 0.5);
+  }
+  .bar-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    position: absolute;
+    bottom: -22px;
+  }
+  @keyframes barGrow { to { transform: scaleY(1); } }
+  @keyframes barVal  { to { opacity: 1; transform: translateY(0); } }
+
+  /* ============================================================
+     SPARKLINE FILA 7 DIAS (V1 base)
+     ============================================================ */
+
+  .queue-bars {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    height: 110px;
+    align-items: end;
+    margin-top: 6px;
+    margin-bottom: 4px;
+  }
+  .queue-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: end;
+  }
+  .queue-bar {
+    width: 100%;
+    max-width: 26px;
+    background: var(--petrol-500);
+    border-radius: 4px 4px 0 0;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    animation: barGrow 700ms var(--easing) forwards;
+    transition: filter var(--t-fast);
+  }
+  .queue-bar.today {
+    background: var(--ember-500);
+    box-shadow: 0 0 14px -2px rgba(208, 138, 74, 0.55);
+  }
+  .queue-day {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .queue-day.today { color: var(--ember-400); }
+  .queue-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-soft);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fog-300);
+    letter-spacing: 0.06em;
+  }
+  .queue-foot .em { color: var(--ember-400); }
+
+  /* ============================================================
+     GAUGE SEMI 89% (V1 base) — glow ao passar 100%
+     ============================================================ */
+
+  .gauge-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 240px;
+    margin: 4px auto 0 auto;
+    aspect-ratio: 2 / 1;
+  }
+  .gauge-wrap svg { width: 100%; height: 100%; overflow: visible; }
+  .gauge-fill {
+    transition: stroke-dasharray var(--t-slow);
+    filter: drop-shadow(0 0 8px rgba(31, 118, 105, 0.4));
+    stroke-dasharray: 0 251.33;
+    animation: gaugeGrow 1500ms var(--easing) forwards;
+    animation-delay: 200ms;
+  }
+  .gauge-fill.completed {
+    filter: drop-shadow(0 0 24px rgba(111, 181, 168, 0.7));
+  }
+  @keyframes gaugeGrow {
+    to { stroke-dasharray: var(--target, 223.68) 251.33; }
+  }
+  .gauge-center {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4%;
+    text-align: center;
+    pointer-events: none;
+  }
+  .gauge-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 38px;
+    color: var(--fog-50);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    font-variation-settings: "opsz" 96, "SOFT" 30;
+  }
+  .gauge-anchor {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 60;
+    font-size: 14px;
+    color: var(--petrol-300);
+    margin-top: 4px;
+  }
+  .gauge-thresholds {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding: 0 4px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-400);
+    letter-spacing: 0.08em;
+  }
+  .gauge-thresholds span strong {
+    color: var(--fog-200);
+    font-weight: 500;
+    margin-left: 4px;
+  }
+
+  /* ============================================================
+     MINI-LIST (top produtos · em produção · alerta)
+     ============================================================ */
+
+  .mini-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .mini-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .mini-list-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .mini-list-item .name {
+    color: var(--fog-50);
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+  .mini-list-item .who {
+    color: var(--fog-300);
+    font-size: 13px;
+    margin-top: 2px;
+    display: block;
+  }
+  .mini-list-item .meta {
+    color: var(--fog-100);
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .mini-list-item .meta.petrol { color: var(--petrol-300); }
+  .mini-list-item .meta.ember  { color: var(--ember-400); }
+
+  .mini-list-item .row-bar {
+    width: 80px;
+    height: 4px;
+    background: var(--border-soft);
+    border-radius: 999px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .row-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--petrol-500), var(--petrol-300));
+    border-radius: 999px;
+    transform-origin: left;
+    animation: rowGrow 800ms var(--easing) forwards;
+    transform: scaleX(0);
+  }
+  @keyframes rowGrow { to { transform: scaleX(1); } }
+
+  /* ============================================================
+     EM PRODUÇÃO AGORA — card especial com progress bars
+     ============================================================ */
+
+  .now-printing {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 6px;
+  }
+  .now-print-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 10px 12px;
+    padding: 12px;
+    background: rgba(31, 118, 105, 0.06);
+    border-radius: 10px;
+    border: 1px solid rgba(31, 118, 105, 0.18);
+    align-items: center;
+  }
+  .now-print-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--petrol-300);
+    box-shadow: 0 0 8px rgba(111, 181, 168, 0.7);
+    animation: pulseDot 1.8s var(--easing) infinite;
+  }
+  .now-print-name {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-50);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .now-print-name .who {
+    color: var(--fog-300);
+    font-weight: 400;
+    font-size: 13px;
+    display: block;
+    margin-top: 2px;
+  }
+  .now-print-time {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--petrol-300);
+    font-weight: 500;
+    text-align: right;
+  }
+  .now-print-progress {
+    grid-column: 1 / -1;
+    height: 4px;
+    background: rgba(242, 239, 234, 0.06);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 2px;
+  }
+  :root[data-theme="light"] .now-print-progress {
+    background: rgba(10, 13, 15, 0.06);
+  }
+  .now-print-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--petrol-500), var(--petrol-300));
+    border-radius: 999px;
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: rowGrow 1000ms var(--easing) forwards;
+    animation-delay: 600ms;
+  }
+
+  /* ============================================================
+     ALERTA FILAMENTO (span 2 ou 4) — pill warning grande
+     ============================================================ */
+
+  .alert-filament {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, rgba(208, 138, 74, 0.10) 0%, rgba(208, 138, 74, 0.03) 100%);
+    border: 1px solid rgba(208, 138, 74, 0.28);
+    border-radius: 14px;
+    margin-top: 6px;
+  }
+  .alert-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(208, 138, 74, 0.18);
+    color: var(--ember-400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .alert-icon-wrap svg { width: 28px; height: 28px; }
+  .alert-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .alert-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--fog-50);
+  }
+  .alert-title em {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    color: var(--ember-400);
+    font-weight: 400;
+    font-variation-settings: "opsz" 60, "SOFT" 50;
+  }
+  .alert-sub {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-200);
+    line-height: 1.5;
+  }
+  .alert-sub strong { color: var(--ember-400); font-weight: 500; }
+  .alert-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--ember-500);
+    color: var(--night-950);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background var(--t-fast), transform var(--t-fast);
+    border: none;
+    white-space: nowrap;
+  }
+  :root[data-theme="light"] .alert-cta { color: #FFFFFF; }
+  .alert-cta:hover {
+    background: var(--ember-400);
+    transform: translateY(-1px);
+  }
+
+  /* ============================================================
+     PILL warning / petrol
+     ============================================================ */
+
+  .pill-warning {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(208, 138, 74, 0.16);
+    color: var(--ember-400);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    border-radius: 999px;
+    width: fit-content;
+    border: 1px solid rgba(208, 138, 74, 0.30);
+    font-weight: 500;
+  }
+  .pill-petrol {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(31, 118, 105, 0.16);
+    color: var(--petrol-300);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    border-radius: 999px;
+    width: fit-content;
+    border: 1px solid rgba(31, 118, 105, 0.32);
+    font-weight: 500;
+  }
+  .health-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--petrol-400);
+    box-shadow: 0 0 8px var(--petrol-500);
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ============================================================
+     PROJECTS ROW (trocar projeto) — final
+     ============================================================ */
+
+  .projects-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 4;
+  }
+  .project-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    border-radius: 999px;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-200);
+    cursor: pointer;
+    transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+  }
+  .project-chip:hover {
+    border-color: var(--petrol-400);
+    background: rgba(31, 118, 105, 0.05);
+    color: var(--fog-100);
+  }
+  .project-chip.active {
+    background: rgba(31, 118, 105, 0.14);
+    border-color: rgba(31, 118, 105, 0.42);
+    color: var(--petrol-300);
+  }
+  .project-chip .chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--petrol-500);
+  }
+  .project-chip.active .chip-dot { background: var(--petrol-300); }
+  .project-chip .chip-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fog-300);
+    margin-left: 2px;
+  }
+  .project-chip.active .chip-meta { color: var(--petrol-300); opacity: 0.8; }
+
+  /* ============================================================
+     FADE IN
+     ============================================================ */
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in {
+    opacity: 0;
+    animation: fadeUp 640ms var(--easing) forwards;
+  }
+  .fade-in.delay-1 { animation-delay: 0.15s; }
+  .fade-in.delay-2 { animation-delay: 0.30s; }
+  .fade-in.delay-3 { animation-delay: 0.45s; }
+  .fade-in.delay-4 { animation-delay: 0.60s; }
+
+  /* ============================================================
+     MOBILE — sidebar vira drawer ≤768px
+     ============================================================ */
+
+  .mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 20;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    color: var(--fog-50);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-card);
+  }
+
+  @media (max-width: 1280px) {
+    .kpi-marquee { grid-template-columns: repeat(2, 1fr); }
+    .cover { grid-template-columns: 1.2fr 1fr; gap: 32px; }
+    .cover-figure { font-size: 84px; }
+    .kpi-hero .kpi-value { font-size: 52px; }
+    .bento-card.span-3 { grid-column: span 2; }
+  }
+
+  @media (max-width: 1024px) {
+    .cover { grid-template-columns: 1fr; gap: 28px; }
+    .cover-figure { font-size: 72px; }
+    .kpi-hero { min-height: 200px; }
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .bento-card.span-2,
+    .bento-card.span-3,
+    .bento-card.span-4 { grid-column: span 2; }
+    .watermark-raiz { font-size: 160px; right: 30px; }
+  }
+
+  @media (max-width: 768px) {
+    .mobile-toggle { display: inline-flex; }
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 280ms var(--easing);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 72px 18px 120px 18px; }
+    .topbar { gap: 8px; }
+    .project-switcher { font-size: 13px; padding: 8px 12px 8px 10px; }
+    .status-pill { font-size: 11px; padding: 6px 10px; }
+    .cover-figure { font-size: 56px; }
+    .cover-anchor { font-size: 19px; }
+    .section-title { font-size: 28px; }
+    .kpi-marquee { grid-template-columns: 1fr 1fr; }
+    .bento-grid { grid-template-columns: 1fr; }
+    .bento-card,
+    .bento-card.span-2,
+    .bento-card.span-3,
+    .bento-card.span-4 { grid-column: span 1; }
+    .donut-wrap { grid-template-columns: 1fr; justify-items: center; }
+    .alert-filament {
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+    }
+    .alert-cta { grid-column: 1 / -1; justify-self: stretch; justify-content: center; }
+    .streak-pill { left: 12px; bottom: 12px; font-size: 11px; padding: 6px 10px; }
+    .watermark-raiz { display: none; }
+    .root-canvas { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .cover-figure { font-size: 48px; }
+    .kpi-hero .kpi-value { font-size: 38px; }
+    .bento-big { font-size: 32px; }
+    .section-title { font-size: 24px; }
+    .kpi-marquee { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     PREFERS-REDUCED-MOTION (fallback estático em TODAS animações)
+     ============================================================ */
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .bar, .queue-bar, .row-bar-fill, .now-print-progress-fill, .hbar-fill {
+      transform: scaleY(1) scaleX(1) !important;
+    }
+    .root-trunk, .root-branch, .root-sub { stroke-dashoffset: 0 !important; }
+    .root-node { opacity: 0.55 !important; }
+    .root-hover path { stroke-dashoffset: 0 !important; transition: opacity 200ms !important; }
+    .root-hover circle { transition: opacity 200ms !important; }
+    .donut-arc { stroke-dashoffset: var(--off, 0) !important; }
+    .gauge-fill { stroke-dasharray: var(--target, 223.68) 251.33 !important; }
+    .live-dot, .now-print-led, .status-dot { animation: none !important; }
+    .fade-in { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AMBIENT LAYERS -->
+<div class="ambient-glow" aria-hidden="true"></div>
+<div class="grain-layer" aria-hidden="true"></div>
+
+<!-- RAÍZ ESTRUTURAL no canvas (V3 base) -->
+<div class="root-canvas" aria-hidden="true">
+  <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+    <!-- TRONCO PRINCIPAL: canto inferior esquerdo → topo direito -->
+    <path class="root-trunk"
+      d="M 60 1060
+         Q 180 980 240 880
+         Q 300 780 380 720
+         Q 480 650 560 580
+         Q 680 480 820 440
+         Q 980 400 1140 360
+         Q 1300 320 1460 280
+         Q 1620 240 1780 180
+         Q 1860 140 1900 80"/>
+
+    <!-- GALHO 1 -->
+    <path class="root-branch"
+      d="M 380 720
+         Q 360 660 320 600
+         Q 290 540 250 480"/>
+    <!-- GALHO 2 -->
+    <path class="root-branch"
+      d="M 560 580
+         Q 640 570 720 540
+         Q 800 510 880 460"/>
+    <!-- GALHO 3 -->
+    <path class="root-branch"
+      d="M 820 440
+         Q 880 360 920 280
+         Q 950 220 980 180"/>
+    <!-- GALHO 4 -->
+    <path class="root-branch"
+      d="M 1140 360
+         Q 1180 300 1240 260
+         Q 1300 220 1360 200"/>
+    <!-- GALHO 5 -->
+    <path class="root-branch"
+      d="M 1460 280
+         Q 1520 240 1580 220
+         Q 1640 200 1700 200"/>
+
+    <!-- SUB-GALHOS -->
+    <path class="root-sub" d="M 320 600 Q 270 590 230 600"/>
+    <path class="root-sub" d="M 720 540 Q 700 510 680 480"/>
+    <path class="root-sub" d="M 920 280 Q 880 250 850 220"/>
+    <path class="root-sub" d="M 1240 260 Q 1220 220 1210 190"/>
+    <path class="root-sub" d="M 1580 220 Q 1560 180 1540 160"/>
+    <path class="root-sub" d="M 180 990 Q 140 1020 100 1050"/>
+    <path class="root-sub" d="M 240 880 Q 200 900 170 920"/>
+
+    <!-- NÓS -->
+    <circle class="root-node" cx="380" cy="720" r="3"/>
+    <circle class="root-node" cx="560" cy="580" r="3"/>
+    <circle class="root-node" cx="820" cy="440" r="3"/>
+    <circle class="root-node" cx="1140" cy="360" r="3"/>
+    <circle class="root-node" cx="1460" cy="280" r="3"/>
+  </svg>
+</div>
+
+<!-- WATERMARK -->
+<div class="watermark-raiz" aria-hidden="true">hayzer</div>
+
+<!-- MOBILE TOGGLE -->
+<button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menu" type="button">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="21" y2="12"/>
+    <line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+
+<!-- ============================================================
+     SIDEBAR
+     ============================================================ -->
+<aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+  <a href="#" class="brand" aria-label="Hayzer · Início">
+    <!-- LOGO PNG (ADR-013) -->
+    <img src="/logo-hayzer.png" alt="Hayzer" class="brand-logo" onerror="this.style.display='none'" />
+    <div class="brand-meta">
+      <span class="brand-word">Hayzer</span>
+      <span class="brand-tag">controle maker</span>
+    </div>
+  </a>
+
+  <nav class="nav-group" aria-label="Núcleo">
+    <span class="nav-group-label">Núcleo</span>
+    <a href="#" class="nav-item active" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+      Início
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18l-2 13H5L3 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+      Pedidos
+      <span class="badge">3</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="12" height="9"/><path d="M8 9V5h8v4"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+      Produção
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10l9 5 9-5V7l-9-5-9 5Z"/><path d="m3 7 9 5 9-5"/><path d="M12 12v10"/></svg>
+      Estoque
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Financeiro
+    </a>
+  </nav>
+
+  <nav class="nav-group" aria-label="Crescimento">
+    <span class="nav-group-label">Crescimento</span>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Clientes
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2Z"/></svg>
+      Leads
+      <span class="badge">7</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Catálogo
+    </a>
+  </nav>
+
+  <nav class="nav-group" aria-label="Sistema">
+    <span class="nav-group-label">Sistema</span>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      Configurações
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Ajuda
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="user-pill" role="button" tabindex="0" aria-label="Conta do usuário">
+      <div class="user-avatar">GV</div>
+      <div class="user-info">
+        <span class="user-name">Gabriel Vaz</span>
+        <span class="user-role">ADMIN</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button class="project-switcher" type="button" aria-label="Trocar projeto">
+        <span class="project-dot">3D</span>
+        <span>Resolução 3D</span>
+        <span class="project-meta">PRINCIPAL</span>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+    <div class="topbar-right">
+      <span class="status-pill" aria-label="Sincronizado ao vivo">
+        <span class="live-dot"></span>
+        AO VIVO · 30s
+      </span>
+      <button class="icon-btn" aria-label="Notificações" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="ind"></span>
+      </button>
+      <button class="icon-btn" aria-label="Buscar" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema claro/escuro" type="button">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/>
+          <line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
+          <line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/>
+          <line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       COVER EDITORIAL — figura Fraunces gigante + KPI hero petrol
+       ============================================================ -->
+  <section class="cover fade-in" aria-label="Visão geral do mês">
+    <div class="cover-left">
+      <span class="cover-eyebrow">Receita do mês · Maio 2026 · até hoje</span>
+      <div class="hairline"></div>
+      <h1 class="cover-figure num">
+        <span class="currency">R$</span>
+        <span id="coverValue" data-target="12480">0</span><span class="decimal">,00</span>
+      </h1>
+      <p class="cover-anchor">esse mês <em>tá no ritmo</em> — recorde do trimestre, dá pra respirar.</p>
+      <p class="cover-meta">
+        Maio <span class="sep">·</span> sem 03 <span class="sep">·</span> atualizado há 4 min
+        <span class="sep">·</span> <strong>+26,8%</strong> vs abril <span class="sep">·</span> 47 pedidos fechados
+      </p>
+    </div>
+
+    <!-- KPI HERO petrol (do V1, ajustado pra direita do cover) -->
+    <article class="kpi-hero" aria-labelledby="kpi-hero-label">
+      <div>
+        <div class="kpi-eyebrow" id="kpi-hero-label">Lucro líquido · maio</div>
+        <div class="kpi-value num" id="kpiHeroValue" data-target="8590" data-prefix="R$ ">R$ 0</div>
+        <div class="kpi-anchor"><span class="star">✦</span> melhor mês desde fevereiro</div>
+      </div>
+      <svg class="kpi-spark" viewBox="0 0 300 42" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F2EFEA" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#F2EFEA" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M 0 32 L 30 28 L 60 30 L 90 22 L 120 24 L 150 18 L 180 20 L 210 14 L 240 12 L 270 8 L 300 6 L 300 42 L 0 42 Z" fill="url(#sparkFill)"/>
+        <path d="M 0 32 L 30 28 L 60 30 L 90 22 L 120 24 L 150 18 L 180 20 L 210 14 L 240 12 L 270 8 L 300 6" stroke="#F2EFEA" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="300" cy="6" r="3" fill="#F2EFEA"/>
+      </svg>
+      <div class="kpi-foot">
+        <span>vs ABR · R$ 6.780</span>
+        <span>+26,7%</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- BRANCH DIVISOR -->
+  <svg class="branch-divisor fade-in delay-1" viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" y1="12" x2="1200" y2="12" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" opacity="0.55"/>
+    <path d="M150 12 Q156 6 165 3" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M280 12 Q286 19 295 23" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M420 12 Q426 5 434 2" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M560 12 Q568 20 578 23" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M720 12 Q727 6 736 3" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M880 12 Q886 19 894 22" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M1040 12 Q1047 5 1056 2" stroke="var(--petrol-500)" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <circle cx="280" cy="12" r="2" fill="var(--petrol-500)" opacity="0.55"/>
+    <circle cx="720" cy="12" r="2" fill="var(--petrol-500)" opacity="0.55"/>
+  </svg>
+
+  <!-- ============================================================
+       KPI MARQUEE — 4 cards (Receita, Custos, Margem, Pedidos)
+       ============================================================ -->
+  <section class="kpi-marquee fade-in delay-1" aria-label="Indicadores do mês">
+    <div class="kpi-card highlight">
+      <span class="kpi-label">Receita do mês</span>
+      <span class="kpi-value num"><span id="kpiReceita" data-target="12480" data-prefix="R$ ">R$ 0</span></span>
+      <span class="kpi-meta">faturamento bruto · sem 03</span>
+      <span class="delta up">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
+        +12% vs sem 02
+      </span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Custos (filamento + energia)</span>
+      <span class="kpi-value num"><span id="kpiCustos" data-target="3890" data-prefix="R$ ">R$ 0</span></span>
+      <span class="kpi-meta">PLA Voolt 4kg · 89 kWh</span>
+      <span class="delta down">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        -3% vs sem 02
+      </span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Margem média</span>
+      <span class="kpi-value num">68,8<span class="kpi-value-suffix">%</span></span>
+      <span class="kpi-meta">média ponderada · 5 canais</span>
+      <span class="delta up">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
+        +4 pp
+      </span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Pedidos no mês</span>
+      <span class="kpi-value num">47</span>
+      <span class="kpi-meta">12 abertos · 35 entregues</span>
+      <span class="delta up">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
+        +8 vs abril
+      </span>
+    </div>
+  </section>
+
+  <!-- SECTION HEADER -->
+  <div class="section-header fade-in delay-2">
+    <h2 class="section-title">O que tá <em>acontecendo</em></h2>
+    <span class="section-tag">7 painéis · maio · sincronizado agora</span>
+  </div>
+
+  <!-- ============================================================
+       BENTO GRID — 4 colunas
+       ============================================================ -->
+  <section class="bento-grid fade-in delay-2" aria-label="Painéis operacionais">
+
+    <!-- ───── DONUT · MARGEM POR PRODUTO (span 2) ───── -->
+    <article class="bento-card span-2 highlight" tabindex="0" aria-labelledby="donut-title">
+      <svg class="root-hover" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="rh-trunk"    d="M32,4 Q32,18 28,28 Q24,38 22,52" />
+        <path class="rh-branch-l" d="M28,22 Q22,24 18,32" />
+        <path class="rh-branch-r" d="M30,32 Q38,36 42,46" />
+        <path class="rh-sub-l"    d="M18,32 Q14,38 12,46" />
+        <circle cx="22" cy="52" r="2" />
+        <circle cx="18" cy="32" r="1.5" />
+        <circle cx="12" cy="46" r="1.2" />
+        <circle cx="42" cy="46" r="1.5" />
+      </svg>
+      <header class="bento-header">
+        <div>
+          <div class="card-eyebrow">Margem por canal</div>
+          <div class="card-title" id="donut-title">Onde tá pegando mais</div>
+        </div>
+        <a href="#" class="card-action">ver detalhe →</a>
+      </header>
+      <div class="donut-wrap">
+        <div class="donut-svg" role="img" aria-label="Distribuição de margem por canal de venda">
+          <svg viewBox="0 0 100 100">
+            <!-- bg ring -->
+            <circle cx="50" cy="50" r="36" stroke="rgba(242,239,234,0.06)" stroke-width="20" fill="none"/>
+            <!-- segmentos. Perímetro = 2π × 36 ≈ 226.19 -->
+            <!-- WhatsApp 30% sem comissão → 67.86 -->
+            <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#1F7669" stroke-width="20" fill="none"
+              style="--len: 67.86; --off: 0; --delay: 200ms;"/>
+            <!-- Loja física 28% → 63.33 (offset -67.86) -->
+            <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#6FB5A8" stroke-width="20" fill="none"
+              style="--len: 63.33; --off: -67.86; --delay: 350ms;"/>
+            <!-- ML 18% → 40.71 (offset -131.19) -->
+            <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#D08A4A" stroke-width="20" fill="none"
+              style="--len: 40.71; --off: -131.19; --delay: 500ms;"/>
+            <!-- Shopee 14% → 31.67 (offset -171.90) -->
+            <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#A86A30" stroke-width="20" fill="none"
+              style="--len: 31.67; --off: -171.90; --delay: 650ms;"/>
+            <!-- Amazon 10% → 22.62 (offset -203.57) -->
+            <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#5B564D" stroke-width="20" fill="none"
+              style="--len: 22.62; --off: -203.57; --delay: 800ms;"/>
+          </svg>
+          <div class="donut-center">
+            <span class="label">média</span>
+            <span class="value num">68,8%</span>
+          </div>
+        </div>
+        <div class="donut-legend" role="list">
+          <div class="legend-row" role="listitem">
+            <span class="legend-dot" style="background:#1F7669"></span>
+            <span class="legend-name">WhatsApp <span style="color:var(--fog-400);font-size:12px;">· 0% comissão</span></span>
+            <span class="legend-val num">88%</span>
+          </div>
+          <div class="legend-row" role="listitem">
+            <span class="legend-dot" style="background:#6FB5A8"></span>
+            <span class="legend-name">Loja física</span>
+            <span class="legend-val num">82%</span>
+          </div>
+          <div class="legend-row" role="listitem">
+            <span class="legend-dot" style="background:#D08A4A"></span>
+            <span class="legend-name">Mercado Livre <span style="color:var(--fog-400);font-size:12px;">· 12%</span></span>
+            <span class="legend-val num">58%</span>
+          </div>
+          <div class="legend-row" role="listitem">
+            <span class="legend-dot" style="background:#A86A30"></span>
+            <span class="legend-name">Shopee <span style="color:var(--fog-400);font-size:12px;">· 14%</span></span>
+            <span class="legend-val num">54%</span>
+          </div>
+          <div class="legend-row" role="listitem">
+            <span class="legend-dot" style="background:#5B564D"></span>
+            <span class="legend-name">Amazon <span style="color:var(--fog-400);font-size:12px;">· 15%</span></span>
+            <span class="legend-val num">49%</span>
+          </div>
+        </div>
+      </div>
+      <p class="footnote">Margem líquida após comissão · base últimos 30 dias · WhatsApp puxa pra cima.</p>
+    </article>
+
+    <!-- ───── BARS 6 MESES · LUCRO (span 2) ───── -->
+    <article class="bento-card span-2" tabindex="0" aria-labelledby="bar-title">
+      <svg class="root-hover" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="rh-trunk"    d="M32,4 Q32,18 28,28 Q24,38 22,52" />
+        <path class="rh-branch-l" d="M28,22 Q22,24 18,32" />
+        <path class="rh-branch-r" d="M30,32 Q38,36 42,46" />
+        <path class="rh-sub-l"    d="M18,32 Q14,38 12,46" />
+        <circle cx="22" cy="52" r="2" />
+        <circle cx="18" cy="32" r="1.5" />
+        <circle cx="12" cy="46" r="1.2" />
+        <circle cx="42" cy="46" r="1.5" />
+      </svg>
+      <header class="bento-header">
+        <div>
+          <div class="card-eyebrow">Lucro · 6 meses</div>
+          <div class="card-title" id="bar-title">A subida é real</div>
+        </div>
+        <a href="#" class="card-action">exportar CSV</a>
+      </header>
+      <div class="bars-vertical" role="img" aria-label="Lucro mensal de Dezembro até Maio em barras verticais">
+        <div class="bar-col">
+          <span class="bar-val num" style="animation-delay: 100ms">R$ 4,2k</span>
+          <div class="bar" style="height: 32%; animation-delay: 100ms;"></div>
+          <span class="bar-label">DEZ</span>
+        </div>
+        <div class="bar-col">
+          <span class="bar-val num" style="animation-delay: 180ms">R$ 5,1k</span>
+          <div class="bar" style="height: 40%; animation-delay: 180ms;"></div>
+          <span class="bar-label">JAN</span>
+        </div>
+        <div class="bar-col">
+          <span class="bar-val num" style="animation-delay: 260ms">R$ 5,8k</span>
+          <div class="bar" style="height: 46%; animation-delay: 260ms;"></div>
+          <span class="bar-label">FEV</span>
+        </div>
+        <div class="bar-col">
+          <span class="bar-val num" style="animation-delay: 340ms">R$ 6,2k</span>
+          <div class="bar" style="height: 50%; animation-delay: 340ms;"></div>
+          <span class="bar-label">MAR</span>
+        </div>
+        <div class="bar-col">
+          <span class="bar-val num" style="animation-delay: 420ms">R$ 6,8k</span>
+          <div class="bar" style="height: 56%; animation-delay: 420ms;"></div>
+          <span class="bar-label">ABR</span>
+        </div>
+        <div class="bar-col">
+          <span class="bar-val num" style="animation-delay: 500ms">R$ 8,6k</span>
+          <div class="bar current" style="height: 78%; animation-delay: 500ms;"></div>
+          <span class="bar-label">MAI</span>
+        </div>
+      </div>
+      <div class="bento-footer" style="margin-top:18px;">
+        <span class="bento-footer-mono">Maio em âmbar · viraço acontecendo</span>
+        <a href="#" class="card-action">ver série completa →</a>
+      </div>
+    </article>
+
+    <!-- ───── FILA BAMBU · 7 DIAS (span 1) ───── -->
+    <article class="bento-card" tabindex="0" aria-labelledby="queue-title">
+      <svg class="root-hover" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="rh-trunk"    d="M32,4 Q32,18 28,28 Q24,38 22,52" />
+        <path class="rh-branch-l" d="M28,22 Q22,24 18,32" />
+        <path class="rh-branch-r" d="M30,32 Q38,36 42,46" />
+        <path class="rh-sub-l"    d="M18,32 Q14,38 12,46" />
+        <circle cx="22" cy="52" r="2" />
+        <circle cx="18" cy="32" r="1.5" />
+        <circle cx="12" cy="46" r="1.2" />
+        <circle cx="42" cy="46" r="1.5" />
+      </svg>
+      <header class="bento-header">
+        <div>
+          <div class="card-eyebrow">Fila Bambu · 7 dias</div>
+          <div class="card-title" id="queue-title">Bambu X1 + Ender V3 SE</div>
+        </div>
+      </header>
+      <div class="queue-bars" role="img" aria-label="Trabalhos por dia da semana, hoje em destaque">
+        <div class="queue-col"><div class="queue-bar" style="height: 33%; animation-delay: 80ms;" aria-label="Sábado 4"></div><span class="queue-day">SÁB</span></div>
+        <div class="queue-col"><div class="queue-bar" style="height: 58%; animation-delay: 140ms;" aria-label="Domingo 7"></div><span class="queue-day">DOM</span></div>
+        <div class="queue-col"><div class="queue-bar" style="height: 42%; animation-delay: 200ms;" aria-label="Segunda 5"></div><span class="queue-day">SEG</span></div>
+        <div class="queue-col"><div class="queue-bar" style="height: 66%; animation-delay: 260ms;" aria-label="Terça 8"></div><span class="queue-day">TER</span></div>
+        <div class="queue-col"><div class="queue-bar" style="height: 100%; animation-delay: 320ms;" aria-label="Quarta 12"></div><span class="queue-day">QUA</span></div>
+        <div class="queue-col"><div class="queue-bar" style="height: 75%; animation-delay: 380ms;" aria-label="Quinta 9"></div><span class="queue-day">QUI</span></div>
+        <div class="queue-col"><div class="queue-bar today" style="height: 58%; animation-delay: 440ms;" aria-label="Sexta hoje 7"></div><span class="queue-day today">HOJE</span></div>
+      </div>
+      <div class="queue-foot">
+        <span>52 jobs · 41h impressão</span>
+        <span class="em">7 hoje · viraço</span>
+      </div>
+    </article>
+
+    <!-- ───── GAUGE META 89% (span 1) ───── -->
+    <article class="bento-card" tabindex="0" aria-labelledby="gauge-title">
+      <svg class="root-hover" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="rh-trunk"    d="M32,4 Q32,18 28,28 Q24,38 22,52" />
+        <path class="rh-branch-l" d="M28,22 Q22,24 18,32" />
+        <path class="rh-branch-r" d="M30,32 Q38,36 42,46" />
+        <path class="rh-sub-l"    d="M18,32 Q14,38 12,46" />
+        <circle cx="22" cy="52" r="2" />
+        <circle cx="18" cy="32" r="1.5" />
+        <circle cx="12" cy="46" r="1.2" />
+        <circle cx="42" cy="46" r="1.5" />
+      </svg>
+      <header class="bento-header">
+        <div>
+          <div class="card-eyebrow">Meta de maio</div>
+          <div class="card-title" id="gauge-title">89% caminhado</div>
+        </div>
+      </header>
+      <div class="gauge-wrap" role="img" aria-label="Gauge da meta mensal: 89% atingido">
+        <svg viewBox="0 0 200 110" aria-hidden="true">
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#155A50"/>
+              <stop offset="55%" stop-color="#1F7669"/>
+              <stop offset="100%" stop-color="#6FB5A8"/>
+            </linearGradient>
+          </defs>
+          <!-- track -->
+          <path d="M 20 100 A 80 80 0 0 1 180 100" stroke="rgba(242,239,234,0.07)" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <!-- fill 89% — semi-circle perímetro = π × r = 251.33; 89% = 223.68 -->
+          <path class="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100"
+            stroke="url(#gaugeGrad)" stroke-width="14" fill="none" stroke-linecap="round"
+            style="--target: 223.68;"/>
+          <!-- threshold ALVO 70% -->
+          <line x1="146" y1="33" x2="153" y2="40" stroke="rgba(208, 138, 74, 0.45)" stroke-width="1.2" stroke-dasharray="2 2"/>
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-value num">89%</div>
+          <div class="gauge-anchor">tá perto</div>
+        </div>
+      </div>
+      <div class="gauge-thresholds">
+        <span>0</span>
+        <span>ALVO <strong>R$ 14k</strong></span>
+        <span>100%</span>
+      </div>
+    </article>
+
+    <!-- ───── TOP PRODUTOS · LUCRO (span 1) ───── -->
+    <article class="bento-card" tabindex="0" aria-labelledby="top-title">
+      <svg class="root-hover" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="rh-trunk"    d="M32,4 Q32,18 28,28 Q24,38 22,52" />
+        <path class="rh-branch-l" d="M28,22 Q22,24 18,32" />
+        <path class="rh-branch-r" d="M30,32 Q38,36 42,46" />
+        <path class="rh-sub-l"    d="M18,32 Q14,38 12,46" />
+        <circle cx="22" cy="52" r="2" />
+        <circle cx="18" cy="32" r="1.5" />
+        <circle cx="12" cy="46" r="1.2" />
+        <circle cx="42" cy="46" r="1.5" />
+      </svg>
+      <header class="bento-header">
+        <div>
+          <div class="card-eyebrow">Top 5 · maio</div>
+          <div class="card-title" id="top-title">Quem deu mais lucro</div>
+        </div>
+      </header>
+      <div class="mini-list">
+        <div class="mini-list-item">
+          <div style="min-width:0;">
+            <div class="name">Vaso Cacto Geo</div>
+            <span class="who">Marina S. · 6 un.</span>
+          </div>
+          <span class="meta petrol">R$ 720</span>
+        </div>
+        <div class="mini-list-item">
+          <div style="min-width:0;">
+            <div class="name">Suporte AirPods Pro</div>
+            <span class="who">Falconi · 8 un.</span>
+          </div>
+          <span class="meta petrol">R$ 480</span>
+        </div>
+        <div class="mini-list-item">
+          <div style="min-width:0;">
+            <div class="name">Organizador Mesa</div>
+            <span class="who">Héquison · 4 un.</span>
+          </div>
+          <span class="meta petrol">R$ 360</span>
+        </div>
+        <div class="mini-list-item">
+          <div style="min-width:0;">
+            <div class="name">Bandeja Hexagonal</div>
+            <span class="who">@3dlab_brasil · 3 un.</span>
+          </div>
+          <span class="meta">R$ 240</span>
+        </div>
+        <div class="mini-list-item">
+          <div style="min-width:0;">
+            <div class="name">Chaveiro logo</div>
+            <span class="who">Carla M. · 12 un.</span>
+          </div>
+          <span class="meta">R$ 180</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- ───── EM PRODUÇÃO AGORA (span 1) ───── -->
+    <article class="bento-card highlight" tabindex="0" aria-labelledby="now-title">
+      <svg class="root-hover" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="rh-trunk"    d="M32,4 Q32,18 28,28 Q24,38 22,52" />
+        <path class="rh-branch-l" d="M28,22 Q22,24 18,32" />
+        <path class="rh-branch-r" d="M30,32 Q38,36 42,46" />
+        <path class="rh-sub-l"    d="M18,32 Q14,38 12,46" />
+        <circle cx="22" cy="52" r="2" />
+        <circle cx="18" cy="32" r="1.5" />
+        <circle cx="12" cy="46" r="1.2" />
+        <circle cx="42" cy="46" r="1.5" />
+      </svg>
+      <header class="bento-header">
+        <div>
+          <div class="card-eyebrow">Imprimindo · agora</div>
+          <div class="card-title" id="now-title">3 peças nas máquinas</div>
+        </div>
+        <span class="pill-petrol">ao vivo</span>
+      </header>
+      <div class="now-printing">
+        <div class="now-print-item">
+          <span class="now-print-led" aria-hidden="true"></span>
+          <div class="now-print-name">
+            Bambu Lab X1-Carbon
+            <span class="who">Vaso Cacto · Marina S.</span>
+          </div>
+          <span class="now-print-time">3h12min</span>
+          <div class="now-print-progress" aria-label="68% concluído">
+            <div class="now-print-progress-fill" style="width: 68%; animation-delay: 600ms;"></div>
+          </div>
+        </div>
+        <div class="now-print-item">
+          <span class="now-print-led" aria-hidden="true"></span>
+          <div class="now-print-name">
+            Ender-3 V3 SE
+            <span class="who">Chaveiros · @3dlab_brasil</span>
+          </div>
+          <span class="now-print-time">1h48min</span>
+          <div class="now-print-progress" aria-label="42% concluído">
+            <div class="now-print-progress-fill" style="width: 42%; animation-delay: 700ms;"></div>
+          </div>
+        </div>
+        <div class="now-print-item">
+          <span class="now-print-led" aria-hidden="true"></span>
+          <div class="now-print-name">
+            AnkerMake M5C
+            <span class="who">Prótese dedo · Falconi</span>
+          </div>
+          <span class="now-print-time">42min</span>
+          <div class="now-print-progress" aria-label="85% concluído">
+            <div class="now-print-progress-fill" style="width: 85%; animation-delay: 800ms;"></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ───── ALERTA FILAMENTO CRÍTICO (span 4 full) ───── -->
+    <article class="bento-card span-4" tabindex="0" aria-labelledby="alert-title">
+      <svg class="root-hover" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="rh-trunk"    d="M32,4 Q32,18 28,28 Q24,38 22,52" />
+        <path class="rh-branch-l" d="M28,22 Q22,24 18,32" />
+        <path class="rh-branch-r" d="M30,32 Q38,36 42,46" />
+        <path class="rh-sub-l"    d="M18,32 Q14,38 12,46" />
+        <circle cx="22" cy="52" r="2" />
+        <circle cx="18" cy="32" r="1.5" />
+        <circle cx="12" cy="46" r="1.2" />
+        <circle cx="42" cy="46" r="1.5" />
+      </svg>
+      <header class="bento-header">
+        <div>
+          <div class="card-eyebrow">Atenção · estoque crítico</div>
+          <div class="card-title" id="alert-title">Filamento PLA preto pra acabar</div>
+        </div>
+        <span class="pill-warning">repor até segunda</span>
+      </header>
+      <div class="alert-filament">
+        <div class="alert-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3L2 20h20L12 3z"/>
+            <line x1="12" y1="10" x2="12" y2="14"/>
+            <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="alert-body">
+          <span class="alert-title"><em>PLA Preto Voolt</em> acaba em <strong style="color:var(--ember-400);">2 dias</strong> no ritmo atual</span>
+          <span class="alert-sub">
+            Spool atual em <strong>320g</strong> · consumo médio <strong>180g/dia</strong> esta semana ·
+            preço Voolt <strong>R$ 47/kg</strong>. Bambu X1 + Ender V3 SE puxam tudo do mesmo spool.
+            Sem reposição, fila de quinta para.
+          </span>
+        </div>
+        <button class="alert-cta" type="button">
+          Comprar agora
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============================================================
+       TROCAR DE PROJETO
+       ============================================================ -->
+  <div class="section-header fade-in delay-3">
+    <h2 class="section-title">Trocar de <em>projeto</em></h2>
+    <span class="section-tag">4 ativos · 1 selecionado · sincronizado agora</span>
+  </div>
+
+  <div class="projects-row fade-in delay-3">
+    <button class="project-chip active" type="button">
+      <span class="chip-dot"></span>
+      <span>Resolução 3D</span>
+      <span class="chip-meta">· atual</span>
+    </button>
+    <button class="project-chip" type="button">
+      <span class="chip-dot" style="background:var(--ember-500);"></span>
+      <span>Loja Cosplay BR</span>
+      <span class="chip-meta num">· R$ 4.200</span>
+    </button>
+    <button class="project-chip" type="button">
+      <span class="chip-dot" style="background:var(--petrol-300);"></span>
+      <span>Studio Marina</span>
+      <span class="chip-meta num">· R$ 2.890</span>
+    </button>
+    <button class="project-chip" type="button">
+      <span class="chip-dot" style="background:#8A8478;"></span>
+      <span>Maker Hub</span>
+      <span class="chip-meta" style="font-family:Fraunces,Georgia,serif;font-style:italic;">· em setup</span>
+    </button>
+  </div>
+
+</main>
+
+<!-- STREAK PILL (mecanismo 7 dopamina) -->
+<div class="streak-pill" role="status" aria-label="Streak de uso consecutivo">
+  <svg class="streak-leaf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 2 Q4 8 4 14 a8 8 0 0 0 16 0 Q20 8 12 2 Z"/>
+    <path d="M12 2 L12 22"/>
+  </svg>
+  <span class="streak-num num">12 dias</span>
+  <span>seguidos no controle</span>
+</div>
+
+<script>
+  (function () {
+    'use strict';
+
+    // ============================================================
+    // PREFERS-REDUCED-MOTION
+    // ============================================================
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ============================================================
+    // THEME TOGGLE (light/dark · localStorage persist)
+    // ============================================================
+    const themeToggle = document.getElementById('themeToggle');
+    const STORAGE_KEY = 'hayzer-theme';
+    const stored = (function () {
+      try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+    })();
+
+    const initial = stored || 'dark';
+    document.documentElement.dataset.theme = initial;
+
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        try { localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
+        themeToggle.setAttribute('aria-label',
+          next === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro');
+      });
+    }
+
+    // ============================================================
+    // COUNT-UP — variable reward (mecanismo 1 dopamina)
+    // KPI hero + KPI marquee animam 0 → valor com easeOutQuart 1.2s
+    // ============================================================
+    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+    function formatBR(n) {
+      return n.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+    function countUp(el) {
+      const target = parseInt(el.dataset.target, 10);
+      if (isNaN(target)) return;
+      const prefix = el.dataset.prefix || '';
+      if (reduce) {
+        el.textContent = prefix + formatBR(target);
+        return;
+      }
+      const duration = 1200;
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const v = Math.round(easeOutQuart(t) * target);
+        el.textContent = prefix + formatBR(v);
+        if (t < 1) requestAnimationFrame(step);
+        else el.textContent = prefix + formatBR(target);
+      }
+      requestAnimationFrame(step);
+    }
+
+    const counters = document.querySelectorAll('[data-target]');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            countUp(e.target);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.35 });
+      counters.forEach(c => io.observe(c));
+    } else {
+      counters.forEach(countUp);
+    }
+
+    // ============================================================
+    // GAUGE — adiciona classe .completed se atingiu meta
+    // (Zeigarnik / progresso · mecanismo 2 dopamina)
+    // ============================================================
+    document.querySelectorAll('.gauge-fill').forEach(g => {
+      const target = parseFloat(g.style.getPropertyValue('--target')) || 0;
+      // 100% da meta = 251.33 (perímetro semi-círculo)
+      if (target >= 251) g.classList.add('completed');
+    });
+
+    // ============================================================
+    // MOBILE DRAWER
+    // ============================================================
+    const mobileToggle = document.getElementById('mobileToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (mobileToggle && sidebar) {
+      mobileToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        const open = sidebar.classList.contains('open');
+        mobileToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      sidebar.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+          if (window.innerWidth <= 768) sidebar.classList.remove('open');
+        });
+      });
+    }
+
+    // ============================================================
+    // KPI CARDS hover — micro-feedback discreto (mecanismo 5)
+    // (sem confetti, sem cringe — só scale-down click)
+    // ============================================================
+    document.querySelectorAll('.kpi-card, .bento-card').forEach(card => {
+      card.addEventListener('mousedown', () => {
+        if (reduce) return;
+        card.style.transform = 'translateY(-2px) scale(0.99)';
+      });
+      const reset = () => {
+        if (reduce) return;
+        card.style.transform = '';
+      };
+      card.addEventListener('mouseup', reset);
+      card.addEventListener('mouseleave', reset);
+    });
+  })();
+</script>
+
+</body>
+</html>

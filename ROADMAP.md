@@ -126,8 +126,15 @@
 - [ ] Atualizar Vercel com credenciais MP produtivas após ativação
 
 ### Segurança
-- [ ] Validação de input via Zod em `/api/checkout`, `/api/encomenda` (XSS possível em `clientName`)
-- [ ] Rate limiting em rotas públicas (`@upstash/ratelimit` ou Vercel BotID)
+- [x] Validação de input via Zod em `/api/checkout`, `/api/encomenda`, `/api/catalog/quote` ✅ 2026-05-16
+- [x] **🔴 Middleware bloqueando webhooks** — `/api/webhooks` adicionado em `PUBLIC_PATHS` ✅ 2026-05-17
+- [x] **🔴 MP webhookSecret obrigatório** — `payments/mercadopago.ts` throw se faltar, `payment-configs/route.ts` bloqueia salvar MP sem secret ≥16 chars ✅ 2026-05-17
+- [x] **🟠 `/api/content/sync` hardening** — auth + Zod + RLS server client ✅ 2026-05-17
+- [ ] Zod nas APIs autenticadas (`/api/finance/fixed-costs`, `/profit-goal`, `/payment-configs`) — atualmente validação manual `typeof`
+- [ ] Rate limiting em rotas públicas (`@upstash/ratelimit` ou solução DB-based replicando `waitlistRateLimit.ts`)
+- [ ] CSP report-only header (`next.config.ts`)
+- [ ] HSTS com `preload` (`next.config.ts`)
+- [ ] Promover Vercel BotID de Log → Challenge
 
 ---
 
@@ -369,6 +376,13 @@
 > Quando terminar item, mover daqui pra cima como `[x]`.
 > Lista compacta de marcos atingidos:
 
+- 2026-05-17 · **Segurança Tier 1 — 3 fixes críticos aplicados** (auditoria Otávio detectou bugs CRÍTICOS além do ROADMAP):
+  - 🔴 **Middleware bloqueava webhooks** — `/api/webhooks/*` fazia 307 → /login (gateway nunca alcançava handler, pagamento aprovado não virava Order). Fix: `/api/webhooks` adicionado em `PUBLIC_PATHS` (`middleware.ts`). Comentário explicando que auth é via signature do payload, não cookie.
+  - 🔴 **MP webhook aceitava qualquer payload** — `payments/mercadopago.ts:121` só verificava signature SE `webhookSecret` configurado. Sem secret = fraude trivial (atacante forja payment approved). Fix: agora throw obrigatório (mesmo padrão do Stripe). Plus: `app/api/payment-configs/route.ts` bloqueia salvar config MP sem webhookSecret válido (mínimo 16 chars).
+  - 🟠 **`/api/content/sync` totalmente exposto** — sem auth, sem Zod, usando client browser no server, escrevia sem filtrar `user_id`. Cross-tenant write trivial. Fix: refatoração completa — `getUser()` obrigatório + `createServerClient()` (RLS) + Zod schema novo (`contentSyncSchema` em `services/apiSchemas.ts`).
+  - **TypeScript 0 erros** após os 5 edits. Pendentes Tier 1 (não-críticos pra launch, agendados Semana 2): rate-limit APIs públicas, Zod nas APIs autenticadas (finance + payment-configs), CSP report-only, HSTS preload, Vercel BotID Challenge.
+- 2026-05-17 · **Dashboard V4 híbrido HTML gerado** — `mockups/dashboard/v4-hibrido.html` (2742 linhas) consolidando winners V1 (donut + bars 6 meses + fila Bambu + gauge semicircular) + V3 (cover editorial 96px Fraunces + raízes SVG fundo + watermark + bento hover) + correções (dark soft `#161B1F`, body 17px, raízes ANIMADAS no hover via stroke-dashoffset CSS puro, light mode toggle + localStorage). 9 mecanismos dopamina aplicados (validação científica via external-researcher). Logo PNG preservada (ADR-013). Microcopy maker BR real. 10/10 checks ✅. Aguarda CEO abrir `hayzer.com.br/mockups/v4-hibrido` e validar pra Felipe converter React.
+- 2026-05-17 · **ADR-013 + memória ativa diego-designer + brand BRIEF logo congelada** — logo Hayzer (`public/logo-hayzer.png` — H+raízes) virou regra fixa pra todos os agentes G7. Nunca mais redesenhar/recriar tipograficamente sem pedido explícito CEO. Sistema aprendizado G7: 2 agentes com memória ativa (carla-copy piloto 16/05 + diego-designer 17/05).
 - 2026-05-09 · **Onda 3 — finanças no DB** — `fixed_costs` (lista granular: DAS, aluguel, software…) + `profit_goals` (meta mensal) por projeto, com RLS, FK em `projects`, e migração one-shot do localStorage legacy. UI: project selector + lista editável + total automático. Refator de `BreakEvenSection` em `components/FinanceView.tsx`. Tipos novos em `core/finance/financeConfigTypes.ts`. Service `services/financeConfig.ts`.
 - 2026-05-10 · **Validação E2E Fase B + fix RPC** — submit de orçamento testado em produção (catálogo público → modal → submit). Bug encontrado: `operator does not exist: uuid = text` na RPC `create_catalog_lead` (linha 42, comparação `products.id` uuid com `p_product_id` text). Fix em `20260510_catalog_quote_lead_rpc_fix.sql` — cast explícito `p_product_id::uuid` + validação prévia de formato pra erro PT-BR amigável. Re-teste OK: Lead criado com `source='catalog'`, status='new', urgência+descrição em notes, aparece no CRM.
 - 2026-05-09 · **Fase B Catálogo evoluído (ADR 005)** — 4 etapas em sequência: (1) schema `products.checkout_mode/variants/allows_custom` + UI admin; (2) `CatalogActionButton` dispatcher + `QuoteModal` no catálogo público (4 modos: direct/variant/quote/contact_only) + remoção do `BuyButton`; (3) `POST /api/catalog/quote` (público) cria Lead com `source='catalog'`; (4) `FloatingWhatsApp` fixo no canto da vitrine. `ContactSource` extendido com `'catalog'`.

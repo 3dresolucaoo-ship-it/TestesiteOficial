@@ -57,6 +57,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'accessToken still masked — paste the real value' }, { status: 400 })
   }
 
+  // Mercado Pago exige webhookSecret obrigatório (anti-fraude).
+  // Sem ele, payments/mercadopago.ts:121 throw e o webhook é rejeitado.
+  // Bloqueio aqui evita salvar config quebrada que vai falhar em runtime.
+  if (body.provider === 'mercadopago') {
+    if (!body.webhookSecret || typeof body.webhookSecret !== 'string' || body.webhookSecret.trim().length < 16) {
+      return NextResponse.json(
+        {
+          error:
+            'webhookSecret é obrigatório para Mercado Pago (mínimo 16 caracteres). ' +
+            'Pegue em: MP Dashboard → Sua aplicação → Webhooks → Chave secreta.',
+        },
+        { status: 400 },
+      )
+    }
+  }
+
   try {
     const client = await createServerClient()
     await paymentConfigService.upsertConfig(user.id, {

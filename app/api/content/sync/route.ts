@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient'
+import { getUser } from '@/lib/auth'
+import { createServerClient } from '@/lib/supabaseServer'
+import { contentSyncSchema, zodErrorToPtBr } from '@/services/apiSchemas'
 
 // ─── Mock metrics generator ───────────────────────────────────────────────────
 // Produces deterministic fake metrics from a URL string.
@@ -25,38 +27,57 @@ function mockMetricsFromLink(link: string): {
 }
 
 // ─── POST /api/content/sync ───────────────────────────────────────────────────
-// Body: { items: Array<{ id: string; link: string }> }
+// Body: { items: Array<{ id: uuid; link: url }> }
 // Returns: { synced: number; items: Array<updatedRow> }
+//
+// Otávio 2026-05-17: hardening completo.
+// Antes: sem auth, sem Zod, client browser no server (sem RLS) →
+//   qualquer um podia POST com {id: <id_alheio>} e sobrescrever métricas
+//   de qualquer usuário (corrupção + vazamento cross-tenant).
+// Agora: getUser() obrigatório + Zod (UUID + URL limits) + createServerClient
+//   (RLS filtra automaticamente por user_id na policy do `content`).
 
 export async function POST(req: NextRequest) {
+  const user = await getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  let body: unknown
   try {
-    const body = await req.json() as { items: Array<{ id: string; link: string }> }
-    const items = body?.items ?? []
+    body = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
 
-    if (!Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ synced: 0, items: [] })
-    }
+  const parsed = contentSyncSchema.safeParse(body)
+  if (!parsed.success) {
+    const { message, fields } = zodErrorToPtBr(parsed.error)
+    return NextResponse.json({ error: message, fields }, { status: 400 })
+  }
 
-    const results: Array<{
-      id: string; views: number; likes: number
-      comments: number; shares: number; saves: number
-    }> = []
+  const { items } = parsed.data
+  const supabase = await createServerClient()
 
+  const results: Array<{
+    id: string; views: number; likes: number
+    comments: number; shares: number; saves: number
+  }> = []
+
+  try {
     for (const item of items) {
-      if (!item.id || !item.link) continue
-
       // Generate metrics (swap with real API call when ready)
       const metrics = mockMetricsFromLink(item.link)
 
       results.push({ id: item.id, ...metrics })
 
-      // Persist to Supabase if configured
-      if (isSupabaseConfigured) {
-        await supabase
-          .from('content')
-          .update(metrics)
-          .eq('id', item.id)
-      }
+      // RLS policy do `content` filtra por user_id = auth.uid() —
+      // tentativa de update em row de outro user retorna 0 rows alterados
+      // sem erro (silent reject). Seguro contra cross-tenant write.
+      await supabase
+        .from('content')
+        .update(metrics)
+        .eq('id', item.id)
     }
 
     return NextResponse.json({ synced: results.length, items: results })

@@ -117,33 +117,40 @@ export function mercadoPagoProvider(creds: ProviderCredentials): PaymentProvider
     const xSig     = headers.get('x-signature')     ?? ''
     const xReqId   = headers.get('x-request-id')   ?? ''
 
-    // ── Verify HMAC signature (if webhookSecret is configured) ───────────────
-    if (webhookSecret) {
-      // Header format: "ts=<epoch_ms>,v1=<hex_hmac>"
-      const parts = Object.fromEntries(
-        xSig.split(',').map(p => {
-          const idx = p.indexOf('=')
-          return [p.slice(0, idx), p.slice(idx + 1)]
-        }),
+    // ── Verify HMAC signature (OBRIGATÓRIO — anti-fraude) ────────────────────
+    // Sem isto, atacante envia POST com metadata bvaz_* montados e cria
+    // Order/Transaction falsos. Verificação obrigatória igual ao Stripe.
+    if (!webhookSecret) {
+      throw new Error(
+        '[MP] parseWebhook: webhookSecret is required for signature verification. ' +
+        'Configure em Settings → Mercado Pago → Webhook Secret ou via MP_WEBHOOK_SECRET env var.',
       )
-      const ts = parts['ts']
-      const v1 = parts['v1']
+    }
 
-      if (!ts || !v1) {
-        console.warn('[MP] parseWebhook: malformed x-signature header:', xSig)
-        return null
-      }
+    // Header format: "ts=<epoch_ms>,v1=<hex_hmac>"
+    const parts = Object.fromEntries(
+      xSig.split(',').map(p => {
+        const idx = p.indexOf('=')
+        return [p.slice(0, idx), p.slice(idx + 1)]
+      }),
+    )
+    const ts = parts['ts']
+    const v1 = parts['v1']
 
-      const manifest = `id:${dataId};request-id:${xReqId};ts:${ts};`
-      const expected = crypto
-        .createHmac('sha256', webhookSecret)
-        .update(manifest)
-        .digest('hex')
+    if (!ts || !v1) {
+      console.warn('[MP] parseWebhook: malformed x-signature header:', xSig)
+      return null
+    }
 
-      if (expected !== v1) {
-        console.warn('[MP] parseWebhook: signature mismatch — possible tampered request')
-        return null
-      }
+    const manifest = `id:${dataId};request-id:${xReqId};ts:${ts};`
+    const expected = crypto
+      .createHmac('sha256', webhookSecret)
+      .update(manifest)
+      .digest('hex')
+
+    if (expected !== v1) {
+      console.warn('[MP] parseWebhook: signature mismatch — possible tampered request')
+      return null
     }
 
     // ── Fetch full payment from MP API ────────────────────────────────────────

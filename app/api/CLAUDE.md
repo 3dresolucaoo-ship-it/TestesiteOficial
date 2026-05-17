@@ -28,17 +28,17 @@
 | `/api/finance/fixed-costs/[id]` | PATCH, DELETE | ✅ OK — edita/remove um custo fixo |
 | `/api/finance/profit-goal` | GET, PUT | ✅ OK — lê/upsert meta mensal por projeto |
 | `/api/catalog/quote` | POST | ✅ OK — endpoint público, cria Lead via admin client; resolve dono via catalog.slug (Fase B) |
-| `/api/webhooks/payment` | POST | ❌ depende B1 |
+| `/api/webhooks/payment` | POST | ✅ OK — middleware libera (Otávio 17/05), MP signature obrigatória |
 | `/api/webhooks/stripe` | POST | ✅ deletado em 2026-05-04 (substituído por `/api/webhooks/payment`) |
-| `/api/content/sync` | POST | ⚠️ usa client browser — refatorar |
+| `/api/content/sync` | POST | ✅ OK — auth + Zod + RLS server client (hardening Otávio 17/05) |
 
 ## Issues conhecidos
 
-- ❌ Sem rate limiting em rotas públicas
-- ❌ Sem validação Zod
-- ❌ `/api/content/sync` usa `lib/supabaseClient` (browser) no server — não filtra `user_id`
-- ❌ `/api/webhooks/stripe` duplica lógica de `payments/stripe.ts`
-- ⚠️ Sem header `X-Robots-Tag: noindex`
+- ⚠️ Sem rate limiting nas rotas públicas (`/api/checkout`, `/api/encomenda`, `/api/catalog/quote`) — agendado Semana 2 ROADMAP
+- ⚠️ Validação Zod incompleta — falta nas APIs autenticadas (`/api/finance/*`, `/api/payment-configs`) — agendado Semana 2
+- ✅ ~~`/api/content/sync` usa `lib/supabaseClient` (browser) no server~~ — RESOLVIDO 2026-05-17 (Otávio): auth + Zod + RLS
+- ✅ ~~`/api/webhooks/stripe` duplica lógica~~ — deletado 2026-05-04
+- ⚠️ Sem header `X-Robots-Tag: noindex` nas rotas API
 
 ## Padrão pra criar rota nova
 

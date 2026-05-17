@@ -12,6 +12,12 @@ const PUBLIC_PATHS = [
   '/privacidade',
   '/termos',
   '/calculadora',
+  // Webhooks são server-to-server: gateway POST sem cookie de sessão.
+  // Autenticação acontece via signature do payload (Stripe: stripe-signature
+  // header verificado em payments/stripe.ts:88; MP: HMAC SHA-256 obrigatório
+  // em payments/mercadopago.ts:121). Sem isto aqui, middleware faz 307→/login
+  // e o gateway nunca alcança o handler — pagamento aprovado não vira Order.
+  '/api/webhooks',
 ]
 // /mockups REMOVIDO de PUBLIC_PATHS em 2026-05-16:
 // requer auth Supabase + email admin pra prevenir vazamento de WIP visual

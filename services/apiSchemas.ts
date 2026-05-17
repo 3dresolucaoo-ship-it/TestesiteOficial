@@ -97,6 +97,28 @@ export const quoteSchema = z
 
 export type QuotePayload = z.infer<typeof quoteSchema>
 
+// ── /api/content/sync ────────────────────────────────────────────────────────
+// Otávio 2026-05-17: rota antes totalmente exposta (sem auth, sem Zod,
+// usando client browser no server) — qualquer um podia update cross-user.
+// Agora exige auth (RLS no service) + Zod (limites firmes).
+export const contentSyncSchema = z.object({
+  items: z
+    .array(
+      z.object({
+        id: z.string().uuid({ message: 'ID do conteúdo inválido' }),
+        link: z
+          .string()
+          .trim()
+          .url({ message: 'Link inválido' })
+          .max(500, 'Link muito longo (máximo 500 caracteres)'),
+      }),
+    )
+    .min(1, 'Informe pelo menos 1 item')
+    .max(100, 'Máximo 100 itens por sync (evita DOS)'),
+})
+
+export type ContentSyncPayload = z.infer<typeof contentSyncSchema>
+
 // ── Helper: formata erro de Zod em PT-BR amigável ────────────────────────────
 export function zodErrorToPtBr(error: z.ZodError): {
   message: string
