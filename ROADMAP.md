@@ -30,14 +30,40 @@
 - [x] **PT-BR formal** em textos instrucionais (decisão CEO) ✅ 2026-05-15
 - [x] **Slash command /rcs** (renomeado de /rc, reforçado pra entregar bloco copiável) ✅ 2026-05-15
 
-### Semana 2 (20-26/05) — Segurança Tier 1
-- [ ] Zod em todos os forms
-- [ ] Rate limit (Upstash Redis) global + por endpoint
-- [ ] HSTS + headers de segurança em next.config.ts
-- [ ] Idempotência em fluxos críticos (`webhook_events` table)
-- [ ] Verificação de webhook signature (Stripe + MP)
-- [ ] Erro genérico no login (anti-enumeração)
-- [ ] Staging branch separada em Vercel
+### Semana 2 (20-26/05) — Dashboard Real + Segurança Tier 1 + Bug Paulo
+> **Gantt detalhado (plano consolidado 17/05 — CEO aprovou)**:
+
+**SEG 20/05** — Conversão V4.3 → React começa
+- [ ] Felipe: Fase 1 conversão V4.3 React — componentes (DashboardLayout + Greeting + CoverHero + KpiSatellites + NextActionCard + BentoGrid + StreakPill + RootHover)
+- [ ] Bruna: Fase 1 bug Paulo — migration `webhook_events` + RPC `process_webhook_atomic` (transaction atômica insert+process+update)
+
+**TER 21/05** — Continua React + segurança
+- [ ] Felipe: Fase 1 continua (componentes complexos: charts, donut, gauge)
+- [ ] Bruna: Fase 2 bug Paulo — refatorar `app/api/webhooks/payment/route.ts` chamando RPC; testar idempotência
+- [ ] Otávio: CSP report-only header em `next.config.ts`
+
+**QUA 22/05** — Termina React + Tier 1 restante
+- [ ] Felipe: Fase 1 últimos detalhes (mobile drawer, root-hover animações)
+- [ ] Otávio: Dependabot/Renovate ativo (OWASP A03 Supply Chain)
+- [ ] Otávio: Zod nas APIs autenticadas (`/api/finance/*` + `/api/payment-configs`)
+
+**QUI 23/05** — Conecta services + a11y
+- [ ] Felipe: Fase 2 conecta com `services/finance.ts`, `services/financeConfig.ts`, `services/orders.ts`, etc
+- [ ] Júlia: a11y audit V4 React (Axe + screen reader)
+- [ ] Diego: paleta HSL 8-10 shades em `globals.css` (Refactoring UI)
+
+**SEX 24/05** — Deploy preview + revisão semanal Pillars
+- [ ] Felipe: deploy preview V4 React, CEO valida com dados REAIS
+- [ ] **Revisão semanal `pillars/SCORES.md` #1** (CEO + Helena 9h)
+- [ ] Otávio: rate-limit Upstash em rotas públicas
+
+**SAB 25/05** — Marketing atrasado da Semana 1
+- [ ] Marcos: 1º post LinkedIn "Hayzer em breve" (estava atrasado da Sem.1)
+
+**DOM 26/05** — Estudo G7 #2
+- [ ] Cada agente lê próximo livro da lista: Helena=7 Powers, Marcos=Influence, Sofia=Customer Success (Nick Mehta), etc
+
+✅ **Resultado esperado**: V4 dashboard em produção com dados reais; segurança Tier 1 90% concluída; bug Paulo (transaction atômica) corrigido.
 
 ### Semana 3 (27/05-02/06) — LGPD + Email + MP Marketplace
 - [x] Política de Privacidade publicada ✅ 2026-05-13
@@ -99,7 +125,7 @@
 ## 🎯 PRÓXIMAS FASES (resumo)
 
 - **Fase 2 — Estabilização** (jul-set/2026, 10 sem): testes, Sentry, otimização funil, suporte estruturado
-- **Fase 3 — Crescimento** (set-dez/2026, 12 sem): Wave 2 (Pilar Produtos), tiers, integrações WhatsApp/Instagram
+- **Fase 3 — Crescimento** (set-dez/2026, 12 sem): Wave 2 (Pilar Produtos), Wave 8 (Marketplace + Segunda Venda — inspiração CEO 17/05), tiers, integrações WhatsApp/Instagram
 - **Fase 4 — Maturidade** (dez/2026-mar/2027, 12 sem): Wave 3 (Mapa Financeiro), automações marketing, talvez primeira contratação
 - **Fase 5 — Expansão** (mar-mai/2027, 10 sem): Wave 4 (Mapa Operacional), Heshiley começa em paralelo
 
@@ -357,6 +383,42 @@
 - [ ] `social_snapshots` (platform, followers, engagement, source manual|api)
 - [ ] Banner forte se >90d sem atualização (concorrentes) / >45d (social)
 - [ ] Migration path: manual → API quando integração IG/YT pronta
+
+### Wave 8 — Marketplace Integrado + Segunda Venda (set/2026, 3-4 sem)
+
+> **Inspiração**: app "Segunda Venda" mostrado pelo CEO 17/05 (vídeo Facebook). Captura WhatsApp+email do cliente do marketplace + automações condicionais. Ouro pra maker BR que vende em ML/Shopee/Amazon mas perde o relacionamento.
+>
+> **Diferencial Hayzer**: maker já tem catálogo/estoque/financeiro no mesmo Hayzer = automação cruza dados (não só captura). Sem assinar 4 ferramentas (Bling + ZapiAuto + Segunda Venda + etc) = tudo num só.
+
+**Estrutura `/marketplace`**:
+- [ ] Aba `/marketplace/anuncios` — sync com ML/Shopee/Amazon (anúncios ativos, pausados, problemas, ranking de busca)
+- [ ] Aba `/marketplace/perguntas` — perguntas pendentes consolidadas (responde de 1 lugar só)
+- [ ] **Aba `/marketplace/segunda-venda`** ⭐ feature âncora:
+  - [ ] Captura automática: cliente novo após pagamento ML/Shopee
+  - [ ] Enriquecimento: busca WhatsApp via tracking + email via NF-e Bling
+  - [ ] Engine de automações condicionais (regras: produto X / cidade Y / valor Z → mensagem)
+  - [ ] Disparo via WhatsApp Business API + Resend (email)
+  - [ ] Templates editáveis com microcopy maker BR (Carla revisa)
+- [ ] Aba `/marketplace/comissao` — gross-up real ML (12-19%), Shopee (14%), Amazon (15%), Magalu (var.)
+- [ ] Aba `/marketplace/importar` — importar produto de marketplace → catálogo Hayzer one-click
+
+**Schemas novos**:
+- `marketplaces` (id, user_id, provider, credentials_oauth, status)
+- `marketplace_listings` (id, marketplace_id, external_id, title, price, stock, status)
+- `marketplace_orders` (id, marketplace_id, external_order_id, customer_data jsonb, captured_contact bool)
+- `second_sale_automations` (id, user_id, name, conditions jsonb, action jsonb, enabled)
+- `second_sale_dispatches` (id, automation_id, order_id, channel, status, sent_at)
+
+**APIs externas necessárias**:
+- Mercado Livre Developers API (OAuth + tokens)
+- Shopee Open Platform (autorização lojista)
+- Amazon Seller Central API (SP-API)
+- Bling NF-e (extrair email da nota fiscal)
+- WhatsApp Business API ou Meta Cloud API (envio mensagens)
+
+**Comparativos BR (vencer)**: Anymarket (R$ 297/mês), Plugg.to (R$ 197/mês), ECOMMENU (R$ 160/mês). Hayzer entrega o que eles + Segunda Venda + integração com calculadora/estoque/financeiro. Diferencial duro.
+
+**Tempo estimado**: 3-4 semanas (1 dev full-time). Início sugerido: set/2026 (Fase 3 Crescimento, pós-launch público + 8 sem de estabilização).
 
 ---
 

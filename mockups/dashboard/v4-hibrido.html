@@ -65,10 +65,11 @@
     --signal-amber: var(--ember-400);
     --signal-red:   #E07A5F;
 
-    /* borders */
-    --border-soft:   rgba(242, 239, 234, 0.08);
-    --border-md:     rgba(242, 239, 234, 0.14);
-    --border-strong: rgba(242, 239, 234, 0.22);
+    /* borders — CEO 17/05 V4.5: subiu de 0.08→0.14 (bordas mais visíveis,
+       não some no fundo, dá contorno claro pros cards) */
+    --border-soft:   rgba(242, 239, 234, 0.14);
+    --border-md:     rgba(242, 239, 234, 0.20);
+    --border-strong: rgba(242, 239, 234, 0.28);
 
     /* shadows */
     --shadow-card:   0 1px 0 rgba(242, 239, 234, 0.04) inset, 0 4px 14px rgba(7, 9, 10, 0.45);
@@ -129,9 +130,9 @@
     --signal-amber: var(--ember-400);
     --signal-red:   #C25E45;
 
-    --border-soft:   rgba(10, 13, 15, 0.06);
-    --border-md:     rgba(10, 13, 15, 0.12);
-    --border-strong: rgba(10, 13, 15, 0.20);
+    --border-soft:   rgba(10, 13, 15, 0.12);
+    --border-md:     rgba(10, 13, 15, 0.18);
+    --border-strong: rgba(10, 13, 15, 0.26);
 
     --shadow-card:   0 1px 3px rgba(10, 13, 15, 0.04), 0 8px 24px rgba(10, 13, 15, 0.06);
     --shadow-petrol: 0 8px 28px -10px rgba(31, 118, 105, 0.25);
@@ -881,7 +882,9 @@
   }
   .kpi-mini-card.highlight {
     background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
-    border-color: rgba(31, 118, 105, 0.22);
+    border-color: rgba(31, 118, 105, 0.42);
+    border-radius: 14px;                /* variar 12→14 (anti uniformidade IA) */
+    box-shadow: inset 0 1px 0 rgba(111, 181, 168, 0.06);
   }
   .kpi-mini-card::after {
     content: "";
@@ -1150,7 +1153,10 @@
   }
   .bento-card.highlight {
     background: linear-gradient(140deg, var(--surface-2) 0%, var(--surface-1) 80%);
-    border-color: rgba(31, 118, 105, 0.18);
+    border-color: rgba(31, 118, 105, 0.42);
+    box-shadow:
+      var(--shadow-card),
+      inset 0 1px 0 rgba(111, 181, 168, 0.08);
   }
   .bento-card.span-2 { grid-column: span 2; }
   .bento-card.span-3 { grid-column: span 3; }
