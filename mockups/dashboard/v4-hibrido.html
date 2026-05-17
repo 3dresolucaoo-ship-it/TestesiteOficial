@@ -37,12 +37,13 @@
     --surface-2: #1F262B;     /* card hover/destaque */
     --surface-3: #2A3239;     /* extra */
 
-    /* fog (texto) */
+    /* fog (texto) — fog-400 subido pra #94908A (era #5B564D, contraste 2.6:1 FALHA WCAG AA)
+       Novo #94908A sobre #161B1F = ~5.1:1 (passa AA AAA). CEO 17/05: legibilidade footnotes. */
     --fog-50:  #F2EFEA;
     --fog-100: #E3DED5;
     --fog-200: #BDB7AB;
     --fog-300: #8A8478;
-    --fog-400: #5B564D;
+    --fog-400: #94908A;
     --fog-500: #3A352D;
 
     /* petrol — cor de marca */
@@ -196,11 +197,11 @@
     pointer-events: none;
     z-index: 1;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-    opacity: 0.18;
+    opacity: 0.30;
     mix-blend-mode: screen;
   }
   :root[data-theme="light"] .grain-layer {
-    opacity: 0.08;
+    opacity: 0.13;
     mix-blend-mode: multiply;
   }
 
@@ -299,39 +300,50 @@
      STREAK PILL — canto inferior fixed (mecanismo 7 dopamina)
      ============================================================ */
 
+  /* sheen ember waitlist-style — único elemento celebratório do dashboard.
+     CEO 17/05: aplicar vibe pílula laranja da landing SÓ aqui (Hick's Law). */
   .streak-pill {
     position: fixed;
     bottom: 22px;
     left: 270px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 14px 8px 12px;
-    background: var(--surface-1);
-    border: 1px solid var(--border-md);
+    gap: 9px;
+    padding: 10px 16px 10px 13px;
+    background: linear-gradient(135deg, var(--ember-500) 0%, var(--ember-600) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.20);
     border-radius: 999px;
     font-family: 'Geist Mono', monospace;
     font-size: 13px;
-    color: var(--fog-200);
+    color: #1A100A;
     letter-spacing: 0.06em;
     z-index: 8;
-    box-shadow: var(--shadow-card);
-    backdrop-filter: blur(8px);
-    transition: border-color var(--t-fast), color var(--t-fast);
+    box-shadow:
+      0 10px 26px -6px rgba(208, 138, 74, 0.50),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.14);
+    transition: transform var(--t-fast), box-shadow var(--t-fast);
   }
   .streak-pill:hover {
-    border-color: var(--petrol-400);
-    color: var(--fog-50);
+    transform: translateY(-1px);
+    box-shadow:
+      0 14px 30px -6px rgba(208, 138, 74, 0.62),
+      inset 0 1px 0 rgba(255, 255, 255, 0.32),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.16);
   }
   .streak-pill .streak-num {
-    color: var(--petrol-300);
-    font-weight: 600;
+    color: #1A100A;
+    font-weight: 700;
   }
   .streak-pill .streak-leaf {
     width: 14px;
     height: 14px;
-    color: var(--petrol-400);
+    color: #1A100A;
+    opacity: 0.85;
   }
+  :root[data-theme="light"] .streak-pill { color: #1A100A; }
+  :root[data-theme="light"] .streak-pill .streak-num,
+  :root[data-theme="light"] .streak-pill .streak-leaf { color: #1A100A; }
 
   /* ============================================================
      SIDEBAR — 248px fixed esquerda (V3 base)
@@ -828,6 +840,114 @@
   }
 
   /* ============================================================
+     KPI SATÉLITES — coluna direita do cover (substitui kpi-hero V1)
+     CEO 17/05: hero virar subcategoria. 1 hero (cover-figure 96px) +
+     4 satélites verticais (Lucro/Margem/Custos/Pedidos) que complementam
+     sem competir. Substitui também o kpi-marquee linha embaixo (info
+     migrou pros satélites — economiza linha vertical + reduz Hick).
+     ============================================================ */
+
+  .kpi-satellites {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-self: stretch;
+  }
+
+  .kpi-mini-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 14px;
+    min-height: 58px;
+    transition: border-color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+    overflow: hidden;
+  }
+  .kpi-mini-card:hover {
+    border-color: rgba(31, 118, 105, 0.32);
+    background: var(--surface-2);
+  }
+  .kpi-mini-card.highlight {
+    background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
+    border-color: rgba(31, 118, 105, 0.22);
+  }
+  .kpi-mini-card::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(180deg, var(--petrol-400) 0%, transparent 100%);
+    transition: height var(--t-med);
+    transform: translateX(-50%);
+  }
+  .kpi-mini-card:hover::after { height: 8px; }
+
+  .kpi-mini-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .kpi-mini-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fog-300);
+  }
+  .kpi-mini-meta {
+    font-family: 'Geist', sans-serif;
+    font-size: 12px;
+    color: var(--fog-400);
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kpi-mini-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .kpi-mini-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 72, "SOFT" 40;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .kpi-mini-value .suffix {
+    font-style: italic;
+    font-size: 15px;
+    color: var(--fog-200);
+    font-weight: 400;
+  }
+  .kpi-mini-delta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .kpi-mini-delta.up { color: var(--petrol-300); }
+  .kpi-mini-delta.down { color: var(--ember-400); }
+  .kpi-mini-delta.neutral { color: var(--fog-300); }
+
+  /* ============================================================
      BRANCH DIVISOR
      ============================================================ */
 
@@ -941,8 +1061,19 @@
     color: var(--ember-300);
     border: 1px solid rgba(208, 138, 74, 0.30);
   }
+  /* neutral — pra Custos e métricas operacionais sem juízo de valor
+     (CEO 17/05: custos não é alarme, é parte natural da operação) */
+  .delta.neutral {
+    background: rgba(242, 239, 234, 0.05);
+    color: var(--fog-200);
+    border: 1px solid var(--border-soft);
+  }
   :root[data-theme="light"] .delta.up { color: var(--petrol-300); }
   :root[data-theme="light"] .delta.down { color: var(--ember-300); }
+  :root[data-theme="light"] .delta.neutral {
+    color: var(--fog-300);
+    background: rgba(10, 13, 15, 0.04);
+  }
 
   /* ============================================================
      SECTION HEADER
@@ -1362,7 +1493,7 @@
   }
   .queue-bar {
     width: 100%;
-    max-width: 26px;
+    max-width: 32px;
     background: var(--petrol-500);
     border-radius: 4px 4px 0 0;
     transform-origin: bottom;
@@ -2096,36 +2227,61 @@
         <span class="currency">R$</span>
         <span id="coverValue" data-target="12480">0</span><span class="decimal">,00</span>
       </h1>
-      <p class="cover-anchor">esse mês <em>tá no ritmo</em> — recorde do trimestre, dá pra respirar.</p>
+      <p class="cover-anchor">esse mês <em>tá no ritmo</em>, recorde do trimestre, dá pra respirar.</p>
       <p class="cover-meta">
         Maio <span class="sep">·</span> sem 03 <span class="sep">·</span> atualizado há 4 min
         <span class="sep">·</span> <strong>+26,8%</strong> vs abril <span class="sep">·</span> 47 pedidos fechados
       </p>
     </div>
 
-    <!-- KPI HERO petrol (do V1, ajustado pra direita do cover) -->
-    <article class="kpi-hero" aria-labelledby="kpi-hero-label">
-      <div>
-        <div class="kpi-eyebrow" id="kpi-hero-label">Lucro líquido · maio</div>
-        <div class="kpi-value num" id="kpiHeroValue" data-target="8590" data-prefix="R$ ">R$ 0</div>
-        <div class="kpi-anchor"><span class="star">✦</span> melhor mês desde fevereiro</div>
-      </div>
-      <svg class="kpi-spark" viewBox="0 0 300 42" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#F2EFEA" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#F2EFEA" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <path d="M 0 32 L 30 28 L 60 30 L 90 22 L 120 24 L 150 18 L 180 20 L 210 14 L 240 12 L 270 8 L 300 6 L 300 42 L 0 42 Z" fill="url(#sparkFill)"/>
-        <path d="M 0 32 L 30 28 L 60 30 L 90 22 L 120 24 L 150 18 L 180 20 L 210 14 L 240 12 L 270 8 L 300 6" stroke="#F2EFEA" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="300" cy="6" r="3" fill="#F2EFEA"/>
-      </svg>
-      <div class="kpi-foot">
-        <span>vs ABR · R$ 6.780</span>
-        <span>+26,7%</span>
-      </div>
-    </article>
+    <!-- KPI SATÉLITES (4 mini-cards verticais — substituem o kpi-hero V1
+         e o kpi-marquee de baixo. CEO 17/05: hero vira subcategoria,
+         tudo continua aparecendo mas com hierarquia clara) -->
+    <aside class="kpi-satellites" aria-label="Indicadores secundários do mês">
+      <article class="kpi-mini-card highlight">
+        <div class="kpi-mini-left">
+          <span class="kpi-mini-label">Lucro líquido</span>
+          <span class="kpi-mini-meta">melhor mês desde fevereiro</span>
+        </div>
+        <div class="kpi-mini-right">
+          <span class="kpi-mini-value num"><span id="kpiLucro" data-target="8590" data-prefix="R$ ">R$ 0</span></span>
+          <span class="kpi-mini-delta up">▲ +26,7% vs abr</span>
+        </div>
+      </article>
+
+      <article class="kpi-mini-card">
+        <div class="kpi-mini-left">
+          <span class="kpi-mini-label">Margem média</span>
+          <span class="kpi-mini-meta">ponderada · 5 canais</span>
+        </div>
+        <div class="kpi-mini-right">
+          <span class="kpi-mini-value num">68,8<span class="suffix">%</span></span>
+          <span class="kpi-mini-delta up">▲ +4 pp</span>
+        </div>
+      </article>
+
+      <article class="kpi-mini-card">
+        <div class="kpi-mini-left">
+          <span class="kpi-mini-label">Custos do mês</span>
+          <span class="kpi-mini-meta">filamento + energia</span>
+        </div>
+        <div class="kpi-mini-right">
+          <span class="kpi-mini-value num"><span id="kpiCustos" data-target="3890" data-prefix="R$ ">R$ 0</span></span>
+          <span class="kpi-mini-delta neutral">−3% vs sem 02</span>
+        </div>
+      </article>
+
+      <article class="kpi-mini-card">
+        <div class="kpi-mini-left">
+          <span class="kpi-mini-label">Pedidos no mês</span>
+          <span class="kpi-mini-meta">12 abertos · 35 entregues</span>
+        </div>
+        <div class="kpi-mini-right">
+          <span class="kpi-mini-value num">47</span>
+          <span class="kpi-mini-delta up">▲ +8 vs abr</span>
+        </div>
+      </article>
+    </aside>
   </section>
 
   <!-- BRANCH DIVISOR -->
@@ -2142,50 +2298,9 @@
     <circle cx="720" cy="12" r="2" fill="var(--petrol-500)" opacity="0.55"/>
   </svg>
 
-  <!-- ============================================================
-       KPI MARQUEE — 4 cards (Receita, Custos, Margem, Pedidos)
-       ============================================================ -->
-  <section class="kpi-marquee fade-in delay-1" aria-label="Indicadores do mês">
-    <div class="kpi-card highlight">
-      <span class="kpi-label">Receita do mês</span>
-      <span class="kpi-value num"><span id="kpiReceita" data-target="12480" data-prefix="R$ ">R$ 0</span></span>
-      <span class="kpi-meta">faturamento bruto · sem 03</span>
-      <span class="delta up">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
-        +12% vs sem 02
-      </span>
-    </div>
-
-    <div class="kpi-card">
-      <span class="kpi-label">Custos (filamento + energia)</span>
-      <span class="kpi-value num"><span id="kpiCustos" data-target="3890" data-prefix="R$ ">R$ 0</span></span>
-      <span class="kpi-meta">PLA Voolt 4kg · 89 kWh</span>
-      <span class="delta down">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-        -3% vs sem 02
-      </span>
-    </div>
-
-    <div class="kpi-card">
-      <span class="kpi-label">Margem média</span>
-      <span class="kpi-value num">68,8<span class="kpi-value-suffix">%</span></span>
-      <span class="kpi-meta">média ponderada · 5 canais</span>
-      <span class="delta up">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
-        +4 pp
-      </span>
-    </div>
-
-    <div class="kpi-card">
-      <span class="kpi-label">Pedidos no mês</span>
-      <span class="kpi-value num">47</span>
-      <span class="kpi-meta">12 abertos · 35 entregues</span>
-      <span class="delta up">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
-        +8 vs abril
-      </span>
-    </div>
-  </section>
+  <!-- KPI MARQUEE removida em V4.1 (CEO 17/05): info dos 4 KPIs migrou
+       pros satélites verticais ao lado do cover. Economiza 1 linha vertical
+       + reduz total de elementos no fold (Hick's Law: 5-7 elementos máx). -->
 
   <!-- SECTION HEADER -->
   <div class="section-header fade-in delay-2">
@@ -2723,7 +2838,7 @@
     // KPI CARDS hover — micro-feedback discreto (mecanismo 5)
     // (sem confetti, sem cringe — só scale-down click)
     // ============================================================
-    document.querySelectorAll('.kpi-card, .bento-card').forEach(card => {
+    document.querySelectorAll('.kpi-card, .kpi-mini-card, .bento-card').forEach(card => {
       card.addEventListener('mousedown', () => {
         if (reduce) return;
         card.style.transform = 'translateY(-2px) scale(0.99)';
