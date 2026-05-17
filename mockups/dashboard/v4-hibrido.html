@@ -742,6 +742,11 @@
     padding-bottom: 2px;
     font-variation-settings: "opsz" 28, "SOFT" 50;
   }
+  /* Estados dinâmicos do anchor (V4.3 17/05): underline muda de cor */
+  .cover-anchor.state-pico em    { border-bottom-color: var(--petrol-300); }
+  .cover-anchor.state-ok em      { border-bottom-color: var(--petrol-400); }
+  .cover-anchor.state-atencao em { border-bottom-color: var(--ember-500); }
+  .cover-anchor.state-alerta em  { border-bottom-color: #E07A5F; }
   .cover-meta {
     font-family: 'Geist Mono', monospace;
     font-size: 14px;
@@ -2501,7 +2506,7 @@
           <div class="cover-progress-fill" style="--target: 83%;"></div>
         </div>
       </div>
-      <p class="cover-anchor">esse mês <em>tá no ritmo</em>, recorde do trimestre, dá pra respirar.</p>
+      <p class="cover-anchor" id="coverAnchor" data-progress="83">esse mês <em>tá no ritmo</em>, recorde do trimestre, dá pra respirar.</p>
       <p class="cover-meta">
         Maio <span class="sep">·</span> sem 03 <span class="sep">·</span> atualizado há 4 min
         <br class="mobile-break">
@@ -3122,6 +3127,29 @@
         document.querySelectorAll('[data-target]').forEach(countUp);
       }
     });
+
+    // ============================================================
+    // COVER ANCHOR DINÂMICO — copy muda com performance (V4.3 17/05)
+    // CEO 17/05: "esse mês tá no ritmo" precisa adaptar se não estiver.
+    // 5 estados baseados em % da meta. Carla redigiu variantes maker BR.
+    // ============================================================
+    const coverAnchor = document.getElementById('coverAnchor');
+    if (coverAnchor) {
+      const progress = parseFloat(coverAnchor.dataset.progress) || 0;
+      const variants = [
+        { min: 100, html: 'esse mês <em>passou da meta</em>, viraço — bora repetir.', cls: 'state-pico' },
+        { min: 90,  html: 'esse mês <em>tá voando</em>, recorde do trimestre, dá pra respirar.', cls: 'state-pico' },
+        { min: 75,  html: 'esse mês <em>tá no ritmo</em>, recorde do trimestre, dá pra respirar.', cls: 'state-ok' },
+        { min: 50,  html: 'esse mês <em>dá pra apertar</em>, ainda dá tempo de fechar bem.', cls: 'state-atencao' },
+        { min: 25,  html: 'esse mês <em>tá devagar</em>, foco nos próximos dias pra recuperar.', cls: 'state-alerta' },
+        { min: 0,   html: 'esse mês <em>precisa correr</em>, planeja o que sai antes do fim do mês.', cls: 'state-alerta' },
+      ];
+      const match = variants.find(v => progress >= v.min);
+      if (match) {
+        coverAnchor.innerHTML = match.html;
+        coverAnchor.classList.add(match.cls);
+      }
+    }
 
     // ============================================================
     // GREETING — horário + nome (V4.2 17/05)
