@@ -12,6 +12,7 @@
 | Onde | Quando ler |
 |---|---|
 | `ROADMAP.md` | Antes de começar feature nova / planejar fase |
+| **`pillars/SCORES.md`** ⭐ | **TODA SESSÃO** — score atual dos 12 pilares + meta 30d/90d. Lembrar de buscar melhorar. CEO 17/05: "nunca se acomodar com nota atual" |
 | `audits/<data>.md` | Pra ver snapshot do projeto numa data |
 | `audits/_rolling.md` | Resumo dos últimos meses |
 | `decisions/<NNN>.md` | Quando precisar saber **por que** algo é assim |
@@ -20,6 +21,12 @@
 | `skills/_ctx.md` + `skills/_standards.md` | Convenções de código (não estado) |
 
 **CLAUDE.md por pasta** carrega automaticamente quando trabalho ali. Eles descrevem **convenções, status e issues conhecidos** dessa parte específica.
+
+**`pillars/SCORES.md`** = filosofia operacional CEO. Lembrar dele:
+1. Toda sessão começa olhando média geral atual + pilar mais baixo
+2. Cada commit que sobe score → atualizar `pillars/SCORES.md` na hora
+3. Toda segunda 9h = revisão semanal CEO + Helena
+4. Pilar com 2 semanas sem revisão = aviso ao owner G7
 
 ---
 

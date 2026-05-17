@@ -47,6 +47,7 @@
 - ✅ `20260509_product_checkout_modes.sql` aplicada em 2026-05-09
 - ✅ `20260510_*` (Wave 0 — fix RPC catálogo + 3 migrations Fundação ADR 006) aplicadas em 2026-05-10
 - ✅ `20260513_waitlist_leads.sql` + fix search_path da trigger function aplicadas em 2026-05-13 (Fase 1 — landing pré-launch)
+- ✅ `20260518_webhook_events.sql` (tabela + RPC `process_webhook_atomic`) aplicada em 2026-05-17 via Supabase MCP (`apply_migration`). Resolve race condition / duplicate charge nos webhooks Stripe/MP.
 
 ## ⚠️ Schema.sql está stale (2026-05-10)
 
