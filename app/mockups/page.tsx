@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { getUser } from '@/lib/auth'
+import { isAdminEmail } from '@/lib/isAdmin'
 
 export const metadata: Metadata = {
   title: 'Mockups · Hayzer',
@@ -59,6 +62,17 @@ const MOCKUPS: Mockup[] = [
     author: 'Diego',
     createdAt: '2026-05-14',
   },
+  {
+    slug: 'dashboard/editorial-bento-hibrido.html',
+    feature: 'Dashboard Interno',
+    title: 'Editorial-Bento Híbrido',
+    variant: 'C',
+    status: 'em-avaliacao',
+    description:
+      'Capa editorial + KPI enxuto + bento intel + watermark. Motif raízes sutil. Recomendação Diego.',
+    author: 'Diego',
+    createdAt: '2026-05-16',
+  },
 ]
 
 const STATUS_STYLES: Record<Mockup['status'], string> = {
@@ -79,7 +93,36 @@ function getMockupUrl(slug: string): string {
   return `/mockups/${slug}`
 }
 
-export default function MockupsPage() {
+export default async function MockupsPage() {
+  // Guard 1: requer usuário logado
+  const user = await getUser()
+  if (!user) {
+    redirect('/login?next=/mockups')
+  }
+
+  // Guard 2: requer email admin (whitelist em ADMIN_EMAILS env var)
+  if (!isAdminEmail(user.email)) {
+    return (
+      <div className="min-h-screen bg-night-950 text-fog-50 flex items-center justify-center px-6">
+        <div className="max-w-md text-center">
+          <div className="mb-4 inline-block rounded-full border border-ember-500/30 bg-ember-500/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-ember-500">
+            acesso restrito
+          </div>
+          <h1 className="font-serif text-3xl font-medium mb-3">Mockups são internos</h1>
+          <p className="text-sm text-fog-50/70 mb-6">
+            Esta área é restrita à equipe Hayzer. Se você acha que deveria ter acesso, fale com o Gabriel.
+          </p>
+          <Link
+            href="/dashboard"
+            className="inline-block rounded-lg border border-fog-50/20 bg-fog-50/5 px-4 py-2 text-sm hover:border-petrol-500/40 hover:bg-petrol-500/10 transition"
+          >
+            Voltar ao dashboard
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   const grouped = MOCKUPS.reduce<Record<string, Mockup[]>>((acc, mockup) => {
     if (!acc[mockup.feature]) acc[mockup.feature] = []
     acc[mockup.feature].push(mockup)
@@ -96,6 +139,9 @@ export default function MockupsPage() {
             </span>
             <span className="rounded-full border border-ember-500/30 bg-ember-500/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-ember-500">
               noindex
+            </span>
+            <span className="rounded-full border border-petrol-500/30 bg-petrol-500/10 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.18em] text-petrol-500">
+              admin · {user.email}
             </span>
           </div>
           <h1 className="font-serif text-5xl font-medium tracking-tight">
@@ -154,7 +200,7 @@ export default function MockupsPage() {
 
         <footer className="mt-16 border-t border-fog-50/10 pt-6 text-xs text-fog-50/40">
           <p className="font-mono uppercase tracking-[0.14em]">
-            mockups/ é versionado · public/mockups/*.html é servido direto
+            mockups/ é versionado · servido via route handler com guard admin
           </p>
         </footer>
       </div>

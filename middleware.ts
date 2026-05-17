@@ -12,8 +12,12 @@ const PUBLIC_PATHS = [
   '/privacidade',
   '/termos',
   '/calculadora',
-  '/mockups',
 ]
+// /mockups REMOVIDO de PUBLIC_PATHS em 2026-05-16:
+// requer auth Supabase + email admin pra prevenir vazamento de WIP visual
+// (especialmente crítico antes da marca INPI ser protocolada).
+// HTMLs antes em public/mockups/ foram movidos pra mockups/ e servidos
+// via route handler app/mockups/[...slug]/route.ts com guard de admin.
 
 function isPublicPath(pathname: string) {
   return PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
