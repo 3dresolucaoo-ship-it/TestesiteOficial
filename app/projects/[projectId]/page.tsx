@@ -67,7 +67,7 @@ export default function ProjectDashboardPage() {
     .slice(0, 5)
 
   const activeLeads = state.leads.filter(l => l.projectId === projectId && l.status !== 'won' && l.status !== 'lost')
-  const lowStock = state.inventory.filter(i => i.projectId === projectId && i.quantity <= 2)
+  // lowStock local removido em 2026-05-16: UI usa stats.lowStock (linha 109+) calculado em outro lugar.
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">

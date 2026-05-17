@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useStore, uid } from '@/lib/store'
-import type { Lead, LeadStatus, ContactSource, Affiliate } from '@/lib/types'
+import type { Lead, LeadStatus, ContactSource } from '@/lib/types'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
 import { Plus, Pencil, Trash2, MoreHorizontal, Users, TrendingUp, LayoutList, Columns } from 'lucide-react'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
@@ -138,7 +138,7 @@ export default function ProjectCrmPage() {
   const [leadsView, setLeadsView] = useState<LeadsView>('list')
   const [creating, setCreating] = useState(false)
   const [editingLead, setEditingLead] = useState<Lead | null>(null)
-  const [editingAff, setEditingAff] = useState<Affiliate | null>(null)
+  // editingAff removido em 2026-05-16: state nunca usado (feature de edição de afiliado não implementada).
   const [filterStatus, setFilterStatus] = useState<LeadStatus | 'all'>('all')
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
 
@@ -175,7 +175,7 @@ export default function ProjectCrmPage() {
     setMenuOpen(null)
   }
 
-  const totalLeadValue = leads.filter(l => l.status === 'won').reduce((s, l) => s + l.value, 0)
+  // totalLeadValue removido em 2026-05-16: calculado mas nunca renderizado na UI.
   const totalAffSales  = affiliates.reduce((s, a) => s + a.totalSales, 0)
 
   if (loading) return null

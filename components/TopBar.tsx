@@ -35,9 +35,11 @@ function useTitle(): string {
   if (parts[1] === 'projects' && parts[2]) {
     const project    = state.projects.find(p => p.id === parts[2])
     const projectName = project?.name ?? 'Projeto'
-    const module      = parts[3] as ProjectModule | undefined
-    if (!module) return projectName
-    const moduleCfg = MODULE_CONFIG[module]
+    // Renomeado de `module` → `currentModule` em 2026-05-16:
+    // `module` é variável reservada pelo Next.js (no-assign-module-variable).
+    const currentModule = parts[3] as ProjectModule | undefined
+    if (!currentModule) return projectName
+    const moduleCfg = MODULE_CONFIG[currentModule]
     if (moduleCfg) return `${projectName} — ${moduleCfg.label}`
     return projectName
   }

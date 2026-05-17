@@ -67,7 +67,25 @@ export function SettingsView({
     }
   }
 
-  useEffect(() => { refreshRemoteConfigs() }, [])
+  // Refatorado em 2026-05-16: useEffect com guard de cancelamento pra evitar
+  // warning `react-hooks/set-state-in-effect` do React 19. setState só roda
+  // se o componente ainda estiver montado.
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res  = await fetch('/api/payment-configs', { cache: 'no-store' })
+        const json = await res.json()
+        if (cancelled) return
+        if (res.ok && Array.isArray(json.configs)) {
+          setRemoteConfigs(json.configs)
+        }
+      } catch {
+        // silent — UI degrades gracefully
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   async function persistGatewayCredentials() {
     const sf = draft.storefront

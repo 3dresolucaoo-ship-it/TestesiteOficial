@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation'
 import { useStore, uid } from '@/lib/store'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import type { ContentItem, ContentStatus, ContentPlatform } from '@/lib/types'
 import { Plus, Pencil, Trash2, MoreHorizontal, Eye, Users, ShoppingCart, ExternalLink, Heart, MessageCircle, Share2, Bookmark, RefreshCw } from 'lucide-react'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
@@ -113,7 +113,11 @@ export default function ProjectContentPage() {
   const totalLeads = items.filter(c => c.status === 'posted').reduce((s, c) => s + c.leads, 0)
 
   // ── Metrics sync ────────────────────────────────────────────────────────────
-  const syncMetrics = useCallback(async () => {
+  // Removido useCallback em 2026-05-16: React Compiler (React 19) memoiza
+  // automaticamente e o useCallback manual estava bloqueando essa otimização
+  // (react-hooks/preserve-manual-memoization). syncMetrics não é passada
+  // como prop pra componente memoizado, só usada em onClick local.
+  async function syncMetrics() {
     const toSync = items.filter(i => i.status === 'posted' && i.link)
     if (!toSync.length) { setSyncResult('Nenhum conteúdo postado com link.'); return }
     setSyncing(true)
@@ -145,7 +149,7 @@ export default function ProjectContentPage() {
       setSyncing(false)
       setTimeout(() => setSyncResult(null), 4000)
     }
-  }, [items, dispatch])
+  }
 
   function parseEngagement(data: FormData) {
     return {
