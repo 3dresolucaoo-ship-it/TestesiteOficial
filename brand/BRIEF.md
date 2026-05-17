@@ -134,7 +134,34 @@ Outros pontos:
 
 ---
 
+## 🌿 LOGOMARCA
+
+**Logo oficial** (desde 14/05/2026): `public/logo-hayzer.png` — H verde com raízes orgânicas saindo da base (PNG 1536×1024px).
+
+**Implementação**: [`components/Logo.tsx`](../components/Logo.tsx) via Next `<Image>` + `mix-blend-mode: screen` (dark mode) ou `multiply` (light mode) pra eliminar o fundo preto do PNG.
+
+**Variants permitidas**: `sm` (h-9) · `lg` (h-20→24 com pulse petrol). Novas variants exigem aprovação CEO antes de implementar.
+
+### Regra fixa (ADR-013, 17/05/2026)
+
+A logo está **congelada como ativo de marca**. Daqui em diante:
+
+1. Toda referência visual — mockup, componente, doc de design, peça de marketing — usa o PNG oficial via `<img src="/logo-hayzer.png">` (HTML estático) ou `<Logo />` (React)
+2. **NUNCA** redesenhar, recriar tipograficamente, inventar SVG alternativo ou substituir por placeholder
+3. Evolução de logo só com pedido explícito do CEO — não é trabalho implícito em redesigns futuros
+4. Em light mode: `mix-blend-mode: multiply` (em vez de `screen`) pra contraste correto
+
+**Aplica-se a TODOS os agentes G7** (Diego, Felipe, Carla, Marcos, qualquer outro). Quem desrespeitar, a entrega volta.
+
+**Motivo**: investimento de tempo/iteração do CEO na arte; 2 tentativas de gerar logo via IA falharam antes (Diego rejeitou ambas); identidade exige consistência em fase early (waitlist + calculadora pública + /mockups admin já no ar com a logo atual).
+
+**ADR completo**: [`decisions/013-logo-h-raizes-preservada.md`](../decisions/013-logo-h-raizes-preservada.md)
+
+---
+
 ## 🎨 IDENTIDADE VISUAL
+
+> ⚠️ **Paletas A/B abaixo são históricas** (mantidas como referência). A paleta oficial em uso desde 14/05/2026 é a **Paleta C** (night/petrol/fog/ember + Fraunces + grain anti-IA) descrita em [`brand/visual-system-v2.md`](./visual-system-v2.md).
 
 ### Vibe (palavras-chave)
 moderno · confiável · brasileiro · sexy · surpreendente · dinâmico · didático · organizado · profissional
