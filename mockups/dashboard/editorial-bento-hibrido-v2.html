@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Hayzer — Dashboard (Editorial-Bento Híbrido v2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,30..100;1,9..144,300..900,30..100&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     HAYZER · DASHBOARD · EDITORIAL-BENTO HÍBRIDO v2
+     Refeito 16/05 — raízes estruturais, charts SVG, tipografia +,
+     surface ladder, microcopy maker BR real.
+     ============================================================ */
+
+  :root {
+    /* night */
+    --night-950: #07090A;
+    --night-900: #0B0E10;
+    --night-850: #0F1316;
+    --night-800: #13171A;
+    --night-700: #1B2024;
+    --night-600: #262C31;
+
+    /* SURFACE LADDER — quebra o "tudo dark plano" */
+    --surface-1: #0F1316;   /* card base */
+    --surface-2: #1B2024;   /* card destaque/hover */
+    --surface-3: #262C31;   /* card extra-destaque (1 propositalmente) */
+
+    /* fog */
+    --fog-50:  #F2EFEA;
+    --fog-100: #E3DED5;
+    --fog-200: #BDB7AB;
+    --fog-300: #8A8478;
+    --fog-400: #5B564D;
+
+    /* petrol */
+    --petrol-200: #A6D4CC;
+    --petrol-300: #6FB5A8;
+    --petrol-400: #3F9286;
+    --petrol-500: #1F7669;
+    --petrol-600: #155A50;
+    --petrol-700: #0E443D;
+
+    /* ember */
+    --ember-400: #E0A269;
+    --ember-500: #D08A4A;
+    --ember-600: #A86A30;
+
+    --easing: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--night-950);
+    color: var(--fog-50);
+    min-height: 100vh;
+    line-height: 1.55;
+    font-size: 16px; /* body MIN 16px — antes era herdado quebrado */
+  }
+
+  .num, [data-num] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* ============================================================
+     GRAIN + AMBIENT
+     ============================================================ */
+
+  .grain-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.22;
+    mix-blend-mode: screen;
+  }
+
+  .ambient-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 15% 12%, rgba(31, 118, 105, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.10) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 30% at 60% 50%, rgba(31, 118, 105, 0.05) 0%, transparent 50%);
+  }
+
+  /* ============================================================
+     RAÍZ ESTRUTURAL — atravessa o canvas inteiro
+     ============================================================ */
+
+  .root-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .root-canvas svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .root-trunk, .root-branch, .root-sub {
+    fill: none;
+    stroke: var(--petrol-400);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .root-trunk {
+    stroke-width: 1.6;
+    stroke-dasharray: 2400;
+    stroke-dashoffset: 2400;
+    opacity: 0.42;
+    animation: rootDraw 1800ms var(--easing) forwards;
+  }
+
+  .root-branch {
+    stroke-width: 1.1;
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    opacity: 0.40;
+    animation: rootDraw 1500ms var(--easing) 200ms forwards;
+  }
+
+  .root-sub {
+    stroke-width: 0.7;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    opacity: 0.30;
+    animation: rootDraw 1400ms var(--easing) 600ms forwards;
+  }
+
+  .root-node {
+    fill: var(--petrol-400);
+    opacity: 0;
+    animation: nodeFade 600ms var(--easing) 1400ms forwards;
+  }
+
+  @keyframes rootDraw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes nodeFade {
+    to { opacity: 0.65; }
+  }
+
+  /* ============================================================
+     SIDEBAR — H maior + logo wordmark maior
+     ============================================================ */
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 248px;
+    height: 100vh;
+    background: var(--night-900);
+    border-right: 1px solid rgba(242, 239, 234, 0.06);
+    padding: 32px 0;
+    z-index: 10;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 24px;
+    position: relative;
+  }
+
+  .sidebar-brand-h {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 40px; /* antes 28 — agora maior */
+    line-height: 1;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    position: relative;
+    letter-spacing: -0.03em;
+    /* GLITCH HUMANO: 1px offset deliberado, não-alinhado-perfeito */
+    transform: translateY(-1px) rotate(-0.4deg);
+  }
+
+  /* raiz fina caindo do H */
+  .sidebar-brand-h::after {
+    content: "";
+    position: absolute;
+    left: 52%;
+    top: calc(100% + 2px);
+    width: 1px;
+    height: 18px;
+    background: linear-gradient(180deg, var(--petrol-500) 0%, transparent 100%);
+    transform: translateX(-50%);
+    opacity: 0.7;
+  }
+
+  .sidebar-brand-wordmark {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 18px; /* antes 15 */
+    color: var(--fog-50);
+    letter-spacing: -0.01em;
+  }
+
+  .nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-group-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-300);
+    padding: 0 24px 10px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--fog-200);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background 180ms var(--easing), color 180ms var(--easing), border-color 180ms var(--easing);
+    text-decoration: none;
+  }
+
+  .nav-item:hover {
+    background: rgba(242, 239, 234, 0.03);
+    color: var(--fog-50);
+  }
+
+  .nav-item.active {
+    background: rgba(31, 118, 105, 0.14);
+    color: var(--fog-50);
+    border-left-color: var(--petrol-500);
+  }
+
+  .nav-item svg {
+    flex-shrink: 0;
+    stroke: currentColor;
+  }
+
+  /* ============================================================
+     MAIN
+     ============================================================ */
+
+  .main {
+    margin-left: 248px;
+    padding: 36px 40px;
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
+  }
+
+  .watermark-raiz {
+    position: fixed;
+    bottom: 40px;
+    right: 60px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 240px;
+    line-height: 1;
+    color: var(--fog-50);
+    opacity: 0.022;
+    pointer-events: none;
+    z-index: 1;
+    letter-spacing: -0.03em;
+  }
+
+  /* ============================================================
+     TOPBAR
+     ============================================================ */
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 44px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .project-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: rgba(242, 239, 234, 0.02);
+    border: 1px solid rgba(242, 239, 234, 0.15);
+    border-radius: 999px;
+    color: var(--fog-50);
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 180ms var(--easing), background 180ms var(--easing);
+  }
+
+  .project-switcher:hover {
+    border-color: rgba(31, 118, 105, 0.4);
+    background: rgba(31, 118, 105, 0.06);
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--fog-200);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--petrol-400);
+    box-shadow: 0 0 0 0 rgba(63, 146, 134, 0.55);
+    animation: pulse-dot 1.8s var(--easing) infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(63, 146, 134, 0.55); }
+    50% { box-shadow: 0 0 0 7px rgba(63, 146, 134, 0); }
+  }
+
+  /* ============================================================
+     CAPA EDITORIAL
+     ============================================================ */
+
+  .cover {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: start;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .cover-left { display: flex; flex-direction: column; gap: 22px; }
+
+  .cover-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px; /* antes 11 */
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-200);
+  }
+
+  .hairline {
+    width: 96px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--petrol-400) 0%, transparent 100%);
+    opacity: 0.6;
+  }
+
+  .cover-figure {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: 96px; /* subiu um pouco */
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .cover-figure .currency {
+    font-style: italic;
+    font-size: 0.45em;
+    color: var(--fog-200);
+    font-weight: 300;
+    position: relative;
+    top: -0.6em;
+  }
+
+  .cover-figure .decimal {
+    font-size: 0.42em;
+    color: var(--fog-200);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.02em;
+  }
+
+  .cover-anchor {
+    font-family: 'Geist', sans-serif;
+    font-size: 22px; /* SUBIU 18 → 22 conforme brief */
+    line-height: 1.4;
+    color: var(--fog-100);
+    max-width: 560px;
+    font-weight: 400;
+  }
+
+  .cover-anchor em {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--fog-50);
+    border-bottom: 2px solid var(--ember-500);
+    padding-bottom: 2px;
+    font-variation-settings: "opsz" 28, "SOFT" 50;
+  }
+
+  .cover-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px; /* antes 13 */
+    color: var(--fog-300);
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+  }
+
+  .cover-meta .sep { color: var(--fog-400); margin: 0 6px; }
+
+  /* live rows direita */
+  .live-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .live-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--surface-1);
+    border: 1px solid rgba(242, 239, 234, 0.06);
+    border-radius: 999px;
+    transition: border-color 220ms var(--easing), background 220ms var(--easing);
+  }
+
+  .live-row:hover {
+    border-color: rgba(31, 118, 105, 0.35);
+    background: var(--surface-2);
+  }
+
+  .live-row-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--petrol-400);
+  }
+
+  .live-row-label {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-200);
+    font-weight: 400;
+  }
+
+  .live-row-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 24, "SOFT" 40;
+  }
+
+  .live-row-delta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .delta-up { color: var(--petrol-300); }
+  .delta-down { color: var(--ember-500); }
+
+  /* ============================================================
+     BRANCH DIVISOR
+     ============================================================ */
+
+  .branch-divisor {
+    width: 100%;
+    height: 28px;
+    opacity: 0.5;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 4;
+  }
+
+  /* ============================================================
+     KPI MARQUEE — agora com 1 card "diferente" (assimetria)
+     ============================================================ */
+
+  .kpi-marquee {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 68px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .kpi-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid rgba(242, 239, 234, 0.08);
+    padding: 22px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 220ms var(--easing), transform 220ms var(--easing), background 220ms var(--easing);
+  }
+
+  .kpi-card:hover {
+    border-color: rgba(31, 118, 105, 0.32);
+    transform: translateY(-2px);
+    background: var(--surface-2);
+  }
+
+  /* card destaque — primeiro KPI, assimetria deliberada */
+  .kpi-card.highlight {
+    background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
+    border-color: rgba(31, 118, 105, 0.2);
+  }
+
+  .kpi-card::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(180deg, var(--petrol-400) 0%, transparent 100%);
+    transition: height 320ms var(--easing);
+    transform: translateX(-50%);
+  }
+
+  .kpi-card:hover::after { height: 10px; }
+
+  .kpi-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px; /* antes 11 — subiu pra mínimo brief */
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fog-200);
+  }
+
+  .kpi-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 32px; /* antes 26 — mínimo brief 32 */
+    font-weight: 500;
+    line-height: 1.05;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 72, "SOFT" 40;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .kpi-value-suffix {
+    font-style: italic;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--fog-200);
+  }
+
+  .kpi-delta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--petrol-300);
+  }
+
+  .kpi-meta {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-300);
+  }
+
+  /* ============================================================
+     SECTION HEADER
+     ============================================================ */
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 16px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 1.1;
+    color: var(--fog-50);
+    letter-spacing: -0.02em;
+    font-variation-settings: "opsz" 96, "SOFT" 30;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--fog-100);
+  }
+
+  .section-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fog-300);
+  }
+
+  /* ============================================================
+     BENTO GRID — assimetria forte
+     ============================================================ */
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+    gap: 18px;
+    margin-bottom: 68px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .bento-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid rgba(242, 239, 234, 0.08);
+    padding: 26px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color 220ms var(--easing), transform 220ms var(--easing), background 220ms var(--easing);
+    overflow: hidden;
+  }
+
+  .bento-card:hover {
+    border-color: rgba(31, 118, 105, 0.32);
+    transform: translateY(-2px);
+    background: var(--surface-2);
+  }
+
+  /* card destaque assimétrico — donut chart usa surface-2 + rotação imperceptível */
+  .bento-card.highlight {
+    background: linear-gradient(140deg, var(--surface-2) 0%, var(--surface-1) 80%);
+    border-color: rgba(31, 118, 105, 0.18);
+  }
+
+  /* card maior em produção span-2 */
+  .bento-card.span-2 { grid-column: span 2; }
+  .bento-card.span-2-tall { grid-column: span 2; grid-row: span 1; }
+
+  /* galho conector pulsa no hover */
+  .bento-card .connector {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 280ms var(--easing);
+  }
+
+  .bento-card:hover .connector {
+    opacity: 1;
+  }
+
+  .bento-card .connector svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .bento-card .connector path {
+    stroke: var(--petrol-300);
+    stroke-width: 1.2;
+    fill: none;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px var(--petrol-500));
+  }
+
+  .bento-card::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -1px;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(180deg, var(--petrol-400) 0%, transparent 100%);
+    transition: height 320ms var(--easing);
+    transform: translateX(-50%);
+  }
+
+  .bento-card:hover::after { height: 10px; }
+
+  .bento-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .bento-num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px; /* antes 11 */
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fog-200);
+  }
+
+  .bento-icon {
+    color: var(--petrol-400);
+    flex-shrink: 0;
+  }
+
+  .bento-icon.ember { color: var(--ember-500); }
+
+  .bento-big {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 1.05;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .bento-big .suffix-italic {
+    font-style: italic;
+    font-size: 19px;
+    font-weight: 400;
+    color: var(--fog-200);
+  }
+
+  .bento-detail {
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--fog-100);
+  }
+
+  .bento-detail strong {
+    color: var(--petrol-300);
+    font-weight: 500;
+  }
+
+  .bento-detail.muted { color: var(--fog-200); }
+
+  .bento-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+
+  .bento-footer-mono {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fog-300);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .bento-link {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--petrol-300);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 180ms var(--easing);
+  }
+
+  .bento-link:hover { color: var(--petrol-200); }
+  .bento-link.ember { color: var(--ember-500); }
+  .bento-link.ember:hover { color: var(--ember-400); }
+
+  /* footnote pequenina — vibe imperfeição editorial */
+  .footnote {
+    font-family: 'Geist', sans-serif;
+    font-size: 11px;
+    color: var(--fog-400);
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  /* mini list */
+  .mini-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .mini-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(242, 239, 234, 0.05);
+  }
+
+  .mini-list-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .mini-list-item .name { color: var(--fog-50); }
+  .mini-list-item .who { color: var(--fog-300); font-size: 12px; }
+  .mini-list-item .meta {
+    color: var(--fog-200);
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+  }
+
+  .mini-list-item .meta.ember { color: var(--ember-400); }
+
+  /* pill atenção */
+  .pill-warning {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(208, 138, 74, 0.16);
+    color: var(--ember-400);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    width: fit-content;
+    border: 1px solid rgba(208, 138, 74, 0.2);
+  }
+
+  .pill-petrol {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(31, 118, 105, 0.16);
+    color: var(--petrol-300);
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 999px;
+    width: fit-content;
+    border: 1px solid rgba(31, 118, 105, 0.22);
+  }
+
+  /* ============================================================
+     CHARTS SVG — donut, sparkline, barras
+     ============================================================ */
+
+  /* DONUT chart */
+  .donut-wrap {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 22px;
+    align-items: center;
+    margin-top: 4px;
+  }
+
+  .donut-svg {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+  }
+
+  .donut-svg circle {
+    transition: stroke-width 220ms var(--easing), opacity 220ms var(--easing);
+  }
+
+  .donut-svg circle:hover {
+    stroke-width: 22;
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .donut-svg .donut-bg {
+    fill: none;
+    stroke: rgba(242, 239, 234, 0.04);
+    stroke-width: 18;
+  }
+
+  .donut-center-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    fill: var(--fog-300);
+  }
+
+  .donut-center-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 24px;
+    font-weight: 500;
+    fill: var(--fog-50);
+    font-variation-settings: "opsz" 72, "SOFT" 30;
+  }
+
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .donut-legend-item {
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    color: var(--fog-100);
+  }
+
+  .donut-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
+  .donut-legend-pct {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--fog-200);
+  }
+
+  /* SPARKLINE */
+  .sparkline-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .sparkline-svg {
+    width: 100%;
+    height: 64px;
+    overflow: visible;
+  }
+
+  .sparkline-bar {
+    fill: var(--petrol-500);
+    transition: fill 220ms var(--easing);
+  }
+
+  .sparkline-bar.today {
+    fill: var(--ember-500);
+  }
+
+  .sparkline-axis {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-400);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* BARS horizontais */
+  .hbars {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .hbar-row {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 6px;
+  }
+
+  .hbar-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-50);
+  }
+
+  .hbar-label .who {
+    font-size: 12px;
+    color: var(--fog-300);
+    margin-left: 6px;
+  }
+
+  .hbar-label .val {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--fog-200);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hbar-track {
+    width: 100%;
+    height: 6px;
+    background: rgba(242, 239, 234, 0.05);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .hbar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--petrol-500) 0%, var(--petrol-300) 100%);
+    border-radius: 3px;
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: hbarGrow 900ms var(--easing) forwards;
+    animation-delay: 800ms;
+  }
+
+  .hbar-fill.winner {
+    background: linear-gradient(90deg, var(--ember-600) 0%, var(--ember-400) 100%);
+  }
+
+  @keyframes hbarGrow {
+    to { transform: scaleX(1); }
+  }
+
+  /* progress bar — mantém estoque conversível */
+  .progress-bar {
+    width: 100%;
+    height: 5px;
+    background: rgba(242, 239, 234, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--petrol-500) 0%, var(--petrol-300) 100%);
+    border-radius: 3px;
+  }
+
+  /* dot saúde */
+  .health-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--petrol-400);
+    box-shadow: 0 0 10px var(--petrol-500);
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ============================================================
+     TROCAR DE PROJETO — BUG VISUAL CORRIGIDO
+     ============================================================ */
+
+  .projects-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 80px;
+    position: relative;
+    z-index: 4;
+  }
+
+  .project-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    background: var(--surface-1);
+    border: 1px solid rgba(189, 183, 171, 0.20); /* fog-200/20 */
+    border-radius: 999px;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-200);
+    cursor: pointer;
+    transition: border-color 220ms var(--easing), background 220ms var(--easing), color 220ms var(--easing);
+  }
+
+  .project-chip:hover {
+    border-color: rgba(31, 118, 105, 0.40);
+    background: rgba(31, 118, 105, 0.04);
+    color: var(--fog-100);
+  }
+
+  .project-chip.active {
+    background: rgba(31, 118, 105, 0.15);
+    border-color: rgba(31, 118, 105, 0.45);
+    color: var(--petrol-300);
+  }
+
+  .project-chip .chip-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fog-300);
+  }
+
+  .project-chip:hover .chip-meta { color: var(--fog-200); }
+  .project-chip.active .chip-meta { color: var(--petrol-300); opacity: 0.85; }
+
+  .project-chip .chip-setup {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--fog-400);
+  }
+
+  /* ============================================================
+     FADE IN
+     ============================================================ */
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    animation: fadeUp 640ms var(--easing) forwards;
+  }
+
+  .fade-in.delay-1 { animation-delay: 0.2s; }
+  .fade-in.delay-2 { animation-delay: 0.4s; }
+  .fade-in.delay-3 { animation-delay: 0.6s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in, .fade-in.delay-1, .fade-in.delay-2, .fade-in.delay-3 {
+      opacity: 1;
+      animation: none;
+    }
+    .status-dot { animation: none; }
+    .root-trunk, .root-branch, .root-sub { stroke-dashoffset: 0; animation: none; }
+    .root-node { opacity: 0.65; animation: none; }
+    .hbar-fill { transform: scaleX(1); animation: none; }
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+
+  .mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 20;
+    background: var(--night-800);
+    border: 1px solid rgba(242, 239, 234, 0.14);
+    color: var(--fog-50);
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-toggle { display: inline-flex; }
+    .sidebar { transform: translateX(-100%); transition: transform 280ms var(--easing); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 72px 20px 40px; }
+    .cover { grid-template-columns: 1fr; gap: 30px; }
+    .cover-figure { font-size: 68px; }
+    .cover-anchor { font-size: 19px; }
+    .kpi-marquee { grid-template-columns: repeat(2, 1fr); }
+    .bento-grid { grid-template-columns: 1fr; }
+    .bento-card.span-2, .bento-card.span-2-tall { grid-column: span 1; }
+    .section-title { font-size: 28px; }
+    .bento-big { font-size: 34px; }
+    .watermark-raiz { font-size: 120px; right: 20px; }
+    .projects-row { gap: 8px; }
+    .project-chip { padding: 10px 16px; font-size: 13px; }
+    .donut-wrap { grid-template-columns: 1fr; }
+    .donut-svg { margin: 0 auto; }
+    .root-canvas { display: none; } /* simplifica mobile */
+  }
+</style>
+</head>
+<body>
+
+<!-- AMBIENT + GRAIN + RAIZ ESTRUTURAL -->
+<div class="ambient-glow"></div>
+<div class="grain-layer"></div>
+
+<!-- RAÍZ ATRAVESSANDO O CANVAS · motif estrutural #1 -->
+<div class="root-canvas" aria-hidden="true">
+  <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+    <!-- TRONCO PRINCIPAL: canto inferior esquerdo → topo direito -->
+    <path class="root-trunk"
+      d="M 60 1060
+         Q 180 980 240 880
+         Q 300 780 380 720
+         Q 480 650 560 580
+         Q 680 480 820 440
+         Q 980 400 1140 360
+         Q 1300 320 1460 280
+         Q 1620 240 1780 180
+         Q 1860 140 1900 80"/>
+
+    <!-- GALHO 1: sai do tronco a ~25% subindo pra esquerda-meio -->
+    <path class="root-branch"
+      d="M 380 720
+         Q 360 660 320 600
+         Q 290 540 250 480"/>
+
+    <!-- GALHO 2: vai pra direita-meio conectando bento -->
+    <path class="root-branch"
+      d="M 560 580
+         Q 640 570 720 540
+         Q 800 510 880 460"/>
+
+    <!-- GALHO 3: salta pra topo central -->
+    <path class="root-branch"
+      d="M 820 440
+         Q 880 360 920 280
+         Q 950 220 980 180"/>
+
+    <!-- GALHO 4: estende pra trás dos cards direita -->
+    <path class="root-branch"
+      d="M 1140 360
+         Q 1180 300 1240 260
+         Q 1300 220 1360 200"/>
+
+    <!-- GALHO 5: rebenta pra cima onde fica área de chips projeto -->
+    <path class="root-branch"
+      d="M 1460 280
+         Q 1520 240 1580 220
+         Q 1640 200 1700 200"/>
+
+    <!-- SUB-GALHOS (mais finos) -->
+    <path class="root-sub"
+      d="M 320 600 Q 270 590 230 600"/>
+    <path class="root-sub"
+      d="M 720 540 Q 700 510 680 480"/>
+    <path class="root-sub"
+      d="M 920 280 Q 880 250 850 220"/>
+    <path class="root-sub"
+      d="M 1240 260 Q 1220 220 1210 190"/>
+    <path class="root-sub"
+      d="M 1580 220 Q 1560 180 1540 160"/>
+    <path class="root-sub"
+      d="M 180 990 Q 140 1020 100 1050"/>
+    <path class="root-sub"
+      d="M 240 880 Q 200 900 170 920"/>
+
+    <!-- NÓS (pequenas pontas onde "toca" cards) -->
+    <circle class="root-node" cx="380" cy="720" r="3"/>
+    <circle class="root-node" cx="560" cy="580" r="3"/>
+    <circle class="root-node" cx="820" cy="440" r="3"/>
+    <circle class="root-node" cx="1140" cy="360" r="3"/>
+    <circle class="root-node" cx="1460" cy="280" r="3"/>
+  </svg>
+</div>
+
+<!-- MOBILE TOGGLE -->
+<button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menu">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="21" y2="12"/>
+    <line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="sidebar-brand-h">H</span>
+    <span class="sidebar-brand-wordmark">Hayzer</span>
+  </div>
+
+  <nav class="nav-group">
+    <span class="nav-group-label">Núcleo</span>
+    <a class="nav-item active" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 12L12 4l9 8"/>
+        <path d="M5 10v10h14V10"/>
+      </svg>
+      Início
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 7h16l-1.5 12H5.5L4 7z"/>
+        <path d="M9 7V4h6v3"/>
+      </svg>
+      Pedidos
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="6" y="9" width="12" height="9"/>
+        <path d="M8 9V5h8v4"/>
+        <line x1="9" y1="13" x2="15" y2="13"/>
+      </svg>
+      Produção
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+        <path d="M3 12l9 4 9-4"/>
+        <path d="M3 17l9 4 9-4"/>
+      </svg>
+      Estoque
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M12 7v10M9 10h5a2 2 0 010 4H9"/>
+      </svg>
+      Financeiro
+    </a>
+  </nav>
+
+  <nav class="nav-group">
+    <span class="nav-group-label">Crescimento</span>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="9" cy="8" r="3"/>
+        <path d="M3 20c0-3 2.5-6 6-6s6 3 6 6"/>
+        <circle cx="17" cy="9" r="2.5"/>
+        <path d="M14 16c2-1 5-1 7 1"/>
+      </svg>
+      Clientes
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 11l8 8 8-8"/>
+        <path d="M12 4v15"/>
+      </svg>
+      Leads
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="4" y="4" width="7" height="7"/>
+        <rect x="13" y="4" width="7" height="7"/>
+        <rect x="4" y="13" width="7" height="7"/>
+        <rect x="13" y="13" width="7" height="7"/>
+      </svg>
+      Catálogo
+    </a>
+  </nav>
+
+  <nav class="nav-group">
+    <span class="nav-group-label">Sistema</span>
+    <a class="nav-item" href="#">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19 12c0 .5 0 1-.1 1.5l2 1.6-2 3.4-2.4-.9c-.7.6-1.5 1-2.4 1.3L13.5 22h-3l-.6-2.1c-.9-.3-1.7-.7-2.4-1.3l-2.4.9-2-3.4 2-1.6c-.1-.5-.1-1-.1-1.5s0-1 .1-1.5l-2-1.6 2-3.4 2.4.9c.7-.6 1.5-1 2.4-1.3L10.5 2h3l.6 2.1c.9.3 1.7.7 2.4 1.3l2.4-.9 2 3.4-2 1.6c.1.5.1 1 .1 1.5z"/>
+      </svg>
+      Configurações
+    </a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="project-switcher" type="button" aria-label="Trocar projeto">
+      <span>3D Resolução · 4 projetos</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+
+    <span class="status-pill">
+      <span class="status-dot"></span>
+      AO VIVO · SINCRONIZADO AGORA HÁ POUCO
+    </span>
+  </div>
+
+  <!-- CAPA EDITORIAL -->
+  <section class="cover fade-in">
+    <div class="cover-left">
+      <span class="cover-tag">LUCRO · MAIO 2026 · até hoje</span>
+      <div class="hairline"></div>
+      <div class="cover-figure num">
+        <span class="currency">R$</span>
+        <span id="lucroValor" data-target="12480">0</span><span class="decimal">,00</span>
+      </div>
+      <p class="cover-anchor">é o que <em>sobrou</em> esse mês — dá pra respirar.</p>
+      <p class="cover-meta num">
+        +18% vs abril <span class="sep">·</span> 32 pedidos fechados
+        <span class="sep">·</span> 89% margem média <span class="sep">·</span> faltam 7 dias pro mês virar
+      </p>
+    </div>
+
+    <div class="live-rows">
+      <div class="live-row">
+        <span class="live-row-dot"></span>
+        <span class="live-row-label">Receita do mês</span>
+        <span class="live-row-value num">R$ 18.420</span>
+        <span class="live-row-delta delta-up">+12%</span>
+      </div>
+      <div class="live-row">
+        <span class="live-row-dot" style="background:var(--ember-500);"></span>
+        <span class="live-row-label">Despesa (filamento + energia)</span>
+        <span class="live-row-value num">R$ 5.940</span>
+        <span class="live-row-delta delta-down">—3%</span>
+      </div>
+      <div class="live-row">
+        <span class="live-row-dot"></span>
+        <span class="live-row-label">Pedidos rolando agora</span>
+        <span class="live-row-value num">32</span>
+        <span class="live-row-delta" style="color:var(--fog-300);"> </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRANCH DIVISOR -->
+  <svg class="branch-divisor" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true">
+    <line x1="0" y1="14" x2="1200" y2="14" stroke="#1F7669" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+    <path d="M150 14 Q156 7 165 4" stroke="#1F7669" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M280 14 Q286 21 295 25" stroke="#1F7669" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M420 14 Q426 6 434 3" stroke="#1F7669" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M560 14 Q568 22 578 26" stroke="#1F7669" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M720 14 Q727 7 736 4" stroke="#1F7669" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M880 14 Q886 21 894 25" stroke="#1F7669" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <path d="M1040 14 Q1047 6 1056 3" stroke="#1F7669" stroke-width="1" stroke-linecap="round" fill="none"/>
+    <circle cx="280" cy="14" r="2" fill="#1F7669" opacity="0.5"/>
+    <circle cx="720" cy="14" r="2" fill="#1F7669" opacity="0.5"/>
+  </svg>
+
+  <!-- KPI MARQUEE -->
+  <section class="kpi-marquee fade-in delay-1">
+    <div class="kpi-card highlight">
+      <span class="kpi-label">Margem média</span>
+      <span class="kpi-value num">89%</span>
+      <span class="kpi-delta">↑ +4 pp vs abril · tá no ritmo</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Em produção</span>
+      <span class="kpi-value num">3 <span class="kpi-value-suffix">peças</span></span>
+      <span class="kpi-meta">2 entregam hoje 18h</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Fila</span>
+      <span class="kpi-value num">7 <span class="kpi-value-suffix">aguardando</span></span>
+      <span class="kpi-meta num">tempo médio 3h12min</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Leads novos</span>
+      <span class="kpi-value num">4</span>
+      <span class="kpi-delta">↑ 3 vieram do Instagram</span>
+    </div>
+  </section>
+
+  <!-- SECTION HEADER -->
+  <div class="section-header">
+    <h2 class="section-title">O que está <em>acontecendo</em></h2>
+    <span class="section-tag">7 sinais · maio · atualizado agora há pouco</span>
+  </div>
+
+  <!-- BENTO INTEL -->
+  <section class="bento-grid fade-in delay-2">
+
+    <!-- 01 — PRODUÇÃO AO VIVO + SPARKLINE FILA 7 DIAS · span 2 -->
+    <article class="bento-card span-2">
+      <div class="connector" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M0 0 Q12 8 16 16 Q20 24 32 32"/></svg>
+      </div>
+      <div class="bento-header">
+        <span class="bento-num">01 — Em produção · agora</span>
+        <svg class="bento-icon" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="6" y="9" width="12" height="7"/>
+          <path d="M6 13H4a1 1 0 01-1-1V9a1 1 0 011-1h2"/>
+          <path d="M18 13h2a1 1 0 001-1V9a1 1 0 00-1-1h-2"/>
+          <path d="M8 9V4h8v5"/>
+          <rect x="8" y="16" width="8" height="5"/>
+        </svg>
+      </div>
+      <div class="bento-big num">3 <span class="suffix-italic">peças imprimindo</span></div>
+      <p class="bento-detail">
+        Bambu X1-Carbon com suporte celular (lote 14), Ender-3 V3 SE rodando chaveiros logo (12 un.)
+        e AnkerMake M5C na prótese de dedo do Falconi. <strong>2 entregam até 18h</strong>.
+      </p>
+
+      <!-- SPARKLINE CHART · FILA 7 DIAS -->
+      <div class="sparkline-wrap">
+        <div class="bento-footer-mono" style="margin-bottom:2px;">Fila de impressão · últimos 7 dias</div>
+        <svg class="sparkline-svg" viewBox="0 0 280 64" preserveAspectRatio="none" aria-label="Fila últimos 7 dias">
+          <!-- 7 barras: 4, 7, 5, 8, 12, 9, 7 (hoje) -->
+          <rect class="sparkline-bar" x="6"   y="44" width="28" height="20" rx="1"/>
+          <rect class="sparkline-bar" x="46"  y="29" width="28" height="35" rx="1"/>
+          <rect class="sparkline-bar" x="86"  y="39" width="28" height="25" rx="1"/>
+          <rect class="sparkline-bar" x="126" y="24" width="28" height="40" rx="1"/>
+          <rect class="sparkline-bar" x="166" y="4"  width="28" height="60" rx="1"/>
+          <rect class="sparkline-bar" x="206" y="19" width="28" height="45" rx="1"/>
+          <rect class="sparkline-bar today" x="246" y="29" width="28" height="35" rx="1"/>
+          <!-- valores no topo das barras maiores -->
+          <text x="180" y="0" fill="#BDB7AB" font-family="Geist Mono" font-size="9" text-anchor="middle">12</text>
+        </svg>
+        <div class="sparkline-axis">
+          <span>seg</span><span>ter</span><span>qua</span><span>qui</span><span>sex</span><span>sáb</span><span style="color:var(--ember-500);">hoje</span>
+        </div>
+      </div>
+
+      <div class="bento-footer">
+        <span class="bento-footer-mono">filamento PLA preto · R$ 47/kg · spool 78%</span>
+        <a class="bento-link" href="#">ver fila →</a>
+      </div>
+    </article>
+
+    <!-- 02 — FILA -->
+    <article class="bento-card">
+      <div class="connector" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M0 0 Q14 6 16 16 Q18 26 32 32"/></svg>
+      </div>
+      <div class="bento-header">
+        <span class="bento-num">02 — Próximas na fila</span>
+      </div>
+      <div class="bento-big num">7 <span class="suffix-italic">aguardando</span></div>
+      <div class="mini-list">
+        <div class="mini-list-item">
+          <div>
+            <div class="name">Vaso geométrico</div>
+            <div class="who">Marina S. · retira quinta 14h</div>
+          </div>
+          <span class="meta num">~2h</span>
+        </div>
+        <div class="mini-list-item">
+          <div>
+            <div class="name">Cosplay armor (peitoral)</div>
+            <div class="who">Héquison · PETG cinza</div>
+          </div>
+          <span class="meta num">~4h</span>
+        </div>
+        <div class="mini-list-item">
+          <div>
+            <div class="name">Brinde corporativo</div>
+            <div class="who">@3dlab_brasil · 50 un.</div>
+          </div>
+          <span class="meta num">~8h</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 — ATENÇÃO -->
+    <article class="bento-card">
+      <div class="connector" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M0 0 Q10 10 16 16 Q22 22 32 32"/></svg>
+      </div>
+      <div class="bento-header">
+        <span class="bento-num">03 — Tá faltando coisa</span>
+        <svg class="bento-icon ember" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3L2 20h20L12 3z"/>
+          <line x1="12" y1="10" x2="12" y2="14"/>
+          <circle cx="12" cy="17" r="0.6" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="bento-big num">2 <span class="suffix-italic">itens críticos</span></div>
+      <p class="bento-detail muted">
+        PETG transparente sumindo (<strong>3 spools/semana</strong>, ritmo crescente).
+        Parafusos M3 a 12 unidades — último ajuste 03/05.
+      </p>
+      <span class="pill-warning">repor antes de quinta</span>
+      <div class="bento-footer">
+        <span class="bento-footer-mono"> </span>
+        <a class="bento-link ember" href="#">comprar →</a>
+      </div>
+    </article>
+
+    <!-- 04 — DONUT MARGEM POR CANAL · highlight assimétrico -->
+    <article class="bento-card span-2 highlight">
+      <div class="connector" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M0 0 Q16 4 16 16 Q16 28 32 32"/></svg>
+      </div>
+      <div class="bento-header">
+        <span class="bento-num">04 — Margem por canal · esse mês</span>
+      </div>
+
+      <div class="donut-wrap">
+        <!-- DONUT SVG -->
+        <svg class="donut-svg" viewBox="0 0 120 120" aria-label="Donut margem por canal">
+          <circle class="donut-bg" cx="60" cy="60" r="46"/>
+          <!-- 5 segmentos: WhatsApp 44%, Loja física 52%, ML 28%, Shopee 24%, Amazon 22% -->
+          <!-- valores como pct DA MARGEM TOTAL (mock: somam 100): WhatsApp 26%, Loja 31%, ML 17%, Shopee 14%, Amazon 12% -->
+          <!-- perímetro 289.03 = 2πr (r=46) -->
+          <!-- WhatsApp: 26% → 75.15 -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#1F7669" stroke-width="18"
+            stroke-dasharray="75.15 289.03" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+          <!-- Loja física: 31% → 89.60, offset -75.15 -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#6FB5A8" stroke-width="18"
+            stroke-dasharray="89.60 289.03" stroke-dashoffset="-75.15" transform="rotate(-90 60 60)"/>
+          <!-- ML: 17% → 49.13, offset -164.75 -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#D08A4A" stroke-width="18"
+            stroke-dasharray="49.13 289.03" stroke-dashoffset="-164.75" transform="rotate(-90 60 60)"/>
+          <!-- Shopee: 14% → 40.46, offset -213.88 -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#A86A30" stroke-width="18"
+            stroke-dasharray="40.46 289.03" stroke-dashoffset="-213.88" transform="rotate(-90 60 60)"/>
+          <!-- Amazon: 12% → 34.68, offset -254.34 -->
+          <circle cx="60" cy="60" r="46" fill="none" stroke="#5B564D" stroke-width="18"
+            stroke-dasharray="34.68 289.03" stroke-dashoffset="-254.34" transform="rotate(-90 60 60)"/>
+
+          <!-- Centro: média 34% -->
+          <text class="donut-center-label" x="60" y="54" text-anchor="middle">média</text>
+          <text class="donut-center-value" x="60" y="74" text-anchor="middle">34%</text>
+        </svg>
+
+        <div class="donut-legend">
+          <div class="donut-legend-item">
+            <span class="donut-legend-swatch" style="background:#1F7669;"></span>
+            <span>WhatsApp · sem comissão</span>
+            <span class="donut-legend-pct num">44%</span>
+          </div>
+          <div class="donut-legend-item">
+            <span class="donut-legend-swatch" style="background:#6FB5A8;"></span>
+            <span>Loja física</span>
+            <span class="donut-legend-pct num">52%</span>
+          </div>
+          <div class="donut-legend-item">
+            <span class="donut-legend-swatch" style="background:#D08A4A;"></span>
+            <span>Mercado Livre</span>
+            <span class="donut-legend-pct num">28%</span>
+          </div>
+          <div class="donut-legend-item">
+            <span class="donut-legend-swatch" style="background:#A86A30;"></span>
+            <span>Shopee</span>
+            <span class="donut-legend-pct num">24%</span>
+          </div>
+          <div class="donut-legend-item">
+            <span class="donut-legend-swatch" style="background:#5B564D;"></span>
+            <span>Amazon</span>
+            <span class="donut-legend-pct num">22%</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="footnote">* margem líquida após comissão e frete · base últimos 30 dias</p>
+
+      <div class="bento-footer">
+        <span class="bento-footer-mono">WhatsApp e loja física puxam pra cima</span>
+        <a class="bento-link" href="#">abrir relatório →</a>
+      </div>
+    </article>
+
+    <!-- 05 — VALOR PARADO + BARS HORIZONTAIS TOP 5 · span 2 -->
+    <article class="bento-card span-2">
+      <div class="connector" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M0 0 Q8 12 16 16 Q24 20 32 32"/></svg>
+      </div>
+      <div class="bento-header">
+        <span class="bento-num">05 — Lucro por produto · top 5 do mês</span>
+      </div>
+      <div class="bento-big num">
+        <span class="currency" style="font-style:italic;font-size:0.5em;font-weight:400;color:var(--fog-200);position:relative;top:-0.5em;">R$</span>
+        8.230 <span class="suffix-italic">parados em estoque</span>
+      </div>
+
+      <!-- HORIZONTAL BARS · TOP 5 LUCRO -->
+      <div class="hbars">
+        <div class="hbar-row">
+          <div class="hbar-label">
+            <span>Vaso geométrico <span class="who">· Marina S.</span></span>
+            <span class="val">R$ 480</span>
+          </div>
+          <div class="hbar-track"><div class="hbar-fill winner" style="width:100%;"></div></div>
+        </div>
+        <div class="hbar-row">
+          <div class="hbar-label">
+            <span>Cosplay armor <span class="who">· Héquison</span></span>
+            <span class="val">R$ 320</span>
+          </div>
+          <div class="hbar-track"><div class="hbar-fill" style="width:67%;"></div></div>
+        </div>
+        <div class="hbar-row">
+          <div class="hbar-label">
+            <span>Chaveiro logo <span class="who">· @3dlab_brasil</span></span>
+            <span class="val">R$ 180</span>
+          </div>
+          <div class="hbar-track"><div class="hbar-fill" style="width:37.5%;"></div></div>
+        </div>
+        <div class="hbar-row">
+          <div class="hbar-label">
+            <span>Suporte celular <span class="who">· Lucas P.</span></span>
+            <span class="val">R$ 90</span>
+          </div>
+          <div class="hbar-track"><div class="hbar-fill" style="width:18.75%;"></div></div>
+        </div>
+        <div class="hbar-row">
+          <div class="hbar-label">
+            <span>Brinde corporativo <span class="who">· Carla M.</span></span>
+            <span class="val">R$ 60</span>
+          </div>
+          <div class="hbar-track"><div class="hbar-fill" style="width:12.5%;"></div></div>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 68%;"></div>
+      </div>
+      <p class="footnote">* estimativa baseada na média dos últimos 30d — pode flutuar conforme demanda</p>
+
+      <div class="bento-footer">
+        <span class="bento-footer-mono">68% do estoque é conversível em pedido aberto</span>
+        <a class="bento-link" href="#">analisar →</a>
+      </div>
+    </article>
+
+    <!-- 06 — ÚLTIMA TRANSAÇÃO -->
+    <article class="bento-card">
+      <div class="connector" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M0 0 Q14 14 16 16 Q18 18 32 32"/></svg>
+      </div>
+      <div class="bento-header">
+        <span class="bento-num">06 — Última transação</span>
+      </div>
+      <div class="bento-big petrol-tone num" style="color:var(--petrol-300);font-size:36px;">+ R$ 180,00</div>
+      <span class="bento-footer-mono">ontem 18:30 · PIX · Marina S.</span>
+      <p class="bento-detail muted">
+        Suporte celular preto (PLA), retirada agendada quinta 14h.
+        Última impressão Bambu X1: 4h27min · sucesso · custo R$ 5,02.
+      </p>
+      <div class="bento-footer">
+        <span class="bento-footer-mono num">3 pedidos hoje · viraço esse fds</span>
+        <a class="bento-link" href="#">ver tudo →</a>
+      </div>
+    </article>
+
+    <!-- 07 — SAÚDE DA MARGEM -->
+    <article class="bento-card">
+      <div class="connector" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M0 0 Q4 14 16 16 Q28 18 32 32"/></svg>
+      </div>
+      <div class="bento-header">
+        <span class="bento-num">07 — Saúde geral</span>
+      </div>
+      <div class="bento-big num">89% <span class="suffix-italic">saudável</span></div>
+      <p class="bento-detail">
+        Acima do alvo de 50%. Nenhum produto rodando no vermelho esse mês.
+        <strong>Esse mês fechou bem</strong>.
+      </p>
+      <span class="pill-petrol"><span class="health-dot"></span>≥ 50% margem em todos itens</span>
+      <div class="bento-footer">
+        <span class="bento-footer-mono">energia 0,89 kWh/h · R$ 1,12/h impressão</span>
+      </div>
+    </article>
+
+  </section>
+  <!-- TROCAR DE PROJETO -->
+  <div class="section-header">
+    <h2 class="section-title">Trocar de <em>projeto</em></h2>
+    <span class="section-tag">4 ativos · 1 selecionado · sincronizado agora há pouco</span>
+  </div>
+
+  <div class="projects-row fade-in delay-3">
+    <button class="project-chip active" type="button">
+      <span>3D Resolução</span>
+      <span class="chip-meta">· atual</span>
+    </button>
+    <button class="project-chip" type="button">
+      <span>Imprimíveis Cia</span>
+      <span class="chip-meta num">· R$ 4.200</span>
+    </button>
+    <button class="project-chip" type="button">
+      <span>Filamento BR</span>
+      <span class="chip-meta num">· R$ 2.890</span>
+    </button>
+    <button class="project-chip" type="button">
+      <span>Maker Hub</span>
+      <span class="chip-setup">· em setup</span>
+    </button>
+  </div>
+
+</main>
+
+<!-- WATERMARK raiz. -->
+<div class="watermark-raiz" aria-hidden="true">raiz.</div>
+
+<script>
+  // ============================================================
+  // COUNT-UP R$ — pt-BR, 1000ms, ease cubic-bezier
+  // ============================================================
+  (function() {
+    const el = document.getElementById('lucroValor');
+    if (!el) return;
+
+    const target = parseInt(el.dataset.target, 10);
+    const duration = 1000;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const fmt = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
+
+    if (prefersReduced) {
+      el.textContent = fmt.format(target);
+      return;
+    }
+
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutCubic(progress);
+      const current = Math.floor(target * eased);
+      el.textContent = fmt.format(current);
+
+      if (progress < 1) requestAnimationFrame(tick);
+      else el.textContent = fmt.format(target);
+    }
+
+    setTimeout(() => requestAnimationFrame(tick), 220);
+  })();
+
+  // ============================================================
+  // MOBILE DRAWER
+  // ============================================================
+  (function() {
+    const toggle = document.getElementById('mobileToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (!toggle || !sidebar) return;
+
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    sidebar.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        if (window.innerWidth <= 768) sidebar.classList.remove('open');
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

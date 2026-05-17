@@ -65,11 +65,22 @@ const MOCKUPS: Mockup[] = [
   {
     slug: 'dashboard/editorial-bento-hibrido.html',
     feature: 'Dashboard Interno',
-    title: 'Editorial-Bento Híbrido',
-    variant: 'C',
+    title: 'Editorial-Bento Híbrido v1',
+    variant: 'C v1',
+    status: 'descartado',
+    description:
+      'Primeira tentativa. CEO detonou: dark uniforme, raízes invisíveis, sem dataviz, fonte pequena.',
+    author: 'Diego',
+    createdAt: '2026-05-16',
+  },
+  {
+    slug: 'dashboard/editorial-bento-hibrido-v2.html',
+    feature: 'Dashboard Interno',
+    title: 'Editorial-Bento Híbrido v2',
+    variant: 'C v2',
     status: 'em-avaliacao',
     description:
-      'Capa editorial + KPI enxuto + bento intel + watermark. Motif raízes sutil. Recomendação Diego.',
+      'Refeito atacando 5 pontos: surface ladder, raízes estruturais, 3 charts (donut+sparkline+bars), tipografia +, conteúdo maker BR real (Falconi, Marina, R$ 47/kg).',
     author: 'Diego',
     createdAt: '2026-05-16',
   },
