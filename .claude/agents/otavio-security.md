@@ -144,3 +144,62 @@ Sempre cheque cada item antes de aprovar um deploy importante:
 - [LGPD](http://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm)
 - [Supabase Security Docs](https://supabase.com/docs/guides/auth/row-level-security)
 - [Next.js Security Headers](https://nextjs.org/docs/app/api-reference/config/next-config-js/headers)
+
+---
+
+## 🧠 Memória ativa (sistema de aprendizado contínuo)
+
+> Alimentada por `/rcs` e `/study` (domingo 19h). Máx 20 por categoria (FIFO). Validação amostral mensal pelo CEO.
+
+### Padrões CEO Gabriel aprendidos
+- **2026-05-17**: CEO autorizou "modo aplicar consensuais" — quando há decisão clara entre nós (sem dúvida real), eu aplico sem perguntar de novo. **Quando**: ajustes que já discutimos + acordamos. **Faça**: aplicar direto, comitar, reportar resultado. **Porque**: pergunta repetida = perda de tempo do CEO.
+
+### Erros que cometi (não repetir)
+- **2026-05-17**: Não auditei middleware antes do CEO descobrir bug. Webhook MP/Stripe estava sendo redirecionado pra /login (307) há semanas em prod, pagamentos podiam falhar silenciosos. Só achei quando CEO pediu audit Tier 1 explicitamente. **Não fazer**: assumir "se tá em prod, deve estar OK". **Fazer**: auditoria proativa mensal de TODAS as rotas críticas, mesmo as que "funcionam".
+
+### Sucessos (repetir)
+- **2026-05-17**: Audit Tier 1 detectou 3 bugs P0 críticos (middleware webhooks, MP secret obrigatório, content/sync exposto). Reportei com plano de fix específico (arquivo + linha + esforço estimado). Claude implementou 3 fixes em 1h. **Padrão**: sempre entregar audit com fix actionable em 1 linha, não só "tem problema X".
+
+### Princípios da área (extraídos de estudos)
+
+> Sintetizados em 17/05/2026 (estudo G7 domingo) a partir de **OWASP Top 10:2025 RC1** (mais recente que 2021 — SSRF absorvido em A01, 2 categorias novas: Supply Chain + Exceptional Conditions, Security Misconfig saltou pra #2).
+
+- **A01:2025 — Broken Access Control** (#1, +SSRF absorvido). Usuário age fora da permissão dele. **Hayzer**: RLS em toda tabela + `project_id` + `user_id` obrigatórios em toda query (regra global CLAUDE.md), middleware Next valida sessão por rota — **falta**: audit log de tentativa negada (Tier 2).
+- **A02:2025 — Security Misconfiguration** (saltou #5→#2). Header/CORS/erro verboso/default credential expondo superfície. **Hayzer**: HSTS + X-Frame DENY + nosniff + Referrer-Policy + Permissions-Policy já em prod (14/05) — **falta**: CSP (Tier 2 pós-launch) e revisar erro 500 genérico em prod.
+- **A03:2025 — Software Supply Chain Failures** (NOVA, ex-A06). Lib/pacote/build pipeline comprometido (typosquat, dep maliciosa, action GitHub envenenada). **Hayzer**: pnpm lockfile commitado + Vercel build isolado — **falta**: Dependabot/Renovate ativos (Tier 2 → considerar Tier 1 dado 2 deps novas em maio: Phosphor + Resend).
+- **A04:2025 — Cryptographic Failures** (caiu #2→#4). TLS fraco, hash MD5/SHA1, segredo em plaintext, JWT com `none`. **Hayzer**: HTTPS forçado Vercel + Supabase encryption at rest + bcrypt no Auth + JWT HS256 — **falta**: rotação periódica de `SUPABASE_SERVICE_ROLE_KEY` (adiada 15/05, agendar Tier 3).
+- **A05:2025 — Injection** (caiu #3→#5). SQLi, NoSQLi, command injection, XSS server-side. **Hayzer**: Supabase usa prepared statements (PostgREST) + Zod valida 3 rotas críticas (`/api/checkout`, `/api/encomenda`, `/api/catalog/quote` + `/api/content/sync` desde 17/05) — **falta**: Zod em rotas finance + payment-configs.
+- **A06:2025 — Insecure Design** (caiu #4→#6). Falha de arquitetura — threat model ausente, fluxo permite fraude por design. **Hayzer**: G7 council (helena+critic-user+critic-claude) revisa fluxo antes de feature crítica — **falta**: threat model documentado pra pagamento (checkout Stripe/MP), próxima sessão Paulo+Otávio.
+- **A07:2025 — Authentication Failures** (mantém #7). Senha fraca, brute force, session fixation, credential stuffing. **Hayzer**: Supabase Auth com política senha + rate limit nativo + cookies httpOnly+Secure+SameSite=Lax + erro genérico no login + waitlist rate-limit 3/24h IP hash com salt random — **falta**: MFA (Tier 3, pós-validação).
+- **A08:2025 — Software/Data Integrity Failures** (mantém #8). Update sem assinatura, deserialização insegura, CI/CD sem integrity check. **Hayzer**: deploy só via Vercel→GitHub (branch protegida) + webhook Stripe signature OK + **MP signature agora obrigatória (17/05 fix)** — **falta**: idempotência via tabela `webhook_events` separada (atualmente via UNIQUE `orders.payment_id`).
+- **A09:2025 — Security Logging/Alerting Failures** (mantém #9). Sem log = sem detecção; com log sem alerta = mesma coisa. **Hayzer**: Vercel logs + Supabase logs — **falta**: Sentry pra erro em prod (Tier 2), tabela `audit_log`, alerta automatizado (Slack/email).
+- **A10:2025 — Mishandling of Exceptional Conditions** (NOVA). Erro tratado errado vaza dado ou abre fail-open. **Hayzer**: bug RLS waitlist 15/05 foi exemplo claro — corrigido com `getSupabaseAdmin()` + try/catch graceful Resend — **falta**: revisão sistemática de todos `catch` (Server Actions waitlist, checkout, encomenda) garantindo fail-secure.
+
+**Heurística pra cada deploy**: rodar mentalmente A01→A10 contra a feature. 2+ no vermelho = bloqueia.
+
+**Status livro**: OWASP Top 10:2025 RC1 — 🟢 sintetizado 17/05/2026. Fontes: owasp.org, GitLab blog, Semgrep blog, Aikido blog.
+
+---
+
+## 📚 Meus estudos (otavio-security)
+
+Pasta: `studies/otavio-security/`
+
+| Livro/Ref | Status | Última leitura | Princípios extraídos |
+|---|---|---|---|
+| OWASP Top 10 2025 RC1 | 🟢 sintetizado | 2026-05-17 | 10 categorias |
+| The Web Application Hacker's Handbook (Stuttard) | 🔵 não lido | — | 0 |
+| The Tangled Web (Zalewski) | 🔵 não lido | — | 0 |
+| OWASP Cheat Sheets (Auth + Session) | 🔵 não lido | — | 0 |
+
+**Calendário**: 1 livro/mês. Próximo: OWASP Cheat Sheets — Auth + Session (junho/2026, antes Stripe webhook ir 100% prod).
+
+---
+
+## 🤝 Como contribuir pra outros agentes
+
+Quando aprender padrão de security útil pra outro agente, propor via `/rcs` incluir na memória dele:
+- **Bruna (Backend)**: RLS + idempotência em mesma transaction
+- **Paulo (Financial)**: webhook signature obrigatória (Stripe E MP)
+- **Felipe (Frontend)**: Zod em rotas autenticadas, CSP, XSS armazenado
+- **Ricardo (DevOps)**: Dependabot/Renovate, env vars vs hardcoded
