@@ -133,9 +133,16 @@ V<X> porque <razão concreta>
 - **2026-05-16**: Email "A calculadora tá no ar — e de graça. Usa e me fala o que faltou." — taxa abertura alta (interna). **Padrão**: contração natural + benefício 1 linha + pedido de feedback (não pedido de venda).
 
 ### Princípios da área (extraídos de estudos)
-*(vazio — primeira leitura pendente)*
 
-**Próxima leitura agendada**: `studies/carla-copy/ogilvy-on-advertising.md` (domingo 24/05/2026 19h)
+- **2026-05-17 · Ogilvy on Advertising (cap 1-3)**: **Quando escrever headline/hero, prometa benefício concreto e inclua o nome da marca, porque 5x mais gente lê headline do que body — sem brand, 80% nunca sabe de quem é o anúncio.** (Ogilvy · cap 2 · classicads/Copyblogger). **Aplicação Hayzer**: hero da landing já passa ("Seu negócio, sem caos"); revisar email transacional e push notifications pra garantir que "Hayzer" + benefício estejam no subject/título, não só no rodapé.
+- **2026-05-17 · Ogilvy (cap 1)**: **Quando criar copy, troque generalidade por número específico verificado, porque concretude vira credibilidade — "35 libras/semana" venceu "menos do que você imagina".** (Ogilvy · cap 1 · readstoleads). **Aplicação Hayzer**: já fazemos no dashboard ("R$ 12.480,00"); replicar em landing (substituir "economize tempo" por "12 pedidos atrasados viram zero em 1 semana") e em emails ("a calculadora roda em 8 segundos" > "rápida").
+- **2026-05-17 · Ogilvy (cap 3)**: **Quando escrever body copy, escreva como carta — uma pessoa pra outra, segunda pessoa do singular, frase curta, palavra do dia-a-dia — porque copy formal não vende, conversa vende.** (Ogilvy · cap 3 · Effectiviology). **Aplicação Hayzer**: já é nosso DNA; reforçar em onboarding e empty states (Sofia), evitar voz corporativa em descrições de plano/preço.
+- **2026-05-17 · Ogilvy (cap 2)**: **Quando montar headline, evite trocadilho/duplo sentido/obscuridade — porque leitor escaneia em meio a 350 concorrentes e não para pra decifrar.** (Ogilvy · cap 2 · classicads). **Aplicação Hayzer**: headline de blog/LinkedIn/post de divulgação maker 3D — direto > esperto. "Calculadora 3D grátis pra precificar do jeito certo" > "A matemática que seu concorrente não quer que você saiba".
+- **2026-05-17 · Ogilvy (cap 2)**: **Quando puder, abra com "news" — produto novo, melhoria, mudança — porque headlines com news tiram 22% mais leitores.** (Ogilvy · cap 2 · karolakarlson). **Aplicação Hayzer**: email "A calculadora tá no ar" já segue isso; aplicar em qualquer lançamento de feature ("Agora a Hayzer fala com seu Bling" > "Integração disponível").
+- **2026-05-17 · Ogilvy (cap 3)**: **Quando descrever benefício, conte em forma de história — "o Zippo que funcionou depois de sair da barriga do peixe" — porque história gruda, lista de feature evapora.** (Ogilvy · cap 3 · classicads). **Aplicação Hayzer**: substituir "controle de pedidos" por mini-narrativa do Rafael ("Era sexta 23h. Rafael abriu a Hayzer e viu: pedido do Carlos, fila 3, prazo terça. Dormiu."). Aplicar em case studies, posts LinkedIn do Marcos, página /sobre.
+- **2026-05-17 · Ogilvy (cap 1)**: **Antes de escrever, pesquise como o cliente fala do produto — que palavra ele usa, que atributo importa, que promessa o faria comprar — porque copy boa é traduzida da fala dele, não inventada na sua mesa.** (Ogilvy · cap 1 · shortform/bookey). **Aplicação Hayzer**: ouvir áudios de WhatsApp do CEO com makers, ler comentários do Instagram @3dlab_brasil, pegar vocabulário cru ("filamento", "fila", "comissão da ML", "recompra") — já está acontecendo, formalizar como check antes de cada copy nova.
+
+**Próxima leitura agendada**: `studies/carla-copy/made-to-stick.md` (junho/2026)
 
 ---
 
@@ -145,12 +152,12 @@ Pasta: `studies/carla-copy/`
 
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
-| Ogilvy on Advertising | 🔵 não lido | — | 0 |
+| Ogilvy on Advertising | 🟢 sintetizado | 2026-05-17 | 7 |
 | Made to Stick (Heath) | 🔵 não lido | — | 0 |
 | The Boron Letters (Halbert) | 🔵 não lido | — | 0 |
 | Copy Hackers vol 1-4 (Wiebe) | 🔵 não lido | — | 0 |
 
-**Calendário**: 1 livro/mês. Próximo: Ogilvy on Advertising (junho/2026).
+**Calendário**: 1 livro/mês. Ogilvy lido 17/05/2026 (adiantado pelo CEO). Próximo: Made to Stick (junho/2026).
 
 ---
 

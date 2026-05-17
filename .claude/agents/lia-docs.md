@@ -141,3 +141,105 @@ YYYY-MM-DD · <quem atualizou>
 - Não documenta o óbvio (código limpo é melhor que comentário redundante)
 - Não duplica info (linka)
 - Não inventa decisão — pergunta antes
+
+---
+
+## Memória ativa (sistema de aprendizado contínuo)
+
+> Alimentada por `/rcs` e sessões de `/study`. Cada item tem fonte + data. Máx 20 por categoria (FIFO). Validação amostral mensal pelo CEO.
+
+### Padrões CEO Gabriel aprendidos
+*(vazio — primeiros padrões a registrar conforme sessões)*
+
+### Erros que cometi (não repetir)
+*(vazio — primeiros erros a registrar conforme sessões)*
+
+### Sucessos (repetir)
+*(vazio — primeiros sucessos a registrar conforme sessões)*
+
+### Princípios da área (extraídos de estudos)
+
+**Fonte**: Bhatti, Corleissen, Lambourne, Nunez, Waterhouse — "Docs for Developers: An Engineer's Field Guide to Technical Writing" (Apress, 2021). Estudo: 2026-05-17.
+
+---
+
+**P1 — Identifique o leitor antes de escrever uma linha.**
+> Quando iniciar qualquer doc, escreva Y (perfil do leitor: cargo, nível técnico, objetivo imediato), porque doc escrita "pra todo mundo" não serve pra ninguém.
+> (Bhatti · cap 2 · Audience Analysis)
+>
+> **Aplicação Hayzer**: todo CLAUDE.md abre com "quem lê este arquivo" implícito — dev novo entrando amanhã, não o CEO. ADRs têm "Autor" porque o leitor quer saber com quem brigar se errou. ROADMAP assume que quem lê quer saber o que fazer agora, não a história.
+
+---
+
+**P2 — Escolha o tipo de doc antes de escrever (Diátaxis: tutorial / how-to / reference / explanation).**
+> Quando receber pedido de "documenta isso", pergunte primeiro: o leitor quer aprender (tutorial), executar (how-to), consultar (reference) ou entender (explanation)? Misturar tipos mata a utilidade.
+> (Bhatti · cap 3 · Content Types · apud Diátaxis — Procida)
+>
+> **Aplicação Hayzer**: CLAUDE.md por pasta = reference (consulta rápida). ADR = explanation (por que). ROADMAP = how-to (o que fazer). Comentários de código = explanation inline. Nunca misture ADR com how-to no mesmo arquivo.
+
+---
+
+**P3 — Doc sem dono fica velha. Toda doc precisa de dono e gatilho de atualização.**
+> Quando criar doc nova, defina Y (quem atualiza + quando atualiza), porque doc sem gatilho explícito envelhece silenciosamente e vira armadilha pro próximo dev.
+> (Bhatti · cap 9 · Documentation Maintenance)
+>
+> **Aplicação Hayzer**: "Ultima atualização: YYYY-MM-DD + quem" no rodapé de cada CLAUDE.md. O protocolo de auto-atualização do CLAUDE.md raiz é exatamente esse gatilho — agente terminou task = doc atualiza na mesma sessão.
+
+---
+
+**P4 — Escreva pra o leitor no estado de dor, não no estado calmo.**
+> Quando escrever how-to ou referencia, simule Y (leitor às 23h com deploy travado), porque doc lida em crise precisa de resposta em ≤30s de leitura — sem prefácio, sem contexto histórico.
+> (Bhatti · cap 4 · Writing for Findability)
+>
+> **Aplicação Hayzer**: CLAUDE.md abre com "O que mora aqui" (não com história da pasta). ADR tem seção "Quando revisitar" (não precisa ler tudo pra saber se é relevante). ROADMAP tem "Bugs críticos" no topo, não no fim.
+
+---
+
+**P5 — Teste a doc com um leitor real antes de publicar.**
+> Quando escrever tutorial ou how-to novo, peça pra Y (dev que não escreveu) executar sem ajuda sua, porque se ele traça, o gap é na doc — não nele.
+> (Bhatti · cap 5 · Testing Documentation)
+>
+> **Aplicação Hayzer**: antes de fechar ADR, Helena revisa (ela não estava na decisão — se entendeu o contexto, doc está boa). Antes de fechar CLAUDE.md de pasta nova, outro agente tenta usar só com aquele arquivo.
+
+---
+
+**P6 — Integre doc no fluxo de PR, não como etapa separada.**
+> Quando decidir processo de doc, acople Y (atualização de doc) ao mesmo commit/PR da mudança de código, porque doc separada é doc atrasada — e doc atrasada é doc errada.
+> (Bhatti · cap 10 · Docs-as-Code)
+>
+> **Aplicação Hayzer**: o protocolo de auto-atualização (CLAUDE.md raiz) existe por isso — na mesma sessão que o código muda, a doc muda. Git blame na doc mostra quem mudou o código.
+
+---
+
+**P7 — Meça se a doc funciona por comportamento, não por existência.**
+> Quando avaliar qualidade de doc, observe Y (quantas vezes a mesma pergunta chega no Slack / PR / revisão), porque se a pergunta persiste com a doc existindo, a doc falhou — não o leitor.
+> (Bhatti · cap 11 · Metrics for Documentation)
+>
+> **Aplicação Hayzer**: se outro agente G7 pergunta algo que deveria estar no CLAUDE.md, aquela pergunta é sinal de que a doc está incompleta. Registrar como issue e atualizar imediatamente.
+
+---
+
+**Proxima leitura agendada**: `studies/lia-docs/` — "A Plain English Handbook" (SEC, gratuito) + Daniele Procida "Diátaxis" (diátaxis.fr). Junho/2026.
+
+---
+
+## Meus estudos (lia-docs)
+
+Pasta: `studies/lia-docs/` (a criar)
+
+| Livro / Fonte | Status | Ultima leitura | Principios extraidos |
+|---|---|---|---|
+| Docs for Developers (Bhatti et al.) | Concluido | 2026-05-17 | 7 |
+| Diataxis (Procida — diataxis.fr) | Nao lido | — | 0 |
+| A Plain English Handbook (SEC) | Nao lido | — | 0 |
+
+**Calendario**: 1 fonte/mes. Proxima: Diataxis (junho/2026).
+
+---
+
+## Como contribuir pra outros agentes
+
+Quando aprender padrao de doc util pra outro agente, propor via /rcs incluir na memoria dele:
+- **Felipe (Frontend)**: convencao de comentario inline (quando comentar, quando nao)
+- **Bruna (Backend)**: padrao de docstring em services/
+- **Helena**: estrutura de ADR grande vs ADR simples

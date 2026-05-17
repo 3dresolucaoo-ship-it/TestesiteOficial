@@ -83,3 +83,59 @@ Quando implementa, mostra:
 2. Código completo
 3. Verificações que rodou (typecheck, lint)
 4. O que falta (deps, env, migration) — se faltar algo
+
+---
+
+## Memória ativa (sistema de aprendizado contínuo)
+
+> Alimentada por `/rcs` e sessões de `/study` (semanal). Cada item tem fonte + data. Máx 20 por categoria (FIFO). Validação amostral mensal pelo CEO.
+
+### Padrões CEO Gabriel aprendidos
+*(vazio — primeira leitura pendente)*
+
+### Erros que cometi (não repetir)
+*(vazio — primeira leitura pendente)*
+
+### Sucessos (repetir)
+*(vazio — primeira leitura pendente)*
+
+### Princípios da área (extraídos de estudos)
+
+**Fonte**: Patterns.dev (Lydia Hallie + Addy Osmani) · 2026-05-17
+
+- **[RSC First] Quando** um componente só lê dados (sem evento de browser, sem state, sem hook de lifecycle), **use** React Server Component async direto no `app/` — nunca `getServerSideProps`. **Porque** o JS desse componente não vai pro bundle do cliente; bundles 20%+ menores + TTFB melhor. (Patterns.dev · React Server Components · https://www.patterns.dev/react/react-server-components)
+  - **Aplicação Hayzer**: `app/dashboard/page.tsx`, `app/inventory/page.tsx`, `app/products/page.tsx` — todos já podem ser async Server Components que chamam `services/` direto. Nenhum deles precisa de `'use client'` no nível da page.
+
+- **[Container/Presentational → Custom Hook] Quando** um Client Component mistura fetch + render, **use** um custom hook (`useOrders`, `useInventory`) que encapsula o estado e retorna os dados; o componente visual recebe só props. **Porque** hooks substituem o Container wrapper e eliminam o "wrapper hell" de HOCs aninhados. (Patterns.dev · Container/Presentational · https://www.patterns.dev/react/presentational-container-pattern)
+  - **Aplicação Hayzer**: `components/DashboardView.tsx` e `components/FinanceView.tsx` têm lógica de estado misturada com render. Candidatos a extrair `useDashboard()` / `useFinance()`.
+
+- **[Compound Component] Quando** um conjunto de sub-componentes compartilha estado implícito (ex: menu, accordion, tabs, modal com partes separadas), **use** Compound Pattern via Context interno ao componente pai + sub-componentes como propriedades estáticas (`Menu.Item`, `Menu.Trigger`). **Porque** evita prop drilling entre partes do mesmo widget e a API fica declarativa para quem consome. (Patterns.dev · Compound Pattern · https://www.patterns.dev/react/compound-pattern)
+  - **Aplicação Hayzer**: `app/catalogo/[slug]/` tem `ProductCard` + `QuoteModal` + `FloatingWhatsApp` que compartilham estado de "produto selecionado" — candidato a Compound. Novo componente de Orders com form multi-step também.
+
+- **[Provider Pattern] Quando** mais de 3 componentes em árvores distintas precisam do mesmo valor (tema, usuário autenticado, projeto ativo), **use** Context Provider com `useContext` tipado, nunca prop drilling. **Porque** refatorar prop drilling depois é caro — dado que passou por 4+ níveis vira dívida técnica garantida. (Patterns.dev · Provider Pattern · https://www.patterns.dev/vanilla/provider-pattern)
+  - **Aplicação Hayzer**: `lib/store.tsx` já usa esse padrão corretamente com `StoreContext`. Regra: **não criar segundo Context global** — estender o store existente. Contextos locais (ex: dentro de um Compound Component) são aceitáveis.
+
+- **[Render Props → children as function] Quando** um componente precisa delegar a decisão de renderização pro consumidor (ex: lista genérica, cell de tabela customizável, chart wrapper), **use** `children` como função ou prop `render`. **Porque** mais flexível que herança, mais explícito que HOC, e em React 19 compõe bem com RSC (o RSC passa Server Component como children para Client Component). (Patterns.dev · Render Props · https://www.patterns.dev/react/render-props-pattern)
+  - **Aplicação Hayzer**: `components/EmptyState.tsx` já aceita `children` — padrão correto. Próxima aplicação: wrapper de tabela de pedidos/inventário que aceita `renderRow` tipado.
+
+- **[Hooks Pattern — lógica reutilizável] Quando** a mesma lógica stateful (debounce, intersection observer, form com Zod, fetch com loading/error) aparece em 2+ componentes, **extraia** para custom hook em `lib/hooks/` com retorno tipado. **Porque** hooks compartilham lógica sem criar hierarquia de componentes — zero custo de re-render extra. (Patterns.dev · Hooks Pattern · https://www.patterns.dev/react/hooks-pattern)
+  - **Aplicação Hayzer**: candidatos imediatos — `useProjectId()` (lê project_id do store), `useSupabaseQuery()` (abstrai loading/error/data pattern), `useDebounce()` (busca em inventário/produtos).
+
+- **[Static + Streaming] Quando** uma página tem partes estáticas (hero, nav, footer) e partes dinâmicas (dados do usuário, métricas), **use** Suspense boundaries para isolar o streaming das partes dinâmicas — a página carrega instantaneamente e as partes dinâmicas chegam progressivamente. **Porque** elimina o "tudo ou nada" do SSR bloqueante e melhora LCP/INP. (Patterns.dev · RSC/Streaming · https://www.patterns.dev/react/react-server-components)
+  - **Aplicação Hayzer**: `app/dashboard/page.tsx` pode ter `<Suspense fallback={<DashboardSkeleton />}><DashboardMetrics /></Suspense>` para métricas Supabase sem bloquear o shell da página.
+
+**Proxima leitura agendada**: `studies/felipe-frontend/` (criar pasta) — "Web Performance in Action" ou documentação oficial Next.js App Router (domingo 24/05/2026)
+
+---
+
+## Estudos (felipe-frontend)
+
+Pasta: `studies/felipe-frontend/` (a criar)
+
+| Fonte | Status | Última leitura | Princípios extraídos |
+|---|---|---|---|
+| Patterns.dev (Hallie + Osmani) | 🟢 lido parcial | 2026-05-17 | 7 |
+| Next.js App Router docs (official) | 🔵 não lido | — | 0 |
+| React 19 changelog (react.dev) | 🔵 não lido | — | 0 |
+
+**Calendário**: 1 fonte/mês. Próxima: Next.js App Router docs (junho/2026).

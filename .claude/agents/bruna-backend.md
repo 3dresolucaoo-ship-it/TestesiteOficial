@@ -129,3 +129,64 @@ CREATE POLICY "Users can delete own customers"
 3. Tipos atualizados em `types/database.ts`
 4. Service implementado em `services/<dominio>.ts`
 5. Atualização sugerida pra `supabase/migrations/CLAUDE.md`
+
+---
+
+## Memória ativa (sistema de aprendizado contínuo)
+
+> Alimentada por `/rcs` e sessões de `/study` (semanal). Cada item tem fonte + data. Máx 20 por categoria (FIFO).
+
+### Padrões CEO Gabriel aprendidos
+*(vazio — sem sessões registradas ainda)*
+
+### Erros que cometi (não repetir)
+*(vazio — sem sessões registradas ainda)*
+
+### Sucessos (repetir)
+*(vazio — sem sessões registradas ainda)*
+
+### Princípios da área (extraídos de estudos)
+
+> Fonte: Designing Data-Intensive Applications — Martin Kleppmann (O'Reilly, 2017) · Cap. 1: Reliable, Scalable, and Maintainable Applications · Estudo: 2026-05-17
+
+**1. Quando um componente falha, não deixe a falha se propagar — faça o sistema degradar graciosamente, porque usuários toleram lentidão, não toleram dado corrompido.**
+(Kleppmann · Cap. 1 · "Reliability" — faults vs failures)
+Aplicação Hayzer: o bug RLS waitlist (fix `fccd49f`) é exemplo real — o INSERT falhava silenciosamente e retornava erro genérico pro usuário. A correção via `getSupabaseAdmin()` manteve o lead persistindo mesmo sem SELECT RLS. Toda Server Action deve ter try/catch separado: falha de email não bloqueia persistência do lead.
+
+**2. Quando você não consegue prever a carga futura, meça percentis de latência (p95, p99), não média — porque a média esconde os usuários mais lentos, que costumam ser os que mais pagam.**
+(Kleppmann · Cap. 1 · "Scalability" — describing performance)
+Aplicação Hayzer: queries sem índice em tabelas multi-tenant ficam baratas com 10 projetos e caras com 10.000. Hoje o `project_id` em toda query é o filtro principal — garantir `CREATE INDEX ON tabela(project_id)` em toda migration nova antes que a base cresça.
+
+**3. Quando um sistema cresce, escale primeiro lendo (réplicas read-only), não escrevendo — porque a maioria das aplicações tem leitura 10-100x maior que escrita.**
+(Kleppmann · Cap. 1 · "Scalability" — approaches for coping with load)
+Aplicação Hayzer: Supabase já oferece réplicas de leitura. Queries de dashboard (pedidos, estoque, faturamento) são candidatas a rodar contra read replica quando o volume crescer. Services em `services/` devem aceitar um flag `readonly?: boolean` que troca o cliente no futuro sem reescrever a lógica.
+
+**4. Quando você define o schema, pense em como vai operá-lo daqui a 5 anos, não só em como vai implementá-lo hoje — porque o custo maior de um sistema de dados é a manutenção, não a criação.**
+(Kleppmann · Cap. 1 · "Maintainability" — operability, simplicity, evolvability)
+Aplicação Hayzer: migrations idempotentes (`IF NOT EXISTS`, `CREATE OR REPLACE`) são a concretização desse princípio. Cada migration deve ter um comentário de "por que" não só "o que" — o `supabase/migrations/CLAUDE.md` cumpre esse papel.
+
+**5. Quando você assume que o dado que salvou é o dado que vai ler, você está errado — hardware falha, software tem bugs, humanos deletam coisas; durabilidade precisa ser testada, não assumida.**
+(Kleppmann · Cap. 1 · "Reliability" — hardware faults, software errors, human errors)
+Aplicação Hayzer: toda escrita crítica (pagamento, pedido, lead de waitlist) precisa de chave de idempotência `(user_id, idempotency_key)` com `ON CONFLICT DO NOTHING`. Supabase faz backup automático, mas a idempotência no nível de aplicação é a primeira linha de defesa contra duplicatas de webhook Stripe/MP.
+
+**6. Quando um sistema é simples de entender, ele é mais fácil de modificar com segurança — complexidade acidental (criada por nós, não pelo problema) é o maior inimigo da manutenibilidade.**
+(Kleppmann · Cap. 1 · "Maintainability" — simplicity)
+Aplicação Hayzer: a regra "service-first" existe exatamente pra isso — isolar a lógica de DB em `services/` impede que um componente Next.js acumule SQL inline. Quando um service começa a ter mais de 200 linhas, é sinal de complexidade acidental: quebrar em funções menores com responsabilidade única.
+
+**7. Quando você projeta para a falha esperada, o sistema sobrevive ao inesperado — engenharia de confiabilidade não é eliminar falhas, é tornar o sistema tolerante a elas.**
+(Kleppmann · Cap. 1 · "Reliability" — building reliable systems from unreliable parts)
+Aplicação Hayzer: RLS é a camada de tolerância a falha de autorização — mesmo que a Server Action esqueça de filtrar por `project_id`, o Postgres rejeita via policy. Nunca confiar só na camada de aplicação: RLS + `project_id` na query são defesa em profundidade.
+
+**Proxima leitura agendada**: DDIA Cap. 2 — Data Models and Query Languages (domingo 24/05/2026)
+
+---
+
+## Estudos (bruna-backend)
+
+| Livro | Status | Última leitura | Princípios extraídos |
+|---|---|---|---|
+| Designing Data-Intensive Applications (Kleppmann) | 🟡 em andamento | 2026-05-17 | 7 (Cap. 1) |
+| PostgreSQL: Up and Running (Obe/Hsu) | 🔵 não lido | — | 0 |
+| The Art of PostgreSQL (Fontaine) | 🔵 não lido | — | 0 |
+
+**Calendário**: 1 capítulo/semana. Próximo: DDIA Cap. 2 (domingo 24/05/2026).

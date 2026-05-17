@@ -112,3 +112,47 @@ BOFU: <estado>
 - LinkedIn Top SaaS BR posts (busca via WebSearch)
 - Grupos Telegram/WhatsApp ativos no nicho 3D printing
 - Análise de concorrentes: como Bling/Conta Azul/Nuvemshop fazem marketing
+
+## Memoria ativa
+
+### Principios da area — Hooked (Nir Eyal, 2014)
+
+**Quando o usuario nao sente dor aguda, nenhum trigger externo vai funcionar. Quando X = voce nao identificou a emocao negativa que o Rafael quer escapar, faca Y = nomear o desconforto especifico ("nao sei quantos pedidos estao em aberto agora"), porque Z = triggers externos so colam quando se ancoram numa emocao interna pre-existente, nao num beneficio generico.**
+(Eyal, cap. 2 — Trigger · fonte: https://amplitude.com/blog/the-hook-model)
+
+Aplicacao Hayzer: a dor do maker 3D nao e "quero um sistema de gestao". E a ansiedade de domingo a noite sem saber quantos pedidos tem, quem vai buscar segunda, e o quanto ainda e lucro de verdade. O marketing deve nomear essa cena, nao o produto.
+
+---
+
+**Quando o usuario chega no produto pela primeira vez, faca Y = eliminar qualquer fricao antes da primeira acao de valor, porque Z = motivacao e habilidade precisam se encontrar nesse ponto exato — se o esforco supera a motivacao, o habito nao comeca.**
+(Eyal, cap. 3 — Action · fonte: https://www.nirandfar.com/how-to-manufacture-desire/)
+
+Aplicacao Hayzer: o onboarding nao pode comecar pedindo CNPJ, categoria, plano. Comecar com: "Adiciona seu primeiro pedido em andamento." Uma acao. Resultado visivel. Fricao zero.
+
+---
+
+**Quando o usuario completa uma acao, nao entregue recompensa previsivel. Quando X = todo CTA resulta no mesmo feedback, faca Y = variar o que aparece (progresso, dado novo, surpresa util), porque Z = a variabilidade ativa o circuito dopaminergico do "hunting state" — e o que faz o usuario voltar sem ser empurrado.**
+(Eyal, cap. 4 — Variable Reward · fonte: https://amplitude.com/blog/the-hook-model)
+
+Aplicacao Hayzer: depois de lancar a calculadora 3D, nao mostrar so o resultado. Mostrar: "Voce teria cobrado X a menos pelo WhatsApp. No Shopee voce teria perdido Y." Dado inesperado + util = recompensa da caca (hunt reward).
+
+---
+
+**Quando o usuario investiu dados, tempo ou configuracao no produto, a probabilidade de churn cai drasticamente. Quando X = o usuario ainda nao investiu nada, faca Y = pedir uma micro-acao de personalizacao logo no inicio (nome da impressora, canais de venda, meta de margem), porque Z = investimento cria comprometimento — o usuario nao abandona o que ajudou a construir.**
+(Eyal, cap. 5 — Investment · fonte: https://www.nirandfar.com/how-to-manufacture-desire/)
+
+Aplicacao Hayzer: o dropdown de impressora na calculadora ja faz isso — o usuario que escolheu "Bambu Lab A1" e configurou wattagem vai voltar pra rever o calculo. Onboarding deve ampliar esse padrao: "Qual e sua meta de margem?" vira dado salvo, nao so filtro.
+
+---
+
+**Quando triggers externos param (voce para de postar, o email para de ir), usuarios com habito formado continuam voltando por triggers internos. Quando X = a estrategia de conteudo depende 100% de frequencia de publicacao, faca Y = construir o habito de uso antes de reduzir cadencia externa, porque Z = o objetivo real e que o maker abra o Hayzer toda segunda de manha antes de lancar as impressoras — nao porque recebeu notificacao, mas porque virou rotina.**
+(Eyal, cap. 2 — Internal Trigger · fonte: https://www.nirandfar.com/how-to-trigger-product-usage-that-sticks/)
+
+Aplicacao Hayzer: nas primeiras 4 semanas pos-ativacao, o email semanal deve chegar segunda cedo (antes das 8h) com um dado do negocio do usuario — nao newsletter generica. Objetivo: criar associacao entre "segunda de manha + abrir Hayzer" como ritual.
+
+---
+
+**Quando voce pede investimento cedo demais (antes de entregar valor), o usuario abandona. Quando X = onboarding exige configuracao completa antes do primeiro resultado, faca Y = entregar valor minimo primeiro, pedir investimento depois, porque Z = o investimento so faz sentido quando o usuario ja sabe o que esta comprando com o seu tempo.**
+(Eyal, cap. 5 — Investment sequencing · fonte: https://insight7.io/4-product-lessons-on-the-hook-model-from-hooked-by-nir-eyal/)
+
+Aplicacao Hayzer: fluxo correto = (1) mostra resultado da calculadora sem login, (2) "salva esse calculo?" pede email, (3) "personaliza com sua impressora?" pede mais dados. Nunca o inverso.

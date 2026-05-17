@@ -115,3 +115,65 @@ Variáveis críticas:
 ## Verificação pós-deploy
 - <teste manual>
 ```
+
+---
+
+## Memória ativa (sistema de aprendizado contínuo)
+
+> Alimentada por `/rcs` e sessões de `/study`. Cada item tem fonte + data. Max 20 por categoria (FIFO). Validação amostral mensal pelo CEO.
+
+### Padrões CEO Gabriel aprendidos
+*(vazio — primeira leitura pendente)*
+
+### Erros que cometi (não repetir)
+*(vazio — primeira leitura pendente)*
+
+### Sucessos (repetir)
+*(vazio — primeira leitura pendente)*
+
+### Princípios da área (extraídos de estudos)
+
+> Fonte primária: **The Phoenix Project** (Kim, Behr, Spafford) + **Accelerate** (Forsgren, Humble, Kim). Extraídos em 2026-05-17.
+
+**P1 — Proteja o constraint, ou tudo que chegar antes vira fila.**
+Quando identificar o gargalo do pipeline (ex: build lento, review acumulando, deploy manual), faça: nunca adicione trabalho novo upstream sem resolver o constraint primeiro. Porque: em qualquer sistema, o throughput total e limitado pelo elo mais lento — melhorar outro ponto nao aumenta a vazao (Kim · Phoenix Project · cap. 23 — Theory of Constraints, Goldratt aplicado a TI).
+Aplicacao Hayzer: se o build do Vercel demora 4 min e o tipo check e o gargalo, reducer bundle size antes de adicionar mais CI steps. Medir `npm run build` local antes de empurrar.
+
+**P2 — Torne o trabalho visivel. WIP invisivel e divida oculta.**
+Quando houver mais de 3 deploys pendentes de review ou mais de 2 branches acumulando sem merge, faca: criar coluna "In Deploy" no quadro e limitar WIP a 2 por vez. Porque: trabalho invisivel acumula como divida tecnica — o custo so aparece no incidente (Kim · Phoenix Project · cap. 9 — os quatro tipos de trabalho: business projects, IT projects, mudancas, trabalho nao planejado).
+Aplicacao Hayzer: PR aberto ha mais de 3 dias sem review e um sinal de alerta. Prioridade: mergear ou fechar, nunca acumular.
+
+**P3 — Deploy frequente reduz risco, nao aumenta.**
+Quando o time hesitar em fazer deploy por medo, faca: diminuir o tamanho do deploy (feature flag, rolling release, preview branch) em vez de atrasar. Porque: lotes menores significam blast radius menor, rollback mais facil e feedback mais rapido — deploy semanal e mais arriscado que deploy diario (Forsgren · Accelerate · cap. 2 — Deploy Frequency como metrica DORA #1).
+Aplicacao Hayzer: Vercel Rolling Releases ativo. Para features grandes (ex: novo sistema de pagamento), usar feature flag via env var antes de ir pra 100% do trafego.
+
+**P4 — MTTR importa mais que MTBF. Projete para recuperar, nao para nao falhar.**
+Quando escolher entre investir em prevencao de falha vs velocidade de recuperacao, faca: priorizar rollback em 1 clique e observabilidade (Sentry + logs) antes de arquitetura a prova de falhas. Porque: sistemas complexos vao falhar — equipes elite tem MTTR medido em minutos, nao horas (Forsgren · Accelerate · cap. 3 — MTTR como metrica DORA #3; Kim · Phoenix Project · cap. 31 — Second Way: amplify feedback loops).
+Aplicacao Hayzer: cada deploy prod precisa ter deployment URL anotada. Rollback = `vercel rollback <url>` ou 1 clique no Dashboard. Sentry DSN configurado antes do launch.
+
+**P5 — Lead time e a metrica que o CEO vai sentir na pele.**
+Quando alguem pedir "quanto tempo pra essa feature ir pra prod?", faca: medir o tempo desde o commit ate o deploy, nao desde o inicio do codigo. Porque: lead time alto indica processo quebrado (filas, aprovacoes manuais, pipeline lento) — elite performers tem lead time menor que 1 hora (Forsgren · Accelerate · cap. 2 — Lead Time for Changes, metrica DORA #2).
+Aplicacao Hayzer: Vercel auto-deploy em push pra main = lead time ~3-5 min. Se algum step manual (aprovacao, migration DB) adicionar horas, documentar e automatizar.
+
+**P6 — Change Failure Rate acima de 15% e sinal de que o processo de review esta quebrado.**
+Quando mais de 1 em cada 7 deploys causar incidente ou rollback, faca: parar de deployar e auditar o processo — typecheck, lint, preview branch, QA manual. Porque: alta taxa de falha nao e azar, e processo — times elite ficam abaixo de 15% (Forsgren · Accelerate · cap. 2 — Change Failure Rate, metrica DORA #4).
+Aplicacao Hayzer: checklist pre-deploy (build + tsc + eslint + preview URL) existe exatamente por isso. Se fizer rollback 2x seguidas, parar e investigar antes do proximo push.
+
+**P7 — Feedback deve ser amplificado, nao suprimido.**
+Quando um erro aparecer em prod (Sentry alert, log anomalo, usuario reclamando), faca: tratar como sinal prioritario — parar feature nova, investigar, documentar em `decisions/incidentes/`. Porque: ignorar feedback de producao e a causa raiz de incidentes graves — o Second Way de Kim e exatamente amplificar loops de feedback pra nao deixar problema virar catastrofe (Kim · Phoenix Project · cap. 31 — Second Way).
+Aplicacao Hayzer: Sentry configurado com alertas por email (CEO + Ricardo). Vercel logs abertos durante primeiro dia de feature nova em prod.
+
+**Proxima leitura agendada**: `studies/ricardo-devops/phoenix-project-notes.md` (domingo 01/06/2026)
+
+---
+
+## Estudos (ricardo-devops)
+
+| Livro | Status | Ultima leitura | Principios extraidos |
+|---|---|---|---|
+| The Phoenix Project (Kim/Behr/Spafford) | Lido (resumo) | 2026-05-17 | 7 |
+| Accelerate (Forsgren/Humble/Kim) | Lido (resumo) | 2026-05-17 | 7 (compartilhados acima) |
+| The DevOps Handbook (Kim et al.) | Nao lido | — | 0 |
+| Site Reliability Engineering (Google) | Nao lido | — | 0 |
+
+**Calendario**: 1 livro/mes. Proximo: The DevOps Handbook (julho/2026).
