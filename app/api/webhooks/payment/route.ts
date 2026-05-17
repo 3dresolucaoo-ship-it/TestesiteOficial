@@ -15,9 +15,18 @@
  *   - Provider verifies the gateway signature before reading any payload
  *   - metadata.merchantId is verified to match the URL param (cross-merchant check)
  *
- * Side effects on approved payment:
+ * Idempotência (fix 2026-05-18 — bug Paulo/Stripe Press):
+ *   - RPC process_webhook_atomic faz INSERT webhook_events + todos os writes de order
+ *     em UMA ÚNICA TRANSAÇÃO Postgres.
+ *   - UNIQUE (provider, event_id) em webhook_events é o lock atômico de evento:
+ *     retries simultâneos do gateway nunca criam duplicate charge.
+ *   - Antes, havia SELECT (idempotency check) + INSERTs em roundtrips separados;
+ *     race condition entre eles gerava duplicate charge em retry simultâneo.
+ *
+ * Side effects on approved payment (dentro da RPC, atomicamente):
+ *   - webhook_events registrado (idempotency lock)
  *   - Order created (source='catalog', status='paid', paymentStatus='paid')
- *   - Production task created (if productId set)
+ *   - Production task created (if productId set and product found)
  *   - Finance transaction created
  *   - Inventory NOT decremented (happens when production → done)
  *
@@ -27,9 +36,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getPaymentProvider }        from '@/services/payments'
-import { processNewOrderAdmin }      from '@/core/flows/processOrderAdmin'
 import { getSupabaseAdmin }          from '@/lib/supabaseAdmin'
-import type { Order }                from '@/lib/types'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -41,14 +48,19 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10)
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 // Supabase user IDs are UUIDs — validate format to reject obviously invalid values
 // (typos, injection attempts, mis-configured webhook URLs).
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 function isValidUUID(value: string): boolean {
   return UUID_RE.test(value)
+}
+
+// ─── Tipos do retorno da RPC ──────────────────────────────────────────────────
+
+interface WebhookAtomicResult {
+  status:   'ok' | 'duplicate'
+  order_id?: string
 }
 
 // ─── Handler ──────────────────────────────────────────────────────────────────
@@ -110,8 +122,20 @@ export async function POST(req: NextRequest) {
 
   const { metadata } = payload
 
-  // ── 6. Look up product for name and sale_price ─────────────────────────────
-  // Needed to populate order.item and order.value correctly.
+  // ── 6. Derivar providerName para o event_id composto ─────────────────────
+  // O event_id do gateway (paymentId) é único dentro do provider, mas não
+  // globalmente — usar (provider, event_id) como chave composta.
+  // Detectamos o provider pelo header característico de cada gateway.
+  const providerName: 'stripe' | 'mercadopago' =
+    req.headers.get('stripe-signature') ? 'stripe' : 'mercadopago'
+
+  // ── 7. Lookup product via admin (sem roundtrip extra no DB do lado TS) ────
+  // Fazemos este SELECT aqui em vez de dentro da RPC porque a RPC precisa dos
+  // valores de name e sale_price para calcular orderValue ANTES de inserir.
+  // A RPC faz seu próprio SELECT de product para a production task (print_time_hours).
+  // Este SELECT é o único que permanece fora da transação — é read-only e
+  // idempotente: não muda o resultado mesmo que o produto seja editado
+  // no instante do webhook (o preço "snapshot" no momento da compra é o correto).
   const admin = getSupabaseAdmin()
   const { data: product } = await admin
     .from('products')
@@ -120,49 +144,79 @@ export async function POST(req: NextRequest) {
     .maybeSingle()
 
   const productName = product?.name ?? metadata.productId
-  // Use stored sale_price × quantity as canonical value (not payment amount)
-  // so the order value is always consistent with the product configuration.
-  const orderValue = product
+  const orderValue  = product
     ? Number(product.sale_price) * metadata.quantity
     : 0
 
-  // ── 7. Build Order ─────────────────────────────────────────────────────────
-  // All required metadata fields from the WebhookPayload are mapped here.
-  const order: Order = {
-    id:               uid(),
-    projectId:        metadata.projectId,
-    clientName:       metadata.customerName,
-    origin:           'other',          // catalog sales have no social-media origin
-    item:             metadata.quantity > 1
-                        ? `${productName} × ${metadata.quantity}`
-                        : productName,
-    value:            orderValue,
-    status:           'paid',           // order is created only after payment approved
-    date:             todayISO(),
-    // product link
-    productId:        metadata.productId  || undefined,
-    qtyUsed:          Math.max(1, metadata.quantity || 1),  // safe default — point 4
-    // e-commerce fields (points 2 & 3)
-    source:           'catalog',
-    catalogSlug:      metadata.catalogSlug  || undefined,
-    paymentId:        payload.paymentId,
-    paymentStatus:    'paid',
-    customerWhatsapp: metadata.whatsapp    || undefined,
-  }
+  // ── 8. Montar parâmetros da order ─────────────────────────────────────────
+  const orderId = uid()
+  const today   = todayISO()
 
-  // ── 8. Persist order + side effects ───────────────────────────────────────
-  // processNewOrderAdmin handles idempotency internally — safe to call even if
-  // the gateway retries the same event.
+  const orderItem = metadata.quantity > 1
+    ? `${productName} × ${metadata.quantity}`
+    : productName
+
+  // product_id é UUID no DB — null se vazio ou inválido
+  const productIdForRpc: string | null =
+    metadata.productId && isValidUUID(metadata.productId)
+      ? metadata.productId
+      : null
+
+  // ── 9. Chamar RPC atômica ─────────────────────────────────────────────────
+  // Toda a escrita (webhook_events + order + production + transaction) ocorre
+  // dentro de uma única transação Postgres. Se qualquer etapa falhar, Postgres
+  // rollbacka tudo e o gateway receberá 500 para retry.
+  let rpcResult: WebhookAtomicResult
   try {
-    await processNewOrderAdmin(order, merchantId)
+    const { data, error } = await admin.rpc('process_webhook_atomic', {
+      p_provider:          providerName,
+      p_event_id:          payload.paymentId,
+      p_event_type:        'payment.approved',
+      p_payload:           { paymentId: payload.paymentId, status: payload.status, metadata },
+
+      p_order_id:          orderId,
+      p_project_id:        metadata.projectId,
+      p_merchant_id:       merchantId,
+      p_client_name:       metadata.customerName,
+      p_origin:            'other',        // catalog sales have no social-media origin
+      p_item:              orderItem,
+      p_value:             orderValue,
+      p_status:            'paid',
+      p_date:              today,
+
+      p_source:            'catalog',
+      p_catalog_slug:      metadata.catalogSlug || null,
+      p_payment_id:        payload.paymentId,
+      p_payment_status:    'paid',
+      p_customer_whatsapp: metadata.whatsapp || null,
+
+      p_product_id:        productIdForRpc,
+    })
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    rpcResult = data as WebhookAtomicResult
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     console.error(
-      `[webhook/payment] processNewOrderAdmin failed | paymentId=${payload.paymentId} | merchantId=${merchantId} | ${msg}`,
+      `[webhook/payment] process_webhook_atomic failed | paymentId=${payload.paymentId} | merchantId=${merchantId} | ${msg}`,
     )
-    // Return 500 so the gateway retries — processNewOrderAdmin is idempotent
+    // Return 500 so the gateway retries — a RPC é idempotente via webhook_events
     return NextResponse.json({ error: 'Failed to process order' }, { status: 500 })
   }
+
+  if (rpcResult.status === 'duplicate') {
+    console.info(
+      `[webhook/payment] Duplicate event ignored (idempotent) | paymentId=${payload.paymentId} | merchantId=${merchantId}`,
+    )
+    return NextResponse.json({ received: true })
+  }
+
+  console.info(
+    `[webhook/payment] Order created OK | orderId=${rpcResult.order_id} | paymentId=${payload.paymentId} | merchantId=${merchantId}`,
+  )
 
   return NextResponse.json({ received: true })
 }

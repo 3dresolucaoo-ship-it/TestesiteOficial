@@ -20,11 +20,11 @@
 | 6 | **Mobile (320-768px)** | 7.0 | 8.5 | 9.0 | Diego + Júlia | 31/05 |
 | 7 | **Conversão (funil)** | 5.0 | 6.5 | 8.0 | Marcos + Sofia | 07/06 |
 | 8 | **Retenção (habit-forming)** | 5.0 | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
-| 9 | **Pagamento (robustez)** | 7.5 | 9.0 | 9.5 | Paulo + Bruna | 24/05 |
+| 9 | **Pagamento (robustez)** | 8.5 ⬆️ | 9.0 | 9.5 | Paulo + Bruna | 24/05 |
 | 10 | **Documentação (Diátaxis)** | 8.0 | 8.5 | 9.0 | Lia | 31/05 |
 | 11 | **Backend (DB + APIs)** | 7.5 | 8.5 | 9.0 | Bruna | 24/05 |
 | 12 | **Estratégia (posicionamento)** | 7.5 | 8.5 | 9.0 | Helena | 31/05 |
-| | **MÉDIA GERAL** | **6.9** | **8.0** | **8.8** | Helena | semanal |
+| | **MÉDIA GERAL** | **7.0 ⬆️** | **8.0** | **8.8** | Helena | semanal |
 
 ---
 
@@ -99,12 +99,14 @@
 - [ ] +0.5: streak real (Hooked · Marcos princípio P5)
 - [ ] +0.5: insight semanal por email (variable reward)
 
-### 9. Pagamento · 7.5 → 9.0
-- ✅ Stripe + MP integrados, signature obrigatória (17/05 fix)
-- [ ] **🔴 +0.5 URGENTE**: transaction atômica webhook (insert+update mesmo BEGIN/COMMIT — bug detectado por Paulo via estudo Stripe Press 17/05)
-- [ ] +0.5: tabela `webhook_events` separada com UNIQUE
-- [ ] +0.5: runbook incidente pagamento documentado
-- [ ] +0.5: reconciliação diária via pg_cron
+### 9. Pagamento · 8.5 ⬆️ → 9.0
+- ✅ Stripe + MP integrados, signature obrigatória (17/05 fix Otávio)
+- ✅ **+1.0 RESOLVIDO 17/05**: transaction atômica webhook — Bruna implementou RPC `process_webhook_atomic` (migration `20260518_webhook_events.sql`). Diagnóstico foi pior que esperado: 5 roundtrips separados (não 2). Agora tudo numa TX Postgres com `ON CONFLICT DO NOTHING` como lock atômico.
+- ✅ **+0.5 RESOLVIDO 17/05**: tabela `webhook_events` criada com UNIQUE (provider, event_id)
+- [ ] +0.3: aplicar migration no Supabase prod (CEO via MCP)
+- [ ] +0.3: runbook incidente pagamento documentado
+- [ ] +0.3: reconciliação diária via pg_cron
+- [ ] +0.3: mover SELECT products pra dentro da RPC (eliminar último roundtrip externo — risco residual identificado por Bruna)
 
 ### 10. Documentação · 8.0 → 8.5
 - ✅ CLAUDE.md por pasta, ADRs 001-013, ROADMAP detalhado

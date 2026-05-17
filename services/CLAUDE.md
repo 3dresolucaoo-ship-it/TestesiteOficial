@@ -51,6 +51,7 @@
 - ✅ ~~`orders.ts` colunas e-commerce~~ — migration aplicada 2026-05-04
 - ✅ ~~`portfolios.ts` tabelas inexistentes~~ — migration aplicada 2026-05-04
 - ✅ ~~`inventory.ts` image_url ausente~~ — migration aplicada 2026-05-04
+- ✅ ~~Webhook 2 roundtrips separados (race condition / duplicate charge)~~ — resolvido 2026-05-18: RPC `process_webhook_atomic` + tabela `webhook_events` (migration `20260518_webhook_events.sql`). Handler refatorado em `app/api/webhooks/payment/route.ts`.
 - ⚠️ `products.ts:75,83` tem console.log/error que deveriam usar `serviceError`
 - ⚠️ `paymentConfig.ts:78` cache in-memory pode vazar entre requests no Fluid Compute
 - ⚠️ Todos os services dependem de `requireUserId` (lib/getUser.ts) que faz 2 chamadas auth
