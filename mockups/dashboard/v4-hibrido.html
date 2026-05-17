@@ -92,7 +92,9 @@
      TOKENS — LIGHT (toggle persiste localStorage)
      ============================================================ */
   :root[data-theme="light"] {
-    --night-950: #FFFFFF;
+    /* CEO 17/05 V4.4: light warm white (#FFFFFF puro ofusca em monitor brilhante).
+       Linear/Stripe/Notion light mode usam off-white (#FAFAFA-#F9F9F8) — nunca #FFF. */
+    --night-950: #FDFCF8;
     --night-900: #FAF7F1;
     --night-850: #F5F1E9;
     --night-800: #EDE8DE;
@@ -100,8 +102,8 @@
     --night-600: #BDB7AB;
 
     --surface-0: #FAF7F1;
-    --surface-1: #FFFFFF;
-    --surface-2: #F5F1E9;
+    --surface-1: #F8F5EE;   /* era #FFFFFF puro — agora warm white */
+    --surface-2: #F2EFE7;
     --surface-3: #EDE8DE;
 
     --fog-50:  #0A0D0F;
@@ -2587,10 +2589,17 @@
   <div class="next-action fade-in delay-2" role="region" aria-label="Próxima ação sugerida">
     <div class="next-action-left">
       <span class="next-action-icon" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
-          <circle cx="12" cy="12" r="4"/>
+        <!-- Motif raiz Hayzer (era lâmpada/sol — clichê IA, CEO 17/05 V4.4) -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="5" r="1.8" fill="currentColor" stroke="none"/>
+          <path d="M12 6.8 L12 14"/>
+          <path d="M12 11 Q9 12.5 7 16"/>
+          <path d="M12 11 Q15 12.5 17 16"/>
+          <path d="M12 14 L12 19"/>
+          <circle cx="7" cy="16" r="0.9" fill="currentColor" stroke="none" opacity="0.7"/>
+          <circle cx="17" cy="16" r="0.9" fill="currentColor" stroke="none" opacity="0.7"/>
+          <circle cx="12" cy="19" r="0.9" fill="currentColor" stroke="none" opacity="0.85"/>
         </svg>
       </span>
       <div class="next-action-text">
