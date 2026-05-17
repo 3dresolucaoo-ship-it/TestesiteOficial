@@ -63,6 +63,17 @@ const MOCKUPS: Mockup[] = [
     createdAt: '2026-05-14',
   },
   {
+    slug: 'dashboard/v4-hibrido.html',
+    feature: 'Dashboard Interno',
+    title: 'V4.3 — Híbrido (DEFINITIVO)',
+    variant: 'V4.3',
+    status: 'em-avaliacao',
+    description:
+      'CEO escolheu caminho A: hero virou subcategoria (cover 96px + 4 satélites verticais), dark soft #161B1F, light toggle, raízes ANIMADAS no hover (CSS stroke-dashoffset), 9 mecanismos dopamina, próxima ação sugerida, greeting horário+nome, cover-anchor dinâmico (muda copy com performance), aria-labels charts, sidebar overlay mobile. Auditoria G7 Sofia+Júlia+Carla aplicada. 3223 linhas.',
+    author: 'general-purpose + Claude + G7 (Diego/Carla/Sofia/Júlia)',
+    createdAt: '2026-05-17',
+  },
+  {
     slug: 'dashboard/editorial-bento-hibrido.html',
     feature: 'Dashboard Interno',
     title: 'Editorial-Bento Híbrido v1',
@@ -78,9 +89,9 @@ const MOCKUPS: Mockup[] = [
     feature: 'Dashboard Interno',
     title: 'V3 — Editorial-Bento Híbrido',
     variant: 'V3',
-    status: 'em-avaliacao',
+    status: 'descartado',
     description:
-      'Editorial Fraunces dominante. Capa R$ 12.480 88px + bento 7 cards + raízes estruturais + 3 charts. Tipografia editorial (risco: Fraunces demais pra dado prolongado).',
+      'CEO aprovou DESIGN (raízes vivas + cover editorial + bento hover). Substituído pelo V4 que combina design V3 + dataviz V1. Mantido como referência.',
     author: 'Diego v2',
     createdAt: '2026-05-16',
   },
@@ -89,9 +100,9 @@ const MOCKUPS: Mockup[] = [
     feature: 'Dashboard Interno',
     title: 'V1 — Dataviz-Rich',
     variant: 'V1',
-    status: 'em-avaliacao',
+    status: 'descartado',
     description:
-      'Espelha refs do CEO. 3 colunas: sidebar + main + right-rail (notifications/activities). KPI hero petrol sólido + donut 4 fatias + bar vertical 6 meses + sparkline + gauge + tabela top 5. Fraunces 12%.',
+      'CEO aprovou GRÁFICOS (donut + bars 6 meses + fila Bambu + gauge meta). Substituído pelo V4 que herdou esses charts. Mantido como referência.',
     author: 'general-purpose (brief Claude)',
     createdAt: '2026-05-16',
   },
@@ -100,9 +111,9 @@ const MOCKUPS: Mockup[] = [
     feature: 'Dashboard Interno',
     title: 'V2 — Hero-Card Dramático',
     variant: 'V2',
-    status: 'em-avaliacao',
+    status: 'descartado',
     description:
-      '1 card petrol-gradient gigante com R$ 12.480 96px Bold + raízes BRANCAS envolvendo o número + 4 satélites + chart wide área 2 séries. Luxo dramático.',
+      'CEO descartou. Manteve só 3 elementos: gráfico Bambu, alerta filamento, ritmo crítico (migraram pro V4).',
     author: 'general-purpose (brief Claude)',
     createdAt: '2026-05-16',
   },
