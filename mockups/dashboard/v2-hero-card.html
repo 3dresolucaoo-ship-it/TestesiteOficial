@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Hayzer — Dashboard · V2 Hero-Card</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,30..100;1,9..144,300..900,30..100&family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     HAYZER · DASHBOARD · V2 HERO-CARD DRAMÁTICO
+     1 cardão petrol domina + 4 KPIs satélites + chart wide
+     Refs: DWS Dashboard "$30 Premium Plan"
+     ============================================================ */
+
+  :root {
+    /* night */
+    --night-950: #07090A;
+    --night-900: #0B0E10;
+    --night-850: #0F1316;
+    --night-800: #13171A;
+    --night-700: #1B2024;
+    --night-600: #262C31;
+
+    /* SURFACE LADDER */
+    --surface-1: #13171A;   /* card base */
+    --surface-2: #1B2024;   /* card destaque */
+    --surface-3: #262C31;   /* extra-destaque */
+
+    /* fog */
+    --fog-50:  #F2EFEA;
+    --fog-100: #E3DED5;
+    --fog-200: #BDB7AB;
+    --fog-300: #8A8478;
+    --fog-400: #5B564D;
+
+    /* petrol */
+    --petrol-200: #A6D4CC;
+    --petrol-300: #6FB5A8;
+    --petrol-400: #3F9286;
+    --petrol-500: #1F7669;
+    --petrol-600: #155A50;
+    --petrol-700: #0E443D;
+    --petrol-800: #082E29;
+
+    /* ember */
+    --ember-400: #E0A269;
+    --ember-500: #D08A4A;
+    --ember-600: #A86A30;
+
+    --crit-500: #C2553F;
+
+    --easing: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --easing-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--night-950);
+    color: var(--fog-50);
+    min-height: 100vh;
+    line-height: 1.55;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  .num, [data-num] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* ============================================================
+     GRAIN + AMBIENT + RAÍZES BACKGROUND
+     ============================================================ */
+
+  .grain-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.22;
+    mix-blend-mode: screen;
+  }
+
+  .ambient-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 55% 45% at 25% 18%, rgba(31, 118, 105, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 35% at 88% 85%, rgba(208, 138, 74, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse 35% 25% at 65% 55%, rgba(31, 118, 105, 0.06) 0%, transparent 50%);
+  }
+
+  /* RAÍZES SUTIS no background main (mais presentes que V1) */
+  .roots-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.08;
+  }
+
+  /* WATERMARK "raiz." canto inferior direito */
+  .watermark-raiz {
+    position: absolute;
+    bottom: -40px;
+    right: -20px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 200px;
+    color: var(--fog-50);
+    opacity: 0.05;
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    z-index: 0;
+    line-height: 1;
+  }
+
+  /* ============================================================
+     LAYOUT GRID
+     ============================================================ */
+
+  .app {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ============================================================
+     SIDEBAR (240px)
+     ============================================================ */
+
+  .sidebar {
+    background: var(--night-900);
+    border-right: 1px solid rgba(189, 183, 171, 0.08);
+    padding: 22px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 8px 16px;
+    border-bottom: 1px solid rgba(189, 183, 171, 0.06);
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--petrol-500) 0%, var(--petrol-700) 100%);
+    display: grid;
+    place-items: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--fog-50);
+    box-shadow: 0 4px 16px rgba(31, 118, 105, 0.3);
+  }
+
+  .brand-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: -0.02em;
+    color: var(--fog-50);
+  }
+
+  .brand-tagline {
+    font-size: 10px;
+    color: var(--fog-300);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nav-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fog-400);
+    padding: 6px 12px 4px;
+    margin-top: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    color: var(--fog-200);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.18s var(--easing);
+    text-decoration: none;
+    position: relative;
+  }
+
+  .nav-item:hover {
+    background: rgba(31, 118, 105, 0.10);
+    color: var(--fog-50);
+  }
+
+  .nav-item.active {
+    background: rgba(31, 118, 105, 0.18);
+    color: var(--fog-50);
+  }
+
+  .nav-item.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 25%;
+    bottom: 25%;
+    width: 2.5px;
+    background: var(--petrol-300);
+    border-radius: 2px;
+  }
+
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    flex-shrink: 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    background: var(--petrol-700);
+    color: var(--petrol-200);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--petrol-600);
+  }
+
+  .nav-badge.ember {
+    background: rgba(208, 138, 74, 0.12);
+    color: var(--ember-400);
+    border-color: rgba(208, 138, 74, 0.25);
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid rgba(189, 183, 171, 0.06);
+  }
+
+  .profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all 0.18s var(--easing);
+  }
+
+  .profile-mini:hover {
+    background: rgba(255,255,255,0.03);
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ember-500), var(--ember-600));
+    display: grid;
+    place-items: center;
+    color: var(--fog-50);
+    font-weight: 600;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .profile-name {
+    font-size: 13px;
+    color: var(--fog-100);
+    font-weight: 500;
+  }
+
+  .profile-role {
+    font-size: 10.5px;
+    color: var(--fog-400);
+    letter-spacing: 0.04em;
+  }
+
+  /* ============================================================
+     MAIN
+     ============================================================ */
+
+  .main {
+    padding: 22px 28px 60px;
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  /* ============================================================
+     TOPBAR
+     ============================================================ */
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 5;
+  }
+
+  .greeting {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .greeting-pre {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-400);
+  }
+
+  .greeting-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    color: var(--fog-50);
+  }
+
+  .greeting-name em {
+    font-style: italic;
+    color: var(--petrol-300);
+  }
+
+  .topbar-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(31, 118, 105, 0.10);
+    border: 1px solid rgba(111, 181, 168, 0.18);
+    font-size: 12px;
+    color: var(--fog-100);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--petrol-300);
+    box-shadow: 0 0 8px var(--petrol-300);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--surface-1);
+    border: 1px solid rgba(189, 183, 171, 0.10);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.2s var(--easing);
+    color: var(--fog-200);
+    position: relative;
+  }
+
+  .icon-btn:hover {
+    border-color: rgba(111, 181, 168, 0.3);
+    color: var(--fog-50);
+    transform: translateY(-1px);
+  }
+
+  .icon-btn svg {
+    width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75;
+  }
+
+  .icon-btn-dot {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--ember-500);
+    box-shadow: 0 0 6px var(--ember-500);
+  }
+
+  /* ============================================================
+     HERO ROW — HERO CARD + 4 SATÉLITES (2x2)
+     ============================================================ */
+
+  .hero-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+
+  /* ============================================================
+     HERO CARD — A ALMA DA VARIANTE
+     ============================================================ */
+
+  .hero-card {
+    position: relative;
+    padding: 32px 36px 28px;
+    border-radius: 22px;
+    background:
+      linear-gradient(135deg, var(--petrol-700) 0%, var(--petrol-500) 55%, var(--petrol-400) 100%);
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow:
+      0 0 60px rgba(31, 118, 105, 0.40),
+      0 30px 80px -20px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* noise overlay */
+  .hero-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n2'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.35 0'/></filter><rect width='100%' height='100%' filter='url(%23n2)'/></svg>");
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* radial glow top-right */
+  .hero-card::after {
+    content: "";
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-roots {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+  }
+
+  .hero-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(242, 239, 234, 0.78);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-tag::before {
+    content: "";
+    width: 28px;
+    height: 1.5px;
+    background: rgba(242, 239, 234, 0.6);
+  }
+
+  .hero-number-wrap {
+    margin: 14px 0 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .hero-currency {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 30px;
+    color: rgba(242, 239, 234, 0.85);
+    letter-spacing: -0.02em;
+  }
+
+  .hero-number {
+    font-family: 'Geist', sans-serif;
+    font-weight: 700;
+    font-size: 96px;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    color: var(--fog-50);
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .hero-recorde {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    color: rgba(242, 239, 234, 0.92);
+    letter-spacing: -0.005em;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 6px;
+  }
+
+  .hero-recorde::before {
+    content: "✦";
+    font-family: 'Geist', sans-serif;
+    color: var(--ember-400);
+    font-size: 19px;
+    font-style: normal;
+  }
+
+  .hero-delta {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 15px;
+    color: rgba(242, 239, 234, 0.95);
+  }
+
+  .hero-delta-up {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-delta-up svg {
+    width: 13px;
+    height: 13px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  .hero-spark {
+    margin-top: 18px;
+    width: 100%;
+    height: 56px;
+  }
+
+  .hero-cta-row {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 20px;
+  }
+
+  .hero-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    color: rgba(242, 239, 234, 0.65);
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    background: var(--fog-50);
+    color: var(--petrol-700);
+    border: none;
+    border-radius: 999px;
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: all 0.25s var(--easing);
+    text-decoration: none;
+  }
+
+  .hero-cta:hover {
+    background: var(--petrol-700);
+    color: var(--fog-50);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    transform: translateY(-1px);
+  }
+
+  .hero-cta svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    transition: transform 0.25s var(--easing);
+  }
+
+  .hero-cta:hover svg {
+    transform: translateX(3px);
+  }
+
+  /* ============================================================
+     SATÉLITES 2x2
+     ============================================================ */
+
+  .satellites {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .kpi-sat {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid rgba(189, 183, 171, 0.07);
+    border-radius: 16px;
+    padding: 16px 18px;
+    transition: all 0.25s var(--easing);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 144px;
+  }
+
+  .kpi-sat:hover {
+    border-color: rgba(111, 181, 168, 0.35);
+    transform: translateY(-2px);
+    background: var(--surface-2);
+  }
+
+  .kpi-sat-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .kpi-sat-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    line-height: 1.3;
+  }
+
+  .kpi-sat-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(31, 118, 105, 0.14);
+    color: var(--petrol-300);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .kpi-sat-icon svg {
+    width: 14px; height: 14px;
+    fill: none; stroke: currentColor; stroke-width: 1.75;
+  }
+
+  .kpi-sat-value {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: -0.025em;
+    color: var(--fog-50);
+    line-height: 1;
+    margin-top: 10px;
+  }
+
+  .kpi-sat-currency {
+    font-size: 14px;
+    color: var(--fog-300);
+    margin-right: 3px;
+    font-weight: 500;
+  }
+
+  .kpi-sat-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .kpi-sat-delta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 5px;
+    background: rgba(31, 118, 105, 0.12);
+    color: var(--petrol-300);
+    border: 1px solid rgba(31, 118, 105, 0.2);
+  }
+
+  .kpi-sat-delta.ember {
+    background: rgba(208, 138, 74, 0.10);
+    color: var(--ember-400);
+    border-color: rgba(208, 138, 74, 0.22);
+  }
+
+  .kpi-sat-mini {
+    flex: 1;
+    margin-left: 8px;
+    height: 24px;
+  }
+
+  /* mini bar (leads) */
+  .kpi-sat-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 22px;
+  }
+
+  .kpi-sat-bars span {
+    flex: 1;
+    background: var(--petrol-500);
+    border-radius: 2px 2px 0 0;
+    opacity: 0.85;
+  }
+
+  /* gauge for margem */
+  .kpi-gauge {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background: rgba(189, 183, 171, 0.08);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+
+  .kpi-gauge-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--petrol-500), var(--petrol-300));
+    border-radius: 3px;
+    transform-origin: left;
+  }
+
+  /* ============================================================
+     CHART WIDE
+     ============================================================ */
+
+  .chart-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid rgba(189, 183, 171, 0.07);
+    border-radius: 18px;
+    padding: 22px 24px 20px;
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .chart-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .chart-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .chart-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-400);
+  }
+
+  .chart-title {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--fog-50);
+    letter-spacing: -0.015em;
+  }
+
+  .chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 12px;
+    color: var(--fog-200);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .legend-dot.receita {
+    background: var(--petrol-300);
+  }
+
+  .legend-dot.lucro {
+    background: var(--petrol-500);
+    box-shadow: 0 0 8px var(--petrol-500);
+  }
+
+  .chart-svg-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .chart-svg {
+    width: 100%;
+    height: 240px;
+    display: block;
+  }
+
+  .chart-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--surface-3);
+    border: 1px solid rgba(111, 181, 168, 0.25);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--fog-50);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.12s ease;
+    min-width: 140px;
+    z-index: 3;
+  }
+
+  .chart-tooltip.visible {
+    opacity: 1;
+  }
+
+  .chart-tooltip-month {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    margin-bottom: 6px;
+  }
+
+  .chart-tooltip-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 3px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+  }
+
+  .chart-tooltip-line span:first-child {
+    color: var(--fog-300);
+  }
+
+  .chart-tooltip-line span:last-child {
+    color: var(--fog-50);
+    font-weight: 600;
+  }
+
+  /* ============================================================
+     OPERAÇÕES — 3 cards
+     ============================================================ */
+
+  .ops-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 26px;
+  }
+
+  .ops-card {
+    position: relative;
+    background: var(--surface-1);
+    border: 1px solid rgba(189, 183, 171, 0.07);
+    border-radius: 16px;
+    padding: 18px 20px;
+    transition: all 0.25s var(--easing);
+    overflow: hidden;
+  }
+
+  .ops-card:hover {
+    border-color: rgba(111, 181, 168, 0.28);
+    background: var(--surface-2);
+  }
+
+  .ops-card.atencao {
+    border-color: rgba(208, 138, 74, 0.20);
+  }
+
+  .ops-card.atencao::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(208,138,74,0.06), transparent 50%);
+    pointer-events: none;
+  }
+
+  .ops-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .ops-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+  }
+
+  .ops-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba(31, 118, 105, 0.14);
+    color: var(--petrol-300);
+    display: grid;
+    place-items: center;
+  }
+
+  .ops-card.atencao .ops-icon {
+    background: rgba(208, 138, 74, 0.14);
+    color: var(--ember-400);
+  }
+
+  .ops-icon svg {
+    width: 15px; height: 15px;
+    fill: none; stroke: currentColor; stroke-width: 1.75;
+  }
+
+  .ops-big {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .ops-big-num {
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 36px;
+    letter-spacing: -0.03em;
+    color: var(--fog-50);
+    line-height: 1;
+  }
+
+  .ops-big-unit {
+    font-size: 13px;
+    color: var(--fog-300);
+    letter-spacing: -0.005em;
+  }
+
+  .ops-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(189, 183, 171, 0.10);
+  }
+
+  .ops-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--fog-100);
+  }
+
+  .ops-list li small {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+  }
+
+  .ops-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .ops-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: rgba(208, 138, 74, 0.10);
+    border: 1px solid rgba(208, 138, 74, 0.22);
+    color: var(--ember-400);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+  }
+
+  .ops-link {
+    margin-left: auto;
+    color: var(--petrol-300);
+    font-size: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.2s var(--easing);
+  }
+
+  .ops-link:hover {
+    color: var(--petrol-200);
+    gap: 6px;
+  }
+
+  .ops-cta-ember {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: var(--ember-500);
+    color: var(--night-950);
+    font-family: 'Geist', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.22s var(--easing);
+    border: none;
+  }
+
+  .ops-cta-ember:hover {
+    background: var(--ember-400);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(208, 138, 74, 0.35);
+  }
+
+  /* ============================================================
+     TROCAR PROJETO (chips)
+     ============================================================ */
+
+  .project-switch {
+    margin-top: 8px;
+    padding: 18px 0 12px;
+    border-top: 1px solid rgba(189, 183, 171, 0.07);
+  }
+
+  .switch-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .switch-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-400);
+  }
+
+  .switch-helper {
+    font-size: 12px;
+    color: var(--fog-300);
+  }
+
+  .switch-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--surface-1);
+    border: 1px solid rgba(189, 183, 171, 0.10);
+    cursor: pointer;
+    transition: all 0.22s var(--easing);
+    color: var(--fog-100);
+    text-decoration: none;
+  }
+
+  .chip:hover {
+    border-color: rgba(111, 181, 168, 0.32);
+    background: var(--surface-2);
+    transform: translateY(-1px);
+  }
+
+  .chip.active {
+    background: rgba(31, 118, 105, 0.16);
+    border-color: var(--petrol-500);
+    color: var(--fog-50);
+  }
+
+  .chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--petrol-300);
+    flex-shrink: 0;
+  }
+
+  .chip.color-ember .chip-dot { background: var(--ember-400); }
+  .chip.color-fog .chip-dot { background: var(--fog-200); }
+  .chip.color-petrol2 .chip-dot { background: var(--petrol-500); }
+
+  .chip-name {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .chip-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10.5px;
+    color: var(--fog-300);
+    padding-left: 10px;
+    border-left: 1px solid rgba(189, 183, 171, 0.12);
+  }
+
+  /* ============================================================
+     FAB
+     ============================================================ */
+
+  .fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--petrol-500), var(--petrol-600));
+    border: 1px solid rgba(111, 181, 168, 0.4);
+    color: var(--fog-50);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow:
+      0 0 30px rgba(31, 118, 105, 0.45),
+      0 12px 28px rgba(0,0,0,0.4);
+    transition: all 0.25s var(--easing);
+    z-index: 50;
+  }
+
+  .fab:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow:
+      0 0 40px rgba(31, 118, 105, 0.6),
+      0 16px 34px rgba(0,0,0,0.5);
+  }
+
+  .fab svg {
+    width: 22px; height: 22px;
+    fill: none; stroke: currentColor; stroke-width: 2.25;
+  }
+
+  .fab-tooltip {
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--surface-3);
+    color: var(--fog-50);
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    border: 1px solid rgba(189, 183, 171, 0.10);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s var(--easing);
+  }
+
+  .fab:hover .fab-tooltip {
+    opacity: 1;
+  }
+
+  /* ============================================================
+     ANIMAÇÕES
+     ============================================================ */
+
+  @keyframes rootGrow {
+    0% { stroke-dashoffset: 1200; opacity: 0; }
+    20% { opacity: 0.20; }
+    100% { stroke-dashoffset: 0; opacity: 0.20; }
+  }
+
+  @keyframes rootGrowSubtle {
+    0% { stroke-dashoffset: 800; opacity: 0; }
+    100% { stroke-dashoffset: 0; opacity: 0.08; }
+  }
+
+  .hero-roots path {
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: rootGrow 2.2s var(--easing-out) 0.3s forwards;
+  }
+
+  .roots-bg path {
+    stroke-dasharray: 800;
+    stroke-dashoffset: 800;
+    animation: rootGrowSubtle 2.8s var(--easing-out) 0.4s forwards;
+  }
+
+  @keyframes spark {
+    0% { stroke-dashoffset: 600; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  .spark-line {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: spark 1.6s var(--easing-out) 0.6s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up { animation: fadeUp 0.6s var(--easing-out) backwards; }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+
+  @media (max-width: 1180px) {
+    .hero-row { grid-template-columns: 1fr; }
+    .satellites { grid-template-columns: 1fr 1fr 1fr 1fr; grid-template-rows: 1fr; }
+    .hero-number { font-size: 78px; }
+  }
+
+  @media (max-width: 920px) {
+    .app { grid-template-columns: 64px 1fr; }
+    .sidebar { padding: 18px 8px; }
+    .brand-name, .brand-tagline, .nav-item span:not(.nav-badge), .nav-label, .profile-name, .profile-role { display: none; }
+    .nav-item { justify-content: center; padding: 10px; }
+    .nav-badge { display: none; }
+    .ops-grid { grid-template-columns: 1fr; }
+    .satellites { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .main { padding: 18px 16px 60px; }
+    .hero-number { font-size: 64px; }
+    .watermark-raiz { font-size: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AMBIENT -->
+<div class="ambient-glow"></div>
+<div class="grain-layer"></div>
+
+<div class="app">
+
+  <!-- ============================================================
+       SIDEBAR
+       ============================================================ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">H</div>
+      <div>
+        <div class="brand-name">Hayzer</div>
+        <div class="brand-tagline">a raiz</div>
+      </div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-label">Operação</div>
+      <a class="nav-item active" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12L12 3l9 9M5 10v10h14V10"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+        <span>Pedidos</span>
+        <span class="nav-badge">7</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+        <span>Estoque</span>
+        <span class="nav-badge ember">2</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M6 2v6a6 6 0 0 0 12 0V2M6 14h12M6 14l-2 8h16l-2-8"/></svg>
+        <span>Produção</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+        <span>Catálogo</span>
+      </a>
+    </nav>
+
+    <nav class="nav-section">
+      <div class="nav-label">Crescimento</div>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span>Vendas</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Clientes</span>
+      </a>
+      <a class="nav-item" href="#">
+        <svg class="nav-icon" viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>
+        <span>Relatórios</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="profile-mini">
+        <div class="avatar">MS</div>
+        <div>
+          <div class="profile-name">Marina S.</div>
+          <div class="profile-role">3D Resolução</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN
+       ============================================================ -->
+  <main class="main">
+
+    <!-- raízes de fundo + watermark -->
+    <div class="roots-bg">
+      <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#6FB5A8" stroke-width="1.1">
+        <path d="M -20 820 C 80 700, 140 620, 200 540 C 260 460, 240 380, 300 320 C 360 260, 400 180, 460 120" stroke-linecap="round"/>
+        <path d="M 200 540 C 260 520, 310 480, 360 440" stroke-linecap="round"/>
+        <path d="M 300 320 C 360 300, 410 270, 460 230" stroke-linecap="round"/>
+        <path d="M 1220 820 C 1120 720, 1060 640, 1000 560 C 940 480, 960 400, 900 340 C 840 280, 800 200, 740 140" stroke-linecap="round"/>
+        <path d="M 1000 560 C 940 540, 890 500, 840 460" stroke-linecap="round"/>
+        <path d="M 600 820 C 600 700, 600 580, 600 460" stroke-linecap="round"/>
+        <path d="M 600 700 C 540 640, 480 600, 420 580" stroke-linecap="round"/>
+        <path d="M 600 580 C 660 540, 720 520, 780 510" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="watermark-raiz">raiz.</div>
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="greeting">
+        <div class="greeting-pre">Sex · 16 mai · 14h22</div>
+        <h1 class="greeting-name">Oi, Marina — <em>tá no ritmo.</em></h1>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>Sincronizado · há 2min</span>
+        </div>
+
+        <button class="icon-btn" aria-label="Buscar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+
+        <button class="icon-btn" aria-label="Notificações">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          <span class="icon-btn-dot"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         HERO ROW
+         ============================================================ -->
+    <section class="hero-row">
+
+      <!-- HERO CARD -->
+      <article class="hero-card fade-up" style="animation-delay: 0.05s">
+
+        <!-- raízes dentro do hero card -->
+        <div class="hero-roots">
+          <svg width="100%" height="100%" viewBox="0 0 700 360" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#F2EFEA" stroke-width="1.5" stroke-linecap="round" style="opacity: 1;">
+            <!-- raiz central subindo -->
+            <path d="M 60 380 C 80 320, 110 270, 140 210 C 170 150, 165 90, 220 50" />
+            <!-- ramos -->
+            <path d="M 140 210 C 200 200, 240 180, 290 165" />
+            <path d="M 110 270 C 170 260, 220 240, 280 235" />
+            <path d="M 220 50 C 270 40, 320 38, 370 45" />
+            <!-- raiz lateral esquerda -->
+            <path d="M 30 380 C 40 340, 35 290, 55 240 C 75 190, 90 140, 130 100" />
+            <!-- raiz curva direita -->
+            <path d="M 720 380 C 680 330, 660 270, 640 220 C 620 170, 590 130, 540 100" />
+            <path d="M 640 220 C 600 215, 565 200, 530 180" />
+            <!-- finezas extras -->
+            <path d="M 290 165 C 320 155, 350 150, 380 152" />
+            <path d="M 130 100 C 160 90, 190 85, 220 88" />
+          </svg>
+        </div>
+
+        <div class="hero-content">
+
+          <div class="hero-tag">Lucro · Maio 2026</div>
+
+          <div class="hero-number-wrap">
+            <span class="hero-currency">R$</span>
+            <span class="hero-number num" id="hero-num" data-target="12480">12.480</span>
+          </div>
+
+          <div class="hero-recorde">recorde do trimestre</div>
+
+          <div class="hero-delta">
+            <span class="hero-delta-up">
+              <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+              +18%
+            </span>
+            <span>vs abril · meta 90% batida</span>
+          </div>
+
+          <!-- mini sparkline branca -->
+          <svg class="hero-spark" viewBox="0 0 600 56" fill="none" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="hero-spark-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F2EFEA" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#F2EFEA" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M 0 42 L 60 38 L 120 40 L 180 32 L 240 36 L 300 28 L 360 24 L 420 20 L 480 16 L 540 14 L 600 8 L 600 56 L 0 56 Z" fill="url(#hero-spark-fill)"/>
+            <path class="spark-line" d="M 0 42 L 60 38 L 120 40 L 180 32 L 240 36 L 300 28 L 360 24 L 420 20 L 480 16 L 540 14 L 600 8" stroke="#F2EFEA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+
+          <div class="hero-cta-row">
+            <div class="hero-meta">14 vendas fechadas · ticket médio R$ 892</div>
+            <a class="hero-cta" href="#">
+              Ver detalhe
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- SATÉLITES 2x2 -->
+      <div class="satellites">
+
+        <article class="kpi-sat fade-up" style="animation-delay: 0.12s">
+          <div class="kpi-sat-head">
+            <div>
+              <div class="kpi-sat-label">Receita<br/>maio</div>
+            </div>
+            <div class="kpi-sat-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+          </div>
+          <div class="kpi-sat-value"><span class="kpi-sat-currency">R$</span><span class="num">18.420</span></div>
+          <div class="kpi-sat-foot">
+            <span class="kpi-sat-delta">+12%</span>
+            <svg class="kpi-sat-mini" viewBox="0 0 80 24" fill="none">
+              <path d="M 0 20 L 10 18 L 20 14 L 30 16 L 40 10 L 50 8 L 60 6 L 70 4 L 80 2" stroke="#6FB5A8" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </article>
+
+        <article class="kpi-sat fade-up" style="animation-delay: 0.18s">
+          <div class="kpi-sat-head">
+            <div>
+              <div class="kpi-sat-label">Pedidos<br/>ativos</div>
+            </div>
+            <div class="kpi-sat-icon">
+              <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+          </div>
+          <div class="kpi-sat-value num">32</div>
+          <div class="kpi-sat-foot">
+            <span class="kpi-sat-delta">+5 hoje</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--fog-300);">3 IG · 2 indicação</span>
+          </div>
+        </article>
+
+        <article class="kpi-sat fade-up" style="animation-delay: 0.24s">
+          <div class="kpi-sat-head">
+            <div>
+              <div class="kpi-sat-label">Margem<br/>média</div>
+            </div>
+            <div class="kpi-sat-icon">
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+          </div>
+          <div class="kpi-sat-value"><span class="num">89</span><span class="kpi-sat-currency" style="margin-left:2px;">%</span></div>
+          <div class="kpi-gauge">
+            <div class="kpi-gauge-fill" style="width: 89%;"></div>
+          </div>
+          <div class="kpi-sat-foot">
+            <span class="kpi-sat-delta">↑ +4pp</span>
+            <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--fog-300);">faixa saudável</span>
+          </div>
+        </article>
+
+        <article class="kpi-sat fade-up" style="animation-delay: 0.30s">
+          <div class="kpi-sat-head">
+            <div>
+              <div class="kpi-sat-label">Leads<br/>novos</div>
+            </div>
+            <div class="kpi-sat-icon">
+              <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11l-3-3m0 0l-3 3m3-3v8"/></svg>
+            </div>
+          </div>
+          <div class="kpi-sat-value num">4</div>
+          <div class="kpi-sat-foot">
+            <div class="kpi-sat-bars" style="flex:1;">
+              <span style="height: 28%;"></span>
+              <span style="height: 75%;"></span>
+              <span style="height: 60%;"></span>
+              <span style="height: 95%;"></span>
+              <span style="height: 45%;"></span>
+              <span style="height: 80%;"></span>
+              <span style="height: 100%;"></span>
+            </div>
+            <span class="kpi-sat-delta">3 do IG</span>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         CHART WIDE — Receita × Lucro 6 meses
+         ============================================================ -->
+    <section class="chart-card fade-up" style="animation-delay: 0.36s">
+      <div class="chart-head">
+        <div class="chart-title-wrap">
+          <div class="chart-eyebrow">Performance · últimos 6 meses</div>
+          <h2 class="chart-title">Receita e lucro mês a mês</h2>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot receita"></span>Receita</span>
+          <span class="legend-item"><span class="legend-dot lucro"></span>Lucro</span>
+        </div>
+      </div>
+
+      <div class="chart-svg-wrap" id="chart-wrap">
+        <svg class="chart-svg" id="main-chart" viewBox="0 0 1100 240" preserveAspectRatio="none" fill="none">
+          <defs>
+            <linearGradient id="receita-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#6FB5A8" stop-opacity="0.30"/>
+              <stop offset="100%" stop-color="#6FB5A8" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="lucro-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1F7669" stop-opacity="0.60"/>
+              <stop offset="100%" stop-color="#1F7669" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+
+          <!-- grid horizontais -->
+          <line x1="60" y1="40" x2="1080" y2="40" stroke="#BDB7AB" stroke-opacity="0.06" stroke-dasharray="2 4"/>
+          <line x1="60" y1="100" x2="1080" y2="100" stroke="#BDB7AB" stroke-opacity="0.06" stroke-dasharray="2 4"/>
+          <line x1="60" y1="160" x2="1080" y2="160" stroke="#BDB7AB" stroke-opacity="0.06" stroke-dasharray="2 4"/>
+
+          <!-- Y labels -->
+          <text x="50" y="44" text-anchor="end" font-family="Geist Mono" font-size="9.5" fill="#5B564D">R$ 22k</text>
+          <text x="50" y="104" text-anchor="end" font-family="Geist Mono" font-size="9.5" fill="#5B564D">R$ 14k</text>
+          <text x="50" y="164" text-anchor="end" font-family="Geist Mono" font-size="9.5" fill="#5B564D">R$ 6k</text>
+
+          <!-- RECEITA: 6 meses Dec→Mai · valores 10.2, 11.8, 13.5, 15.2, 16.8, 18.4 -->
+          <!-- Conversão para Y: 22k=40, 6k=200, linha de base 200 -->
+          <path d="M 100 158 L 280 134 L 460 110 L 640 84 L 820 60 L 1000 36 L 1000 200 L 100 200 Z" fill="url(#receita-fill)"/>
+          <path d="M 100 158 L 280 134 L 460 110 L 640 84 L 820 60 L 1000 36" stroke="#6FB5A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+          <!-- LUCRO: valores 6.4, 7.2, 8.6, 10.1, 11.4, 12.5 -->
+          <path d="M 100 184 L 280 174 L 460 156 L 640 138 L 820 122 L 1000 108 L 1000 200 L 100 200 Z" fill="url(#lucro-fill)"/>
+          <path d="M 100 184 L 280 174 L 460 156 L 640 138 L 820 122 L 1000 108" stroke="#1F7669" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+          <!-- pontos receita -->
+          <g class="chart-dots-receita">
+            <circle cx="100" cy="158" r="3.5" fill="#0F1316" stroke="#6FB5A8" stroke-width="1.75"/>
+            <circle cx="280" cy="134" r="3.5" fill="#0F1316" stroke="#6FB5A8" stroke-width="1.75"/>
+            <circle cx="460" cy="110" r="3.5" fill="#0F1316" stroke="#6FB5A8" stroke-width="1.75"/>
+            <circle cx="640" cy="84" r="3.5" fill="#0F1316" stroke="#6FB5A8" stroke-width="1.75"/>
+            <circle cx="820" cy="60" r="3.5" fill="#0F1316" stroke="#6FB5A8" stroke-width="1.75"/>
+            <circle cx="1000" cy="36" r="4" fill="#6FB5A8" stroke="#0F1316" stroke-width="2"/>
+          </g>
+
+          <!-- pontos lucro -->
+          <g class="chart-dots-lucro">
+            <circle cx="100" cy="184" r="3.5" fill="#0F1316" stroke="#1F7669" stroke-width="1.75"/>
+            <circle cx="280" cy="174" r="3.5" fill="#0F1316" stroke="#1F7669" stroke-width="1.75"/>
+            <circle cx="460" cy="156" r="3.5" fill="#0F1316" stroke="#1F7669" stroke-width="1.75"/>
+            <circle cx="640" cy="138" r="3.5" fill="#0F1316" stroke="#1F7669" stroke-width="1.75"/>
+            <circle cx="820" cy="122" r="3.5" fill="#0F1316" stroke="#1F7669" stroke-width="1.75"/>
+            <circle cx="1000" cy="108" r="4" fill="#1F7669" stroke="#F2EFEA" stroke-width="2"/>
+          </g>
+
+          <!-- linha vertical mês atual -->
+          <line x1="1000" y1="36" x2="1000" y2="200" stroke="#F2EFEA" stroke-opacity="0.15" stroke-dasharray="3 4"/>
+
+          <!-- X labels -->
+          <text x="100" y="222" text-anchor="middle" font-family="Geist Mono" font-size="11" fill="#8A8478">DEZ</text>
+          <text x="280" y="222" text-anchor="middle" font-family="Geist Mono" font-size="11" fill="#8A8478">JAN</text>
+          <text x="460" y="222" text-anchor="middle" font-family="Geist Mono" font-size="11" fill="#8A8478">FEV</text>
+          <text x="640" y="222" text-anchor="middle" font-family="Geist Mono" font-size="11" fill="#8A8478">MAR</text>
+          <text x="820" y="222" text-anchor="middle" font-family="Geist Mono" font-size="11" fill="#8A8478">ABR</text>
+          <text x="1000" y="222" text-anchor="middle" font-family="Geist Mono" font-size="11" fill="#F2EFEA" font-weight="600">MAI</text>
+
+          <!-- hover hot zones (invisible) -->
+          <g id="chart-hotzones">
+            <rect x="60"  y="20" width="160" height="180" fill="transparent" data-i="0"/>
+            <rect x="220" y="20" width="180" height="180" fill="transparent" data-i="1"/>
+            <rect x="400" y="20" width="180" height="180" fill="transparent" data-i="2"/>
+            <rect x="580" y="20" width="180" height="180" fill="transparent" data-i="3"/>
+            <rect x="760" y="20" width="180" height="180" fill="transparent" data-i="4"/>
+            <rect x="940" y="20" width="140" height="180" fill="transparent" data-i="5"/>
+          </g>
+
+          <!-- crosshair -->
+          <line id="chart-crosshair" x1="0" y1="20" x2="0" y2="200" stroke="#F2EFEA" stroke-opacity="0.2" stroke-dasharray="2 3" style="opacity:0;"/>
+        </svg>
+
+        <div class="chart-tooltip" id="chart-tooltip">
+          <div class="chart-tooltip-month">Maio</div>
+          <div class="chart-tooltip-line">
+            <span><span class="legend-dot receita" style="display:inline-block; vertical-align:middle; margin-right:6px;"></span>Receita</span>
+            <span>R$ 18.420</span>
+          </div>
+          <div class="chart-tooltip-line">
+            <span><span class="legend-dot lucro" style="display:inline-block; vertical-align:middle; margin-right:6px;"></span>Lucro</span>
+            <span>R$ 12.480</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         OPERAÇÕES — 3 cards
+         ============================================================ -->
+    <section class="ops-grid">
+
+      <article class="ops-card fade-up" style="animation-delay: 0.42s">
+        <div class="ops-head">
+          <div class="ops-label">Em produção</div>
+          <div class="ops-icon">
+            <svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="6" rx="1"/><path d="M6 18h12v3H6zM3 9h18v9H3z"/><circle cx="18" cy="14" r="1"/></svg>
+          </div>
+        </div>
+
+        <div class="ops-big">
+          <span class="ops-big-num num">3</span>
+          <span class="ops-big-unit">peças rodando</span>
+        </div>
+
+        <ul class="ops-list">
+          <li><span>Bambu X1-Carbon</span><small>fim 17h40</small></li>
+          <li><span>Ender-3 V3 SE</span><small>fim 18h10</small></li>
+          <li><span>AnkerMake M5C</span><small>fim 21h05</small></li>
+        </ul>
+
+        <div class="ops-foot">
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--petrol-300);">2 entregam até 18h</span>
+          <a class="ops-link" href="#">acompanhar ⟶</a>
+        </div>
+      </article>
+
+      <article class="ops-card fade-up" style="animation-delay: 0.48s">
+        <div class="ops-head">
+          <div class="ops-label">Fila</div>
+          <div class="ops-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </div>
+        </div>
+
+        <div class="ops-big">
+          <span class="ops-big-num num">7</span>
+          <span class="ops-big-unit">aguardando</span>
+        </div>
+
+        <ul class="ops-list">
+          <li><span>Falconi · 2 vasos PETG</span><small>17h</small></li>
+          <li><span>Héquison · suporte PC</span><small>18h30</small></li>
+          <li><span>@3dlab_brasil · cosplay</span><small>20h</small></li>
+        </ul>
+
+        <div class="ops-foot">
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:var(--fog-300);">+4 marcados pra amanhã</span>
+          <a class="ops-link" href="#">ver fila ⟶</a>
+        </div>
+      </article>
+
+      <article class="ops-card atencao fade-up" style="animation-delay: 0.54s">
+        <div class="ops-head">
+          <div class="ops-label" style="color: var(--ember-400);">Atenção</div>
+          <div class="ops-icon">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+        </div>
+
+        <div class="ops-big">
+          <span class="ops-big-num num">2</span>
+          <span class="ops-big-unit">itens críticos</span>
+        </div>
+
+        <ul class="ops-list">
+          <li><span>PLA preto 1kg</span><small>resta 180g</small></li>
+          <li><span>PETG laranja 1kg</span><small>resta 240g</small></li>
+        </ul>
+
+        <div class="ops-foot">
+          <span class="ops-pill">⚠ repor antes de quinta</span>
+          <button class="ops-cta-ember">
+            comprar
+            <svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2.5;"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ============================================================
+         TROCAR PROJETO
+         ============================================================ -->
+    <section class="project-switch">
+      <div class="switch-head">
+        <span class="switch-eyebrow">Trocar projeto</span>
+        <span class="switch-helper">você tá vendo: <strong style="color: var(--fog-100);">3D Resolução</strong></span>
+      </div>
+
+      <div class="switch-row">
+        <a class="chip active" href="#">
+          <span class="chip-dot"></span>
+          <span class="chip-name">3D Resolução</span>
+          <span class="chip-meta">maker · ativo</span>
+        </a>
+        <a class="chip color-ember" href="#">
+          <span class="chip-dot"></span>
+          <span class="chip-name">Lucas P. · Cosplay</span>
+          <span class="chip-meta">2 pedidos</span>
+        </a>
+        <a class="chip color-fog" href="#">
+          <span class="chip-dot"></span>
+          <span class="chip-name">Carla M. · Estética</span>
+          <span class="chip-meta">pausado</span>
+        </a>
+        <a class="chip color-petrol2" href="#">
+          <span class="chip-dot"></span>
+          <span class="chip-name">+ Novo projeto</span>
+          <span class="chip-meta">criar</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FAB -->
+<button class="fab" aria-label="Novo pedido">
+  <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  <span class="fab-tooltip">Novo pedido</span>
+</button>
+
+<script>
+  // ============================================================
+  // COUNT-UP HERO NUMBER (0 → 12.480) em 1.2s easeOutCubic
+  // ============================================================
+  (function() {
+    const el = document.getElementById('hero-num');
+    if (!el) return;
+    const target = parseInt(el.dataset.target, 10);
+    const duration = 1200;
+    const start = performance.now();
+
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+    function fmt(n) {
+      return n.toLocaleString('pt-BR');
+    }
+
+    function tick(now) {
+      const elapsed = now - start;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = easeOutCubic(t);
+      const value = Math.round(target * eased);
+      el.textContent = fmt(value);
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = fmt(target);
+    }
+
+    // delay levemente pra ler o card primeiro
+    setTimeout(() => requestAnimationFrame(tick), 350);
+  })();
+
+  // ============================================================
+  // CHART HOVER tooltip + crosshair
+  // ============================================================
+  (function() {
+    const wrap = document.getElementById('chart-wrap');
+    const svg = document.getElementById('main-chart');
+    const tooltip = document.getElementById('chart-tooltip');
+    const crosshair = document.getElementById('chart-crosshair');
+    const zones = document.querySelectorAll('#chart-hotzones rect');
+
+    const dataPoints = [
+      { month: 'Dezembro', receita: '10.180', lucro: '6.420',  x: 100, y: 158 },
+      { month: 'Janeiro',  receita: '11.840', lucro: '7.220',  x: 280, y: 134 },
+      { month: 'Fevereiro',receita: '13.560', lucro: '8.640',  x: 460, y: 110 },
+      { month: 'Março',    receita: '15.210', lucro: '10.180', x: 640, y: 84  },
+      { month: 'Abril',    receita: '16.820', lucro: '11.420', x: 820, y: 60  },
+      { month: 'Maio',     receita: '18.420', lucro: '12.480', x: 1000, y: 36 },
+    ];
+
+    function show(i) {
+      const d = dataPoints[i];
+      if (!d) return;
+
+      // SVG é 1100 wide em viewBox, mapeia pro container
+      const rect = svg.getBoundingClientRect();
+      const wrapRect = wrap.getBoundingClientRect();
+      const scaleX = rect.width / 1100;
+      const xpx = d.x * scaleX + (rect.left - wrapRect.left);
+
+      tooltip.style.left = `${xpx}px`;
+      tooltip.style.top = `${ d.y * (rect.height / 240) + (rect.top - wrapRect.top) - 12 }px`;
+      tooltip.querySelector('.chart-tooltip-month').textContent = d.month;
+      const lines = tooltip.querySelectorAll('.chart-tooltip-line span:last-child');
+      lines[0].textContent = `R$ ${d.receita}`;
+      lines[1].textContent = `R$ ${d.lucro}`;
+      tooltip.classList.add('visible');
+
+      // crosshair
+      crosshair.setAttribute('x1', d.x);
+      crosshair.setAttribute('x2', d.x);
+      crosshair.style.opacity = 1;
+    }
+
+    function hide() {
+      tooltip.classList.remove('visible');
+      crosshair.style.opacity = 0;
+    }
+
+    zones.forEach(z => {
+      z.addEventListener('mouseenter', () => show(parseInt(z.dataset.i, 10)));
+      z.addEventListener('mouseleave', hide);
+    });
+  })();
+
+  // ============================================================
+  // CHIP active toggle (UX taste)
+  // ============================================================
+  (function() {
+    const chips = document.querySelectorAll('.switch-row .chip');
+    chips.forEach(c => {
+      c.addEventListener('click', e => {
+        e.preventDefault();
+        chips.forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

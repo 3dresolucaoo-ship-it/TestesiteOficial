@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Hayzer — Dashboard · V1 Dataviz-Rich</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,30..100;1,9..144,300..900,30..100&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     HAYZER · DASHBOARD · V1 DATAVIZ-RICH
+     Espelha refs CEO (DWS, Analytics) com paleta Hayzer.
+     Hero petrol + donut + bars + sparkline + gauge + tabela inline.
+     Tipografia híbrida: Fraunces ≤15% / Geist 85%.
+     ============================================================ */
+
+  :root {
+    /* night ladder */
+    --night-950: #07090A;
+    --night-900: #0B0E10;
+    --night-850: #0F1416;
+    --night-800: #13171A;
+    --night-700: #1B2024;
+    --night-600: #262C31;
+
+    /* surface ladder */
+    --surface-0: #0F1416;     /* main bg */
+    --surface-1: #13171A;     /* card base */
+    --surface-2: #1B2024;     /* card destaque/hover */
+    --surface-3: #262C31;     /* extra */
+
+    /* fog */
+    --fog-50:  #F2EFEA;
+    --fog-100: #E3DED5;
+    --fog-200: #BDB7AB;
+    --fog-300: #8A8478;
+    --fog-400: #5B564D;
+    --fog-500: #3A352D;
+
+    /* petrol — verde-raiz Hayzer */
+    --petrol-200: #A6D4CC;
+    --petrol-300: #6FB5A8;
+    --petrol-400: #3F9286;
+    --petrol-500: #1F7669;
+    --petrol-600: #155A50;
+    --petrol-700: #0E443D;
+
+    /* ember */
+    --ember-300: #ECC196;
+    --ember-400: #E0A269;
+    --ember-500: #D08A4A;
+    --ember-600: #A86A30;
+
+    /* tokens func */
+    --border-soft: rgba(242, 239, 234, 0.06);
+    --border-md:   rgba(242, 239, 234, 0.10);
+    --border-strong: rgba(242, 239, 234, 0.18);
+
+    --shadow-petrol: 0 8px 24px -8px rgba(31, 118, 105, 0.35), 0 2px 4px rgba(7, 9, 10, 0.6);
+    --shadow-card:   0 1px 0 rgba(242, 239, 234, 0.04) inset, 0 4px 12px rgba(7, 9, 10, 0.4);
+
+    --easing: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --t-fast: 180ms var(--easing);
+    --t-med:  320ms var(--easing);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'ss01', 'cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--night-950);
+    color: var(--fog-50);
+    min-height: 100vh;
+    line-height: 1.55;
+    font-size: 14px;
+    overflow-x: hidden;
+  }
+
+  /* tabular nums em todos os números */
+  .num, [data-num], .kpi-value, .num-mono, table td, .table-num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* ============================================================
+     GRAIN + AMBIENT
+     ============================================================ */
+
+  .grain-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.93 0 0 0 0 0.88 0 0 0 0.45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.18;
+    mix-blend-mode: screen;
+  }
+
+  .ambient-glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 50% 40% at 22% 18%, rgba(31, 118, 105, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 35% at 90% 85%, rgba(208, 138, 74, 0.08) 0%, transparent 55%);
+  }
+
+  /* ============================================================
+     LAYOUT — 3 colunas
+     ============================================================ */
+
+  .app {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    min-height: 100vh;
+    background: var(--surface-0);
+  }
+
+  /* ============================================================
+     SIDEBAR (240px)
+     ============================================================ */
+
+  .sidebar {
+    background: var(--night-900);
+    border-right: 1px solid var(--border-soft);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 5;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px 28px 24px;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 20px;
+  }
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+  .brand-word {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    font-variation-settings: 'opsz' 60, 'SOFT' 50;
+    color: var(--fog-50);
+    letter-spacing: -0.02em;
+  }
+  .brand-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--petrol-300);
+    margin-top: 2px;
+    display: block;
+  }
+
+  .nav-group {
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+  .nav-group-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+    padding: 0 8px 10px 8px;
+    display: block;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 8px 9px 10px;
+    border-radius: 8px;
+    color: var(--fog-200);
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--t-fast), color var(--t-fast), transform var(--t-fast);
+    position: relative;
+    border-left: 2px solid transparent;
+    margin-bottom: 1px;
+  }
+  .nav-item svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--fog-300);
+    transition: color var(--t-fast);
+  }
+  .nav-item:hover {
+    background: rgba(242, 239, 234, 0.03);
+    color: var(--fog-50);
+  }
+  .nav-item:hover svg { color: var(--fog-100); }
+  .nav-item.active {
+    background: rgba(31, 118, 105, 0.12);
+    color: var(--fog-50);
+    border-left-color: var(--petrol-500);
+    padding-left: 8px;
+  }
+  .nav-item.active svg { color: var(--petrol-300); }
+  .nav-item .badge {
+    margin-left: auto;
+    background: var(--ember-500);
+    color: var(--night-950);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 6px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background var(--t-fast);
+  }
+  .user-pill:hover { background: rgba(242, 239, 234, 0.04); }
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--petrol-500), var(--petrol-700));
+    color: var(--fog-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .user-info { display: flex; flex-direction: column; min-width: 0; }
+  .user-name {
+    font-size: 13px;
+    color: var(--fog-50);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .user-role {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-300);
+    letter-spacing: 0.08em;
+  }
+
+  /* ============================================================
+     MAIN (flexível) — bento grid
+     ============================================================ */
+
+  .main {
+    padding: 24px 28px 80px 28px;
+    position: relative;
+    min-width: 0;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+
+  .project-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px 8px 10px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color var(--t-fast), background var(--t-fast);
+  }
+  .project-switcher:hover {
+    border-color: var(--petrol-400);
+    background: var(--surface-2);
+  }
+  .project-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--petrol-500), var(--petrol-700));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--fog-50);
+  }
+  .project-name { font-size: 14px; color: var(--fog-50); font-weight: 500; }
+  .project-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-300);
+    margin-left: 4px;
+    letter-spacing: 0.1em;
+  }
+  .chev { color: var(--fog-300); width: 14px; height: 14px; }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px 6px 10px;
+    background: rgba(31, 118, 105, 0.10);
+    border: 1px solid rgba(31, 118, 105, 0.30);
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--petrol-200);
+  }
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--petrol-300);
+    box-shadow: 0 0 0 0 rgba(111, 181, 168, 0.7);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(111, 181, 168, 0.7); }
+    70%  { box-shadow: 0 0 0 8px rgba(111, 181, 168, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(111, 181, 168, 0); }
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border-md);
+    background: var(--surface-1);
+    color: var(--fog-200);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--t-fast);
+    position: relative;
+  }
+  .icon-btn:hover {
+    border-color: var(--petrol-400);
+    color: var(--fog-50);
+    background: var(--surface-2);
+  }
+  .icon-btn svg { width: 16px; height: 16px; }
+  .icon-btn .ind {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ember-500);
+    box-shadow: 0 0 0 2px var(--surface-1);
+  }
+
+  .greeting {
+    margin-bottom: 22px;
+  }
+  .greeting-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--petrol-300);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .greeting-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--fog-50);
+    letter-spacing: -0.01em;
+  }
+  .greeting-title .punch {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    font-weight: 400;
+    color: var(--petrol-300);
+  }
+
+  /* ============================================================
+     BENTO GRID
+     ============================================================ */
+
+  .bento {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .bento-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .bento-row-3 {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
+    border-radius: 16px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--t-fast), transform var(--t-fast);
+  }
+  .card:hover { border-color: var(--border-md); }
+
+  .card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+  .card-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .card-title {
+    font-size: 15px;
+    color: var(--fog-100);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .card-action {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color var(--t-fast);
+  }
+  .card-action:hover { color: var(--petrol-300); }
+
+  /* ============================================================
+     KPI HERO — PETROL SÓLIDO ("UAU")
+     ============================================================ */
+
+  .kpi-hero {
+    background: var(--petrol-500);
+    color: var(--fog-50);
+    border: 1px solid var(--petrol-600);
+    padding: 28px;
+    min-height: 220px;
+    box-shadow: var(--shadow-petrol);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.10) 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, rgba(14, 68, 61, 0.40) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .kpi-hero:hover {
+    box-shadow: var(--shadow-petrol), 0 0 32px -8px rgba(111, 181, 168, 0.4);
+  }
+  .kpi-hero .kpi-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(242, 239, 234, 0.85);
+    position: relative;
+    z-index: 1;
+  }
+  .kpi-hero .kpi-value {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 14px 0 10px 0;
+    color: var(--fog-50);
+    position: relative;
+    z-index: 1;
+  }
+  .kpi-hero .kpi-anchor {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-variation-settings: 'opsz' 60, 'SOFT' 70;
+    font-weight: 400;
+    font-size: 16px;
+    color: rgba(242, 239, 234, 0.92);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .kpi-hero .star {
+    color: var(--fog-50);
+    font-size: 14px;
+  }
+  .kpi-hero .kpi-spark {
+    width: 100%;
+    height: 42px;
+    position: relative;
+    z-index: 1;
+    display: block;
+  }
+  .kpi-hero .kpi-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: rgba(242, 239, 234, 0.75);
+    letter-spacing: 0.08em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============================================================
+     KPI 2 — SECONDARY
+     ============================================================ */
+
+  .kpi-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 220px;
+  }
+  .kpi-card .kpi-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .kpi-card .kpi-value {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 36px;
+    color: var(--fog-50);
+    letter-spacing: -0.02em;
+    margin: 10px 0 6px 0;
+    line-height: 1;
+  }
+  .kpi-card .kpi-sub {
+    font-size: 12px;
+    color: var(--fog-300);
+  }
+  .kpi-card .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px 3px 7px;
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .delta.up {
+    background: rgba(31, 118, 105, 0.14);
+    color: var(--petrol-200);
+    border: 1px solid rgba(31, 118, 105, 0.30);
+  }
+  .delta.down {
+    background: rgba(208, 138, 74, 0.12);
+    color: var(--ember-300);
+    border: 1px solid rgba(208, 138, 74, 0.30);
+  }
+  .kpi-card .kpi-spark {
+    width: 100%;
+    height: 56px;
+    margin-top: 14px;
+  }
+
+  /* ============================================================
+     DONUT
+     ============================================================ */
+
+  .donut-wrap {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  .donut-svg {
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .donut-svg svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .donut-center .label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-300);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .donut-center .value {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--fog-50);
+    margin-top: 2px;
+    letter-spacing: -0.01em;
+  }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+  }
+  .legend-row {
+    display: grid;
+    grid-template-columns: 12px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--t-fast);
+  }
+  .legend-row:hover { background: rgba(242, 239, 234, 0.04); }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+  .legend-name {
+    color: var(--fog-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .legend-val {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fog-200);
+    font-weight: 500;
+  }
+
+  .donut-arc {
+    transition: stroke-width var(--t-fast), opacity var(--t-fast);
+    cursor: pointer;
+  }
+  .donut-arc:hover { stroke-width: 26; }
+
+  /* ============================================================
+     BAR VERTICAL — 6 meses
+     ============================================================ */
+
+  .bars-vertical {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    height: 230px;
+    align-items: end;
+    padding: 8px 4px 24px 4px;
+    position: relative;
+  }
+  .bars-vertical::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 25%;
+    border-top: 1px dashed rgba(242, 239, 234, 0.05);
+  }
+  .bars-vertical::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    border-top: 1px dashed rgba(242, 239, 234, 0.08);
+  }
+  .bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: end;
+    position: relative;
+  }
+  .bar-val {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-200);
+    margin-bottom: 6px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(4px);
+    animation: barVal 600ms var(--easing) forwards;
+  }
+  .bar {
+    width: 100%;
+    max-width: 42px;
+    background: linear-gradient(180deg, var(--petrol-300) 0%, var(--petrol-500) 100%);
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    animation: barGrow 800ms var(--easing) forwards;
+    cursor: pointer;
+    transition: filter var(--t-fast);
+  }
+  .bar:hover { filter: brightness(1.15); }
+  .bar.current {
+    background: linear-gradient(180deg, var(--ember-400) 0%, var(--ember-600) 100%);
+    box-shadow: 0 0 16px -4px rgba(208, 138, 74, 0.45);
+  }
+  .bar-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-300);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    position: absolute;
+    bottom: -22px;
+  }
+  @keyframes barGrow {
+    to { transform: scaleY(1); }
+  }
+  @keyframes barVal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================================
+     SPARKLINE FILA 7 dias (mini bars)
+     ============================================================ */
+
+  .queue-card { min-height: 220px; }
+  .queue-bars {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    height: 100px;
+    align-items: end;
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+  .queue-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: end;
+  }
+  .queue-bar {
+    width: 100%;
+    max-width: 24px;
+    background: var(--petrol-500);
+    border-radius: 4px 4px 0 0;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    animation: barGrow 700ms var(--easing) forwards;
+    transition: filter var(--t-fast);
+  }
+  .queue-bar.today {
+    background: var(--ember-500);
+    box-shadow: 0 0 12px -2px rgba(208, 138, 74, 0.5);
+  }
+  .queue-day {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-300);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .queue-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border-soft);
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-300);
+    letter-spacing: 0.08em;
+  }
+  .queue-foot .em { color: var(--ember-400); }
+
+  /* ============================================================
+     GAUGE SEMI 89%
+     ============================================================ */
+
+  .gauge-card { min-height: 220px; display: flex; flex-direction: column; }
+  .gauge-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 240px;
+    margin: 6px auto 0 auto;
+    aspect-ratio: 2 / 1;
+  }
+  .gauge-wrap svg { width: 100%; height: 100%; overflow: visible; }
+  .gauge-center {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6%;
+    text-align: center;
+    pointer-events: none;
+  }
+  .gauge-value {
+    font-family: 'Geist', sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    color: var(--fog-50);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .gauge-anchor {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-variation-settings: 'opsz' 60;
+    font-size: 13px;
+    color: var(--petrol-300);
+    margin-top: 4px;
+  }
+  .gauge-thresholds {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding: 0 4px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-400);
+    letter-spacing: 0.08em;
+  }
+  .gauge-thresholds span strong {
+    color: var(--fog-200);
+    font-weight: 500;
+    margin-left: 4px;
+  }
+
+  /* ============================================================
+     TABELA TOP 5 produtos (com bar inline)
+     ============================================================ */
+
+  .table-card { padding: 0; overflow: hidden; }
+  .table-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 22px 14px 22px;
+  }
+  .table-head .card-title { margin-top: 4px; }
+
+  table.products {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  table.products thead th {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fog-400);
+    text-align: left;
+    padding: 8px 22px;
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+    font-weight: 500;
+    background: rgba(7, 9, 10, 0.4);
+  }
+  table.products thead th.right { text-align: right; }
+  table.products tbody td {
+    padding: 13px 22px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 13px;
+    color: var(--fog-100);
+    vertical-align: middle;
+    transition: background var(--t-fast);
+  }
+  table.products tbody tr:last-child td { border-bottom: none; }
+  table.products tbody tr:hover td { background: var(--surface-2); }
+  table.products td.product { font-weight: 500; color: var(--fog-50); }
+  table.products td.client { color: var(--fog-300); font-size: 12px; }
+  table.products td.value { font-family: 'Geist Mono', monospace; color: var(--petrol-300); font-weight: 500; }
+  table.products td.bar-cell { width: 38%; }
+  .row-bar {
+    height: 6px;
+    width: 100%;
+    background: rgba(242, 239, 234, 0.06);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .row-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--petrol-500), var(--petrol-300));
+    border-radius: 999px;
+    transform-origin: left;
+    animation: rowGrow 700ms var(--easing) forwards;
+    transform: scaleX(0);
+  }
+  @keyframes rowGrow { to { transform: scaleX(1); } }
+
+  /* ============================================================
+     CHIPS — trocar projeto
+     ============================================================ */
+
+  .project-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+    padding: 14px 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .chips-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fog-400);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-right: 4px;
+    align-self: center;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px 6px 10px;
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--fog-300);
+    cursor: pointer;
+    transition: all var(--t-fast);
+  }
+  .chip:hover {
+    border-color: var(--petrol-400);
+    color: var(--fog-100);
+    background: rgba(31, 118, 105, 0.06);
+  }
+  .chip-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ============================================================
+     RIGHT-RAIL (280px)
+     ============================================================ */
+
+  .rail {
+    background: var(--night-900);
+    border-left: 1px solid var(--border-soft);
+    padding: 24px 20px 24px 20px;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .rail-section { margin-bottom: 26px; }
+  .rail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .rail-title {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--fog-300);
+  }
+  .rail-count {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    background: rgba(208, 138, 74, 0.14);
+    color: var(--ember-400);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(208, 138, 74, 0.30);
+    font-weight: 500;
+  }
+  .rail-count.cool {
+    background: rgba(31, 118, 105, 0.12);
+    color: var(--petrol-200);
+    border-color: rgba(31, 118, 105, 0.30);
+  }
+
+  .notif-item {
+    display: grid;
+    grid-template-columns: 8px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 11px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background var(--t-fast);
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  .notif-item:hover { background: rgba(242, 239, 234, 0.04); }
+  .notif-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .notif-dot.urgent { background: var(--ember-500); box-shadow: 0 0 0 3px rgba(208, 138, 74, 0.18); }
+  .notif-dot.info   { background: var(--petrol-400); }
+  .notif-dot.warn   { background: var(--ember-400); }
+  .notif-text {
+    font-size: 13px;
+    color: var(--fog-100);
+    line-height: 1.4;
+  }
+  .notif-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-400);
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+    display: block;
+  }
+
+  .activity-item {
+    display: grid;
+    grid-template-columns: 8px 1fr;
+    gap: 10px;
+    padding: 9px 4px 9px 4px;
+    border-bottom: 1px dashed var(--border-soft);
+    font-size: 12.5px;
+    color: var(--fog-200);
+    line-height: 1.4;
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-circle {
+    width: 8px;
+    height: 8px;
+    margin-top: 5px;
+    border-radius: 50%;
+    border: 1.5px solid var(--petrol-400);
+    background: transparent;
+  }
+  .activity-item strong {
+    color: var(--fog-50);
+    font-weight: 500;
+  }
+  .activity-time {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-400);
+    letter-spacing: 0.05em;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .client-row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    gap: 10px;
+    padding: 10px 4px;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background var(--t-fast);
+  }
+  .client-row:hover { background: rgba(242, 239, 234, 0.04); }
+  .client-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--fog-50);
+    border: 1px solid var(--border-md);
+  }
+  .av-1 { background: linear-gradient(135deg, var(--petrol-400), var(--petrol-700)); }
+  .av-2 { background: linear-gradient(135deg, var(--ember-500), var(--ember-600)); }
+  .av-3 { background: linear-gradient(135deg, var(--petrol-300), var(--petrol-500)); }
+  .av-4 { background: linear-gradient(135deg, #6B5B3A, #4B3D26); }
+  .client-info { min-width: 0; }
+  .client-name {
+    font-size: 13px;
+    color: var(--fog-50);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .client-meta {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fog-400);
+    letter-spacing: 0.05em;
+  }
+  .client-value {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--petrol-300);
+    font-weight: 500;
+  }
+
+  /* ============================================================
+     FAB — Novo pedido
+     ============================================================ */
+
+  .fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--petrol-500);
+    color: var(--fog-50);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 12px 24px -8px rgba(31, 118, 105, 0.6),
+      0 2px 8px rgba(7, 9, 10, 0.5),
+      0 0 0 0 rgba(111, 181, 168, 0);
+    transition: all var(--t-med);
+    z-index: 50;
+    animation: fabGlow 3s var(--easing) infinite;
+  }
+  .fab:hover {
+    background: var(--petrol-400);
+    transform: scale(1.06);
+    box-shadow:
+      0 16px 32px -8px rgba(31, 118, 105, 0.75),
+      0 4px 12px rgba(7, 9, 10, 0.55),
+      0 0 0 6px rgba(111, 181, 168, 0.18);
+  }
+  .fab svg { width: 24px; height: 24px; }
+  .fab-tooltip {
+    position: absolute;
+    right: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(8px);
+    background: var(--night-700);
+    color: var(--fog-100);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all var(--t-fast);
+    border: 1px solid var(--border-md);
+    font-family: 'Geist Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .fab:hover .fab-tooltip { opacity: 1; transform: translateY(-50%) translateX(0); }
+  @keyframes fabGlow {
+    0%, 100% { box-shadow: 0 12px 24px -8px rgba(31, 118, 105, 0.6), 0 2px 8px rgba(7, 9, 10, 0.5), 0 0 0 0 rgba(111, 181, 168, 0); }
+    50%      { box-shadow: 0 12px 24px -8px rgba(31, 118, 105, 0.6), 0 2px 8px rgba(7, 9, 10, 0.5), 0 0 0 8px rgba(111, 181, 168, 0.10); }
+  }
+
+  /* ============================================================
+     RAÍZES — overlay sutil
+     ============================================================ */
+
+  .roots-bg {
+    position: fixed;
+    bottom: 0;
+    left: 240px;
+    width: 240px;
+    height: 320px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.15;
+  }
+  .roots-bg svg { width: 100%; height: 100%; }
+  .roots-bg path {
+    fill: none;
+    stroke: var(--petrol-400);
+    stroke-width: 1;
+    stroke-linecap: round;
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: drawRoot 1500ms var(--easing) forwards;
+  }
+  .roots-bg path:nth-child(2) { animation-delay: 200ms; }
+  .roots-bg path:nth-child(3) { animation-delay: 400ms; }
+  .roots-bg path:nth-child(4) { animation-delay: 600ms; }
+  @keyframes drawRoot {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .watermark-raiz {
+    position: fixed;
+    bottom: 16px;
+    right: 320px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 70;
+    font-weight: 300;
+    font-size: 180px;
+    line-height: 1;
+    color: var(--fog-50);
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1;
+    letter-spacing: -0.04em;
+    user-select: none;
+  }
+
+  /* ============================================================
+     MOBILE
+     ============================================================ */
+
+  .mobile-nav { display: none; }
+  .mobile-fab { display: none; }
+  .menu-toggle { display: none; }
+
+  @media (max-width: 1280px) {
+    .app { grid-template-columns: 220px 1fr 260px; }
+    .kpi-hero .kpi-value { font-size: 56px; }
+    .watermark-raiz { font-size: 140px; }
+  }
+
+  @media (max-width: 1024px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar, .rail { display: none; }
+    .main { padding: 16px; }
+    .bento, .bento-row-2, .bento-row-3 { grid-template-columns: 1fr; }
+    .kpi-hero { min-height: 200px; padding: 24px; }
+    .kpi-hero .kpi-value { font-size: 52px; }
+    .kpi-card { min-height: auto; }
+    .donut-wrap { grid-template-columns: 1fr; justify-items: center; }
+    .roots-bg { left: 0; width: 120px; height: 200px; }
+    .watermark-raiz { display: none; }
+    .fab { display: none; }
+    .mobile-nav {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--night-900);
+      border-top: 1px solid var(--border-md);
+      padding: 8px 0 calc(env(safe-area-inset-bottom, 0px) + 8px) 0;
+      justify-content: space-around;
+      z-index: 40;
+      backdrop-filter: blur(8px);
+    }
+    .mobile-nav .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 10px;
+      color: var(--fog-300);
+      cursor: pointer;
+      font-size: 10px;
+      font-family: 'Geist Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 8px;
+      transition: color var(--t-fast);
+    }
+    .mobile-nav .item svg { width: 20px; height: 20px; }
+    .mobile-nav .item.active { color: var(--petrol-300); }
+    .mobile-nav .item.fab-m {
+      background: var(--petrol-500);
+      color: var(--fog-50);
+      transform: translateY(-12px);
+      width: 56px;
+      height: 56px;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 6px 16px -4px rgba(31, 118, 105, 0.6);
+    }
+    .mobile-nav .item.fab-m svg { width: 22px; height: 22px; }
+    .mobile-nav .item.fab-m .lbl { display: none; }
+    .menu-toggle {
+      display: inline-flex;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border-md);
+      background: var(--surface-1);
+      color: var(--fog-200);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .main { padding-bottom: 96px; }
+  }
+
+  @media (max-width: 640px) {
+    .topbar { gap: 8px; }
+    .greeting-title { font-size: 18px; }
+    .kpi-hero .kpi-value { font-size: 44px; }
+    .bar-val { font-size: 10px; }
+    .table-head, table.products tbody td, table.products thead th { padding-left: 14px; padding-right: 14px; }
+    table.products td.bar-cell { display: none; }
+    .project-chips { gap: 6px; }
+    .chip { font-size: 11px; padding: 5px 10px; }
+  }
+
+  /* ============================================================
+     PREFERS-REDUCED-MOTION
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    .bar, .queue-bar, .row-bar-fill { transform: scaleY(1) scaleX(1) !important; }
+    .roots-bg path { stroke-dashoffset: 0 !important; }
+  }
+
+  /* a11y focus */
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible, .nav-item:focus-visible {
+    outline: 2px solid var(--petrol-300);
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- AMBIENT LAYERS -->
+<div class="ambient-glow" aria-hidden="true"></div>
+<div class="grain-layer" aria-hidden="true"></div>
+
+<!-- RAÍZES OVERLAY -->
+<div class="roots-bg" aria-hidden="true">
+  <svg viewBox="0 0 240 320" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 60 320 C 60 280, 80 240, 70 200 S 50 140, 80 100 S 120 50, 110 10" />
+    <path d="M 100 320 C 100 290, 90 260, 110 220 S 140 170, 130 130" />
+    <path d="M 140 320 C 140 290, 160 250, 150 210 S 130 160, 170 120" />
+    <path d="M 30 320 C 30 290, 50 270, 45 230 S 20 180, 40 140" />
+  </svg>
+</div>
+
+<!-- WATERMARK -->
+<div class="watermark-raiz" aria-hidden="true">raiz.</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- ============================================================
+       SIDEBAR
+       ============================================================ -->
+  <aside class="sidebar" aria-label="Navegação principal">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <!-- H estilizado com raiz -->
+        <path d="M 8 6 L 8 26" stroke="#1F7669" stroke-width="2.5" stroke-linecap="round" fill="none" />
+        <path d="M 24 6 L 24 26" stroke="#1F7669" stroke-width="2.5" stroke-linecap="round" fill="none" />
+        <path d="M 8 16 L 24 16" stroke="#6FB5A8" stroke-width="2.5" stroke-linecap="round" fill="none" />
+        <!-- raízes -->
+        <path d="M 8 26 C 8 28, 6 30, 4 31" stroke="#3F9286" stroke-width="1" stroke-linecap="round" fill="none" />
+        <path d="M 24 26 C 24 28, 26 29, 28 31" stroke="#3F9286" stroke-width="1" stroke-linecap="round" fill="none" />
+        <path d="M 16 26 L 16 30" stroke="#3F9286" stroke-width="1" stroke-linecap="round" fill="none" />
+      </svg>
+      <div>
+        <div class="brand-word">Hayzer</div>
+        <span class="brand-tag">a raiz · v0.4</span>
+      </div>
+    </div>
+
+    <nav class="nav-group">
+      <span class="nav-group-label">Núcleo</span>
+      <a href="#" class="nav-item active" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+        Início
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18l-2 13H5L3 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+        Pedidos
+        <span class="badge">3</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10l9 5 9-5V7l-9-5-9 5Z"/><path d="m3 7 9 5 9-5"/><path d="M12 12v10"/></svg>
+        Estoque
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Financeiro
+      </a>
+    </nav>
+
+    <nav class="nav-group">
+      <span class="nav-group-label">Crescimento</span>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clientes
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2Z"/></svg>
+        Leads
+        <span class="badge">7</span>
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Catálogo
+      </a>
+    </nav>
+
+    <nav class="nav-group">
+      <span class="nav-group-label">Sistema</span>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+        Configurações
+      </a>
+      <a href="#" class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Ajuda
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="user-pill" role="button" tabindex="0" aria-label="Conta do usuário">
+        <div class="user-avatar">GV</div>
+        <div class="user-info">
+          <span class="user-name">Gabriel Vaz</span>
+          <span class="user-role">ADMIN</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN
+       ============================================================ -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button class="menu-toggle" aria-label="Abrir menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="project-switcher" role="button" tabindex="0" aria-label="Trocar projeto">
+          <span class="project-dot">3D</span>
+          <span class="project-name">Resolução 3D</span>
+          <span class="project-meta">PRINCIPAL</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="status-pill">
+          <span class="live-dot"></span>
+          AO VIVO · há 30s
+        </span>
+        <button class="icon-btn" aria-label="Notificações">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="ind"></span>
+        </button>
+        <button class="icon-btn" aria-label="Buscar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- GREETING -->
+    <div class="greeting">
+      <div class="greeting-eyebrow">Sexta · 16 maio · 09:42</div>
+      <h1 class="greeting-title">Bom dia, Gabriel. <span class="punch">esse mês tá no ritmo.</span></h1>
+    </div>
+
+    <!-- BENTO ROW 1: HERO + KPI 2 -->
+    <section class="bento" aria-label="Indicadores principais">
+      <article class="card kpi-hero" aria-labelledby="kpi-hero-label">
+        <div class="kpi-eyebrow" id="kpi-hero-label">Lucro · maio 2026</div>
+        <div class="kpi-value num" data-target="12480" data-prefix="R$ ">R$ 0</div>
+        <div class="kpi-anchor"><span class="star">✦</span> recorde do trimestre</div>
+        <!-- mini spark branco sobre o petrol -->
+        <svg class="kpi-spark" viewBox="0 0 300 42" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#F2EFEA" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#F2EFEA" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M 0 32 L 30 28 L 60 30 L 90 22 L 120 24 L 150 18 L 180 20 L 210 14 L 240 12 L 270 8 L 300 6 L 300 42 L 0 42 Z" fill="url(#sparkFill)"/>
+          <path d="M 0 32 L 30 28 L 60 30 L 90 22 L 120 24 L 150 18 L 180 20 L 210 14 L 240 12 L 270 8 L 300 6" stroke="#F2EFEA" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="300" cy="6" r="3" fill="#F2EFEA"/>
+        </svg>
+        <div class="kpi-foot">
+          <span>vs ABR · R$ 9.840</span>
+          <span>+26,8%</span>
+        </div>
+      </article>
+
+      <article class="card kpi-card" aria-labelledby="kpi-arr">
+        <div>
+          <div class="kpi-eyebrow" id="kpi-arr">Receita 12 meses</div>
+          <div class="kpi-value num" data-target="187320" data-prefix="R$ ">R$ 0</div>
+          <div class="kpi-sub">projeção ARR · base últimos 90d</div>
+          <span class="delta up">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 15 12 9 18 15"/></svg>
+            +12,3%
+          </span>
+        </div>
+        <svg class="kpi-spark" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="sparkPetrol" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1F7669" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#1F7669" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M 0 42 L 30 38 L 60 40 L 90 32 L 120 30 L 150 26 L 180 28 L 210 22 L 240 18 L 270 14 L 300 10 L 300 56 L 0 56 Z" fill="url(#sparkPetrol)"/>
+          <path d="M 0 42 L 30 38 L 60 40 L 90 32 L 120 30 L 150 26 L 180 28 L 210 22 L 240 18 L 270 14 L 300 10" stroke="#6FB5A8" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="300" cy="10" r="3" fill="#6FB5A8"/>
+        </svg>
+      </article>
+    </section>
+
+    <!-- BENTO ROW 2: DONUT + BAR VERTICAL -->
+    <section class="bento-row-2" aria-label="Margens e histórico">
+      <article class="card" aria-labelledby="donut-title">
+        <header class="card-head">
+          <div>
+            <div class="card-eyebrow">Margem por canal</div>
+            <div class="card-title" id="donut-title">Onde tá pegando mais</div>
+          </div>
+          <a href="#" class="card-action">ver detalhe →</a>
+        </header>
+        <div class="donut-wrap">
+          <div class="donut-svg">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <!-- bg ring -->
+              <circle cx="50" cy="50" r="36" stroke="rgba(242,239,234,0.06)" stroke-width="20" fill="none"/>
+              <!-- segmentos: total 146 (44+52+28+22). Circunferência = 2π × 36 ≈ 226.19 -->
+              <!-- WhatsApp 44 / 146 = 30.14% → 68.18 -->
+              <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#1F7669" stroke-width="20" fill="none"
+                stroke-dasharray="68.18 226.19" stroke-dashoffset="0"/>
+              <!-- Loja física 52 / 146 = 35.62% → 80.54 (offset -68.18) -->
+              <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#6FB5A8" stroke-width="20" fill="none"
+                stroke-dasharray="80.54 226.19" stroke-dashoffset="-68.18"/>
+              <!-- ML 28 / 146 = 19.18% → 43.39 (offset -148.72) -->
+              <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#D08A4A" stroke-width="20" fill="none"
+                stroke-dasharray="43.39 226.19" stroke-dashoffset="-148.72"/>
+              <!-- Outros 22 / 146 = 15.07% → 34.10 (offset -192.11) -->
+              <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#8A8478" stroke-width="20" fill="none"
+                stroke-dasharray="34.10 226.19" stroke-dashoffset="-192.11"/>
+            </svg>
+            <div class="donut-center">
+              <span class="label">média</span>
+              <span class="value num">34%</span>
+            </div>
+          </div>
+          <div class="donut-legend" role="list">
+            <div class="legend-row" role="listitem">
+              <span class="legend-dot" style="background:#1F7669"></span>
+              <span class="legend-name">WhatsApp</span>
+              <span class="legend-val num">44%</span>
+            </div>
+            <div class="legend-row" role="listitem">
+              <span class="legend-dot" style="background:#6FB5A8"></span>
+              <span class="legend-name">Loja física</span>
+              <span class="legend-val num">52%</span>
+            </div>
+            <div class="legend-row" role="listitem">
+              <span class="legend-dot" style="background:#D08A4A"></span>
+              <span class="legend-name">Mercado Livre</span>
+              <span class="legend-val num">28%</span>
+            </div>
+            <div class="legend-row" role="listitem">
+              <span class="legend-dot" style="background:#8A8478"></span>
+              <span class="legend-name">Outros</span>
+              <span class="legend-val num">22%</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" aria-labelledby="bar-title">
+        <header class="card-head">
+          <div>
+            <div class="card-eyebrow">Lucro · 6 meses</div>
+            <div class="card-title" id="bar-title">A subida é real</div>
+          </div>
+          <a href="#" class="card-action">exportar CSV</a>
+        </header>
+        <div class="bars-vertical" role="img" aria-label="Barras verticais do lucro de Dezembro a Maio">
+          <div class="bar-col">
+            <span class="bar-val num" style="animation-delay: 100ms">R$ 6,2k</span>
+            <div class="bar" style="height: 38%; animation-delay: 100ms;"></div>
+            <span class="bar-label">DEZ</span>
+          </div>
+          <div class="bar-col">
+            <span class="bar-val num" style="animation-delay: 160ms">R$ 7,1k</span>
+            <div class="bar" style="height: 44%; animation-delay: 160ms;"></div>
+            <span class="bar-label">JAN</span>
+          </div>
+          <div class="bar-col">
+            <span class="bar-val num" style="animation-delay: 220ms">R$ 8,4k</span>
+            <div class="bar" style="height: 52%; animation-delay: 220ms;"></div>
+            <span class="bar-label">FEV</span>
+          </div>
+          <div class="bar-col">
+            <span class="bar-val num" style="animation-delay: 280ms">R$ 8,9k</span>
+            <div class="bar" style="height: 56%; animation-delay: 280ms;"></div>
+            <span class="bar-label">MAR</span>
+          </div>
+          <div class="bar-col">
+            <span class="bar-val num" style="animation-delay: 340ms">R$ 9,8k</span>
+            <div class="bar" style="height: 62%; animation-delay: 340ms;"></div>
+            <span class="bar-label">ABR</span>
+          </div>
+          <div class="bar-col">
+            <span class="bar-val num" style="animation-delay: 400ms">R$ 12,5k</span>
+            <div class="bar current" style="height: 78%; animation-delay: 400ms;"></div>
+            <span class="bar-label">MAI</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- BENTO ROW 3: SPARKLINE FILA + GAUGE -->
+    <section class="bento-row-3" aria-label="Fila de impressão e saúde da margem">
+      <article class="card queue-card" aria-labelledby="queue-title">
+        <header class="card-head">
+          <div>
+            <div class="card-eyebrow">Fila de impressão · 7 dias</div>
+            <div class="card-title" id="queue-title">Bambu X1 + Ender V3 SE</div>
+          </div>
+          <a href="#" class="card-action">ver fila →</a>
+        </header>
+        <div class="queue-bars" role="img" aria-label="Pedidos por dia da semana">
+          <div class="queue-col"><div class="queue-bar" style="height: 33%; animation-delay: 80ms;" aria-label="Sábado: 4"></div><span class="queue-day">SÁB</span></div>
+          <div class="queue-col"><div class="queue-bar" style="height: 58%; animation-delay: 140ms;" aria-label="Domingo: 7"></div><span class="queue-day">DOM</span></div>
+          <div class="queue-col"><div class="queue-bar" style="height: 42%; animation-delay: 200ms;" aria-label="Segunda: 5"></div><span class="queue-day">SEG</span></div>
+          <div class="queue-col"><div class="queue-bar" style="height: 66%; animation-delay: 260ms;" aria-label="Terça: 8"></div><span class="queue-day">TER</span></div>
+          <div class="queue-col"><div class="queue-bar" style="height: 100%; animation-delay: 320ms;" aria-label="Quarta: 12"></div><span class="queue-day">QUA</span></div>
+          <div class="queue-col"><div class="queue-bar" style="height: 75%; animation-delay: 380ms;" aria-label="Quinta: 9"></div><span class="queue-day">QUI</span></div>
+          <div class="queue-col"><div class="queue-bar today" style="height: 58%; animation-delay: 440ms;" aria-label="Sexta hoje: 7"></div><span class="queue-day">HOJE</span></div>
+        </div>
+        <div class="queue-foot">
+          <span>52 trabalhos · 41h de impressão</span>
+          <span class="em">7 hoje · viraço</span>
+        </div>
+      </article>
+
+      <article class="card gauge-card" aria-labelledby="gauge-title">
+        <header class="card-head">
+          <div>
+            <div class="card-eyebrow">Saúde da margem</div>
+            <div class="card-title" id="gauge-title">89% acima do alvo</div>
+          </div>
+        </header>
+        <div class="gauge-wrap" role="img" aria-label="Gauge 89% saudável">
+          <svg viewBox="0 0 200 110" aria-hidden="true">
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#155A50"/>
+                <stop offset="55%" stop-color="#1F7669"/>
+                <stop offset="100%" stop-color="#6FB5A8"/>
+              </linearGradient>
+            </defs>
+            <!-- track -->
+            <path d="M 20 100 A 80 80 0 0 1 180 100" stroke="rgba(242,239,234,0.07)" stroke-width="14" fill="none" stroke-linecap="round"/>
+            <!-- fill 89% — semi-circle perímetro = π × r = 251.33; 89% = 223.68 -->
+            <path d="M 20 100 A 80 80 0 0 1 180 100"
+              stroke="url(#gaugeGrad)" stroke-width="14" fill="none" stroke-linecap="round"
+              stroke-dasharray="223.68 251.33" stroke-dashoffset="0"
+              style="filter: drop-shadow(0 0 8px rgba(31, 118, 105, 0.4));"/>
+            <!-- threshold 50% (alvo) -->
+            <line x1="100" y1="20" x2="100" y2="30" stroke="rgba(242,239,234,0.32)" stroke-width="1.2" stroke-dasharray="2 2"/>
+            <!-- threshold 70% (excelente) ~126deg do start = ângulo final em 0.7×180=126deg da esq -->
+            <line x1="146" y1="33" x2="153" y2="40" stroke="rgba(208, 138, 74, 0.45)" stroke-width="1.2" stroke-dasharray="2 2"/>
+          </svg>
+          <div class="gauge-center">
+            <div class="gauge-value num">89%</div>
+            <div class="gauge-anchor">saudável</div>
+          </div>
+        </div>
+        <div class="gauge-thresholds">
+          <span>0%</span>
+          <span>ALVO <strong>50%</strong></span>
+          <span>EXCEL <strong>70%</strong></span>
+          <span>100%</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- TABELA TOP 5 -->
+    <section aria-label="Top produtos">
+      <article class="card table-card">
+        <div class="table-head">
+          <div>
+            <div class="card-eyebrow">Top 5 · maio</div>
+            <div class="card-title">Produtos que mais deram lucro</div>
+          </div>
+          <a href="#" class="card-action">catálogo completo →</a>
+        </div>
+        <table class="products">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Cliente</th>
+              <th class="right">Lucro</th>
+              <th>Participação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="product">Vaso geométrico G3</td>
+              <td class="client">Marina S.</td>
+              <td class="value">R$ 480</td>
+              <td class="bar-cell">
+                <div class="row-bar"><div class="row-bar-fill" style="width: 100%; animation-delay: 80ms;"></div></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="product">Cosplay armor Mk2</td>
+              <td class="client">Héquison</td>
+              <td class="value">R$ 320</td>
+              <td class="bar-cell">
+                <div class="row-bar"><div class="row-bar-fill" style="width: 67%; animation-delay: 160ms;"></div></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="product">Chaveiro com logo</td>
+              <td class="client">@3dlab_brasil</td>
+              <td class="value">R$ 180</td>
+              <td class="bar-cell">
+                <div class="row-bar"><div class="row-bar-fill" style="width: 37%; animation-delay: 240ms;"></div></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="product">Suporte celular dobrável</td>
+              <td class="client">Lucas P.</td>
+              <td class="value">R$ 90</td>
+              <td class="bar-cell">
+                <div class="row-bar"><div class="row-bar-fill" style="width: 19%; animation-delay: 320ms;"></div></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="product">Brinde corporativo (lote 20)</td>
+              <td class="client">Carla M.</td>
+              <td class="value">R$ 60</td>
+              <td class="bar-cell">
+                <div class="row-bar"><div class="row-bar-fill" style="width: 13%; animation-delay: 400ms;"></div></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <!-- CHIPS — TROCAR PROJETO -->
+    <div class="project-chips" aria-label="Trocar projeto">
+      <span class="chips-label">trocar projeto</span>
+      <button class="chip"><span class="chip-dot" style="background:var(--petrol-500)"></span>Resolução 3D</button>
+      <button class="chip"><span class="chip-dot" style="background:var(--ember-500)"></span>Loja Cosplay BR</button>
+      <button class="chip"><span class="chip-dot" style="background:var(--petrol-300)"></span>Studio Marina</button>
+      <button class="chip"><span class="chip-dot" style="background:#8A8478"></span>+ novo</button>
+    </div>
+
+  </main>
+
+  <!-- ============================================================
+       RIGHT-RAIL
+       ============================================================ -->
+  <aside class="rail" aria-label="Atividades e notificações">
+
+    <section class="rail-section">
+      <header class="rail-head">
+        <span class="rail-title">Notificações</span>
+        <span class="rail-count">3</span>
+      </header>
+      <div class="notif-item" role="button" tabindex="0">
+        <span class="notif-dot urgent" aria-hidden="true"></span>
+        <div>
+          <span class="notif-text"><strong>3 pedidos</strong> esperando resposta no WhatsApp</span>
+          <span class="notif-meta">URGENTE · há 12min</span>
+        </div>
+      </div>
+      <div class="notif-item" role="button" tabindex="0">
+        <span class="notif-dot warn" aria-hidden="true"></span>
+        <div>
+          <span class="notif-text">PETG transparente acabando — restam <strong>2 dias</strong> no ritmo atual</span>
+          <span class="notif-meta">ESTOQUE · 320g · R$ 47/kg</span>
+        </div>
+      </div>
+      <div class="notif-item" role="button" tabindex="0">
+        <span class="notif-dot info" aria-hidden="true"></span>
+        <div>
+          <span class="notif-text">Lead novo: <strong>@maria_cosplay</strong> chegou pelo Instagram</span>
+          <span class="notif-meta">LEAD · há 1h</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="rail-section">
+      <header class="rail-head">
+        <span class="rail-title">Atividades recentes</span>
+        <span class="rail-count cool">hoje</span>
+      </header>
+      <div class="activity-item">
+        <span class="activity-circle" aria-hidden="true"></span>
+        <div>
+          <strong>Marina S.</strong> pagou R$ 180 · vaso G3
+          <span class="activity-time">HÁ 10MIN · PIX</span>
+        </div>
+      </div>
+      <div class="activity-item">
+        <span class="activity-circle" aria-hidden="true"></span>
+        <div>
+          Pedido <strong>#234</strong> entregue por motoboy
+          <span class="activity-time">HÁ 2H · ZONA SUL</span>
+        </div>
+      </div>
+      <div class="activity-item">
+        <span class="activity-circle" aria-hidden="true"></span>
+        <div>
+          Calculadora aberta <strong>4×</strong> hoje
+          <span class="activity-time">HÁ 3H · MARGEM 38%</span>
+        </div>
+      </div>
+      <div class="activity-item">
+        <span class="activity-circle" aria-hidden="true"></span>
+        <div>
+          Spool de PLA <strong>recebido</strong> · 4kg
+          <span class="activity-time">HÁ 5H · R$ 188</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="rail-section">
+      <header class="rail-head">
+        <span class="rail-title">Top clientes · maio</span>
+        <span class="rail-count cool">5</span>
+      </header>
+      <div class="client-row" role="button" tabindex="0">
+        <span class="client-avatar av-1" aria-hidden="true">M</span>
+        <div class="client-info">
+          <span class="client-name">Marina Souza</span>
+          <span class="client-meta">3 PEDIDOS · WHATSAPP</span>
+        </div>
+        <span class="client-value num">R$ 480</span>
+      </div>
+      <div class="client-row" role="button" tabindex="0">
+        <span class="client-avatar av-2" aria-hidden="true">H</span>
+        <div class="client-info">
+          <span class="client-name">Héquison Falconi</span>
+          <span class="client-meta">2 PEDIDOS · INSTAGRAM</span>
+        </div>
+        <span class="client-value num">R$ 320</span>
+      </div>
+      <div class="client-row" role="button" tabindex="0">
+        <span class="client-avatar av-3" aria-hidden="true">L</span>
+        <div class="client-info">
+          <span class="client-name">Lucas Pereira</span>
+          <span class="client-meta">4 PEDIDOS · LOJA</span>
+        </div>
+        <span class="client-value num">R$ 240</span>
+      </div>
+      <div class="client-row" role="button" tabindex="0">
+        <span class="client-avatar av-4" aria-hidden="true">C</span>
+        <div class="client-info">
+          <span class="client-name">Carla Mendes</span>
+          <span class="client-meta">1 PEDIDO · ML</span>
+        </div>
+        <span class="client-value num">R$ 60</span>
+      </div>
+    </section>
+
+  </aside>
+
+</div>
+
+<!-- FAB -->
+<button class="fab" aria-label="Criar novo pedido">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  <span class="fab-tooltip">NOVO PEDIDO</span>
+</button>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" aria-label="Navegação mobile">
+  <button class="item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+    <span>INÍCIO</span>
+  </button>
+  <button class="item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 7h18l-2 13H5L3 7Z"/></svg>
+    <span>PEDIDOS</span>
+  </button>
+  <button class="item fab-m" aria-label="Novo pedido">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <span class="lbl">+</span>
+  </button>
+  <button class="item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 7v10l9 5 9-5V7l-9-5-9 5Z"/></svg>
+    <span>ESTOQUE</span>
+  </button>
+  <button class="item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33"/></svg>
+    <span>MENU</span>
+  </button>
+</nav>
+
+<script>
+  (function () {
+    'use strict';
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ---- COUNT-UP ----
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function formatBR(n) {
+      return n.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+    function countUp(el) {
+      const target = parseInt(el.dataset.target, 10);
+      const prefix = el.dataset.prefix || '';
+      if (reduce) { el.textContent = prefix + formatBR(target); return; }
+      const duration = 800;
+      const start = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const v = Math.round(easeOutCubic(t) * target);
+        el.textContent = prefix + formatBR(v);
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // intersection trigger
+    const counters = document.querySelectorAll('[data-target]');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            countUp(e.target);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      counters.forEach(c => io.observe(c));
+    } else {
+      counters.forEach(countUp);
+    }
+
+    // FAB nudge no load (sutil)
+    if (!reduce) {
+      const fab = document.querySelector('.fab');
+      if (fab) {
+        setTimeout(() => {
+          fab.animate(
+            [
+              { transform: 'scale(1)' },
+              { transform: 'scale(1.08)' },
+              { transform: 'scale(1)' }
+            ],
+            { duration: 600, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)' }
+          );
+        }, 1400);
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>

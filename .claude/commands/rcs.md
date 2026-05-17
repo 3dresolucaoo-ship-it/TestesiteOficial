@@ -95,9 +95,41 @@ Crie `sessions/YYYY-MM-DD-HHmm-{slug}.md` com este formato:
 ## 👥 Agentes G7 envolvidos
 {quem foi chamado, pra quê}
 
-## 🧠 Aprendizados técnicos
-{coisas que aprendi e quero registrar pra não esquecer}
+## 🧠 Aprendizados da sessão
+
+> Cada aprendizado segue formato: **"Quando X, faça Y, porque Z."** + data + agente envolvido.
+> Itens viram entradas na `## Memória ativa` dos agentes correspondentes (auto-propagação).
+
+### Padrões CEO observados
+{vocabulário, decisões, preferências percebidas — com evidência da sessão}
+
+### Erros cometidos (não repetir)
+{erros desta sessão com causa-raiz + correção. Auto-propaga pra `Erros cometidos` do agente envolvido.}
+
+### Sucessos (repetir)
+{soluções que funcionaram. Auto-propaga pra `Sucessos` do agente envolvido.}
+
+### Conhecimento técnico novo
+{libs/padrões/APIs/refs descobertos. Vai pra memória do agente da área (Felipe/Bruna/Otávio/etc).}
+
+### Conhecimento de domínio
+{maker 3D BR, mercado brasileiro, behavior do user — vai pra Marcos/Sofia.}
 ```
+
+### 5.b. Auto-propagação pra memória dos agentes (NOVO)
+
+Após criar o snapshot, para cada aprendizado classificado, ABRA o `.md` do agente alvo e ADICIONE entrada na seção `## Memória ativa` correspondente:
+
+- Padrão CEO → `### Padrões CEO Gabriel aprendidos`
+- Erro → `### Erros que cometi (não repetir)`
+- Sucesso → `### Sucessos (repetir)`
+- Princípio técnico/domínio → `### Princípios da área`
+
+**Regras de auto-propagação**:
+- Máx 20 itens por categoria por agente (FIFO — remove o mais antigo se passar)
+- Todo item tem data + fonte
+- Se agente não tem seção `## Memória ativa`, criar (template no `studies/_index.md`)
+- Validação amostral 1x/mês: CEO marca 5 princípios aleatórios como ✅/❌/⚠️
 
 ### 5. Output FINAL no chat — o que mais importa
 

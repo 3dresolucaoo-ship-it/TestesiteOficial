@@ -76,12 +76,34 @@ const MOCKUPS: Mockup[] = [
   {
     slug: 'dashboard/editorial-bento-hibrido-v2.html',
     feature: 'Dashboard Interno',
-    title: 'Editorial-Bento Híbrido v2',
-    variant: 'C v2',
+    title: 'V3 — Editorial-Bento Híbrido',
+    variant: 'V3',
     status: 'em-avaliacao',
     description:
-      'Refeito atacando 5 pontos: surface ladder, raízes estruturais, 3 charts (donut+sparkline+bars), tipografia +, conteúdo maker BR real (Falconi, Marina, R$ 47/kg).',
-    author: 'Diego',
+      'Editorial Fraunces dominante. Capa R$ 12.480 88px + bento 7 cards + raízes estruturais + 3 charts. Tipografia editorial (risco: Fraunces demais pra dado prolongado).',
+    author: 'Diego v2',
+    createdAt: '2026-05-16',
+  },
+  {
+    slug: 'dashboard/v1-dataviz-rich.html',
+    feature: 'Dashboard Interno',
+    title: 'V1 — Dataviz-Rich',
+    variant: 'V1',
+    status: 'em-avaliacao',
+    description:
+      'Espelha refs do CEO. 3 colunas: sidebar + main + right-rail (notifications/activities). KPI hero petrol sólido + donut 4 fatias + bar vertical 6 meses + sparkline + gauge + tabela top 5. Fraunces 12%.',
+    author: 'general-purpose (brief Claude)',
+    createdAt: '2026-05-16',
+  },
+  {
+    slug: 'dashboard/v2-hero-card.html',
+    feature: 'Dashboard Interno',
+    title: 'V2 — Hero-Card Dramático',
+    variant: 'V2',
+    status: 'em-avaliacao',
+    description:
+      '1 card petrol-gradient gigante com R$ 12.480 96px Bold + raízes BRANCAS envolvendo o número + 4 satélites + chart wide área 2 séries. Luxo dramático.',
+    author: 'general-purpose (brief Claude)',
     createdAt: '2026-05-16',
   },
 ]
