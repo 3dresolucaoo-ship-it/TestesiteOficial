@@ -1894,6 +1894,248 @@
   .project-chip.active .chip-meta { color: var(--petrol-300); opacity: 0.8; }
 
   /* ============================================================
+     GREETING — personalização horário+nome (V4.2 17/05)
+     Endowment effect: maker sente propriedade do produto
+     ============================================================ */
+
+  .greeting {
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 4;
+  }
+  .greeting-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-300);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .greeting-text {
+    font-family: 'Geist', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--fog-100);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .greeting-text em {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    color: var(--fog-50);
+    font-variation-settings: "opsz" 60, "SOFT" 50;
+    font-weight: 500;
+    font-size: 1.05em;
+  }
+
+  /* ============================================================
+     COVER PROGRESS — meta + barra visual (V4.2 17/05)
+     Loss aversion + Zeigarnik: cérebro QUER completar
+     ============================================================ */
+
+  .cover-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  .cover-progress-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .cover-progress-pct {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--petrol-300);
+    font-variation-settings: "opsz" 60, "SOFT" 50;
+    letter-spacing: -0.01em;
+  }
+  .cover-progress-info {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-300);
+  }
+  .cover-progress-info strong {
+    color: var(--fog-100);
+    font-weight: 500;
+  }
+  .cover-progress-bar {
+    height: 5px;
+    width: 100%;
+    max-width: 480px;
+    background: rgba(242, 239, 234, 0.06);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  :root[data-theme="light"] .cover-progress-bar {
+    background: rgba(10, 13, 15, 0.06);
+  }
+  .cover-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--petrol-500) 0%, var(--petrol-300) 100%);
+    border-radius: 999px;
+    animation: progressFill 1400ms var(--easing) 800ms forwards;
+    box-shadow: 0 0 14px -2px rgba(111, 181, 168, 0.45);
+  }
+  @keyframes progressFill {
+    to { width: var(--target, 50%); }
+  }
+
+  /* ============================================================
+     NEXT ACTION — paradoxo escolha reduzida (V4.2 17/05)
+     Card único entre cover e bento. Placeholder Copiloto Wave 6.
+     ============================================================ */
+
+  .next-action {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 16px 22px 16px 20px;
+    margin-bottom: 32px;
+    background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
+    border: 1px solid rgba(31, 118, 105, 0.22);
+    border-radius: 14px;
+    position: relative;
+    z-index: 4;
+    overflow: hidden;
+    transition: border-color var(--t-fast), background var(--t-fast);
+  }
+  .next-action::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--petrol-400) 0%, var(--petrol-600) 100%);
+  }
+  .next-action:hover {
+    border-color: rgba(31, 118, 105, 0.36);
+  }
+  .next-action-left {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: center;
+    min-width: 0;
+  }
+  .next-action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(31, 118, 105, 0.14);
+    color: var(--petrol-300);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .next-action-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-300);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .next-action-msg {
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    color: var(--fog-50);
+    line-height: 1.45;
+  }
+  .next-action-msg strong {
+    color: var(--petrol-300);
+    font-weight: 500;
+  }
+  .next-action-right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .next-action-cta {
+    background: var(--petrol-500);
+    color: #F2EFEA;
+    border: 1px solid var(--petrol-600);
+    padding: 9px 18px;
+    border-radius: 9px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--t-fast), transform var(--t-fast);
+    white-space: nowrap;
+  }
+  .next-action-cta:hover {
+    background: var(--petrol-400);
+    transform: translateY(-1px);
+  }
+  .next-action-dismiss {
+    background: transparent;
+    color: var(--fog-300);
+    border: none;
+    padding: 9px 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    cursor: pointer;
+    transition: color var(--t-fast);
+    white-space: nowrap;
+  }
+  .next-action-dismiss:hover { color: var(--fog-100); }
+
+  /* ============================================================
+     SIDEBAR OVERLAY — fecha drawer mobile (Júlia P0 17/05)
+     Sem isto, usuário não vê escape do drawer aberto.
+     ============================================================ */
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(7, 9, 10, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 9;
+    opacity: 0;
+    transition: opacity 240ms var(--easing);
+  }
+  .sidebar.open ~ .sidebar-overlay,
+  body.sidebar-open .sidebar-overlay {
+    display: block;
+    opacity: 1;
+  }
+
+  /* ============================================================
+     UTILITIES — sr-only + mobile-break (Júlia P1 17/05)
+     ============================================================ */
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .mobile-break { display: none; }
+
+  /* ============================================================
      FADE IN
      ============================================================ */
 
@@ -1962,9 +2204,18 @@
     .topbar { gap: 8px; }
     .project-switcher { font-size: 13px; padding: 8px 12px 8px 10px; }
     .status-pill { font-size: 11px; padding: 6px 10px; }
+    .greeting-text { font-size: 19px; }
     .cover-figure { font-size: 56px; }
     .cover-anchor { font-size: 19px; }
+    .cover-meta { font-size: 13px; line-height: 1.7; }
+    .mobile-break { display: inline; }
+    .mobile-hidden { display: none; }
     .section-title { font-size: 28px; }
+    .next-action {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .next-action-right { justify-content: flex-start; }
     .kpi-marquee { grid-template-columns: 1fr 1fr; }
     .bento-grid { grid-template-columns: 1fr; }
     .bento-card,
@@ -1980,6 +2231,9 @@
     .streak-pill { left: 12px; bottom: 12px; font-size: 11px; padding: 6px 10px; }
     .watermark-raiz { display: none; }
     .root-canvas { display: none; }
+    /* Júlia P1 17/05: root-hover SVG não faz sentido em touch (sem hover real) */
+    .root-hover { display: none; }
+    .card-eyebrow { margin-left: 0; }
   }
 
   @media (max-width: 480px) {
@@ -2084,7 +2338,7 @@
 <div class="watermark-raiz" aria-hidden="true">hayzer</div>
 
 <!-- MOBILE TOGGLE -->
-<button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menu" type="button">
+<button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar" type="button">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
     <line x1="3" y1="6" x2="21" y2="6"/>
     <line x1="3" y1="12" x2="21" y2="12"/>
@@ -2170,6 +2424,9 @@
   </div>
 </aside>
 
+<!-- Sidebar overlay mobile (Júlia P0 17/05): backdrop fecha drawer fora -->
+<div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
 <!-- ============================================================
      MAIN
      ============================================================ -->
@@ -2186,7 +2443,7 @@
       </button>
     </div>
     <div class="topbar-right">
-      <span class="status-pill" aria-label="Sincronizado ao vivo">
+      <span class="status-pill" aria-label="Sincronizado ao vivo · atualiza a cada 30 segundos">
         <span class="live-dot"></span>
         AO VIVO · 30s
       </span>
@@ -2216,10 +2473,16 @@
     </div>
   </div>
 
+  <!-- GREETING — personalização horário+nome (endowment effect, V4.2 17/05) -->
+  <div class="greeting fade-in" id="greetingBlock">
+    <span class="greeting-eyebrow" id="greetingEyebrow">Sábado · 17 de maio · 23h32</span>
+    <h2 class="greeting-text" id="greetingText">Boa noite, <em>Gabriel</em>.</h2>
+  </div>
+
   <!-- ============================================================
-       COVER EDITORIAL — figura Fraunces gigante + KPI hero petrol
+       COVER EDITORIAL — figura Fraunces gigante + KPI satélites
        ============================================================ -->
-  <section class="cover fade-in" aria-label="Visão geral do mês">
+  <section class="cover fade-in delay-1" aria-label="Visão geral do mês">
     <div class="cover-left">
       <span class="cover-eyebrow">Receita do mês · Maio 2026 · até hoje</span>
       <div class="hairline"></div>
@@ -2227,10 +2490,22 @@
         <span class="currency">R$</span>
         <span id="coverValue" data-target="12480">0</span><span class="decimal">,00</span>
       </h1>
+      <!-- PROGRESSO META — loss aversion + Zeigarnik (V4.2 17/05) -->
+      <div class="cover-progress" role="progressbar" aria-label="Progresso da meta de maio"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="83">
+        <div class="cover-progress-meta">
+          <span class="cover-progress-pct num">83%</span>
+          <span class="cover-progress-info">da meta · faltam <strong>R$ 2.520</strong> · 14 dias</span>
+        </div>
+        <div class="cover-progress-bar">
+          <div class="cover-progress-fill" style="--target: 83%;"></div>
+        </div>
+      </div>
       <p class="cover-anchor">esse mês <em>tá no ritmo</em>, recorde do trimestre, dá pra respirar.</p>
       <p class="cover-meta">
         Maio <span class="sep">·</span> sem 03 <span class="sep">·</span> atualizado há 4 min
-        <span class="sep">·</span> <strong>+26,8%</strong> vs abril <span class="sep">·</span> 47 pedidos fechados
+        <br class="mobile-break">
+        <span class="sep mobile-hidden">·</span> <strong>+26,8%</strong> vs abril <span class="sep">·</span> 47 pedidos fechados
       </p>
     </div>
 
@@ -2241,7 +2516,7 @@
       <article class="kpi-mini-card highlight">
         <div class="kpi-mini-left">
           <span class="kpi-mini-label">Lucro líquido</span>
-          <span class="kpi-mini-meta">melhor mês desde fevereiro</span>
+          <span class="kpi-mini-meta">não fechava assim desde fev</span>
         </div>
         <div class="kpi-mini-right">
           <span class="kpi-mini-value num"><span id="kpiLucro" data-target="8590" data-prefix="R$ ">R$ 0</span></span>
@@ -2302,10 +2577,32 @@
        pros satélites verticais ao lado do cover. Economiza 1 linha vertical
        + reduz total de elementos no fold (Hick's Law: 5-7 elementos máx). -->
 
+  <!-- PRÓXIMA AÇÃO SUGERIDA — paradoxo escolha reduzida (Schwartz)
+       Placeholder pro Copiloto da Wave 6. CEO/Diego 17/05 V4.2 -->
+  <div class="next-action fade-in delay-2" role="region" aria-label="Próxima ação sugerida">
+    <div class="next-action-left">
+      <span class="next-action-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+          <circle cx="12" cy="12" r="4"/>
+        </svg>
+      </span>
+      <div class="next-action-text">
+        <span class="next-action-label">Próxima ação · sugerida</span>
+        <p class="next-action-msg">Repõe <strong>PLA Preto Voolt</strong> antes de quinta. Sem ele, 4 pedidos da fila param.</p>
+      </div>
+    </div>
+    <div class="next-action-right">
+      <button class="next-action-cta" type="button">Pedir agora</button>
+      <button class="next-action-dismiss" type="button" aria-label="Dispensar sugestão">Dispensar</button>
+    </div>
+  </div>
+
   <!-- SECTION HEADER -->
   <div class="section-header fade-in delay-2">
     <h2 class="section-title">O que tá <em>acontecendo</em></h2>
-    <span class="section-tag">7 painéis · maio · sincronizado agora</span>
+    <span class="section-tag">7 painéis · maio · atualiza sozinho</span>
   </div>
 
   <!-- ============================================================
@@ -2328,7 +2625,7 @@
       <header class="bento-header">
         <div>
           <div class="card-eyebrow">Margem por canal</div>
-          <div class="card-title" id="donut-title">Onde tá pegando mais</div>
+          <div class="card-title" id="donut-title">Margem por canal de venda</div>
         </div>
         <a href="#" class="card-action">ver detalhe →</a>
       </header>
@@ -2340,18 +2637,23 @@
             <!-- segmentos. Perímetro = 2π × 36 ≈ 226.19 -->
             <!-- WhatsApp 30% sem comissão → 67.86 -->
             <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#1F7669" stroke-width="20" fill="none"
+              role="img" aria-label="WhatsApp: 30% do faturamento, 88% de margem"
               style="--len: 67.86; --off: 0; --delay: 200ms;"/>
             <!-- Loja física 28% → 63.33 (offset -67.86) -->
             <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#6FB5A8" stroke-width="20" fill="none"
+              role="img" aria-label="Loja física: 28% do faturamento, 82% de margem"
               style="--len: 63.33; --off: -67.86; --delay: 350ms;"/>
             <!-- ML 18% → 40.71 (offset -131.19) -->
             <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#D08A4A" stroke-width="20" fill="none"
+              role="img" aria-label="Mercado Livre: 18% do faturamento, 58% de margem após 12% de comissão"
               style="--len: 40.71; --off: -131.19; --delay: 500ms;"/>
             <!-- Shopee 14% → 31.67 (offset -171.90) -->
             <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#A86A30" stroke-width="20" fill="none"
+              role="img" aria-label="Shopee: 14% do faturamento, 54% de margem após 14% de comissão"
               style="--len: 31.67; --off: -171.90; --delay: 650ms;"/>
             <!-- Amazon 10% → 22.62 (offset -203.57) -->
             <circle class="donut-arc" cx="50" cy="50" r="36" stroke="#5B564D" stroke-width="20" fill="none"
+              role="img" aria-label="Amazon: 10% do faturamento, margem em apuração"
               style="--len: 22.62; --off: -203.57; --delay: 800ms;"/>
           </svg>
           <div class="donut-center">
@@ -2387,7 +2689,7 @@
           </div>
         </div>
       </div>
-      <p class="footnote">Margem líquida após comissão · base últimos 30 dias · WhatsApp puxa pra cima.</p>
+      <p class="footnote">Margem líquida pós-comissão · últimos 30 dias · WhatsApp puxa pra cima.</p>
     </article>
 
     <!-- ───── BARS 6 MESES · LUCRO (span 2) ───── -->
@@ -2461,7 +2763,7 @@
       </svg>
       <header class="bento-header">
         <div>
-          <div class="card-eyebrow">Fila Bambu · 7 dias</div>
+          <div class="card-eyebrow">Fila de impressão · 7 dias</div>
           <div class="card-title" id="queue-title">Bambu X1 + Ender V3 SE</div>
         </div>
       </header>
@@ -2658,7 +2960,7 @@
           <div class="card-eyebrow">Atenção · estoque crítico</div>
           <div class="card-title" id="alert-title">Filamento PLA preto pra acabar</div>
         </div>
-        <span class="pill-warning">repor até segunda</span>
+        <span class="pill-warning">comprar até segunda</span>
       </header>
       <div class="alert-filament">
         <div class="alert-icon-wrap" aria-hidden="true">
@@ -2693,7 +2995,7 @@
        ============================================================ -->
   <div class="section-header fade-in delay-3">
     <h2 class="section-title">Trocar de <em>projeto</em></h2>
-    <span class="section-tag">4 ativos · 1 selecionado · sincronizado agora</span>
+    <span class="section-tag">4 projetos · esse é o atual</span>
   </div>
 
   <div class="projects-row fade-in delay-3">
@@ -2752,6 +3054,12 @@
     const initial = stored || 'dark';
     document.documentElement.dataset.theme = initial;
 
+    // Theme aria-label inicial (Júlia P2 17/05): reflete o estado atual
+    if (themeToggle) {
+      themeToggle.setAttribute('aria-label',
+        initial === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro');
+    }
+
     if (themeToggle) {
       themeToggle.addEventListener('click', () => {
         const current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
@@ -2806,6 +3114,37 @@
       counters.forEach(countUp);
     }
 
+    // bfcache fix (Júlia P0 17/05): browser back/forward pode restaurar DOM
+    // com contadores zerados e IntersectionObserver destruído.
+    // Re-roda count-up em todos os elementos com data-target ao voltar.
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) {
+        document.querySelectorAll('[data-target]').forEach(countUp);
+      }
+    });
+
+    // ============================================================
+    // GREETING — horário + nome (V4.2 17/05)
+    // Endowment effect: maker sente propriedade do produto
+    // ============================================================
+    const greetingText = document.getElementById('greetingText');
+    const greetingEyebrow = document.getElementById('greetingEyebrow');
+    const USER_NAME = 'Gabriel'; // TODO Felipe: vem do Supabase user.name
+
+    if (greetingText) {
+      const h = new Date().getHours();
+      const period = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+      greetingText.innerHTML = `${period}, <em>${USER_NAME}</em>.`;
+    }
+    if (greetingEyebrow) {
+      const now = new Date();
+      const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+      const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      greetingEyebrow.textContent = `${dias[now.getDay()]} · ${now.getDate()} de ${meses[now.getMonth()]} · ${hh}h${mm}`;
+    }
+
     // ============================================================
     // GAUGE — adiciona classe .completed se atingiu meta
     // (Zeigarnik / progresso · mecanismo 2 dopamina)
@@ -2817,22 +3156,49 @@
     });
 
     // ============================================================
-    // MOBILE DRAWER
+    // MOBILE DRAWER + OVERLAY (Júlia P0 17/05)
+    // Sem overlay/listener fora, usuário não vê escape do drawer.
     // ============================================================
     const mobileToggle = document.getElementById('mobileToggle');
     const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function closeSidebar() {
+      if (!sidebar) return;
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+    }
+    function openSidebar() {
+      if (!sidebar) return;
+      sidebar.classList.add('open');
+      document.body.classList.add('sidebar-open');
+      if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'true');
+    }
+
     if (mobileToggle && sidebar) {
       mobileToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-        const open = sidebar.classList.contains('open');
-        mobileToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (sidebar.classList.contains('open')) closeSidebar();
+        else openSidebar();
       });
       sidebar.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
-          if (window.innerWidth <= 768) sidebar.classList.remove('open');
+          if (window.innerWidth <= 768) closeSidebar();
         });
       });
     }
+
+    // Click no overlay fecha drawer
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+    // Escape key fecha drawer (a11y bonus)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+    });
 
     // ============================================================
     // KPI CARDS hover — micro-feedback discreto (mecanismo 5)

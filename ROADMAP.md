@@ -371,6 +371,50 @@
 
 ---
 
+## 🎯 BACKLOG CONVERSÃO REACT V4 → FELIPE
+
+> Itens identificados na auditoria G7 do V4.1/V4.2 (17/05) que **Felipe decide** quando converter o mockup HTML pra React. Tudo aqui está fora do escopo do HTML estático (precisa state management, libs, ou decisão arquitetural maior).
+
+### Funcionais (precisam lib React)
+- [ ] **Tooltips charts** ao hover (donut, bars 6 meses, gauge) — usar Recharts ou Visx, não JS vanilla
+- [ ] **Search Cmd+K** global na topbar — usar `cmdk` lib (Vercel/Linear pattern)
+- [ ] **Filtros de período pill toggle** ("Hoje · 7d · Mês · Trimestre · Custom") — precisa state + recalcular dataviz
+- [ ] **Drag widgets reorder** do bento — `@dnd-kit/sortable`, persistir em user_preferences DB
+- [ ] **Variable reward animations contínuas** (números "dançam" quando novo pedido) — Framer Motion + Supabase realtime subscription
+
+### UX / onboarding (Sofia 17/05)
+- [ ] **Banner "Modo demonstração"** no topo quando user ainda não cadastrou nada real — pill discreta com link "conectar primeiras fontes"
+- [ ] **Card de onboarding 3 passos** (cadastrar primeiro pedido → produto → impressora) — visível só até completar 3, depois some
+- [ ] **Empty states maker-específicos** em cada bento card (não Lorem genérico):
+  - Fila impressão: "Nenhum job agendado. Cadastra a primeira impressão?"
+  - Em produção AGORA: "Nenhuma impressora ativa no momento."
+  - Top produtos: "Aparece após o primeiro pedido."
+  - Bars 6 meses: "Histórico aparece a partir do segundo mês."
+  - Donut canais: "Conecte pelo menos 2 canais para comparar margem."
+- [ ] **Streak pill aparece só D3+** (não no D1 com dados falsos "12 dias") — lógica baseada em primeiro_login
+- [ ] **Alerta filamento crítico no TOPO do bento** quando ativo (não em span-4 abaixo do fold)
+
+### A11y / QA (Júlia 17/05)
+- [ ] **`kpi-mini-delta` sr-only "aumento de"/"queda de"** antes do valor (color-only fix)
+- [ ] **Donut segmentos com `<title>` SVG individual** (screen reader lê valores por fatia)
+- [ ] **Edge case `data-target="0"`** — fallback "R$ 0" sem decimal estranho
+- [ ] **Mini-list item nome com `overflow:hidden text-overflow:ellipsis`** (produto nome 80 chars não quebra layout)
+- [ ] **Donut hover stroke-width 24** (era 26, colide com segmentos adjacentes)
+- [ ] **Tooltip de busca** ("Buscar pedidos, produtos, clientes") na lupa da topbar
+- [ ] **now-print-led glow estático** em prefers-reduced-motion (atual mantém box-shadow)
+
+### Realtime / observabilidade
+- [ ] **Card "última atualização"** por bento card individual ("atualizou há 30s")
+- [ ] **Status connection** explícito quando perde conexão Supabase realtime
+- [ ] **Otimistic updates** ao marcar pedido como entregue / dispensar próxima ação
+
+### Métrica + lógica
+- [ ] Próxima ação sugerida **conectada com engine real** (Wave 6 ROADMAP — Pilar 6 Copiloto)
+- [ ] Cover progress **calculado real**: % atual / meta do mês via `profit_goals`
+- [ ] Streak real baseado em `analytics.last_active_dates`
+
+---
+
 ## 📜 HISTÓRICO DE CONCLUSÕES
 
 > Quando terminar item, mover daqui pra cima como `[x]`.
