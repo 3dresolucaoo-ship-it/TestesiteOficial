@@ -5,7 +5,7 @@ import { ImageResponse } from 'next/og'
 // Tamanho padrão Open Graph: 1200x630.
 
 export const runtime = 'edge'
-export const alt = 'Hayzer — A raiz do seu negócio'
+export const alt = 'Hayzer · A raiz do seu negócio'
 export const size = {
   width: 1200,
   height: 630,

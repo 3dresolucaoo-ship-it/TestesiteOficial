@@ -45,7 +45,7 @@ const ANCHOR_COPY: Record<CoverAnchorState, React.ReactNode> = {
   pico:    <>esse mês foi um <em>viraço</em>, meta batida, pode respirar.</>,
   ok:      <>esse mês <em>tá no ritmo</em>, recorde do trimestre, dá pra respirar.</>,
   atencao: <>dá pra recuperar, mas precisa <em>acelerar</em> essa semana.</>,
-  alerta:  <>meta em risco — <em>precisa correr</em> pro mês não fechar no vermelho.</>,
+  alerta:  <>meta em risco. <em>precisa correr</em> pro mês não fechar no vermelho.</>,
 }
 
 // ---------------------------------------------------------------------------
