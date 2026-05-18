@@ -10,6 +10,18 @@ Auditoria total pré-lançamento. Dispara TODOS os squads relevantes em paralelo
 ## Escopo
 $ARGUMENTS (default: todo o produto)
 
+## Pré-launch — Rotações de credencial (semana 7, ~27/06)
+
+Antes do launch público, rotacionar credenciais sensíveis com gatilho real ("começar fase produção limpa"):
+
+- [ ] **SUPABASE_SERVICE_ROLE_KEY** — via Standby Key (Settings → JWT Keys → JWT Signing Keys → Create Standby Key → propagar → promover → revogar antiga). Atualizar env Vercel + redeploy. Zero downtime esperado.
+- [ ] **STRIPE_SECRET_KEY** — se mudou time (Vercel/Stripe access).
+- [ ] **RESEND_API_KEY** — já rotacionada 15/05 (`hayzer-prod-v2`). Confirmar continua ativa.
+- [ ] **WAITLIST_IP_SALT** — só rotacionar se quiser invalidar dedup histórica (provavelmente não).
+- [ ] **API_RATE_LIMIT_SALT** — só rotacionar com motivo.
+
+**Princípio NIST**: rotação SEM gatilho real é teatro (`memory/feedback_rotacao_credencial_precisa_gatilho.md`). Pre-launch é gatilho legítimo (começar limpo para Fase 2 com usuários reais).
+
 ## Fluxo (paralelo)
 
 ### 1. Otávio — Segurança Tier 1
