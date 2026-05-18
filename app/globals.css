@@ -85,6 +85,60 @@ html {
   --night-900: 200 11% 4%;     /* #080A0C — bg primário dark (atual --background landing) */
   --night-950: 200 11% 3%;     /* #07090A — black absoluto (pé do gradient) */
 
+  /* ── NIGHT shade intermediária V4.8 (Diego 2026-05-18 · patch B1) ────────
+   * night-850 fica entre 800 e 900, surface-1 dos cards base no V4.8 dark.
+   * Aplicar com hsl(var(--night-850)) ou Tailwind bg-night-850. */
+  --night-850: 200 11% 10%;    /* #161B1F — surface-1 V4.8 cards base */
+
+  /* ── RED · família danger/destructive Hayzer (NOVO · V4.8 signal-red) ────
+   * Curva quente warm-leaning (hue 9-13°), não vermelho-sangue puro.
+   * Compatível com paleta marrom V4.8 light (sand-mocha). Usado em alertas,
+   * estados destructivos, signal-red de dataviz. 8 shades (50→700). */
+  --red-50:  10 80% 96%;       /* alert danger bg muito sutil */
+  --red-100: 11 70% 88%;       /* toast error bg */
+  --red-200: 12 65% 76%;       /* badge danger border */
+  --red-300: 13 60% 63%;       /* hover de danger sutil */
+  --red-400: 12 55% 52%;       /* secondary destructive */
+  --red-500: 11 60% 42%;       /* base · destructive, error text, signal-red */
+  --red-600: 10 65% 33%;       /* pressed/active destructive */
+  --red-700:  9 70% 24%;       /* border danger em dark, deep alert */
+
+  /* ── SAND-MOCHA · light mode marrom V4.8 CEO (NOVO · paleta 17/05) ───────
+   * Família DEDICADA ao light V4.8 (não confundir com --sand linear ou sand-bg).
+   * Curva especial CEO: backgrounds cream → texto profundo cocoa. 9 shades.
+   * Doc: design/paleta-hsl-audit-2026-05-18.md §3. */
+  --sand-mocha-50:  35 28% 89%;   /* #ECE7DF — page bg light V4.8 */
+  --sand-mocha-100: 35 25% 85%;   /* #E2DBD0 — surface-0 cream theme */
+  --sand-mocha-200: 33 23% 78%;   /* #D5CABA — surface-1 cards V4.8 light */
+  --sand-mocha-300: 35 22% 68%;   /* #BFB29D — border cream médio */
+  --sand-mocha-400: 30 17% 53%;   /* #9B8770 — text muted light cream */
+  --sand-mocha-500: 21 41% 31%;   /* #6E4A2F — text secondary on cream */
+  --sand-mocha-600: 13 22% 28%;   /* #574232 — text primary cream */
+  --sand-mocha-700: 18 32% 7%;    /* #1A1108 — heading cream theme */
+  --sand-mocha-800: 20 35% 4%;    /* #0E0805 — display contrast max */
+
+  /* ── Ajustes WCAG AA — footnote/microcopy text (Diego 2026-05-18) ────────
+   * Tokens semânticos pra texto micro (helpers, labels, badges) com contraste
+   * mínimo AA 4.5:1 no V4.8 dark + light. Resolve drift fog-400 detectado. */
+  --text-footnote-dark:  36 5% 56%;     /* on night-850 surface, AA pass */
+  --text-footnote-light: 13 22% 28%;    /* on sand-mocha-100 surface, AA pass */
+
+  /* ── Shadows tokenizadas V4.8 (Diego 2026-05-18 · patch B1) ──────────────
+   * Refactoring UI cap "Creating Depth" — emula física: inner highlight + drop.
+   * Petrol shadow = drop shadow tinted (marca primária acentuada em hover). */
+  --shadow-card-dark:    0 1px 0 rgba(242, 239, 234, 0.04) inset, 0 4px 14px rgba(7, 9, 10, 0.45);
+  --shadow-card-light:   0 2px 6px rgba(15, 10, 9, 0.10), 0 14px 32px rgba(87, 64, 57, 0.18);
+  --shadow-petrol-dark:  0 8px 24px -8px rgba(31, 118, 105, 0.45);
+  --shadow-petrol-light: 0 10px 32px -10px rgba(21, 90, 80, 0.35);
+
+  /* ── Easing + duration tokens V4.8 (Diego 2026-05-18) ────────────────────
+   * Curva única em todo o app (consistência microinteração). Trio fast/med/slow
+   * cobre hover (180ms), enter/exit (320ms), modal/page transition (540ms). */
+  --easing-default: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t-fast: 180ms var(--easing-default);
+  --t-med:  320ms var(--easing-default);
+  --t-slow: 540ms var(--easing-default);
+
   /* ── SAND · marrom orgânico (NOVO · paleta CEO 17/05) ─────────────────── */
   /* Base sand-500 ancorada na 3ª linha/3ª coluna da matriz 5x5 CEO.
    * Hue marrom quente (28-32°), saturação média (15-30%), evita "barro sujo".
@@ -244,6 +298,28 @@ html {
   --color-night-800: hsl(200 11% 6%);
   --color-night-900: hsl(200 11% 4%);
   --color-night-950: hsl(200 11% 3%);
+  --color-night-850: hsl(200 11% 10%);
+
+  /* RED · família danger/destructive (V4.8 signal-red) */
+  --color-red-50:  hsl(10 80% 96%);
+  --color-red-100: hsl(11 70% 88%);
+  --color-red-200: hsl(12 65% 76%);
+  --color-red-300: hsl(13 60% 63%);
+  --color-red-400: hsl(12 55% 52%);
+  --color-red-500: hsl(11 60% 42%);
+  --color-red-600: hsl(10 65% 33%);
+  --color-red-700: hsl( 9 70% 24%);
+
+  /* SAND-MOCHA · light mode marrom V4.8 CEO */
+  --color-sand-mocha-50:  hsl(35 28% 89%);
+  --color-sand-mocha-100: hsl(35 25% 85%);
+  --color-sand-mocha-200: hsl(33 23% 78%);
+  --color-sand-mocha-300: hsl(35 22% 68%);
+  --color-sand-mocha-400: hsl(30 17% 53%);
+  --color-sand-mocha-500: hsl(21 41% 31%);
+  --color-sand-mocha-600: hsl(13 22% 28%);
+  --color-sand-mocha-700: hsl(18 32% 7%);
+  --color-sand-mocha-800: hsl(20 35% 4%);
 
   --color-sand-50:  hsl(35 35% 95%);
   --color-sand-100: hsl(33 30% 87%);

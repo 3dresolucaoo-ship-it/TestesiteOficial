@@ -88,6 +88,19 @@ gh pr comment <N> --body "## PR Review Bot
 4. Zero red flags
 5. Aberto ha >=30min
 6. Sem review pendente humano
+7. **Blacklist recursiva** — NENHUM arquivo do diff casa com:
+   - `automation/pr-review-bot-spec.md` (auto-modificacao do bot)
+   - `.claude/commands/*.md` (qualquer slash command)
+   - `.github/dependabot.yml`
+   - `.github/workflows/**` (qualquer workflow Actions)
+   - Qualquer `.yml` ou `.yaml` na raiz de `.github/`
+   Casar 1 = NAO auto-merge, escalada humana obrigatoria.
+8. **ROADMAP.md so-adicao** — rodar `gh pr view <N> --json additions,deletions` filtrado pra ROADMAP.md. Se `deletions > 0` no ROADMAP.md, NAO auto-merge (escalada humana — exclusao de item pode estar mascarando rollback).
+9. **Guard rails de volume** — escalada humana se QUALQUER:
+   - `additions + deletions > 200` (PR grande demais pra Routine)
+   - `files.length > 5` (mudanca espalhada)
+   - `deletions > additions * 1.5` (predominantemente remocao)
+   - Pra CLAUDE.md raiz especificamente: `deletions > 5` (CLAUDE.md raiz e cerebro do projeto, deletar linhas exige olho humano)
 
 Se TODAS true:
 ```bash
