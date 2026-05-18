@@ -87,6 +87,7 @@ Sistema aprende a separar sinal de ruído. Princípios com 3+ ⚠️ saem da mem
 - 🔵 **Docs for Developers** — Jared Bhatti — write the docs framework
 - 🔵 **Every Page Is Page One** — Mark Baker — topic-based
 - 🔵 **Style guide Microsoft + Google** — atualização semestral
+- 🔵 **Anthropic Changelog mensal** — anthropic.com/news · claude.ai/changelog — 1a segunda do mes · `studies/anthropic-changelog.md`
 
 ### Júlia (QA)
 - 🔵 **Lessons Learned in Software Testing** — Kaner, Bach, Pettichord
@@ -105,3 +106,4 @@ Sistema aprende a separar sinal de ruído. Princípios com 3+ ⚠️ saem da mem
 ## Histórico
 
 - 2026-05-16: criado por Claude após CEO Gabriel pedir sistema de aprendizado contínuo
+- 2026-05-17: Lia adicionou "Anthropic Changelog mensal" na curadoria + calendário de rastreio. Calendário 2026 — 1a segunda do mes: 01/06, 06/07, 03/08, 07/09, 05/10, 02/11, 07/12.

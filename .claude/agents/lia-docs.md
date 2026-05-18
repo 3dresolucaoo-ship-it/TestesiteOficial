@@ -155,7 +155,10 @@ YYYY-MM-DD · <quem atualizou>
 *(vazio — primeiros erros a registrar conforme sessões)*
 
 ### Sucessos (repetir)
-*(vazio — primeiros sucessos a registrar conforme sessões)*
+
+**S1 — Changelog Anthropic + processo mensal de rastreio (17/05/2026)**
+> Criei `studies/anthropic-changelog.md` + adicionei "Anthropic Changelog mensal" na curadoria de Lia em `studies/_index.md` com calendario 2026.
+> Licao aprendida: doc bem mantida evita decisao cara baseada em info desatualizada. CEO estava prestes a contratar VPS R$ 30-100/mes quando Claude Code Routines (lancado 14/04) ja resolvia o problema de graca. Um mes de lag custaria R$ 30-100. Processo mensal (20-30 min) previne esse tipo de buraco.
 
 ### Princípios da área (extraídos de estudos)
 

@@ -7,6 +7,182 @@ html {
   scroll-behavior: smooth;
 }
 
+/* ============================================================================
+   PALETA HSL — Refactoring UI princípio #3 (Diego · 2026-05-17)
+   ============================================================================
+
+   Wathan/Schoger ensinam: NUNCA 3 shades (light/base/dark), sempre 8-10 por cor.
+   Use HSL (humano lê, ajuste fácil) em vez de hex. Greys também precisam de 8-10.
+
+   Resolve bug latente Tailwind 4 onde `bg-X/Y` (ex: bg-card/30) renderiza
+   transparente — split HSL não compunha opacity corretamente. Com tokens HSL
+   nomeados (--petrol-500), `hsl(var(--petrol-500) / 0.3)` funciona sempre.
+
+   5 cores dominantes Hayzer:
+   • petrol  — verde-petróleo (marca, primary, CTAs)
+   • fog     — off-white quente (texto, surfaces light)
+   • ember   — laranja-cocoa (accent, warnings, marker)
+   • night   — quase-preto azulado (background dark)
+   • sand    — marrom orgânico (NOVA · 25 shades em palette-sand-matrix.md)
+
+   Convenção: 50 = mais claro · 500 = base · 900 = mais escuro.
+   Lightness step: ~8-10% entre shades adjacentes (curva perceptual).
+   Hue/Saturation: mantidos próximos ao base; pequenas variações pra evitar
+   shades "sujos" (Wathan: drift hue ligeiramente quente em luzes, frio em sombras).
+   ──────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── PETROL · verde-petróleo (marca primária) ─────────────────────────── */
+  /* Base petrol-500 = #1F7669 (hsl 173 58% 28%) — primary atual da landing v2 */
+  --petrol-50:  168 45% 96%;   /* #F0F8F6 — backgrounds tints, hover muito sutil */
+  --petrol-100: 170 42% 90%;   /* #DCEDE9 — cards info, badge bg suave */
+  --petrol-200: 171 40% 80%;   /* #B7DAD2 — borders, dividers tinted */
+  --petrol-300: 173 35% 60%;   /* #6FB5A8 — accent visual, links secundários */
+  --petrol-400: 173 45% 42%;   /* #3B9081 — hover de primary, focus rings */
+  --petrol-500: 173 58% 28%;   /* #1F7669 — base · primary buttons, brand H */
+  --petrol-600: 173 62% 22%;   /* #155C52 — pressed/active state primary */
+  --petrol-700: 174 65% 17%;   /* #0F473F — borders em dark surfaces */
+  --petrol-800: 175 60% 12%;   /* #0B342E — overlays petrol em dark */
+  --petrol-900: 176 55% 7%;    /* #07221E — pé do gradient, shadow tinted */
+
+  /* ── FOG · off-white quente (texto/surfaces light + texto on-dark) ────── */
+  /* Base fog-50 = #F2EFEA (hsl 43 17% 93%) — foreground principal da landing v2 */
+  --fog-50:  43 17% 93%;       /* #F2EFEA — texto primário em dark, bg primário em light */
+  --fog-100: 40 21% 86%;       /* #DDD6C7 — texto on-dark soft, surface elevated light */
+  --fog-200: 40 12% 71%;       /* #BDB7AB — muted-foreground on-dark, secondary text */
+  --fog-300: 38 7%  51%;       /* #877E76 — placeholder, disabled text on-dark */
+  --fog-400: 35 9%  33%;       /* #5C5147 — borders em dark, deep muted */
+  --fog-500: 33 11% 22%;       /* #3C342C — text-muted em light, contrast bridge */
+  --fog-600: 30 13% 16%;       /* #2C2620 — border em light, slate quente */
+  --fog-700: 28 15% 11%;       /* #1F1B17 — text on light secundário */
+  --fog-800: 25 17% 7%;        /* #14110E — text on light primário (alternativa night) */
+  --fog-900: 22 18% 4%;        /* #0B0907 — black absoluto warm */
+
+  /* ── EMBER · laranja-cocoa (accent secundário, warnings, marker) ──────── */
+  /* Base ember-500 = #D08A4A (hsl 28 60% 55%) — accent atual da landing v2 */
+  --ember-50:  32 80% 96%;     /* #FDF4EA — alert info bg muito sutil */
+  --ember-100: 30 75% 90%;     /* #F8DFC2 — toast warning bg */
+  --ember-200: 29 70% 80%;     /* #F0C28B — badge warning border */
+  --ember-300: 28 67% 70%;     /* #E5A766 — hover de ember-500 (visual sutil) */
+  --ember-400: 27 67% 65%;     /* #DC9858 — secondary CTAs ember */
+  --ember-500: 28 60% 55%;     /* #D08A4A — base · marker, warning text, sticker */
+  --ember-600: 25 56% 42%;     /* #A86730 — pressed ember, link warm */
+  --ember-700: 23 55% 32%;     /* #804D24 — border ember em dark */
+  --ember-800: 21 53% 22%;     /* #573418 — overlay warm em dark */
+  --ember-900: 18 50% 13%;     /* #311E0D — shadow ember tinted */
+
+  /* ── NIGHT · quase-preto levemente azulado (backgrounds dark) ─────────── */
+  /* Base night-950 = #07090A (hsl 200 11% 3%) — bg da landing v2 atual */
+  --night-50:  200 14% 95%;    /* #ECEFF1 — bg light alternativo (paleta dark→light) */
+  --night-100: 200 13% 88%;    /* #D5DAE0 — surface dim em light */
+  --night-200: 200 12% 75%;    /* #B1BAC2 — borders heavy em light */
+  --night-300: 200 11% 55%;    /* #7A858E — divider em surfaces */
+  --night-400: 200 11% 30%;    /* #3F4951 — surface-3 elevadíssima dark */
+  --night-500: 200 11% 18%;    /* #262E33 — surface-2 (cards elevados em dark) */
+  --night-600: 200 11% 12%;    /* #1A1F23 — surface-1 (cards padrão em dark) */
+  --night-700: 200 11% 9%;     /* #13171A — surface-0 (dark soft "letra" CEO 17/05) */
+  --night-800: 200 11% 6%;     /* #0B0E10 — bg secundário dark (atual --card landing) */
+  --night-900: 200 11% 4%;     /* #080A0C — bg primário dark (atual --background landing) */
+  --night-950: 200 11% 3%;     /* #07090A — black absoluto (pé do gradient) */
+
+  /* ── SAND · marrom orgânico (NOVO · paleta CEO 17/05) ─────────────────── */
+  /* Base sand-500 ancorada na 3ª linha/3ª coluna da matriz 5x5 CEO.
+   * Hue marrom quente (28-32°), saturação média (15-30%), evita "barro sujo".
+   * Documentação completa + 25 shades matriz: design/palette-sand-matrix.md
+   * Esta linha aqui é a DIAGONAL central da matriz (sand-50 → sand-900) — uso default.
+   */
+  --sand-50:  35 35% 95%;      /* #F5EFE7 — bg cream, paper light */
+  --sand-100: 33 30% 87%;      /* #E5D9C6 — cards bg em light, soft hover */
+  --sand-200: 31 27% 76%;      /* #CDBA9F — borders cream, divider warm */
+  --sand-300: 30 25% 62%;      /* #B0967A — text on light cream, accent earth */
+  --sand-400: 29 24% 48%;      /* #8A6F58 — border medium, secondary on-cream */
+  --sand-500: 28 22% 35%;      /* #6E5841 — base · accent earth, brand secondary */
+  --sand-600: 27 24% 27%;      /* #564330 — text primary on cream, link warm */
+  --sand-700: 26 27% 20%;      /* #403021 — overlay marrom, surface dark warm */
+  --sand-800: 25 30% 13%;      /* #2C1E14 — overlay heavy, deep earth */
+  --sand-900: 24 33% 8%;       /* #1C1209 — shadow tinted, pé warm */
+
+  /* ── MATRIZ SAND 5×5 — paleta CEO 17/05 expandida ──────────────────────
+   * 5 famílias (rows) × 5 stops (columns: 100→500) — total 25 tokens.
+   * Doc completa: design/palette-sand-matrix.md
+   *
+   * Row 1 (sand-bg)     — backgrounds quentes (page, section, hero light)
+   * Row 2 (sand-surf)   — cards/surfaces elevadas em cream
+   * Row 3 (sand-line)   — borders + dividers warm
+   * Row 4 (sand-ink)    — texto on cream (primário, secundário, muted)
+   * Row 5 (sand-warm)   — accent terra (badges, hover, selected)
+   *
+   * Convenção número: row{1-5}{stop100|200|300|400|500} ex sand-bg-300
+   * Column 100 = mais claro · 500 = mais escuro do row.
+   */
+
+  /* Row 1 · sand-bg (backgrounds quentes) */
+  --sand-bg-100: 36 40% 97%;   /* #FAF6F0 — page bg light alternativo */
+  --sand-bg-200: 35 35% 93%;   /* #F0E8D9 — section bg, hero light tinted */
+  --sand-bg-300: 34 30% 87%;   /* #E1D2BC — band/strip warm, callout bg */
+  --sand-bg-400: 33 25% 78%;   /* #C9B89E — section accent, image overlay */
+  --sand-bg-500: 32 22% 68%;   /* #B09B81 — feature bg, hero image tint */
+
+  /* Row 2 · sand-surf (cards / surfaces elevadas) */
+  --sand-surf-100: 38 28% 96%; /* #F7F2EA — card bg padrão em cream theme */
+  --sand-surf-200: 36 26% 91%; /* #EDE3D2 — card hover, popover bg */
+  --sand-surf-300: 34 24% 84%; /* #DDCDB2 — modal bg, sheet warm */
+  --sand-surf-400: 32 22% 75%; /* #C5B391 — surface elevated 3 */
+  --sand-surf-500: 30 20% 64%; /* #A99478 — surface accent (CTA secondary bg) */
+
+  /* Row 3 · sand-line (borders + dividers) */
+  --sand-line-100: 35 22% 88%; /* #E3D7C3 — divider sutil em cream */
+  --sand-line-200: 33 22% 78%; /* #CCB89D — border padrão em cream */
+  --sand-line-300: 31 22% 65%; /* #B0937A — border heavy, focus ring warm */
+  --sand-line-400: 29 23% 50%; /* #8C705A — divider em surface dark warm */
+  --sand-line-500: 27 25% 36%; /* #6B533F — border accent (selected/active) */
+
+  /* Row 4 · sand-ink (texto on cream) */
+  --sand-ink-100: 28 18% 38%;  /* #6D5C4C — text muted (placeholder, disabled) */
+  --sand-ink-200: 26 22% 28%;  /* #574232 — text secondary (helpers, labels) */
+  --sand-ink-300: 25 26% 20%;  /* #422F22 — text primary on cream */
+  --sand-ink-400: 24 30% 13%;  /* #2D1F14 — heading on cream */
+  --sand-ink-500: 22 33% 7%;   /* #18100A — display headline, contrast max */
+
+  /* Row 5 · sand-warm (accent terra — vivo) */
+  --sand-warm-100: 32 50% 88%; /* #EBD9BD — badge bg soft, hover row */
+  --sand-warm-200: 30 55% 75%; /* #D8B58A — pill warm, marker secondary */
+  --sand-warm-300: 28 60% 60%; /* #C28D4F — accent vivo, link warm */
+  --sand-warm-400: 26 62% 45%; /* #A36A2C — CTA warm, badge text */
+  --sand-warm-500: 24 65% 30%; /* #7E4818 — accent pressed, badge dark */
+}
+
+/* ============================================================================
+   DARK MODE OVERRIDES — alguns shades invertem semântica em dark
+   ============================================================================
+
+   Em dark mode, "surface elevada" fica MAIS CLARA (Wathan: usar lightness pra
+   elevação, não shadow forte). Tokens semânticos abaixo (--surface-0/1/2)
+   mapeiam pra night-XXX certas e mantêm hierarquia visual constante.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Semantic surface tokens — auto-resolve dark/light via classe .dark */
+  --surface-0: var(--fog-50);          /* base (page bg) */
+  --surface-1: 0 0% 100%;              /* card padrão */
+  --surface-2: 0 0% 98%;               /* card elevado */
+  --surface-3: 0 0% 96%;               /* popover/modal */
+  --text-primary:   var(--night-900);
+  --text-secondary: var(--fog-500);
+  --text-muted:     var(--fog-400);
+}
+
+.dark {
+  /* Surface ladder em dark — cada step ~5% lightness mais claro */
+  --surface-0: var(--night-700);       /* bg principal — dark SOFT (CEO 17/05) */
+  --surface-1: var(--night-600);       /* card padrão */
+  --surface-2: var(--night-500);       /* card hover / elevado */
+  --surface-3: var(--night-400);       /* popover / modal / dropdown */
+  --text-primary:   var(--fog-50);
+  --text-secondary: var(--fog-200);
+  --text-muted:     var(--fog-300);
+}
+
 /* ─── Tailwind compile-time tokens ─────────────────────────────────────────── */
 @theme inline {
   --color-accent:      #7c3aed;
@@ -17,6 +193,97 @@ html {
   --color-blue:       #3b82f6;
   --font-sans: var(--font-geist-sans);
   --font-mono: ui-monospace, 'Cascadia Code', monospace;
+
+  /* ── PALETA HSL (Refactoring UI #3) — utility classes Tailwind 4 ──────── */
+  /* Gera: bg-petrol-500, text-fog-200, border-ember-300, ring-night-700, etc.
+   * Funciona com opacity: bg-petrol-500/30, text-fog-50/80.
+   * Esta é a SOLUÇÃO ao bug Tailwind 4 bg-X/Y — tokens HSL nomeados compõem ok. */
+  --color-petrol-50:  hsl(168 45% 96%);
+  --color-petrol-100: hsl(170 42% 90%);
+  --color-petrol-200: hsl(171 40% 80%);
+  --color-petrol-300: hsl(173 35% 60%);
+  --color-petrol-400: hsl(173 45% 42%);
+  --color-petrol-500: hsl(173 58% 28%);
+  --color-petrol-600: hsl(173 62% 22%);
+  --color-petrol-700: hsl(174 65% 17%);
+  --color-petrol-800: hsl(175 60% 12%);
+  --color-petrol-900: hsl(176 55% 7%);
+
+  --color-fog-50:  hsl(43 17% 93%);
+  --color-fog-100: hsl(40 21% 86%);
+  --color-fog-200: hsl(40 12% 71%);
+  --color-fog-300: hsl(38 7%  51%);
+  --color-fog-400: hsl(35 9%  33%);
+  --color-fog-500: hsl(33 11% 22%);
+  --color-fog-600: hsl(30 13% 16%);
+  --color-fog-700: hsl(28 15% 11%);
+  --color-fog-800: hsl(25 17% 7%);
+  --color-fog-900: hsl(22 18% 4%);
+
+  --color-ember-50:  hsl(32 80% 96%);
+  --color-ember-100: hsl(30 75% 90%);
+  --color-ember-200: hsl(29 70% 80%);
+  --color-ember-300: hsl(28 67% 70%);
+  --color-ember-400: hsl(27 67% 65%);
+  --color-ember-500: hsl(28 60% 55%);
+  --color-ember-600: hsl(25 56% 42%);
+  --color-ember-700: hsl(23 55% 32%);
+  --color-ember-800: hsl(21 53% 22%);
+  --color-ember-900: hsl(18 50% 13%);
+
+  --color-night-50:  hsl(200 14% 95%);
+  --color-night-100: hsl(200 13% 88%);
+  --color-night-200: hsl(200 12% 75%);
+  --color-night-300: hsl(200 11% 55%);
+  --color-night-400: hsl(200 11% 30%);
+  --color-night-500: hsl(200 11% 18%);
+  --color-night-600: hsl(200 11% 12%);
+  --color-night-700: hsl(200 11% 9%);
+  --color-night-800: hsl(200 11% 6%);
+  --color-night-900: hsl(200 11% 4%);
+  --color-night-950: hsl(200 11% 3%);
+
+  --color-sand-50:  hsl(35 35% 95%);
+  --color-sand-100: hsl(33 30% 87%);
+  --color-sand-200: hsl(31 27% 76%);
+  --color-sand-300: hsl(30 25% 62%);
+  --color-sand-400: hsl(29 24% 48%);
+  --color-sand-500: hsl(28 22% 35%);
+  --color-sand-600: hsl(27 24% 27%);
+  --color-sand-700: hsl(26 27% 20%);
+  --color-sand-800: hsl(25 30% 13%);
+  --color-sand-900: hsl(24 33% 8%);
+
+  /* Matriz sand 5×5 (rows × stops) — exposta como classes Tailwind */
+  --color-sand-bg-100: hsl(36 40% 97%);
+  --color-sand-bg-200: hsl(35 35% 93%);
+  --color-sand-bg-300: hsl(34 30% 87%);
+  --color-sand-bg-400: hsl(33 25% 78%);
+  --color-sand-bg-500: hsl(32 22% 68%);
+
+  --color-sand-surf-100: hsl(38 28% 96%);
+  --color-sand-surf-200: hsl(36 26% 91%);
+  --color-sand-surf-300: hsl(34 24% 84%);
+  --color-sand-surf-400: hsl(32 22% 75%);
+  --color-sand-surf-500: hsl(30 20% 64%);
+
+  --color-sand-line-100: hsl(35 22% 88%);
+  --color-sand-line-200: hsl(33 22% 78%);
+  --color-sand-line-300: hsl(31 22% 65%);
+  --color-sand-line-400: hsl(29 23% 50%);
+  --color-sand-line-500: hsl(27 25% 36%);
+
+  --color-sand-ink-100: hsl(28 18% 38%);
+  --color-sand-ink-200: hsl(26 22% 28%);
+  --color-sand-ink-300: hsl(25 26% 20%);
+  --color-sand-ink-400: hsl(24 30% 13%);
+  --color-sand-ink-500: hsl(22 33% 7%);
+
+  --color-sand-warm-100: hsl(32 50% 88%);
+  --color-sand-warm-200: hsl(30 55% 75%);
+  --color-sand-warm-300: hsl(28 60% 60%);
+  --color-sand-warm-400: hsl(26 62% 45%);
+  --color-sand-warm-500: hsl(24 65% 30%);
 
   /* shadcn/ui tokens (semantic) — referenciados como bg-background, text-foreground, etc */
   --color-background:        var(--background);

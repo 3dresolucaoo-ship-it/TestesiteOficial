@@ -119,6 +119,111 @@ export const contentSyncSchema = z.object({
 
 export type ContentSyncPayload = z.infer<typeof contentSyncSchema>
 
+// ── /api/finance/fixed-costs ─────────────────────────────────────────────────
+// Otávio 2026-05-17 (Tier 1 finalização):
+// - label: trim + min 1 + max 120 evita strings vazias e bytes-flood
+// - amount: nonneg (custo é >= 0) + max 1e9 evita overflow no Numeric do PG
+// - id e projectId: UUID v4 estrito
+const idSchema        = z.string().uuid({ message: 'ID inválido' })
+const projectIdSchema = z.string().uuid({ message: 'projectId inválido' })
+
+const fixedCostLabelSchema = z
+  .string()
+  .trim()
+  .min(1, 'Descrição é obrigatória')
+  .max(120, 'Descrição muito longa (máximo 120 caracteres)')
+
+const fixedCostAmountSchema = z
+  .number({ message: 'Valor deve ser número' })
+  .finite('Valor inválido')
+  .nonnegative('Valor não pode ser negativo')
+  .max(1_000_000_000, 'Valor acima do limite aceito')
+
+export const fixedCostCreateSchema = z.object({
+  id:        idSchema,
+  projectId: projectIdSchema,
+  label:     fixedCostLabelSchema,
+  amount:    fixedCostAmountSchema,
+})
+
+export const fixedCostPatchSchema = z.object({
+  label:  fixedCostLabelSchema,
+  amount: fixedCostAmountSchema,
+})
+
+export type FixedCostCreatePayload = z.infer<typeof fixedCostCreateSchema>
+export type FixedCostPatchPayload  = z.infer<typeof fixedCostPatchSchema>
+
+// ── /api/finance/profit-goal ─────────────────────────────────────────────────
+// month YYYY-MM regex (define escopo da meta).
+// Aceita amount como `monthlyTarget` por compat com o handler atual + opcional
+// month YYYY-MM caso o front mande no futuro (não usado ainda — guard pré-existente).
+const monthYYYYMMSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Mês deve estar no formato YYYY-MM')
+
+export const profitGoalSchema = z.object({
+  projectId:     projectIdSchema,
+  monthlyTarget: z
+    .number({ message: 'Meta deve ser número' })
+    .finite('Meta inválida')
+    .nonnegative('Meta não pode ser negativa')
+    .max(1_000_000_000, 'Meta acima do limite aceito'),
+  // Opcional — caso queira fixar meta por mês no futuro
+  month: monthYYYYMMSchema.optional(),
+})
+
+export type ProfitGoalPayload = z.infer<typeof profitGoalSchema>
+
+// ── /api/payment-configs ─────────────────────────────────────────────────────
+// Substitui validação manual atual no handler (POST).
+// Mercado Pago: webhookSecret obrigatório (min 16) — sem ele payments/mercadopago.ts:121
+// throw e webhook é rejeitado. Bloqueio aqui evita salvar config quebrada.
+// Stripe/InfinityPay: webhookSecret opcional.
+const accessTokenSchema = z
+  .string()
+  .trim()
+  .min(8, 'accessToken obrigatório (mínimo 8 caracteres)')
+  .max(500, 'accessToken muito longo')
+  .refine(v => !v.startsWith('****'), {
+    message: 'accessToken ainda mascarado — cole o valor real',
+  })
+
+const webhookSecretSchema = z
+  .string()
+  .trim()
+  .max(500, 'webhookSecret muito longo')
+  .optional()
+
+const paymentConfigBase = z.object({
+  id:            idSchema.optional(),
+  accessToken:   accessTokenSchema,
+  publicKey:     z.string().trim().max(500, 'publicKey muito longa').optional(),
+  webhookSecret: webhookSecretSchema,
+  sandbox:       z.boolean().optional().default(false),
+})
+
+export const paymentConfigSchema = z.discriminatedUnion('provider', [
+  paymentConfigBase.extend({
+    provider: z.literal('mercadopago'),
+    // Override: MP exige webhookSecret >= 16
+    webhookSecret: z
+      .string({ message: 'webhookSecret é obrigatório para Mercado Pago' })
+      .trim()
+      .min(16, 'webhookSecret obrigatório para Mercado Pago (mínimo 16 caracteres). Pegue em: MP Dashboard → Sua aplicação → Webhooks → Chave secreta.')
+      .max(500, 'webhookSecret muito longo'),
+  }),
+  paymentConfigBase.extend({
+    provider: z.literal('stripe'),
+  }),
+  paymentConfigBase.extend({
+    provider: z.literal('infinitypay'),
+  }),
+])
+
+export type PaymentConfigPayload = z.infer<typeof paymentConfigSchema>
+
 // ── Helper: formata erro de Zod em PT-BR amigável ────────────────────────────
 export function zodErrorToPtBr(error: z.ZodError): {
   message: string

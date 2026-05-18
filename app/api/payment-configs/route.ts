@@ -15,11 +15,8 @@ import { getUser }                   from '@/lib/auth'
 import { createServerClient }        from '@/lib/supabaseServer'
 import {
   paymentConfigService,
-  type PaymentProviderName,
-  type UpsertPaymentConfigInput,
 } from '@/services/paymentConfig'
-
-const VALID_PROVIDERS: PaymentProviderName[] = ['mercadopago', 'stripe', 'infinitypay']
+import { paymentConfigSchema, zodErrorToPtBr } from '@/services/apiSchemas'
 
 // ─── GET — list user's configs (masked) ─────────────────────────────────────
 
@@ -38,50 +35,32 @@ export async function POST(req: NextRequest) {
   const user = await getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  let body: Partial<UpsertPaymentConfigInput> & { id?: string }
+  // Otávio (Security) 2026-05-17: substituiu validação manual por discriminated
+  // union Zod. Garante provider enum, accessToken trim+min 8 + sem mascarado,
+  // e MP exige webhookSecret >= 16 chars (regra do provider).
+  let rawBody: unknown
   try {
-    body = await req.json()
+    rawBody = await req.json()
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  if (!body.provider || !VALID_PROVIDERS.includes(body.provider)) {
-    return NextResponse.json({ error: 'Invalid provider' }, { status: 400 })
+  const parsed = paymentConfigSchema.safeParse(rawBody)
+  if (!parsed.success) {
+    const { message, fields } = zodErrorToPtBr(parsed.error)
+    return NextResponse.json({ error: message, fields }, { status: 400 })
   }
-
-  if (!body.accessToken || typeof body.accessToken !== 'string' || body.accessToken.trim().length < 8) {
-    return NextResponse.json({ error: 'accessToken is required (min 8 chars)' }, { status: 400 })
-  }
-
-  if (body.accessToken.startsWith('****')) {
-    return NextResponse.json({ error: 'accessToken still masked — paste the real value' }, { status: 400 })
-  }
-
-  // Mercado Pago exige webhookSecret obrigatório (anti-fraude).
-  // Sem ele, payments/mercadopago.ts:121 throw e o webhook é rejeitado.
-  // Bloqueio aqui evita salvar config quebrada que vai falhar em runtime.
-  if (body.provider === 'mercadopago') {
-    if (!body.webhookSecret || typeof body.webhookSecret !== 'string' || body.webhookSecret.trim().length < 16) {
-      return NextResponse.json(
-        {
-          error:
-            'webhookSecret é obrigatório para Mercado Pago (mínimo 16 caracteres). ' +
-            'Pegue em: MP Dashboard → Sua aplicação → Webhooks → Chave secreta.',
-        },
-        { status: 400 },
-      )
-    }
-  }
+  const data = parsed.data
 
   try {
     const client = await createServerClient()
     await paymentConfigService.upsertConfig(user.id, {
-      id:            body.id,
-      provider:      body.provider,
-      accessToken:   body.accessToken.trim(),
-      publicKey:     body.publicKey?.trim()     || undefined,
-      webhookSecret: body.webhookSecret?.trim() || undefined,
-      sandbox:       Boolean(body.sandbox),
+      id:            data.id,
+      provider:      data.provider,
+      accessToken:   data.accessToken,
+      publicKey:     data.publicKey     || undefined,
+      webhookSecret: data.webhookSecret || undefined,
+      sandbox:       Boolean(data.sandbox),
     }, client)
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Save failed'

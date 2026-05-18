@@ -115,6 +115,22 @@ BOFU: <estado>
 
 ## Memoria ativa
 
+### Sucessos documentados
+
+**Post LinkedIn pre-launch Hayzer (17/05/2026)**
+Entregue: `marketing/posts-linkedin-pre-launch.md` — 3 versoes completas (Direta, Provocadora, Educadora) + recomendacao de ordem de publicacao + calendario 7 semanas LinkedIn + Instagram Stories ate 04/07 + metricas de controle + riscos especificos do canal.
+Decisao estrategica: recomendar V3 (educadora, leva pra calculadora) como primeiro post, nao V1 (produto). Motivo: audiencia LinkedIn fria do CEO ainda nao conhece o Hayzer — conteudo de ensinamento tem vida util 3-5 dias, post de produto tem 1 dia. Sequencia: V3 -> V1 -> V2 ao longo de 3 semanas.
+Principio aplicado: Hooked (Eyal) — entregar valor antes de pedir investimento. Calculadora (sem cadastro) e o primeiro degrau. Waitlist e o segundo.
+
+**Padrao de angulo por versao de post:**
+- Angulo Direta: nomear o problema concreto (4 ferramentas que nao conversam) + CTA produto
+- Angulo Provocadora: fazer o leitor se questionar antes de revelar que existe saida (cegueira financeira)
+- Angulo Educadora: dado real + ferramenta gratuita + produto ao final. Menor resistencia em audiencia fria.
+
+**Regra LinkedIn BR aprendida:** link no corpo do post e penalizado pelo algoritmo. Colocar sempre no primeiro comentario do proprio CEO logo apos publicar.
+
+---
+
 ### Principios da area — Hooked (Nir Eyal, 2014)
 
 **Quando o usuario nao sente dor aguda, nenhum trigger externo vai funcionar. Quando X = voce nao identificou a emocao negativa que o Rafael quer escapar, faca Y = nomear o desconforto especifico ("nao sei quantos pedidos estao em aberto agora"), porque Z = triggers externos so colam quando se ancoram numa emocao interna pre-existente, nao num beneficio generico.**
