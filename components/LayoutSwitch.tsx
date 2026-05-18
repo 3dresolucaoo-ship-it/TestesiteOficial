@@ -7,8 +7,16 @@ import type { AppState } from '@/lib/types'
 
 const MARKETING_PATHS = ['/', '/waitlist', '/privacidade', '/termos', '/calculadora', '/mockups']
 
+// V4_PATHS = rotas que já trazem shell próprio (sidebar + topbar) e NÃO devem
+// ser envolvidas pelo AppShell legado. Adicionar aqui ao migrar mais módulos V4.
+const V4_PATHS = ['/dashboard']
+
 function isMarketingPath(pathname: string) {
   return MARKETING_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
+}
+
+function isV4Path(pathname: string) {
+  return V4_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))
 }
 
 export function LayoutSwitch({
@@ -20,6 +28,7 @@ export function LayoutSwitch({
 }) {
   const pathname    = usePathname()
   const isMarketing = isMarketingPath(pathname)
+  const isV4        = isV4Path(pathname)
 
   // Marca <html data-layout="marketing"> no client. O bg/color em si fica no
   // CSS (html[data-layout="marketing"] body) — inline style sobrescrevia o
@@ -35,6 +44,11 @@ export function LayoutSwitch({
 
   if (isMarketing) {
     return <main className="min-h-screen bg-background text-foreground">{children}</main>
+  }
+
+  // V4: rotas com shell próprio (sidebar+topbar). Renderiza children direto.
+  if (isV4) {
+    return <>{children}</>
   }
 
   return <AppShell initialState={initialState}>{children}</AppShell>
