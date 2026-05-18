@@ -157,7 +157,7 @@ function SidebarFooter({ iconOnly = false }: { iconOnly?: boolean }) {
 
   if (iconOnly) {
     return (
-      <div className="mt-auto pb-3 flex flex-col items-center gap-2"
+      <div className="shrink-0 pb-3 flex flex-col items-center gap-2"
            style={{ borderTop: '1px solid var(--t-footer-border)', paddingTop: '0.75rem' }}>
         {isSupabaseConfigured ? dot : (
           <div className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--t-text-muted)' }} />
@@ -167,7 +167,7 @@ function SidebarFooter({ iconOnly = false }: { iconOnly?: boolean }) {
   }
 
   return (
-    <div className="mt-auto pt-3 px-5 pb-4"
+    <div className="shrink-0 pt-3 px-5 pb-4"
          style={{ borderTop: '1px solid var(--t-footer-border)' }}>
       <p className="text-[11px]" style={{ color: 'var(--t-footer-text)' }}>
         Sistema Operacional v0.3
@@ -213,7 +213,7 @@ function GlobalNav({
   // ── Icon-only (collapsed) view ─────────────────────────────────────────────
   if (collapsed) {
     return (
-      <div className="flex flex-col flex-1 overflow-y-auto items-center pt-2 pb-2 gap-0.5">
+      <div className="sidebar-scroll flex flex-col flex-1 min-h-0 overflow-y-auto items-center pt-2 pb-2 gap-0.5">
         <Logo iconOnly />
 
         {/* Expand button */}
@@ -259,7 +259,7 @@ function GlobalNav({
 
   // ── Full expanded view ─────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col flex-1 overflow-y-auto">
+    <div className="sidebar-scroll flex flex-col flex-1 min-h-0 overflow-y-auto pb-2">
       <Logo />
       <nav className="flex flex-col gap-0.5 mt-5 px-2">
         {visibleGlobalNav.map(item => (
@@ -324,7 +324,7 @@ function ProjectNav({ projectId, onNav }: { projectId: string; onNav?: () => voi
   const modules = project?.modules ?? []
 
   return (
-    <div className="flex flex-col flex-1 overflow-y-auto">
+    <div className="sidebar-scroll flex flex-col flex-1 min-h-0 overflow-y-auto">
       {/* Back to global */}
       <div className="px-2 pt-3">
         <Link
@@ -474,13 +474,14 @@ export function Sidebar() {
 
   return (
     <aside
-      className="hidden lg:flex flex-col min-h-screen fixed top-0 left-0 z-30 overflow-hidden"
+      className="hidden lg:flex flex-col h-screen fixed top-0 left-0 z-30 overflow-hidden"
       style={{
         width:       collapsed ? '3.5rem' : '14rem',
         transition:  'width 200ms ease',
         background:  'linear-gradient(180deg, var(--t-accent-soft) 0%, transparent 30%), var(--t-sidebar-bg)',
         borderRight: '1px solid var(--t-sidebar-border)',
         boxShadow:   '1px 0 0 var(--t-sidebar-border)',
+        minHeight:   0,
       }}
     >
       {projectId ? (
