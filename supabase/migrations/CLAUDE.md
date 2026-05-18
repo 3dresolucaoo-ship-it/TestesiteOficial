@@ -33,6 +33,7 @@
 | `20260513_waitlist_updated_at_search_path_fix` (inline) | Fix `update_waitlist_leads_updated_at` com `set search_path = ''` + `pg_catalog.now()`. Mesma defesa aplicada em `customers_function_search_path_fix`. Resolve advisor `function_search_path_mutable`. |
 | `20260518_webhook_events.sql` | **Fix bug crítico: duplicate charge (Paulo/Stripe Press 17/05).** Cria `webhook_events` (provider, event_id, event_type, payload, processed_at) com UNIQUE(provider, event_id) + RLS deny-all (só service_role). Cria RPC `process_webhook_atomic` (SECURITY DEFINER, search_path imutável): lock atômico de evento + INSERT order/production/transaction em UMA única transação Postgres. Handler `/api/webhooks/payment` refatorado pra chamar a RPC — elimina race condition entre SELECT idempotency-check e INSERTs separados que causava duplicate charge em retry simultâneo do gateway. |
 | `20260518_api_rate_limits.sql` | **Tier 1 rate-limit DB-based (Otávio 17/05).** Cria `api_rate_limits` (endpoint, ip_hash, meta jsonb, created_at) + 2 índices (lookup composto + cleanup created_at) + RLS deny-all (só service_role). Suporta rate-limit por endpoint usado em `/api/checkout` (20/min), `/api/encomenda` (20/min), `/api/catalog/quote` (10/min). Fail-OPEN no service. NÃO usa Upstash Redis ainda (custo + setup) — versão Upstash fica pra pós-launch quando passar de 5k req/dia. |
+| `20260518_enable_pg_cron_cleanup.sql` | **Cleanup automático api_rate_limits (Ricardo 18/05 00h).** Habilita pg_cron extension + cria job `cleanup-api-rate-limits` (diário 3h UTC = 00h BRT) que deleta rows com mais de 7 dias. Fecha gap P1 do audit Ricardo — tabela não cresce indefinidamente. DOWN: `SELECT cron.unschedule('cleanup-api-rate-limits'); DROP EXTENSION pg_cron;` |
 
 ## Schema base
 
@@ -50,6 +51,7 @@
 - ✅ `20260513_waitlist_leads.sql` + fix search_path da trigger function aplicadas em 2026-05-13 (Fase 1 — landing pré-launch)
 - ✅ `20260518_webhook_events.sql` (tabela + RPC `process_webhook_atomic`) aplicada em 2026-05-17 via Supabase MCP (`apply_migration`). Resolve race condition / duplicate charge nos webhooks Stripe/MP.
 - ✅ `20260518_api_rate_limits.sql` (tabela `api_rate_limits` + 2 índices + RLS deny-all) **APLICADA em prod em 2026-05-17** (confirmado via Supabase MCP `execute_sql` em 2026-05-17 23h59 — tabela existe com 5 colunas, RLS ativo). Usada pelas rotas `/api/checkout` (20/min), `/api/encomenda` (20/min), `/api/catalog/quote` (10/min) através do `services/apiRateLimit.ts`. Combinada com `API_RATE_LIMIT_SALT` env var setada no Vercel (deploy `D1YRg3yBF` 2026-05-17), rate-limit Tier 1 está 100% funcional.
+- ✅ `20260518_enable_pg_cron_cleanup.sql` **APLICADA em prod em 2026-05-18 00h** via Supabase MCP `apply_migration`. Habilita pg_cron + cria job `cleanup-api-rate-limits` (jobid 1, schedule `0 3 * * *` UTC = 00h BRT, active=true) que deleta rows de `api_rate_limits` com mais de 7 dias. Resolve gap P1 do audit Ricardo (DevOps) — tabela não cresce indefinidamente. Steady-state estimado: ~7k rows.
 
 ## ⚠️ Schema.sql está stale (2026-05-10)
 
