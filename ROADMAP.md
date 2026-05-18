@@ -39,8 +39,8 @@
 
 **TER 21/05** — Continua React + segurança
 - [ ] Felipe: Fase 1 continua (componentes complexos: charts, donut, gauge)
-- [ ] Bruna: Fase 2 bug Paulo — refatorar `app/api/webhooks/payment/route.ts` chamando RPC; testar idempotência
-- [ ] Otávio: CSP report-only header em `next.config.ts`
+- [x] Bruna: Fase 2 bug Paulo — handler `app/api/webhooks/payment/route.ts` já chama RPC `process_webhook_atomic` ✅ (feito no commit `38b517e` em 17/05, mesma janela da migration. Audit Bruna 18/05 confirmou: 5 race conditions eliminadas, 5→2 roundtrips Supabase. Dead code `core/flows/processOrderAdmin.ts` identificado pra deleção)
+- [x] Otávio: CSP report-only header em `next.config.ts` ✅ 2026-05-17
 
 **QUA 22/05** — Termina React + Tier 1 restante
 - [ ] Felipe: Fase 1 últimos detalhes (mobile drawer, root-hover animações)
