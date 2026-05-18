@@ -37,9 +37,20 @@ const securityHeaders = [
 // - frame-ancestors 'none' (defense-in-depth com X-Frame-Options DENY)
 // - 'unsafe-inline' em script/style ainda necessário pra Next.js inline runtime
 //   + Tailwind utility classes. Pós-launch: migrar pra nonces (`headers()` dinâmico).
+// - 'unsafe-eval' só em dev (React reconstrói server stack via eval).
+const isDev = process.env.NODE_ENV !== 'production';
+const scriptSrc = [
+  "'self'",
+  "'unsafe-inline'",
+  isDev ? "'unsafe-eval'" : null,
+  "va.vercel-scripts.com",
+  "vitals.vercel-insights.com",
+  "js.stripe.com",
+].filter(Boolean).join(' ');
+
 const cspReportOnly = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' va.vercel-scripts.com vitals.vercel-insights.com js.stripe.com",
+  `script-src ${scriptSrc}`,
   "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
   "font-src 'self' fonts.gstatic.com data:",
   "img-src 'self' data: blob: https:",

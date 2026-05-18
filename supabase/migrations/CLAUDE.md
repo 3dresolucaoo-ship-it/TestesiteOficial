@@ -32,6 +32,7 @@
 | `20260513_waitlist_leads.sql` | **Fase 1 — landing pré-launch.** Cria `waitlist_leads` (~30 colunas: etapa 1, etapa 2, UTM/geo, `ip_hash` SHA-256 pra rate-limit LGPD-friendly, status CRM, double opt-in). 5 índices, trigger updated_at, 4 policies RLS (insert público, select/update/delete admin via `raw_app_meta_data->>'is_admin'`). Extensions `pgcrypto` + `citext` (email case-insensitive). |
 | `20260513_waitlist_updated_at_search_path_fix` (inline) | Fix `update_waitlist_leads_updated_at` com `set search_path = ''` + `pg_catalog.now()`. Mesma defesa aplicada em `customers_function_search_path_fix`. Resolve advisor `function_search_path_mutable`. |
 | `20260518_webhook_events.sql` | **Fix bug crítico: duplicate charge (Paulo/Stripe Press 17/05).** Cria `webhook_events` (provider, event_id, event_type, payload, processed_at) com UNIQUE(provider, event_id) + RLS deny-all (só service_role). Cria RPC `process_webhook_atomic` (SECURITY DEFINER, search_path imutável): lock atômico de evento + INSERT order/production/transaction em UMA única transação Postgres. Handler `/api/webhooks/payment` refatorado pra chamar a RPC — elimina race condition entre SELECT idempotency-check e INSERTs separados que causava duplicate charge em retry simultâneo do gateway. |
+| `20260518_api_rate_limits.sql` | **Tier 1 rate-limit DB-based (Otávio 17/05).** Cria `api_rate_limits` (endpoint, ip_hash, meta jsonb, created_at) + 2 índices (lookup composto + cleanup created_at) + RLS deny-all (só service_role). Suporta rate-limit por endpoint usado em `/api/checkout` (20/min), `/api/encomenda` (20/min), `/api/catalog/quote` (10/min). Fail-OPEN no service. NÃO usa Upstash Redis ainda (custo + setup) — versão Upstash fica pra pós-launch quando passar de 5k req/dia. |
 
 ## Schema base
 
@@ -48,6 +49,7 @@
 - ✅ `20260510_*` (Wave 0 — fix RPC catálogo + 3 migrations Fundação ADR 006) aplicadas em 2026-05-10
 - ✅ `20260513_waitlist_leads.sql` + fix search_path da trigger function aplicadas em 2026-05-13 (Fase 1 — landing pré-launch)
 - ✅ `20260518_webhook_events.sql` (tabela + RPC `process_webhook_atomic`) aplicada em 2026-05-17 via Supabase MCP (`apply_migration`). Resolve race condition / duplicate charge nos webhooks Stripe/MP.
+- ⏳ `20260518_api_rate_limits.sql` (tabela `api_rate_limits` + 2 índices + RLS deny-all) **PENDENTE de aplicação em prod**. CEO aplica via Supabase MCP. Necessária pras rotas `/api/checkout`, `/api/encomenda`, `/api/catalog/quote` — service `apiRateLimit.ts` é fail-OPEN, então rotas funcionam mesmo sem migration (sem rate-limit ativo, com warning no console).
 
 ## ⚠️ Schema.sql está stale (2026-05-10)
 

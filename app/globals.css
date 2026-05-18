@@ -162,11 +162,13 @@ html {
    ──────────────────────────────────────────────────────────────────────────── */
 
 :root {
-  /* Semantic surface tokens — auto-resolve dark/light via classe .dark */
-  --surface-0: var(--fog-50);          /* base (page bg) */
-  --surface-1: 0 0% 100%;              /* card padrão */
-  --surface-2: 0 0% 98%;               /* card elevado */
-  --surface-3: 0 0% 96%;               /* popover/modal */
+  /* Semantic surface tokens — auto-resolve dark/light via classe .dark.
+   * Light mode usa neutros (white→fog) pra cards parecerem "papel limpo".
+   * Tokens nomeados em vez de HSL cru: tudo passa pelo mesmo sistema. */
+  --surface-0: var(--fog-50);          /* base (page bg) — off-white quente */
+  --surface-1: var(--night-50);        /* card padrão — quase branco frio */
+  --surface-2: var(--fog-100);         /* card elevado — beige sutil */
+  --surface-3: var(--night-100);       /* popover/modal — cinza-claro */
   --text-primary:   var(--night-900);
   --text-secondary: var(--fog-500);
   --text-muted:     var(--fog-400);

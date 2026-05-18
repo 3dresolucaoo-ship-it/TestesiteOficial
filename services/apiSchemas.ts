@@ -196,30 +196,47 @@ const webhookSecretSchema = z
   .max(500, 'webhookSecret muito longo')
   .optional()
 
-const paymentConfigBase = z.object({
+// Schemas explícitos por provider (Zod v4 + discriminatedUnion funciona melhor
+// quando o discriminator é literal direto no objeto, sem .extend de base).
+const publicKeyOptional = z.string().trim().max(500, 'publicKey muito longa').optional()
+const sandboxOptional   = z.boolean().optional().default(false)
+
+const mercadopagoConfigSchema = z.object({
+  provider:    z.literal('mercadopago'),
+  id:          idSchema.optional(),
+  accessToken: accessTokenSchema,
+  publicKey:   publicKeyOptional,
+  // MP exige webhookSecret >= 16. Sem ele payments/mercadopago.ts throw em runtime.
+  webhookSecret: z
+    .string({ message: 'webhookSecret é obrigatório para Mercado Pago' })
+    .trim()
+    .min(16, 'webhookSecret obrigatório para Mercado Pago (mínimo 16 caracteres). Pegue em: MP Dashboard → Sua aplicação → Webhooks → Chave secreta.')
+    .max(500, 'webhookSecret muito longo'),
+  sandbox: sandboxOptional,
+})
+
+const stripeConfigSchema = z.object({
+  provider:      z.literal('stripe'),
   id:            idSchema.optional(),
   accessToken:   accessTokenSchema,
-  publicKey:     z.string().trim().max(500, 'publicKey muito longa').optional(),
+  publicKey:     publicKeyOptional,
   webhookSecret: webhookSecretSchema,
-  sandbox:       z.boolean().optional().default(false),
+  sandbox:       sandboxOptional,
+})
+
+const infinitypayConfigSchema = z.object({
+  provider:      z.literal('infinitypay'),
+  id:            idSchema.optional(),
+  accessToken:   accessTokenSchema,
+  publicKey:     publicKeyOptional,
+  webhookSecret: webhookSecretSchema,
+  sandbox:       sandboxOptional,
 })
 
 export const paymentConfigSchema = z.discriminatedUnion('provider', [
-  paymentConfigBase.extend({
-    provider: z.literal('mercadopago'),
-    // Override: MP exige webhookSecret >= 16
-    webhookSecret: z
-      .string({ message: 'webhookSecret é obrigatório para Mercado Pago' })
-      .trim()
-      .min(16, 'webhookSecret obrigatório para Mercado Pago (mínimo 16 caracteres). Pegue em: MP Dashboard → Sua aplicação → Webhooks → Chave secreta.')
-      .max(500, 'webhookSecret muito longo'),
-  }),
-  paymentConfigBase.extend({
-    provider: z.literal('stripe'),
-  }),
-  paymentConfigBase.extend({
-    provider: z.literal('infinitypay'),
-  }),
+  mercadopagoConfigSchema,
+  stripeConfigSchema,
+  infinitypayConfigSchema,
 ])
 
 export type PaymentConfigPayload = z.infer<typeof paymentConfigSchema>

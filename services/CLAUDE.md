@@ -45,6 +45,8 @@
 | waitlist.ts | 174 | waitlist_leads | ✅ Fase 1 — usa service_role no insert/update (RLS+RETURNING fix 15/05, commit `fccd49f`) |
 | waitlistRateLimit.ts | 85 | waitlist_leads | ✅ hash SHA-256(IP+salt) + count 24h via service_role (fail-open). Requer `SUPABASE_SERVICE_ROLE_KEY` no env |
 | waitlistSchema.ts | — | (Zod) | ✅ schemas etapa 1, etapa 2, bot guards (honeypot/time), LeadCaptureMeta. SEGMENT_OPTIONS refeitas (3D-focused, ADR-010) |
+| apiRateLimit.ts | 183 | api_rate_limits | ✅ Otávio 17/05 — genérico por endpoint, SHA-256(IP+`API_RATE_LIMIT_SALT`) + count janela via service_role (fail-OPEN). Helpers `checkApiRateLimit`, `recordApiHit`, `enforceApiRateLimit`, `getClientIp`. Aplicado em `/api/checkout` (20/min), `/api/encomenda` (20/min), `/api/catalog/quote` (10/min). Migration: `20260518_api_rate_limits.sql`. |
+| apiSchemas.ts | 246 | (Zod) | ✅ Otávio 17/05 — schemas Zod compartilhados pras APIs públicas + finance + payment-configs. Inclui `checkoutSchema`, `encomendaSchema`, `quoteSchema`, `contentSyncSchema`, `fixedCostCreateSchema`, `fixedCostPatchSchema`, `profitGoalSchema`, `paymentConfigSchema` (discriminated union por provider). Helper `zodErrorToPtBr` retorna `{ message, fields }`. |
 
 ## Issues conhecidos
 
