@@ -7,7 +7,7 @@ import { ImageResponse } from 'next/og'
 // - Tamanho padrão Open Graph: 1200x630
 
 export const runtime = 'edge'
-export const alt = 'Calculadora 3D Hayzer — preço justo, lucro real'
+export const alt = 'Calculadora 3D Hayzer · preço justo, lucro real'
 export const size = {
   width: 1200,
   height: 630,

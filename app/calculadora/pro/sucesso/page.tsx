@@ -4,7 +4,7 @@ import Link from 'next/link'
 import type { SearchParams } from 'next/dist/server/request/search-params'
 
 export const metadata = {
-  title: 'Calculadora Pro liberada — Hayzer',
+  title: 'Calculadora Pro liberada · Hayzer',
   description: 'Compra confirmada. Verifique o email com as instruções de acesso.',
   robots: { index: false },
 }
@@ -55,7 +55,7 @@ export default async function CalculadoraProSucessoPage({ searchParams }: Succes
             </h1>
 
             <p className="mx-auto mt-5 max-w-[480px] text-[16px] leading-[1.65] text-muted-foreground">
-              Verifica o email — mandamos as instruções de acesso em até 5min.
+              Verifica o email. Mandamos as instruções de acesso em até 5min.
               Salva o link que vai chegar nos favoritos, é por ele que você entra de qualquer dispositivo.
             </p>
 

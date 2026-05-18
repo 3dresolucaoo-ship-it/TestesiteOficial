@@ -9,8 +9,8 @@ interface PaywallModalProps {
   open: boolean
   onClose: () => void
   /**
-   * 'pdf'     — trigger: clicou "Exportar PDF"
-   * 'other'   — trigger: histórico / multi-impressora / trocar moeda
+   * 'pdf'     trigger: clicou "Exportar PDF"
+   * 'other'   trigger: histórico / multi-impressora / trocar moeda
    */
   trigger?: 'pdf' | 'other'
 }
@@ -47,8 +47,8 @@ export function PaywallModal({ open, onClose, trigger = 'pdf' }: PaywallModalPro
   const isPdf = trigger === 'pdf'
 
   const body = isPdf
-    ? 'O PDF sai com seu nome no topo, o item, o prazo e o preço final — formato pra você mandar direto pro cliente no WhatsApp.'
-    : 'Histórico, várias impressoras com perfil próprio e cobrança em dólar/euro — tudo pelos mesmos R$ 37 que você paga uma vez. Cada cálculo fica salvo no seu navegador. Volta quando precisar.'
+    ? 'O PDF sai com seu nome no topo, o item, o prazo e o preço final. Formato pra você mandar direto pro cliente no WhatsApp.'
+    : 'Histórico, várias impressoras com perfil próprio e cobrança em dólar/euro. Tudo pelos mesmos R$ 37 que você paga uma vez. Cada cálculo fica salvo no seu navegador. Volta quando precisar.'
 
   return (
     <AnimatePresence>
