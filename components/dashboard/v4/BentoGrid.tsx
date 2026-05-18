@@ -60,7 +60,17 @@ interface DonutCardProps {
 function DonutCard({ segments, avgMargin }: DonutCardProps) {
   // SVG donut: circunferência = 2π × r36 ≈ 226.19
   const CIRCUMFERENCE = 226.19
-  let offset = 0
+
+  // Pré-computa offsets com reduce para evitar mutação de variável durante render
+  // (react-hooks/immutability não permite `let offset = 0; offset += len` em .map())
+  const segmentsWithOffsets = segments.reduce<
+    Array<{ seg: DonutSegment; len: number; currOff: number; delay: number }>
+  >((acc, seg, i) => {
+    const prevOffset = acc.length > 0 ? acc[acc.length - 1].currOff + acc[acc.length - 1].len : 0
+    const len = (seg.revenuePercent / 100) * CIRCUMFERENCE
+    acc.push({ seg, len, currOff: -prevOffset, delay: 200 + i * 150 })
+    return acc
+  }, [])
 
   return (
     <article
@@ -93,30 +103,23 @@ function DonutCard({ segments, avgMargin }: DonutCardProps) {
               fill="none"
             />
             {/* Segmentos animados */}
-            {segments.map((seg, i) => {
-              const len     = (seg.revenuePercent / 100) * CIRCUMFERENCE
-              const currOff = -offset
-              offset += len
-              const delay   = 200 + i * 150
-
-              return (
-                <circle
-                  key={seg.channel}
-                  className="donut-arc"
-                  cx="50" cy="50" r="36"
-                  stroke={seg.color}
-                  strokeWidth="20"
-                  fill="none"
-                  role="img"
-                  aria-label={`${seg.channel}: ${seg.revenuePercent}% do faturamento, ${seg.marginPercent}% de margem`}
-                  style={{
-                    ['--len' as string]:   len,
-                    ['--off' as string]:   currOff,
-                    ['--delay' as string]: `${delay}ms`,
-                  }}
-                />
-              )
-            })}
+            {segmentsWithOffsets.map(({ seg, len, currOff, delay }) => (
+              <circle
+                key={seg.channel}
+                className="donut-arc"
+                cx="50" cy="50" r="36"
+                stroke={seg.color}
+                strokeWidth="20"
+                fill="none"
+                role="img"
+                aria-label={`${seg.channel}: ${seg.revenuePercent}% do faturamento, ${seg.marginPercent}% de margem`}
+                style={{
+                  ['--len' as string]:   len,
+                  ['--off' as string]:   currOff,
+                  ['--delay' as string]: `${delay}ms`,
+                }}
+              />
+            ))}
           </svg>
           <div className="donut-center">
             <span className="label">média</span>

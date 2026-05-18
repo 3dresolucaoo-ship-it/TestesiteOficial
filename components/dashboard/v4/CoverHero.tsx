@@ -63,11 +63,12 @@ function CountUp({ target, duration = 1200 }: CountUpProps) {
   const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
-    // Respeitar prefers-reduced-motion
+    // Respeitar prefers-reduced-motion — usa requestAnimationFrame pra evitar
+    // setState síncrono dentro de effect (react-hooks/set-state-in-effect).
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduced) {
-      setDisplayed(target)
-      return
+      const raf = requestAnimationFrame(() => setDisplayed(target))
+      return () => cancelAnimationFrame(raf)
     }
 
     const start     = performance.now()

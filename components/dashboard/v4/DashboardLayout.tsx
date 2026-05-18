@@ -211,7 +211,7 @@ const NAV_ITEMS = [
   },
 ] as const
 
-function Sidebar({ isOpen, onClose, userName, projects, activeProjectId, onProjectChange }: SidebarProps) {
+function Sidebar({ isOpen, onClose, userName }: SidebarProps) {
   const initials = userName
     .split(' ')
     .slice(0, 2)
@@ -300,8 +300,12 @@ export function DashboardLayout({ data }: DashboardLayoutProps) {
   useEffect(() => {
     const saved = localStorage.getItem(THEME_KEY) as DashboardTheme | null
     if (saved === 'light' || saved === 'dark') {
-      setTheme(saved)
+      // Usa requestAnimationFrame pra evitar setState síncrono no effect
+      // (react-hooks/set-state-in-effect) — garante que o update ocorre
+      // após o commit, não durante.
       document.documentElement.setAttribute('data-theme', saved)
+      const raf = requestAnimationFrame(() => setTheme(saved))
+      return () => cancelAnimationFrame(raf)
     }
   }, [])
 
