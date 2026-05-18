@@ -9,7 +9,8 @@ const MARKETING_PATHS = ['/', '/waitlist', '/privacidade', '/termos', '/calculad
 
 // V4_PATHS = rotas que já trazem shell próprio (sidebar + topbar) e NÃO devem
 // ser envolvidas pelo AppShell legado. Adicionar aqui ao migrar mais módulos V4.
-const V4_PATHS = ['/dashboard']
+// /library: design system interno com shell proprio (sem sidebar legada).
+const V4_PATHS = ['/dashboard', '/library']
 
 function isMarketingPath(pathname: string) {
   return MARKETING_PATHS.some(p => pathname === p || pathname.startsWith(p + '/'))

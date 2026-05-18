@@ -25,6 +25,7 @@
 | `/checkout` | público | `/api/checkout` |
 | `/settings` | SSR | `loadInitialState` |
 | `/login` | público | `useAuth` |
+| `/library` | SSR guard admin | `getUser` + `isAdminEmail` |
 
 ## Status
 

@@ -28,6 +28,14 @@
 | Modal.tsx | 68 | ✅ helpers de form |
 | ShareButton.tsx | 46 | ✅ |
 
+## visual-library/ (novo · 2026-05-18)
+
+Biblioteca de assets decorativos e utilitarios da identidade Hayzer.
+9 componentes: TapeBadge, UnderlineMarker, HighlightedText, Stamp, GrainOverlay, GlowPetrol, RootSvg, LottiePlayer, VideoBackground.
+Barrel export via `index.ts`. Doc completa em `components/visual-library/README.md`.
+Showcase vivo em `/library` (admin only).
+Dep nova instalada: `lottie-react`.
+
 ## Issues conhecidos
 
 - ✅ ~~`SettingsView.tsx` e `DashboardView.tsx` gigantes~~ — refatorados em 2026-05-04
