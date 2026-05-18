@@ -36,10 +36,10 @@ Sempre cheque cada item antes de aprovar um deploy importante:
 - [ ] Backup automático: verificar plano Supabase (Pro = 7 dias)
 
 ### Input/Output
-- [ ] Zod valida **toda entrada externa** (form, API, webhook)
-- [ ] Sanitização de string (DOMPurify se renderizar HTML user-input)
-- [ ] Erro genérico no login (não "email não existe" vs "senha errada" — vaza base)
-- [ ] Sem dado sensível em URL (sempre body POST)
+- [x] Zod valida **toda entrada externa** — 7 rotas com schemas em `services/apiSchemas.ts` (17/05 noite). Faltam apenas rotas internas que recebem `merchantId` da URL (webhooks, callbacks).
+- [ ] Sanitização de string (DOMPurify se renderizar HTML user-input) — não necessário ainda, sem render de HTML user-input
+- [x] Erro genérico no login ✓ (Supabase Auth default)
+- [x] Sem dado sensível em URL ✓ (sempre body POST nas rotas atuais)
 
 ### Rate Limit
 - [ ] Global no edge (Vercel rate limit ou middleware)
@@ -54,12 +54,12 @@ Sempre cheque cada item antes de aprovar um deploy importante:
 - [ ] Refund flow auditável
 
 ### Headers de Segurança (next.config.ts)
-- [ ] `Strict-Transport-Security`
-- [ ] `X-Frame-Options: DENY` (anti clickjacking)
-- [ ] `X-Content-Type-Options: nosniff`
-- [ ] `Referrer-Policy: strict-origin-when-cross-origin`
-- [ ] `Permissions-Policy` mínimo
-- [ ] `Content-Security-Policy` (vai pra Tier 2 — pode esperar pós-launch)
+- [x] `Strict-Transport-Security` ✓ (14/05)
+- [x] `X-Frame-Options: DENY` ✓ (14/05)
+- [x] `X-Content-Type-Options: nosniff` ✓ (14/05)
+- [x] `Referrer-Policy: strict-origin-when-cross-origin` ✓ (14/05)
+- [x] `Permissions-Policy` mínimo ✓ (14/05 — camera/microphone/geolocation negados)
+- [x] `Content-Security-Policy-Report-Only` ✓ (17/05 noite) — 12 directives. Promover pra enforcing após 2-4 semanas de observação no DevTools.
 
 ### LGPD (lei brasileira)
 - [ ] Política de Privacidade publicada
