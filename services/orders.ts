@@ -52,13 +52,23 @@ function toDB(o: Order, userId: string) {
 }
 
 export const ordersService = {
-  async getAll(): Promise<Order[]> {
+  /**
+   * Busca pedidos do usuário.
+   * Quando projectId é fornecido (obrigatório em contextos multi-tenant como o dashboard V4),
+   * filtra por projeto. O store legado omite projectId e recebe todos os projetos do user —
+   * a filtragem nesse caso fica na UI via state.orders.filter(o => o.projectId === id).
+   * TODO: migrar store.tsx loadFromSupabase para passar projectId quando V4 substituir o store.
+   */
+  async getAll(projectId?: string): Promise<Order[]> {
     const userId = await requireUserId()
-    const { data, error } = await supabase
+    let query = supabase
       .from('orders')
       .select('*')
       .eq('user_id', userId)
-      .order('date', { ascending: false })
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+    const { data, error } = await query.order('date', { ascending: false })
     if (error) serviceError('ordersService.getAll', error)
     return (data ?? []).map(fromDB)
   },
@@ -80,16 +90,18 @@ async create(o: Order): Promise<void> {
       .update(toDB(o, userId))
       .eq('id', o.id)
       .eq('user_id', userId)
+      .eq('project_id', o.projectId)
     if (error) serviceError('ordersService.update', error)
   },
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('orders')
       .delete()
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('ordersService.delete', error)
   },
 }

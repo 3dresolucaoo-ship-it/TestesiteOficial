@@ -45,13 +45,23 @@ function itemToDB(i: InventoryItem, userId: string) {
 }
 
 export const inventoryService = {
-  async getAll(): Promise<InventoryItem[]> {
+  /**
+   * Busca itens de inventário do usuário.
+   * Quando projectId é fornecido (obrigatório em contextos multi-tenant como o dashboard V4),
+   * filtra por projeto. O store legado omite projectId e recebe todos os projetos do user —
+   * a filtragem nesse caso fica na UI via state.inventory.filter(i => i.projectId === id).
+   * TODO: migrar store.tsx loadFromSupabase para passar projectId quando V4 substituir o store.
+   */
+  async getAll(projectId?: string): Promise<InventoryItem[]> {
     const userId = await requireUserId()
-    const { data, error } = await supabase
+    let query = supabase
       .from('inventory')
       .select('*')
       .eq('user_id', userId)
-      .order('name')
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+    const { data, error } = await query.order('name')
     if (error) serviceError('inventoryService.getAll', error)
     return (data ?? []).map(itemFromDB)
   },
@@ -73,16 +83,18 @@ export const inventoryService = {
       .update(itemToDB(i, userId))
       .eq('id', i.id)
       .eq('user_id', userId)
+      .eq('project_id', i.projectId)
     if (error) serviceError('inventoryService.update', error)
   },
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('inventory')
       .delete()
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('inventoryService.delete', error)
   },
 
@@ -247,13 +259,22 @@ function mvToDB(m: StockMovement, userId: string) {
 }
 
 export const movementsService = {
-  async getAll(): Promise<StockMovement[]> {
+  /**
+   * Busca movimentações de estoque do usuário.
+   * Quando projectId é fornecido (obrigatório em contextos multi-tenant como o dashboard V4),
+   * filtra por projeto. O store legado omite projectId e recebe todos os projetos do user.
+   * TODO: migrar store.tsx loadFromSupabase para passar projectId quando V4 substituir o store.
+   */
+  async getAll(projectId?: string): Promise<StockMovement[]> {
     const userId = await requireUserId()
-    const { data, error } = await supabase
+    let query = supabase
       .from('movements')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+    const { data, error } = await query.order('created_at', { ascending: false })
     if (error) serviceError('movementsService.getAll', error)
     return (data ?? []).map(mvFromDB)
   },
@@ -267,13 +288,14 @@ export const movementsService = {
     if (error) serviceError('movementsService.create', error)
   },
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('movements')
       .delete()
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('movementsService.delete', error)
   },
 }

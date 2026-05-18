@@ -28,13 +28,22 @@ function toDB(d: Decision, userId: string) {
 }
 
 export const decisionsService = {
-  async getAll(): Promise<Decision[]> {
+  /**
+   * Busca decisões do usuário.
+   * Quando projectId é fornecido (obrigatório em contextos multi-tenant como o dashboard V4),
+   * filtra por projeto. O store legado omite projectId e recebe todos os projetos do user.
+   * TODO: migrar store.tsx loadFromSupabase para passar projectId quando V4 substituir o store.
+   */
+  async getAll(projectId?: string): Promise<Decision[]> {
     const userId = await requireUserId()
-    const { data, error } = await supabase
+    let query = supabase
       .from('decisions')
       .select('*')
       .eq('user_id', userId)
-      .order('date', { ascending: false })
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+    const { data, error } = await query.order('date', { ascending: false })
     if (error) serviceError('decisionsService.getAll', error)
     return (data ?? []).map(fromDB)
   },
@@ -56,16 +65,18 @@ export const decisionsService = {
       .update(toDB(d, userId))
       .eq('id', d.id)
       .eq('user_id', userId)
+      .eq('project_id', d.projectId)
     if (error) serviceError('decisionsService.update', error)
   },
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('decisions')
       .delete()
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('decisionsService.delete', error)
   },
 }

@@ -42,13 +42,22 @@ function leadToDB(l: Lead, userId: string) {
 }
 
 export const leadsService = {
-  async getAll(): Promise<Lead[]> {
+  /**
+   * Busca leads do usuário.
+   * Quando projectId é fornecido (obrigatório em contextos multi-tenant como o dashboard V4),
+   * filtra por projeto. O store legado omite projectId e recebe todos os projetos do user.
+   * TODO: migrar store.tsx loadFromSupabase para passar projectId quando V4 substituir o store.
+   */
+  async getAll(projectId?: string): Promise<Lead[]> {
     const userId = await requireUserId()
-    const { data, error } = await supabase
+    let query = supabase
       .from('leads')
       .select('*')
       .eq('user_id', userId)
-      .order('date', { ascending: false })
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+    const { data, error } = await query.order('date', { ascending: false })
     if (error) serviceError('leadsService.getAll', error)
     return (data ?? []).map(leadFromDB)
   },
@@ -68,16 +77,18 @@ export const leadsService = {
       .update(leadToDB(l, userId))
       .eq('id', l.id)
       .eq('user_id', userId)
+      .eq('project_id', l.projectId)
     if (error) serviceError('leadsService.update', error)
   },
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('leads')
       .delete()
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('leadsService.delete', error)
   },
 }
@@ -115,13 +126,22 @@ function affToDB(a: Affiliate, userId: string) {
 }
 
 export const affiliatesService = {
-  async getAll(): Promise<Affiliate[]> {
+  /**
+   * Busca afiliados do usuário.
+   * Quando projectId é fornecido (obrigatório em contextos multi-tenant como o dashboard V4),
+   * filtra por projeto. O store legado omite projectId e recebe todos os projetos do user.
+   * TODO: migrar store.tsx loadFromSupabase para passar projectId quando V4 substituir o store.
+   */
+  async getAll(projectId?: string): Promise<Affiliate[]> {
     const userId = await requireUserId()
-    const { data, error } = await supabase
+    let query = supabase
       .from('affiliates')
       .select('*')
       .eq('user_id', userId)
-      .order('date', { ascending: false })
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+    const { data, error } = await query.order('date', { ascending: false })
     if (error) serviceError('affiliatesService.getAll', error)
     return (data ?? []).map(affFromDB)
   },
