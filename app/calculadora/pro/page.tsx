@@ -31,23 +31,20 @@ export default function CalculadoraProPage() {
               Pagamento único · R$ 37 · sem mensalidade
             </div>
 
-            <h1
-              className="text-[2.75rem] font-bold leading-[1.08] tracking-[-0.04em] text-foreground sm:text-[3.5rem] md:text-[4rem]"
-              style={{ fontFamily: 'var(--font-serif)' }}
-            >
-              Para de calcular preço no caderno.
+            <h1 className="display-h1 max-w-[700px] mx-auto text-[2.75rem] text-foreground sm:text-[3.5rem] md:text-[4rem]">
+              Para de calcular preço{' '}
+              <span
+                className="italic-soft marker"
+                style={{ boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone' }}
+              >
+                na cabeça, no Excel ou no zap
+              </span>
+              .
             </h1>
-            <h2
-              className="mt-4 text-[1.5rem] font-medium leading-[1.2] tracking-[-0.02em] text-muted-foreground sm:text-[1.75rem]"
-              style={{ fontFamily: 'var(--font-serif)' }}
-            >
-              E no Excel. E de cabeça também.
-            </h2>
 
-            <p className="mx-auto mt-6 max-w-[600px] text-[17px] leading-[1.6] text-muted-foreground">
-              A Calculadora Pro salva seus cálculos, exporta PDF pro cliente
-              e cuida de quantas impressoras você tiver.
-              Pagamento único de R$ 37. Acesso pra sempre.
+            <p className="mx-auto mt-6 max-w-[560px] text-[17px] leading-[1.6] text-muted-foreground">
+              PDF pro cliente, histórico salvo, multi-impressora.
+              R$&nbsp;37 pra sempre.
             </p>
 
             <div className="mt-10 flex flex-col items-center gap-3">
