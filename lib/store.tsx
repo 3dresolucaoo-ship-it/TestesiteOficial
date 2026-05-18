@@ -308,7 +308,11 @@ async function syncAction(
     // Transactions
     case 'ADD_TRANSACTION':    await transactionsService.create(action.payload); break
     case 'UPDATE_TRANSACTION': await transactionsService.update(action.payload); break
-    case 'DELETE_TRANSACTION': await transactionsService.delete(action.payload); break
+    case 'DELETE_TRANSACTION': {
+      const tx = prevState.transactions.find(t => t.id === action.payload)
+      if (tx) await transactionsService.delete(action.payload, tx.projectId)
+      break
+    }
 
     // Leads
     case 'ADD_LEAD':    await leadsService.create(action.payload); break

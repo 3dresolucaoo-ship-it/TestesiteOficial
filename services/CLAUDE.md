@@ -28,7 +28,7 @@
 | config.ts | 37 | config | ✅ |
 | content.ts | 114 | content | ✅ |
 | decisions.ts | 72 | decisions | ✅ |
-| finance.ts | 76 | transactions | ✅ |
+| finance.ts | 90 | transactions | ✅ `project_id` adicionado em todas as queries (fix 2026-05-18) |
 | financeConfig.ts | 100 | fixed_costs + profit_goals | ✅ Onda 3 (custos fixos + meta por projeto) |
 | inventory.ts | 280 | inventory + movements | ✅ (`image_url` adicionado em migration 20260504) |
 | leads.ts | — | leads + affiliates | ✅ |
@@ -49,6 +49,9 @@
 | apiSchemas.ts | 246 | (Zod) | ✅ Otávio 17/05 — schemas Zod compartilhados pras APIs públicas + finance + payment-configs. Inclui `checkoutSchema`, `encomendaSchema`, `quoteSchema`, `contentSyncSchema`, `fixedCostCreateSchema`, `fixedCostPatchSchema`, `profitGoalSchema`, `paymentConfigSchema` (discriminated union por provider). Helper `zodErrorToPtBr` retorna `{ message, fields }`. |
 
 ## Issues conhecidos
+
+- ✅ ~~`finance.ts` sem `project_id` em queries~~ — corrigido 2026-05-18: `getAll(projectId?)`, `update` + `delete` com `.eq('project_id', ...)`. Store legado usa `getAll()` sem arg (filtra na UI); dashboard V4 usa `getAll(projectId)` direto.
+- ⚠️ **BUG MESMO PADRÃO em outros services** (fora escopo desta task — reportar pra backlog): `ordersService.getAll`, `inventoryService.getAll`, `movementsService.getAll`, `productionService.getAll`, `contentService.getAll`, `decisionsService.getAll`, `leadsService.getAll`, `affiliatesService.getAll`, `productsService.getAll`, `catalogsService.listCatalogs` — todos sem `.eq('project_id', ...)` no `getAll`. Mesma correção necessária antes do dashboard V4 conectar esses services.
 
 - ✅ ~~`orders.ts` colunas e-commerce~~ — migration aplicada 2026-05-04
 - ✅ ~~`portfolios.ts` tabelas inexistentes~~ — migration aplicada 2026-05-04

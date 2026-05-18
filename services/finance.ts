@@ -32,13 +32,23 @@ function toDB(t: Transaction, userId: string) {
 }
 
 export const transactionsService = {
-  async getAll(): Promise<Transaction[]> {
+  /**
+   * Busca transações do usuário.
+   * Quando projectId é fornecido (obrigatório em contextos multi-tenant como o dashboard V4),
+   * filtra por projeto. O store legado omite projectId e recebe todos os projetos do user —
+   * a filtragem nesse caso fica na UI via state.transactions.filter(t => t.projectId === id).
+   * TODO: migrar store.tsx loadFromSupabase para passar projectId quando V4 substituir o store.
+   */
+  async getAll(projectId?: string): Promise<Transaction[]> {
     const userId = await requireUserId()
-    const { data, error } = await supabase
+    let query = supabase
       .from('transactions')
       .select('*')
       .eq('user_id', userId)
-      .order('date', { ascending: false })
+    if (projectId) {
+      query = query.eq('project_id', projectId)
+    }
+    const { data, error } = await query.order('date', { ascending: false })
     if (error) serviceError('transactionsService.getAll', error)
     return (data ?? []).map(fromDB)
   },
@@ -53,23 +63,25 @@ export const transactionsService = {
   },
 
   async update(t: Transaction): Promise<void> {
-    validateRequired('transactionsService.update', { id: t.id })
+    validateRequired('transactionsService.update', { id: t.id, projectId: t.projectId })
     const userId = await requireUserId()
     const { error } = await supabase
       .from('transactions')
       .update(toDB(t, userId))
       .eq('id', t.id)
       .eq('user_id', userId)
+      .eq('project_id', t.projectId)
     if (error) serviceError('transactionsService.update', error)
   },
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('transactions')
       .delete()
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('transactionsService.delete', error)
   },
 }
