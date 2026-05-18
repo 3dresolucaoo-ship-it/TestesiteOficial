@@ -1,7 +1,5 @@
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
-import Link from 'next/link'
-
 export const metadata = {
   title: 'Calculadora Pro — PDF de orçamento, histórico e multi-impressora · Hayzer',
   description:
@@ -218,7 +216,7 @@ export default function CalculadoraProPage() {
               </p>
               <p className="mt-4 text-[15px] leading-[1.65] text-muted-foreground">
                 Se em 7 dias você achar que não vale, devolve o dinheiro. Sem pergunta, sem formulário,
-                sem "deixa eu tentar te convencer". Manda email, eu estorno no mesmo dia.
+                sem &ldquo;deixa eu tentar te convencer&rdquo;. Manda email, eu estorno no mesmo dia.
               </p>
             </div>
           </div>
