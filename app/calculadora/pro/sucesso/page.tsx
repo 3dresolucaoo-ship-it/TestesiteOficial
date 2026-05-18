@@ -23,7 +23,7 @@ export default async function CalculadoraProSucessoPage({ searchParams }: Succes
       <main>
         <section className="flex min-h-[calc(100svh-4rem)] flex-col items-center justify-center px-6 py-20 text-center md:px-10">
           <div className="mx-auto max-w-[560px]">
-            {/* Indicador visual simples — sem confetti, sem over-the-top */}
+            {/* Indicador visual simples, sem confetti, sem over-the-top */}
             <div
               className="mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-full"
               style={{
