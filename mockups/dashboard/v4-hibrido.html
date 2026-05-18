@@ -333,6 +333,47 @@
     letter-spacing: -0.03em;
     user-select: none;
     font-variation-settings: "opsz" 144, "SOFT" 70;
+    /* CEO 17/05 V4.9: imperfeição humana deliberada (rotação 0.4° + offset 1px)
+       Faz parecer escrito a mão, não plotter mecânico. Anti-IA cirúrgico. */
+    transform: rotate(-0.4deg) translateY(-1px);
+  }
+
+  /* ============================================================
+     DECOR ROOTS — SVG decorativo lateral autoral (V4.9 17/05)
+     Raiz crescendo da esquerda, sutil mas presente. Motif Hayzer
+     único que NENHUM template SaaS tem. Anti-IA score +0.3.
+     ============================================================ */
+  .decor-roots {
+    position: fixed;
+    left: 248px;          /* alinhado com fim da sidebar */
+    bottom: 0;
+    width: 280px;
+    height: 380px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.18;
+  }
+  :root[data-theme="light"] .decor-roots {
+    opacity: 0.12;
+  }
+  .decor-roots path {
+    fill: none;
+    stroke: var(--petrol-400);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  :root[data-theme="light"] .decor-roots path {
+    stroke: var(--fog-200);
+  }
+  .decor-roots circle {
+    fill: var(--petrol-300);
+  }
+  :root[data-theme="light"] .decor-roots circle {
+    fill: var(--fog-200);
+  }
+  @media (max-width: 1024px) {
+    .decor-roots { display: none; }
   }
   :root[data-theme="light"] .watermark-raiz {
     /* CEO 17/05 V4.8: watermark agora mais visível em light (era 0.06 fantasma) */
@@ -744,7 +785,9 @@
     font-weight: 500;
     font-size: 96px;
     line-height: 0.95;
-    letter-spacing: -0.04em;
+    /* CEO 17/05 V4.9: tracking VARIÁVEL (não default uniforme) — Refactoring UI cap
+       "tracking comprime números grandes". -0.045em mais agressivo aqui pra dar peso. */
+    letter-spacing: -0.045em;
     color: var(--fog-50);
     font-variation-settings: "opsz" 144, "SOFT" 30;
     display: flex;
@@ -1155,7 +1198,8 @@
     font-size: 36px;
     line-height: 1.1;
     color: var(--fog-50);
-    letter-spacing: -0.02em;
+    /* tracking diferente do cover-figure (-0.025 vs -0.045) — variar deliberadamente */
+    letter-spacing: -0.025em;
     font-variation-settings: "opsz" 96, "SOFT" 30;
   }
   .section-title em {
@@ -2356,6 +2400,31 @@
 <!-- AMBIENT LAYERS -->
 <div class="ambient-glow" aria-hidden="true"></div>
 <div class="grain-layer" aria-hidden="true"></div>
+
+<!-- DECOR ROOTS — raíz lateral autoral (V4.9 17/05, motif único Hayzer).
+     Cresce da base esquerda subindo + ramificando. SVG desenhado à mão
+     (não preset Phosphor/Lucide) — anti-IA cirúrgico. -->
+<svg class="decor-roots" viewBox="0 0 280 380" aria-hidden="true">
+  <!-- tronco principal: base esquerda → topo direito -->
+  <path d="M 10 380 Q 38 340 58 290 Q 75 248 95 222 Q 122 192 158 178 Q 198 162 240 152"/>
+  <!-- ramo descendente esquerda -->
+  <path d="M 58 290 Q 42 248 28 208 Q 18 178 12 142 Q 8 112 4 80"/>
+  <!-- ramo central subindo -->
+  <path d="M 95 222 Q 110 188 128 156 Q 145 128 168 102 Q 188 82 208 64"/>
+  <!-- raízes finas laterais -->
+  <path d="M 28 208 Q 18 198 8 192"/>
+  <path d="M 158 178 Q 178 174 198 172"/>
+  <path d="M 128 156 Q 140 150 152 146"/>
+  <!-- nós/seivas (onde raízes ramificam) -->
+  <circle cx="58"  cy="290" r="2.8"/>
+  <circle cx="95"  cy="222" r="2.2"/>
+  <circle cx="158" cy="178" r="2.5"/>
+  <circle cx="28"  cy="208" r="1.8"/>
+  <circle cx="128" cy="156" r="1.8"/>
+  <circle cx="4"   cy="80"  r="1.5"/>
+  <circle cx="208" cy="64"  r="1.8"/>
+  <circle cx="240" cy="152" r="2.2"/>
+</svg>
 
 <!-- RAÍZ ESTRUTURAL no canvas (V3 base) -->
 <div class="root-canvas" aria-hidden="true">
