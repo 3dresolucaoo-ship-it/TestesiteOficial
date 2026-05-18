@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Calculator, ArrowRight, Copy, Check } from 'lucide-react'
+import { Calculator, ArrowRight, Copy, Check, FileText } from 'lucide-react'
+import { PaywallModal } from '@/components/calculadora/PaywallModal'
 import {
   Disc,           // rolo de filamento (3D look)
   Cube,           // peça 3D
