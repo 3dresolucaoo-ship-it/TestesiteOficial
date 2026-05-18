@@ -37,7 +37,7 @@
 | paymentConfig.ts | 316 | payment_configs | ✅ robusto, com cache + auto-refresh |
 | payments.ts | 198 | (abstração) | ✅ resolve provider via DB ou env |
 | portfolios.ts | 172 | portfolios + portfolio_items | ✅ (tabelas criadas em migration 20260504) |
-| production.ts | — | production | ⚠️ tabela SEM coluna `project_id` — getAll aceita arg opcional mas não filtra (ver TODO abaixo) |
+| production.ts | — | production | ✅ `project_id` ativo em getAll (migration `20260518_production_project_id` aplicada em prod 2026-05-18) |
 | products.ts | 148 | products | ✅ `project_id` em getAll/update/delete (fix 2026-05-18) · ⚠️ console.log linha 75 |
 | profiles.ts | 46 | profiles | ✅ |
 | projects.ts | 72 | projects | ✅ |
@@ -52,7 +52,7 @@
 
 - ✅ ~~`finance.ts` sem `project_id` em queries~~ — corrigido 2026-05-18.
 - ✅ ~~`ordersService`, `inventoryService`, `movementsService`, `contentService`, `decisionsService`, `leadsService`, `affiliatesService`, `productsService`, `catalogsService` sem `project_id`~~ — todos corrigidos 2026-05-18: `getAll(projectId?)` opcional, `update` + `delete` com `.eq('project_id', ...)`. Callers DELETE no store.tsx ajustados com lookup em `prevState`. `tsc --noEmit` passa zero erros.
-- ⚠️ **`productionService` PENDENTE** — tabela `production` não tem coluna `project_id` no schema atual. `ProductionItem` também não tem o campo. Necessário: (1) migration `ALTER TABLE production ADD COLUMN project_id uuid REFERENCES projects(id)`, (2) atualizar `ProductionItem` em `lib/types.ts`, (3) atualizar `toDB` em `production.ts`, (4) aplicar `.eq('project_id', projectId)` no `getAll`. Bloqueado até migration ser aplicada.
+- ✅ ~~`productionService` PENDENTE~~ — migration `20260518_production_project_id.sql` aplicada em prod 2026-05-18 via Supabase MCP. Backfill setou `project_id` como o primeiro projeto do user. RLS recreated (sem alterar logic). `productionService.getAll` ativado com `.eq('project_id', projectId)` condicional. `ProductionItem`/`toDB` opcionais — V4 dashboard pode passar projectId, store legado pode omitir.
 
 - ✅ ~~`orders.ts` colunas e-commerce~~ — migration aplicada 2026-05-04
 - ✅ ~~`portfolios.ts` tabelas inexistentes~~ — migration aplicada 2026-05-04

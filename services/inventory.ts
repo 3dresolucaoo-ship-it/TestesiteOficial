@@ -99,13 +99,14 @@ export const inventoryService = {
   },
 
   /** Patch only the quantity field (used for stock adjustments). */
-  async setQuantity(id: string, quantity: number): Promise<void> {
+  async setQuantity(id: string, quantity: number, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('inventory')
       .update({ quantity })
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('inventoryService.setQuantity', error)
   },
 

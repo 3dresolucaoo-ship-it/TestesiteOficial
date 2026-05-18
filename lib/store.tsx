@@ -359,7 +359,9 @@ async function syncAction(
       const { movement, itemId, delta } = action.payload
       await movementsService.create(movement)
       const prevItem = prevState.inventory.find(i => i.id === itemId)
-      await inventoryService.setQuantity(itemId, Math.max(0, (prevItem?.quantity ?? 0) + delta))
+      if (prevItem) {
+        await inventoryService.setQuantity(itemId, Math.max(0, prevItem.quantity + delta), prevItem.projectId)
+      }
       break
     }
 
