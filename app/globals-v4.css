@@ -836,21 +836,23 @@
   letter-spacing: 0.06em;
 }
 
-/* KPI HERO card petrol */
+/* KPI HERO card petrol — glow ampliado (Diego ajuste 1, 2026-05-18) */
 .kpi-hero {
   background: hsl(var(--petrol-500));
   color: hsl(var(--fog-50));
   border: 1px solid hsl(var(--petrol-600));
   padding: 26px 26px 22px 26px;
   border-radius: 16px;
-  box-shadow: var(--v4-shadow-petrol);
+  box-shadow:
+    var(--v4-shadow-card),
+    0 0 36px -10px rgba(31, 118, 105, 0.40);
   position: relative;
   overflow: hidden;
   min-height: 240px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: box-shadow var(--t-med);
+  transition: box-shadow 320ms ease-out;
 }
 .kpi-hero::before {
   content: '';
@@ -862,7 +864,9 @@
   pointer-events: none;
 }
 .kpi-hero:hover {
-  box-shadow: var(--v4-shadow-petrol), 0 0 36px -8px rgba(111, 181, 168, 0.45);
+  box-shadow:
+    var(--v4-shadow-card),
+    0 0 48px -8px rgba(31, 118, 105, 0.55);
 }
 
 /* ============================================================

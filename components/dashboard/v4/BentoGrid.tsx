@@ -27,6 +27,7 @@
  */
 
 import { RootHover } from './RootHover'
+import { TapeBadge } from '@/components/visual-library'
 import type {
   DonutSegment,
   MonthBar,
@@ -444,7 +445,7 @@ function AlertCard({ alert }: { alert: StockAlert }) {
             {alert.materialName} pra acabar
           </div>
         </div>
-        <span className="pill-warning">{alert.urgencyLabel}</span>
+        <TapeBadge tone="ember" rotate={4} size="sm">{alert.urgencyLabel}</TapeBadge>
       </header>
 
       <div className="alert-filament">
