@@ -24,7 +24,7 @@
 | 10 | **Documentação (Diátaxis)** | 8.0 | 8.5 | 9.0 | Lia | 31/05 |
 | 11 | **Backend (DB + APIs)** | 7.5 | 8.5 | 9.0 | Bruna | 24/05 |
 | 12 | **Estratégia (posicionamento)** | 7.5 | 8.5 | 9.0 | Helena | 31/05 |
-| | **MÉDIA GERAL** | **7.2 ⬆️** | **8.0** | **8.8** | Helena | semanal |
+| | **MÉDIA GERAL** | **7.3 ⬆️** | **8.0** | **8.8** | Helena | semanal |
 
 ---
 

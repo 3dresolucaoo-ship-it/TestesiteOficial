@@ -39,14 +39,15 @@ const securityHeaders = [
 //   + Tailwind utility classes. Pós-launch: migrar pra nonces (`headers()` dinâmico).
 // - 'unsafe-eval' só em dev (React reconstrói server stack via eval).
 const isDev = process.env.NODE_ENV !== 'production';
-const scriptSrc = [
+const scriptSrcParts: string[] = [
   "'self'",
   "'unsafe-inline'",
-  isDev ? "'unsafe-eval'" : null,
   "va.vercel-scripts.com",
   "vitals.vercel-insights.com",
   "js.stripe.com",
-].filter(Boolean).join(' ');
+];
+if (isDev) scriptSrcParts.splice(2, 0, "'unsafe-eval'");
+const scriptSrc = scriptSrcParts.join(' ');
 
 const cspReportOnly = [
   "default-src 'self'",
