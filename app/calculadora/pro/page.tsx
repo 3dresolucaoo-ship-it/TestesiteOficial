@@ -1,5 +1,6 @@
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
+import { Logo } from '@/components/landing/Logo'
 export const metadata = {
   title: 'Calculadora Pro · PDF de orçamento, histórico e multi-impressora · Hayzer',
   description:
@@ -10,44 +11,76 @@ const stripeLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_CALC_PRO
 
 export default function CalculadoraProPage() {
   return (
-    <div className="grain bg-background text-foreground">
+    <div className="bg-background text-foreground">
       <Header />
       <main>
         {/* ── HERO ──────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
-          <div className="mx-auto max-w-[860px] px-6 text-center md:px-10">
-            <div
-              className="mb-6 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11.5px] font-medium tracking-wide"
-              style={{
-                background: 'hsl(var(--petrol-500) / 0.12)',
-                border: '1px solid hsl(var(--petrol-400) / 0.3)',
-                color: 'hsl(var(--petrol-300))',
-              }}
-            >
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ background: 'hsl(var(--petrol-300))' }}
-              />
-              Pagamento único · R$ 37 · sem mensalidade
+        <section className="vignette grain relative overflow-hidden">
+          {/* Glows ambientes nos cantos: verde-petrol esquerda, ember direita */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-32 -left-32 h-[520px] w-[520px] rounded-full blur-[110px]"
+            style={{ background: 'hsl(var(--petrol-500) / 0.22)', zIndex: 0 }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute top-40 -right-40 h-[460px] w-[460px] rounded-full blur-[120px]"
+            style={{ background: 'hsl(var(--ember-500) / 0.16)', zIndex: 0 }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-[-160px] left-1/3 h-[380px] w-[380px] rounded-full blur-[110px]"
+            style={{ background: 'hsl(var(--petrol-400) / 0.12)', zIndex: 0 }}
+          />
+
+          <div className="container-warm relative mx-auto max-w-[1000px] px-6 pt-20 pb-24 text-center md:px-10 md:pt-28 md:pb-32">
+            {/* Logo gigante: mesma alma do hero do waitlist */}
+            <div className="mb-10 flex justify-center">
+              <Logo size="lg" pulse />
             </div>
 
-            <h1 className="display-h1 max-w-[700px] mx-auto text-[2.75rem] text-foreground sm:text-[3.5rem] md:text-[4rem]">
+            {/* Badge sticker âmbar tilt: paralelo ao "ACESSO ANTECIPADO" do waitlist */}
+            <div className="mb-8 flex justify-center">
+              <span className="sticker-amber inline-flex -rotate-1 items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em]">
+                Pro Lifetime · R$ 37 · pagamento único
+              </span>
+            </div>
+
+            <h1 className="display-h1 mx-auto max-w-[820px] text-[3rem] text-foreground sm:text-[3.75rem] md:text-[4.75rem] lg:text-[5.25rem]">
               Para de calcular preço{' '}
               <span
                 className="italic-soft marker"
                 style={{ boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone' }}
               >
-                na cabeça, no Excel ou no zap
+                na cabeça
               </span>
-              .
+              ,{' '}
+              <span className="italic-soft">no Excel ou no zap</span>.
             </h1>
 
-            <p className="mx-auto mt-6 max-w-[560px] text-[17px] leading-[1.6] text-muted-foreground">
+            <p className="mx-auto mt-7 max-w-[580px] text-[17px] leading-[1.6] text-muted-foreground md:text-[18px]">
               PDF pro cliente, histórico salvo, multi-impressora.
               R$&nbsp;37 pra sempre.
             </p>
 
-            <div className="mt-10 flex flex-col items-center gap-3">
+            {/* Lista "para makers que": paralelo ao "construído para" do hero waitlist */}
+            <div className="mx-auto mt-10 flex max-w-[680px] flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[13px]">
+              <span className="tag tag-fog">para quem</span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
+                manda orçamento pelo WhatsApp
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
+                tem mais de uma impressora
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
+                vende em marketplace
+              </span>
+            </div>
+
+            <div className="mt-12 flex flex-col items-center gap-3">
               <CtaButton />
               <p className="text-[12px] text-muted-foreground">
                 pagamento único · sem mensalidade · 7 dias pra pedir reembolso
@@ -312,7 +345,7 @@ function CtaButton() {
   return (
     <a
       href={stripeLink}
-      className="inline-flex items-center justify-center rounded-xl px-8 py-4 text-[16px] font-semibold transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-300))] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group inline-flex items-center justify-center rounded-xl px-8 py-4 text-[16px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_0_28px_hsl(var(--petrol-400)/0.55),0_18px_44px_-12px_hsl(var(--petrol-500)/0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-300))] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       style={{
         background: 'linear-gradient(180deg, hsl(var(--petrol-400)) 0%, hsl(var(--petrol-500)) 100%)',
         color: 'hsl(var(--fog-50))',
