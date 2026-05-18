@@ -65,15 +65,63 @@
 
 ✅ **Resultado esperado**: V4 dashboard em produção com dados reais; segurança Tier 1 90% concluída; bug Paulo (transaction atômica) corrigido.
 
-### Semana 3 (27/05-02/06) — LGPD + Email + MP Marketplace
+### Semana 3 (25-31/05) — Polish V4 + Analytics + Calculadora Pro + Tier 2 Segurança
+> **Plano reajustado pela Helena 18/05** baseado em pilares mais fracos (Conversão 5.0, Retenção 5.0) e runway CEO. Doc completo: `strategy/decisoes-resolvidas-2026-05-18.md`.
+
+**BLOCO A — Polish V4 React em prod com dados reais** (Felipe + Bruna)
+- [ ] Polish bugs descobertos no preview 24/05
+- [ ] Onboarding empty states (Sofia FP-01/02/03 — reusar `components/EmptyState.tsx`)
+- [ ] Conectar últimos services se ainda faltarem
+
+**BLOCO B — Analytics de funil instalado** (Marcos + Felipe)
+- [ ] Vercel Analytics ativo
+- [ ] PostHog free configurado
+- [ ] Eventos instrumentados: page_view + click_cta_waitlist + waitlist_step1_done + waitlist_step2_done + calculadora_used + viu_paywall_calc_pro + clicou_comprar_calc_pro
+- [ ] 3 variantes A/B de hero copy (Marcos define, Carla refina, Felipe implementa)
+
+**BLOCO C — Lighthouse + Axe audit + fix top 3** (Júlia + Felipe)
+- [ ] Lighthouse score em todas rotas públicas
+- [ ] Axe issues fixados (top 3 críticos)
+- [ ] Pilar Performance 6.5 → 7.5, Acessibilidade 6.5 → 7.5
+
+**BLOCO D — Email transacional sequência D+1, D+3, D+7** (Sofia + Carla)
+- [ ] Template D+1: "Bem-vindo, conta um pouco do teu maker"
+- [ ] Template D+3: "Calculadora 3D — preço por canal"
+- [ ] Template D+7: "Hayzer em breve — o que vem"
+- [ ] Wire-up em `services/email.ts` com triggers Supabase scheduled functions OU pg_cron
+
+**BLOCO E — Calculadora 3D Pro paga R$ 37** (Carla + Paulo + Felipe — DECISÃO HELENA 18/05)
+- [ ] Carla escreve copy paywall + página venda (até qua 27/05)
+- [ ] Paulo cria Stripe Payment Link R$ 37 (preço-âncora) (até qua 27/05)
+- [ ] Felipe implementa lógica check + UI paywall + histórico localStorage + PDF export + multi-impressora (qui-sex 28-29/05, max 6h)
+- [ ] Deploy preview sex 29/05 noite
+- [ ] Sofia+Marcos divulgam no grupo Beta WhatsApp sáb 30/05
+
+**BLOCO F — LGPD + Tier 2 Segurança** (Otávio + Bruna)
+- [ ] Direito de deleção (endpoint `DELETE /api/me`)
+- [ ] Vercel BotID Challenge mode no form waitlist
+- [ ] Dependabot ativo (`.github/dependabot.yml` — feito 18/05 madrugada ✅)
+- [ ] Sentry instalado + DSN configurado
+- [ ] Audit log table + helper `services/auditLog.ts` (auth/payment/webhooks)
+- [ ] Rate-limit em rotas autenticadas (`/api/finance/*`, `/api/payment-configs`)
+- [ ] CSP report endpoint `/api/csp-report` apontando pro Sentry
+
+**BLOCO G — MP OAuth (se destravar até 25/05)** (Paulo)
+- [ ] MP OAuth Marketplace E2E (se ainda travado em 25/05 → adia pra Semana 5+)
+- [ ] Stripe Connect cobre se MP atrasar
+
+**Decisões CEO da Helena (resolvidas 18/05, aguardando CEO confirmar)**
+- ✋ Calculadora Pro Semana 3 R$ 37
+- ✋ Ritmo PR 30min/semana com gatilho redução automática
+- ✋ Ordem features 1-2-3 + Calc Pro como upsell
+- ✋ Deadline PR 48h com `/extend` (+48h)
+
+### Backup pendências antigas (movidas pra Semanas 4+)
 - [x] Política de Privacidade publicada ✅ 2026-05-13
 - [x] Termos de Uso publicados ✅ 2026-05-13
 - [x] Checkbox de consentimento no form de captura ✅ 2026-05-13
-- [ ] Direito de deleção (endpoint DELETE /api/me)
-- [ ] Vercel BotID ativado no form
-- [x] **Resend configurado (domínio + SPF/DKIM/DMARC)** ✅ 2026-05-15 — verified us-east-1 (recriado após sa-east-1 travado)
-- [x] **Email de boas-vindas** (template HTML+texto, wire-up em actions.ts) ✅ 2026-05-15 — testado fim-a-fim em prod
-- [ ] MP OAuth Marketplace E2E (resolver bloqueio atual)
+- [x] **Resend configurado (domínio + SPF/DKIM/DMARC)** ✅ 2026-05-15 — verified us-east-1
+- [x] **Email de boas-vindas** ✅ 2026-05-15 — testado fim-a-fim em prod
 
 ### Semana 4 (03-09/06) — Wave 1 — Customers
 - [ ] Tela `/customers` (lista + busca + filtros)
