@@ -18,6 +18,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { quoteSchema, zodErrorToPtBr } from '@/services/apiSchemas'
+import { enforceApiRateLimit, getClientIp } from '@/services/apiRateLimit'
 
 function getAnonClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -27,6 +28,21 @@ function getAnonClient() {
 }
 
 export async function POST(req: NextRequest) {
+  // Otávio (Security) 2026-05-17: rate-limit mais agressivo (10/min) porque
+  // quote cria Lead no CRM do dono — spam direto na inbox dele. Fail-OPEN se DB cair.
+  const rl = await enforceApiRateLimit({
+    endpoint: 'catalog_quote',
+    ip:       getClientIp(req),
+    limit:    10,
+    windowMs: 60_000,
+  })
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Muitas tentativas. Aguarde um momento e tente novamente.' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
+    )
+  }
+
   // Otávio (Security) 2026-05-16: validação Zod (com refine pra whatsapp || email)
   // bloqueia XSS no name/description, limita tamanhos, valida URL de referência.
   let rawBody: unknown

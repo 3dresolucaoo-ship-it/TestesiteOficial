@@ -11,9 +11,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin }          from '@/lib/supabaseAdmin'
 import { encomendaSchema, zodErrorToPtBr } from '@/services/apiSchemas'
+import { enforceApiRateLimit, getClientIp } from '@/services/apiRateLimit'
 
 export async function POST(req: NextRequest) {
   try {
+    // Otávio (Security) 2026-05-17: rate-limit DB-based — 20 req/min por IP.
+    // Bloqueia flood de pedidos lead fake. Fail-OPEN se DB cair.
+    const rl = await enforceApiRateLimit({
+      endpoint: 'encomenda',
+      ip:       getClientIp(req),
+      limit:    20,
+      windowMs: 60_000,
+    })
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Muitas tentativas. Aguarde um momento e tente novamente.' },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
+      )
+    }
+
     // Otávio (Security) 2026-05-16: validação Zod bloqueia XSS + limita payload
     const rawBody = await req.json()
     const parsed = encomendaSchema.safeParse(rawBody)

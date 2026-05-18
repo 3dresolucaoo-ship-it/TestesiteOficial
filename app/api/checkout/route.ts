@@ -26,9 +26,26 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSupabaseAdmin }          from '@/lib/supabaseAdmin'
 import { getPaymentProvider }        from '@/services/payments'
 import { checkoutSchema, zodErrorToPtBr } from '@/services/apiSchemas'
+import { enforceApiRateLimit, getClientIp } from '@/services/apiRateLimit'
 
 export async function POST(req: NextRequest) {
   try {
+    // Otávio (Security) 2026-05-17: rate-limit DB-based — 20 req/min por IP.
+    // Defesa contra flood de payment sessions (custo por sessão MP/Stripe + DOS
+    // no DB). Fail-OPEN: se Supabase cair, request passa.
+    const rl = await enforceApiRateLimit({
+      endpoint: 'checkout',
+      ip:       getClientIp(req),
+      limit:    20,
+      windowMs: 60_000,
+    })
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Muitas tentativas. Aguarde um momento e tente novamente.' },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
+      )
+    }
+
     // Otávio (Security) 2026-05-16: validação Zod bloqueia XSS em customerName/whatsapp
     // + limita tamanho de payload + valida UUID do produto + sanitiza slug
     const rawBody = await req.json()

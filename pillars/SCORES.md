@@ -12,7 +12,7 @@
 
 | # | Pilar | Hoje | Meta 30d | Meta 90d | Owner G7 | Próx. revisão |
 |---|---|---|---|---|---|---|
-| 1 | **Design (UI/UX)** | 8.5 ⬆️ | 9.0 | 9.5 | Diego | 24/05 |
+| 1 | **Design (UI/UX)** | 9.0 ⬆️ | 9.5 | 9.7 | Diego | 24/05 |
 | 2 | **Anti-IA (autenticidade)** | 8.5 ⬆️ | 9.0 | 9.5 | Carla + Diego | 24/05 |
 | 3 | **Segurança (OWASP 2025)** | 7.0 | 8.5 | 9.0 | Otávio | 24/05 |
 | 4 | **Performance (Web Vitals)** | 6.5 | 7.5 | 8.5 | Felipe + Ricardo | 31/05 |
@@ -24,7 +24,7 @@
 | 10 | **Documentação (Diátaxis)** | 8.0 | 8.5 | 9.0 | Lia | 31/05 |
 | 11 | **Backend (DB + APIs)** | 7.5 | 8.5 | 9.0 | Bruna | 24/05 |
 | 12 | **Estratégia (posicionamento)** | 7.5 | 8.5 | 9.0 | Helena | 31/05 |
-| | **MÉDIA GERAL** | **7.0 ⬆️** | **8.0** | **8.8** | Helena | semanal |
+| | **MÉDIA GERAL** | **7.1 ⬆️** | **8.0** | **8.8** | Helena | semanal |
 
 ---
 
@@ -47,12 +47,18 @@
 
 ## 🎯 Plano de ação por pilar (próximos 30 dias)
 
-### 1. Design (UI/UX) · 7.5 → 8.5
+### 1. Design (UI/UX) · 8.5 → 9.0 ✅ (17/05 noite)
 - ✅ V4.3 entregue (hierarquia hero+satélites, dark soft, raízes hover)
-- [ ] +0.5: trocar ícone lâmpada → raiz no Next Action (✅ feito 17/05 V4.4)
-- [ ] +0.5: variar border-radius cards (não tudo 999px ou 14px uniforme)
-- [ ] +0.5: paleta HSL 8-10 shades (Refactoring UI · Diego)
-- [ ] +1.0: animações Framer Motion na conversão React (Felipe)
+- ✅ trocar ícone lâmpada → raiz no Next Action (17/05 V4.4)
+- ✅ **+0.5: paleta HSL 8-10 shades** (Refactoring UI · Diego · 17/05 noite)
+  - 50 tokens petrol/fog/ember/night/sand (10 cada) implementados em `app/globals.css`
+  - + 25 tokens matriz sand 5×5 (5 rows × 5 stops) — paleta marrom CEO 17/05
+  - + classes Tailwind 4 auto-geradas: `bg-petrol-500`, `text-fog-200`, `bg-sand-warm-300/20`...
+  - **Resolve bug latente Tailwind 4 `bg-X/Y`** — tokens HSL nomeados compõem opacity corretamente
+  - Doc: anexo A em `design/dashboard-v4-spec.md` (a extrair pra `palette-sand-matrix.md`)
+- [ ] +0.5: variar border-radius cards (não tudo 999px ou 14px uniforme) — próximo
+- [ ] +0.5: migrar componentes existentes pra novos tokens (hex hardcode → sand-*/petrol-*)
+- [ ] +0.5: animações Framer Motion na conversão React (Felipe)
 
 ### 2. Anti-IA · 7.5 → 8.5
 - ✅ Fraunces ≤15%, microcopy maker BR real, vírgula brasileira, raízes vivas

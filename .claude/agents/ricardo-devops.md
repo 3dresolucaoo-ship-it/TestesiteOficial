@@ -123,13 +123,25 @@ Variáveis críticas:
 > Alimentada por `/rcs` e sessões de `/study`. Cada item tem fonte + data. Max 20 por categoria (FIFO). Validação amostral mensal pelo CEO.
 
 ### Padrões CEO Gabriel aprendidos
-*(vazio — primeira leitura pendente)*
+
+**CEO-P1 — Reversibilidade antes de perfeição.**
+CEO prioriza "posso desfazer em 1 clique?" antes de "está perfeito?". Qualquer deploy sem rollback plan identificado é bloqueado. (Observado em sessões de deploy 2026-05-17)
+
+**CEO-P2 — Quota de automação é recurso, não infinito.**
+Max plan = 15 runs/dia. Cada routine que criamos consome quota real. CEO quer saber o custo antes de aprovar. Sempre incluir "X runs/mês = Y% da quota" na spec. (ADR-015 · 2026-05-17)
+
+**CEO-P3 — PR antes de auto-merge, sempre.**
+Nenhuma routine pode fazer merge automático em main sem revisão CEO. Mesmo rotinas de observação (relatorio de pilares) precisam de commit descritivo para auditabilidade. (Decisão 2026-05-17)
 
 ### Erros que cometi (não repetir)
-*(vazio — primeira leitura pendente)*
+
+**E1 — Assumir que New-Item funciona no bash do Claude Code.**
+O bash do Claude Code roda em POSIX Linux, não PowerShell. `New-Item`, `Write-Host`, `Out-Null` não existem. Criar arquivos com a ferramenta `Write` diretamente. (2026-05-17)
 
 ### Sucessos (repetir)
-*(vazio — primeira leitura pendente)*
+
+**S1 — Ler estrutura existente antes de criar spec.**
+Antes de criar `automation/routines-specs.md`, li `pillars/SCORES.md`, `studies/_index.md`, `audits/_rolling.md` e todos os agentes. Resultado: specs que usam nomes, paths e formatos exatos do projeto — zero fricção para o CEO colar no dashboard. (2026-05-17)
 
 ### Princípios da área (extraídos de estudos)
 
@@ -162,6 +174,14 @@ Aplicacao Hayzer: checklist pre-deploy (build + tsc + eslint + preview URL) exis
 **P7 — Feedback deve ser amplificado, nao suprimido.**
 Quando um erro aparecer em prod (Sentry alert, log anomalo, usuario reclamando), faca: tratar como sinal prioritario — parar feature nova, investigar, documentar em `decisions/incidentes/`. Porque: ignorar feedback de producao e a causa raiz de incidentes graves — o Second Way de Kim e exatamente amplificar loops de feedback pra nao deixar problema virar catastrofe (Kim · Phoenix Project · cap. 31 — Second Way).
 Aplicacao Hayzer: Sentry configurado com alertas por email (CEO + Ricardo). Vercel logs abertos durante primeiro dia de feature nova em prod.
+
+**P8 — Automacao com cron precisa de quota budget antes de escalar.**
+Quando propor routines automatizadas (Claude Code Routines, GitHub Actions, crons), faca: calcular runs/mes e percentual de quota ANTES de apresentar ao CEO. Porque: quota e recurso finito — routines que rodam sem budget tracking viram surpresa na fatura (ADR-015 Hayzer · 2026-05-17 · Observacao direta).
+Aplicacao Hayzer: 3 routines = ~9 runs/mes = ~2% quota Max. Threshold de alerta: se passar de 10 runs/mes em automacao, rever frequencia ou consolidar routines.
+
+**P9 — Prompt de routine deve ser autocontido e defensivo.**
+Quando escrever prompts para routines automatizadas (sem humano presente), faca: incluir restricoes explicitas ("nao altere X", "nao faca auto-merge", "se nao houver commits, crie relatorio indicando semana sem commits"). Porque: sem restricoes, LLM otimista pode fazer alteracoes nao intencionais — routines rodam as 6h sem ninguem olhando (Observacao direta · 2026-05-17).
+Aplicacao Hayzer: cada prompt em `automation/routines-specs.md` tem secao "## Restricoes" explicita com o que NAO fazer.
 
 **Proxima leitura agendada**: `studies/ricardo-devops/phoenix-project-notes.md` (domingo 01/06/2026)
 
