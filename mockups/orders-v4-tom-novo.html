@@ -1230,5 +1230,729 @@
 </style>
 </head>
 <body>
+
+<!-- AMBIENT LAYERS (grain + glow petrol/ember + raízes — igual landing) -->
+<div class="ambient-glow" aria-hidden="true"></div>
+<div class="grain-layer" aria-hidden="true"></div>
+
+<!-- RAÍZES ESTRUTURAIS atravessando o canvas -->
+<div class="root-canvas" aria-hidden="true">
+  <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+    <path class="root-trunk"
+      d="M 60 1060 Q 180 980 240 880 Q 300 780 380 720 Q 480 650 560 580
+         Q 680 480 820 440 Q 980 400 1140 360 Q 1300 320 1460 280
+         Q 1620 240 1780 180 Q 1860 140 1900 80"/>
+    <path class="root-branch" d="M 380 720 Q 360 660 320 600 Q 290 540 250 480"/>
+    <path class="root-branch" d="M 560 580 Q 640 570 720 540 Q 800 510 880 460"/>
+    <path class="root-branch" d="M 820 440 Q 880 360 920 280 Q 950 220 980 180"/>
+    <path class="root-branch" d="M 1140 360 Q 1180 300 1240 260 Q 1300 220 1360 200"/>
+    <path class="root-branch" d="M 1460 280 Q 1520 240 1580 220 Q 1640 200 1700 200"/>
+    <path class="root-sub" d="M 320 600 Q 270 590 230 600"/>
+    <path class="root-sub" d="M 720 540 Q 700 510 680 480"/>
+    <path class="root-sub" d="M 920 280 Q 880 250 850 220"/>
+    <path class="root-sub" d="M 1240 260 Q 1220 220 1210 190"/>
+    <circle class="root-node" cx="380" cy="720" r="3"/>
+    <circle class="root-node" cx="560" cy="580" r="3"/>
+    <circle class="root-node" cx="820" cy="440" r="3"/>
+    <circle class="root-node" cx="1140" cy="360" r="3"/>
+    <circle class="root-node" cx="1460" cy="280" r="3"/>
+  </svg>
+</div>
+
+<!-- WATERMARK gigante -->
+<div class="watermark-raiz" aria-hidden="true">pedidos</div>
+
+<!-- MOBILE TOGGLE -->
+<button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menu" type="button">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+    <line x1="3" y1="6" x2="21" y2="6"/>
+    <line x1="3" y1="12" x2="21" y2="12"/>
+    <line x1="3" y1="18" x2="21" y2="18"/>
+  </svg>
+</button>
+
+<!-- ============================================================
+     SIDEBAR (igual dashboard V4)
+     ============================================================ -->
+<aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+  <a href="#" class="brand" aria-label="Hayzer · Início">
+    <img src="/logo-hayzer.png" alt="Hayzer" class="brand-logo" onerror="this.style.display='none'" />
+    <div class="brand-meta">
+      <span class="brand-word">Hayzer</span>
+      <span class="brand-tag">controle maker</span>
+    </div>
+  </a>
+
+  <nav class="nav-group" aria-label="Núcleo">
+    <span class="nav-group-label">Núcleo</span>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 12 3l9 9"/><path d="M5 10v10h14V10"/></svg>
+      Início
+    </a>
+    <a href="#" class="nav-item active" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18l-2 13H5L3 7Z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg>
+      Pedidos
+      <span class="badge">3</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="12" height="9"/><path d="M8 9V5h8v4"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+      Produção
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v10l9 5 9-5V7l-9-5-9 5Z"/><path d="m3 7 9 5 9-5"/><path d="M12 12v10"/></svg>
+      Estoque
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Financeiro
+    </a>
+  </nav>
+
+  <nav class="nav-group" aria-label="Crescimento">
+    <span class="nav-group-label">Crescimento</span>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Clientes
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2Z"/></svg>
+      Leads
+      <span class="badge">7</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Catálogo
+    </a>
+  </nav>
+
+  <nav class="nav-group" aria-label="Sistema">
+    <span class="nav-group-label">Sistema</span>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      Configurações
+    </a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="user-pill" role="button" tabindex="0">
+      <div class="user-avatar">GV</div>
+      <div class="user-info">
+        <span class="user-name">Gabriel Vaz</span>
+        <span class="user-role">ADMIN</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<main class="main">
+
+  <!-- TOPBAR (igual V4 dashboard) -->
+  <div class="topbar">
+    <button class="project-switcher" type="button" aria-label="Trocar projeto">
+      <span class="project-dot">3D</span>
+      <span>Resolução 3D</span>
+      <span class="project-meta">PRINCIPAL</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="topbar-right">
+      <span class="status-pill">
+        <span class="live-dot"></span>
+        AO VIVO · 30s
+      </span>
+      <button class="icon-btn" aria-label="Notificações" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="ind"></span>
+      </button>
+      <button class="icon-btn" aria-label="Buscar" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema" type="button">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+          <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
+          <line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/><line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       PAGE HEADER editorial — título Fraunces + frase viva
+       ============================================================ -->
+  <header class="page-header fade-in">
+    <div class="page-header-left">
+      <span class="page-eyebrow">
+        <span class="pill-mini">MAIO · SEM 03</span>
+        12 abertos · 35 entregues no mês
+      </span>
+      <h1 class="page-title">
+        Pedidos
+        <span class="accent-italic">essa semana</span>
+      </h1>
+      <p class="page-sub">
+        <span class="marker-ember">8 pra entregar até sexta</span>,
+        3 atrasaram, 2 já saíram do galpão.
+        Resto tá <span class="wavy-petrol">no ritmo certo</span>.
+      </p>
+    </div>
+    <div class="page-header-right">
+      <button class="btn-ghost" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Exportar CSV
+      </button>
+      <button class="btn-primary" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Novo pedido
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       KPI ROW — hero petrol + 2 cards normais
+       ============================================================ -->
+  <section class="kpi-row fade-in delay-1" aria-label="Indicadores de pedidos">
+
+    <!-- HERO PETROL (igual V1 dataviz, com raízes no canto) -->
+    <article class="kpi-card hero-petrol">
+      <span class="kpi-eyebrow">FATURADO · 7 DIAS</span>
+      <div class="kpi-value">
+        <span class="currency">R$</span>4.280<span class="decimal">,50</span>
+      </div>
+      <span class="kpi-sub">23 pedidos fechados, ticket médio R$ 186.</span>
+      <span class="kpi-delta up">▲ +18% vs sem 02</span>
+
+      <!-- raízes SVG no canto (motif Hayzer) -->
+      <svg class="hero-roots" viewBox="0 0 110 110" aria-hidden="true">
+        <path d="M 8 108 Q 22 88 32 70 Q 44 50 60 38 Q 78 24 96 18"/>
+        <path d="M 32 70 Q 22 50 14 38"/>
+        <path d="M 60 38 Q 70 26 78 18"/>
+        <path d="M 44 50 Q 54 38 62 32"/>
+        <circle cx="32" cy="70" r="2.4"/>
+        <circle cx="60" cy="38" r="2"/>
+        <circle cx="14" cy="38" r="1.6"/>
+      </svg>
+    </article>
+
+    <!-- TICKET MÉDIO -->
+    <article class="kpi-card">
+      <span class="kpi-eyebrow">TICKET MÉDIO</span>
+      <div class="kpi-value">
+        <span class="currency">R$</span>186<span class="decimal">,10</span>
+      </div>
+      <span class="kpi-sub">aumentou com produtos Bambu na vitrine.</span>
+      <span class="kpi-delta up">▲ +12% vs abr</span>
+    </article>
+
+    <!-- ATRASADOS (alerta) -->
+    <article class="kpi-card">
+      <span class="kpi-eyebrow">ATRASADOS</span>
+      <div class="kpi-value" style="color: var(--signal-red);">
+        3<span class="decimal" style="color: var(--fog-300);"> pedidos</span>
+      </div>
+      <span class="kpi-sub">Helena, Falconi e Rafael esperando filamento.</span>
+      <span class="kpi-delta down">▼ resolver até quinta</span>
+    </article>
+  </section>
+
+  <!-- ============================================================
+       FILTROS — tabs status + busca
+       ============================================================ -->
+  <div class="filter-bar fade-in delay-2">
+    <div class="filter-tabs" role="tablist">
+      <button class="filter-tab active" role="tab" aria-selected="true">
+        Todos
+        <span class="count">47</span>
+      </button>
+      <button class="filter-tab" role="tab">
+        Produzindo
+        <span class="count">5</span>
+      </button>
+      <button class="filter-tab" role="tab">
+        Aguardando pagamento
+        <span class="count">2</span>
+      </button>
+      <button class="filter-tab" role="tab">
+        Pago
+        <span class="count">8</span>
+      </button>
+      <button class="filter-tab" role="tab">
+        Enviado
+        <span class="count">4</span>
+      </button>
+      <button class="filter-tab" role="tab" style="color: var(--ember-300);">
+        Atrasados
+        <span class="count" style="background: rgba(208, 138, 74, 0.20); color: var(--ember-300);">3</span>
+      </button>
+    </div>
+    <div class="filter-right">
+      <div class="search-input">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Buscar por cliente, peça ou ID" aria-label="Buscar pedidos">
+      </div>
+      <button class="btn-ghost" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+        Filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ORDERS TABLE — 10 pedidos maker BR realistas
+       ============================================================ -->
+  <section class="orders-wrap fade-in delay-3" aria-label="Lista de pedidos">
+    <header class="orders-head">
+      <div>PEDIDO</div>
+      <div>CLIENTE · CANAL</div>
+      <div class="col-items">PEÇAS</div>
+      <div>VALOR</div>
+      <div>PRAZO</div>
+      <div style="text-align:center;">STATUS</div>
+      <div class="col-action" style="text-align:right;">AÇÃO</div>
+    </header>
+
+    <!-- PEDIDO 1 — ATRASADO (com tape badge) -->
+    <article class="orders-row late">
+      <span class="tape-badge">ATRASADO 2D</span>
+      <div>
+        <div class="order-id">#HZR-2641</div>
+        <span class="order-id-sub">14.05</span>
+        <span class="row-priority urgente">URGENTE</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">HF</div>
+        <div class="customer-meta">
+          <span class="customer-name">Helena Falconi</span>
+          <span class="customer-channel whatsapp">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 14.2c-.3-.1-1.6-.8-1.9-.9-.3-.1-.4-.1-.6.1s-.7.9-.8 1c-.2.2-.3.2-.5.1-1.4-.7-2.4-1.3-3.4-2.9-.3-.5.3-.4.8-1.4.1-.2.1-.4 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.4 0-.6.3-.2.2-.8.8-.8 2s.9 2.3 1 2.5c.1.2 1.8 2.7 4.4 3.8 1.6.7 2.3.8 3.1.7.5-.1 1.6-.6 1.8-1.3.2-.6.2-1.2.1-1.3-.1-.1-.2-.2-.5-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.7.4 3.3 1.3 4.8L2 22l5.3-1.3c1.4.8 3 1.3 4.7 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.5 0-2.9-.4-4.2-1.2l-.3-.2-3.1.8.8-3-.2-.3c-.8-1.3-1.3-2.7-1.3-4.3 0-4.5 3.7-8.2 8.3-8.2S20.3 7.5 20.3 12s-3.8 8.2-8.3 8.2z"/></svg>
+            WhatsApp
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">3×</span>Suporte celular Bambu X1</div>
+        <div class="item-extra">PLA preto · cliente recorrente</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>540<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,00</span></div>
+        <span class="order-value-margin">margem 67%</span>
+      </div>
+      <div>
+        <div class="order-date">12.05.2026</div>
+        <span class="order-date-rel late">atrasou ontem</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp atrasado" aria-label="Atrasado">ATRA<br>SADO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Abrir</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 2 — PRODUZINDO -->
+    <article class="orders-row">
+      <div>
+        <div class="order-id">#HZR-2640</div>
+        <span class="order-id-sub">14.05</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">RM</div>
+        <div class="customer-meta">
+          <span class="customer-name">Rafael Mendonça</span>
+          <span class="customer-channel ml">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Mercado Livre
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">1×</span>Vaso Voronoi 18cm</div>
+        <div class="item-extra">PETG verde · 36h impressão · Bambu P1S</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>289<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,90</span></div>
+        <span class="order-value-margin">margem 54%</span>
+      </div>
+      <div>
+        <div class="order-date">19.05.2026</div>
+        <span class="order-date-rel">em 3 dias</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp produzindo" aria-label="Produzindo">PRODU<br>ZINDO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Abrir</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 3 — PAGO -->
+    <article class="orders-row">
+      <div>
+        <div class="order-id">#HZR-2639</div>
+        <span class="order-id-sub">13.05</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">CB</div>
+        <div class="customer-meta">
+          <span class="customer-name">Camila Bertolini</span>
+          <span class="customer-channel shopee">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L8 8h8z M3 8h18l-2 12H5L3 8z"/></svg>
+            Shopee
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">2×</span>Cubo Tarefa cinza Bambu</div>
+        <div class="item-extra">PLA satin · grava nome do cliente</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>148<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,40</span></div>
+        <span class="order-value-margin mid">margem 38%</span>
+      </div>
+      <div>
+        <div class="order-date">20.05.2026</div>
+        <span class="order-date-rel">em 4 dias</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp pago" aria-label="Pago">PAGO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Abrir</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 4 — ENVIADO -->
+    <article class="orders-row">
+      <div>
+        <div class="order-id">#HZR-2638</div>
+        <span class="order-id-sub">12.05</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">PH</div>
+        <div class="customer-meta">
+          <span class="customer-name">Paulo Héquison</span>
+          <span class="customer-channel direto">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M21 6.5l-2 12h-14l-2-12L21 6.5zM12 2l-3 4H4l-1 4 9 5 9-5-1-4h-5l-3-4z"/></svg>
+            Hayzer Direto
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">6×</span>Garra leve para drone</div>
+        <div class="item-extra">CF-Nylon · arquivo do cliente · revisão 02</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>1.240<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,00</span></div>
+        <span class="order-value-margin">margem 72%</span>
+      </div>
+      <div>
+        <div class="order-date">12.05.2026</div>
+        <span class="order-date-rel">enviado ontem</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp enviado" aria-label="Enviado">ENVI<br>ADO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Rastrear</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 5 — AGUARDANDO PAGAMENTO -->
+    <article class="orders-row">
+      <div>
+        <div class="order-id">#HZR-2637</div>
+        <span class="order-id-sub">12.05</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">JS</div>
+        <div class="customer-meta">
+          <span class="customer-name">Júlia Santanna</span>
+          <span class="customer-channel whatsapp">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.7.4 3.3 1.3 4.8L2 22l5.3-1.3c1.4.8 3 1.3 4.7 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+            WhatsApp
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">1×</span>Miniatura D&D set 4 peças</div>
+        <div class="item-extra">resina cinza · pintura inclusa</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>320<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,00</span></div>
+        <span class="order-value-margin mid">margem 41%</span>
+      </div>
+      <div>
+        <div class="order-date">22.05.2026</div>
+        <span class="order-date-rel">em 6 dias</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp aguardando" aria-label="Aguardando pagamento">AGUARD<br>PIX</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Cobrar</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 6 — ATRASADO -->
+    <article class="orders-row late">
+      <span class="tape-badge">ATRASADO 1D</span>
+      <div>
+        <div class="order-id">#HZR-2636</div>
+        <span class="order-id-sub">11.05</span>
+        <span class="row-priority alto">ALTO</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">FB</div>
+        <div class="customer-meta">
+          <span class="customer-name">Falconi Brinquedos</span>
+          <span class="customer-channel direto">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            B2B Loja
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">24×</span>Pino encaixe Lego clássico</div>
+        <div class="item-extra">ABS amarelo · pedido recorrente mensal</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>720<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,00</span></div>
+        <span class="order-value-margin">margem 58%</span>
+      </div>
+      <div>
+        <div class="order-date">13.05.2026</div>
+        <span class="order-date-rel late">atrasou hoje</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp atrasado" aria-label="Atrasado">ATRA<br>SADO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Abrir</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 7 — ENTREGUE -->
+    <article class="orders-row">
+      <div>
+        <div class="order-id">#HZR-2635</div>
+        <span class="order-id-sub">10.05</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">DL</div>
+        <div class="customer-meta">
+          <span class="customer-name">Diego Lazzari</span>
+          <span class="customer-channel amazon">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18l-2 13H5L3 6z"/></svg>
+            Amazon BR
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">1×</span>Suporte fone gamer rgb</div>
+        <div class="item-extra">PLA preto · personalizado tag &ldquo;Lazzari&rdquo;</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>96<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,50</span></div>
+        <span class="order-value-margin low">margem 18%</span>
+      </div>
+      <div>
+        <div class="order-date">10.05.2026</div>
+        <span class="order-date-rel">entregue 5d atrás</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp entregue" aria-label="Entregue">ENTRE<br>GUE</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Histórico</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 8 — PRODUZINDO -->
+    <article class="orders-row">
+      <div>
+        <div class="order-id">#HZR-2634</div>
+        <span class="order-id-sub">10.05</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">MK</div>
+        <div class="customer-meta">
+          <span class="customer-name">Marcos Kael</span>
+          <span class="customer-channel ml">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Mercado Livre
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">8×</span>Organizador fones earbud</div>
+        <div class="item-extra">PETG translúcido · 12h cada · A1 mini</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>432<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,00</span></div>
+        <span class="order-value-margin">margem 64%</span>
+      </div>
+      <div>
+        <div class="order-date">21.05.2026</div>
+        <span class="order-date-rel">em 5 dias</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp produzindo" aria-label="Produzindo">PRODU<br>ZINDO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Abrir</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 9 — ATRASADO -->
+    <article class="orders-row late">
+      <span class="tape-badge">ATRASADO 3D</span>
+      <div>
+        <div class="order-id">#HZR-2633</div>
+        <span class="order-id-sub">09.05</span>
+        <span class="row-priority urgente">URGENTE</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">RB</div>
+        <div class="customer-meta">
+          <span class="customer-name">Rafael Borgues</span>
+          <span class="customer-channel whatsapp">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.7.4 3.3 1.3 4.8L2 22l5.3-1.3c1.4.8 3 1.3 4.7 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+            WhatsApp
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">4×</span>Hub raspberry Pi 5 case</div>
+        <div class="item-extra">esperando filamento PETG-CF chegar</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>880<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,00</span></div>
+        <span class="order-value-margin">margem 61%</span>
+      </div>
+      <div>
+        <div class="order-date">11.05.2026</div>
+        <span class="order-date-rel late">atrasou 3 dias</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp atrasado" aria-label="Atrasado">ATRA<br>SADO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Abrir</button>
+      </div>
+    </article>
+
+    <!-- PEDIDO 10 — PAGO recente -->
+    <article class="orders-row">
+      <div>
+        <div class="order-id">#HZR-2632</div>
+        <span class="order-id-sub">09.05</span>
+      </div>
+      <div class="order-customer">
+        <div class="customer-avatar">SA</div>
+        <div class="customer-meta">
+          <span class="customer-name">Sofia Almeida</span>
+          <span class="customer-channel shopee">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M3 8h18l-2 12H5L3 8z"/></svg>
+            Shopee
+          </span>
+        </div>
+      </div>
+      <div class="order-items col-items">
+        <div class="item-line"><span class="item-qty">12×</span>Tag pet acrílico personalizada</div>
+        <div class="item-extra">PLA branco + corte laser pra acabamento</div>
+      </div>
+      <div>
+        <div class="order-value"><span class="currency">R$</span>216<span class="decimal" style="font-size:0.42em; color:var(--fog-300);">,00</span></div>
+        <span class="order-value-margin mid">margem 35%</span>
+      </div>
+      <div>
+        <div class="order-date">18.05.2026</div>
+        <span class="order-date-rel">em 2 dias</span>
+      </div>
+      <div class="order-status">
+        <div class="stamp pago" aria-label="Pago">PAGO</div>
+      </div>
+      <div class="order-action col-action">
+        <button class="btn-row">Abrir</button>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- footer paginação enxuto -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding:0 4px;">
+    <span style="font-family:'Geist Mono',monospace; font-size:12px; color:var(--fog-300); letter-spacing:0.06em;">
+      MOSTRANDO 1–10 DE 47 PEDIDOS DO MÊS
+    </span>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-row" disabled style="opacity:0.4;">Anterior</button>
+      <button class="btn-row">Próximo</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============================================================
+     JS — theme toggle + filter tab + sidebar mobile
+     ============================================================ -->
+<script>
+  (function () {
+    // ========== THEME TOGGLE (persiste localStorage) ==========
+    const toggle = document.getElementById('themeToggle');
+    const root = document.documentElement;
+    const stored = (function () {
+      try { return localStorage.getItem('hayzer-theme'); } catch { return null; }
+    })();
+    if (stored === 'light' || stored === 'dark') {
+      root.setAttribute('data-theme', stored);
+    }
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const cur = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('hayzer-theme', next); } catch {}
+      });
+    }
+
+    // ========== FILTER TABS (visual only) ==========
+    const tabs = document.querySelectorAll('.filter-tab');
+    tabs.forEach(t => {
+      t.addEventListener('click', () => {
+        tabs.forEach(x => { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+        t.classList.add('active');
+        t.setAttribute('aria-selected', 'true');
+      });
+    });
+
+    // ========== MOBILE TOGGLE ==========
+    const mobileToggle = document.getElementById('mobileToggle');
+    const sidebar = document.getElementById('sidebar');
+    if (mobileToggle && sidebar) {
+      mobileToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+
+    // ========== ROW CLICK micro-feedback (sem cringe) ==========
+    document.querySelectorAll('.orders-row').forEach(row => {
+      row.addEventListener('mousedown', () => {
+        row.style.transition = 'transform 120ms ease-out';
+        row.style.transform = 'scale(0.998)';
+      });
+      const reset = () => { row.style.transform = ''; };
+      row.addEventListener('mouseup', reset);
+      row.addEventListener('mouseleave', reset);
+    });
+  })();
+</script>
 </body>
+</html>
 </html>

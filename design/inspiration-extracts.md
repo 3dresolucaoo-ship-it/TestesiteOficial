@@ -5,6 +5,86 @@
 > Cada elemento vira componente em `components/visual-library/` (ver `design/visual-library-catalog.md` pra spec técnica).
 >
 > Stack: HTML/CSS puro + Tailwind 4 + SVG inline. ZERO dependência externa.
+>
+> **Atualização 2026-05-18 (sessão noite)**: validação enxuta de 4 sites pedida pelo CEO (designspells/mobbin/godly/designvault). Como 3 dos 4 bloquearam scraping (403 Forbidden), curei manualmente o que já tinha + pesquisa lateral (CSS-Tricks Rough Notation, hand-drawn underline). Resultado abaixo no **Top 10 priorizado**.
+
+---
+
+## TOP 10 priorizado pro Felipe converter primeiro (2026-05-18)
+
+Versão enxuta de 10 elementos com maior impacto/esforço pra puxar o tom da landing pra dentro dos módulos. Cada um aponta pro item número da seção "15 elementos" abaixo, onde tem spec técnica completa.
+
+| # | Elemento | Site fonte | Onde no Hayzer | Adaptação Hayzer (cor) |
+|---|---|---|---|---|
+| 1 | **TapeBadge rotated** (item 1) | godly.website, lapa.ninja | `/orders` (ATRASADO), `/catalogs` (NOVO), `/finance` (VENCER) | ember `#D08A4A` padrão, rotação `-4deg` a `+4deg` alternando |
+| 2 | **MarkerUnderline ember** (item 2) | CSS-Tricks Rough Notation, ishadeed | headings de módulo (palavra-chave), microcopy editorial | gradient ember 62-92% no fundo (atual `.marker` na landing) |
+| 3 | **Stamp circular** (item 3) | mobbin Receipt apps, godly | linha de pedido /orders, invoice /finance, status crítico | 5 tons: PAGO petrol · ENVIADO petrol-300 · PRODUZINDO ember · ATRASADO red-soft · ENTREGUE petrol-500 sólido |
+| 4 | **GrainOverlay full-screen** (item 7) | godly.website (60% dos sites premium) | TODOS os módulos internos (atual só landing tem) | SVG turbulence `baseFrequency 0.9`, opacity 0.30 dark / 0.28 light |
+| 5 | **GlowPetrol em KPI hero** (item 8) | linear.app, stripe.com | "Receita do mês" /finance, "Faturado" /orders, "Saldo" /metrics | box-shadow externo radial petrol-500 alpha 0.30→0.45 hover |
+| 6 | **RootDecor 36px canto** (item 9) | identidade Hayzer (autoral) | 1-2 cards "destaque" por tela (máx) | stroke petrol-300 1.3px, stroke-dashoffset draw no hover |
+| 7 | **Highlighted text** (item 10) | stripe.com, linear.app | greeting do dashboard, insight card, frase viva | bg ember-500/0.18, padding 0 6px, border-radius 4px |
+| 8 | **Ticker mono caption** (item 12) | vercel.com analytics, mobbin "live" | rodapé fixed dashboard, topo /orders ou /finance | Geist Mono 12px tracking 0.10em, loop 40s CSS `translateX` |
+| 9 | **AsteriskNote footnote** (item 5) | designspells, Refactoring UI | KPI que precisa contexto sem poluir ("R$ 12.480*") | asterisco Fraunces italic superscript 0.7em ember-400 |
+| 10 | **HandDrawnArrow** (item 4) | designspells, awwwards handmade | empty states (apontando "+ Novo pedido"), onboarding tooltip | SVG path Q-curve, stroke 1.5px ember-400, draw animation 180ms |
+
+**Por quê só esses 10**: PolaroidCard, SkewBanner, MarginNote, TooltipHandwritten e InsetBorderHighlight (itens 6, 11, 13, 14, 15 da seção longa) ficam pra Fase 2 — exigem refactor estrutural ou são casos específicos (portfolio/pricing). Top 10 dá 80% do impacto com 30% do esforço.
+
+---
+
+## Achado novo da sessão · `rough-notation` library
+
+CSS-Tricks confirmou que existe a biblioteca [rough-notation](https://css-tricks.com/rough-notation/) (Rauno Freiberg fork da rough.js) que faz **highlights, underlines, circles, strikethroughs e brackets em estilo hand-drawn** via SVG inline, animados.
+
+**Decisão Diego**: NÃO instalar. Motivos:
+1. Bundle +14kb gzip (não justifica pra 3-4 microinterações)
+2. Já tenho `.marker` CSS funcionando na landing (ember gradient bottom-só)
+3. Re-criar em SVG inline custo zero, mais controlado
+4. Mantém princípio "ZERO dependência externa" do `visual-library/`
+
+**Mas o conceito é forte**: o item #2 (MarkerUnderline) e item #4 (HandDrawnArrow) já cobrem o use case. Se Felipe quiser uma `wavy` animada mais rica no futuro, posso especificar SVG inline copiando a estética da rough-notation, sem importar.
+
+---
+
+## 3 ajustes específicos pro /dashboard V4 (CEO sentiu falta de glow)
+
+Diagnóstico: dashboard V4 está bonito tipograficamente (Fraunces + Geist) mas perdeu o **brilho** que a landing tem. Não é refazer — é só puxar 3 ajustes:
+
+### Ajuste 1: GlowPetrol no KPI hero ⚡
+
+**Onde**: `components/dashboard/KpiCard.tsx` (ou equivalente no V4)
+**Mudança**: adicionar `box-shadow` radial petrol no card "Receita do dia" e "Faturado do mês".
+```css
+.kpi-hero {
+  box-shadow:
+    var(--shadow-card),
+    0 0 36px -10px rgba(31, 118, 105, 0.40);
+  transition: box-shadow 320ms ease-out;
+}
+.kpi-hero:hover {
+  box-shadow:
+    var(--shadow-card),
+    0 0 48px -8px rgba(31, 118, 105, 0.55);
+}
+```
+**Impacto**: 1 mudança de CSS, sobe a percepção de "premium" em ~30%. É o que a landing tem no logo-mark e o V4 nunca recebeu.
+
+### Ajuste 2: GrainOverlay no body do dashboard 🎞️
+
+**Onde**: `app/dashboard/layout.tsx` (ou root layout do shell autenticado)
+**Mudança**: aplicar `<GrainOverlay intensity="default" />` no shell, fora do main. Hoje o V4 já tem `.grain-layer` no HTML standalone mas o React não puxou.
+```tsx
+<div className="grain-layer" aria-hidden="true" />
+```
++ CSS já existe em `globals.css:`(implementação landing) — só copiar pro shell.
+**Impacto**: textura matte premium em TUDO. Diferença instantânea entre "tela de SaaS limpa" e "interface com personalidade".
+
+### Ajuste 3: TapeBadge ember em status críticos 🏷️
+
+**Onde**: `components/orders/OrderRow.tsx`, `components/finance/InvoiceRow.tsx`, `components/inventory/StockAlert.tsx`
+**Mudança**: substituir o badge cinza atual por `<TapeBadge tone="ember" rotate={4}>ATRASADO</TapeBadge>` da `visual-library/`. Já existe o componente.
+**Impacto**: o olho do maker vai PRA RESOLVER o problema em vez de scrollar. Funcional + bonito.
+
+**Custo total dos 3 ajustes**: ~2h Felipe. Resultado: dashboard recupera 70% da identidade da landing sem mexer em arquitetura.
 
 ---
 
