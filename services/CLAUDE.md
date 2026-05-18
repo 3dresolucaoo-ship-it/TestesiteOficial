@@ -24,21 +24,21 @@
 
 | Service | Linhas | Tabela | Status |
 |---|---|---|---|
-| catalogs.ts | 107 | catalogs | ✅ |
+| catalogs.ts | 120 | catalogs | ✅ `project_id` em listCatalogs/updateCatalog/deleteCatalog (fix 2026-05-18) |
 | config.ts | 37 | config | ✅ |
-| content.ts | 114 | content | ✅ |
-| decisions.ts | 72 | decisions | ✅ |
+| content.ts | 127 | content | ✅ `project_id` em getAll/update/delete (fix 2026-05-18) |
+| decisions.ts | 85 | decisions | ✅ `project_id` em getAll/update/delete (fix 2026-05-18) |
 | finance.ts | 90 | transactions | ✅ `project_id` adicionado em todas as queries (fix 2026-05-18) |
 | financeConfig.ts | 100 | fixed_costs + profit_goals | ✅ Onda 3 (custos fixos + meta por projeto) |
-| inventory.ts | 280 | inventory + movements | ✅ (`image_url` adicionado em migration 20260504) |
-| leads.ts | — | leads + affiliates | ✅ |
+| inventory.ts | 305 | inventory + movements | ✅ `project_id` em getAll/update/delete de inventoryService e movementsService (fix 2026-05-18) |
+| leads.ts | 185 | leads + affiliates | ✅ `project_id` em getAll/update/delete de leadsService e affiliatesService (fix 2026-05-18) |
 | mpTokenRefresh.ts | 92 | payment_configs | ✅ refresh OAuth MP |
-| orders.ts | 96 | orders | ✅ (colunas e-commerce adicionadas em migration 20260504) |
+| orders.ts | 110 | orders | ✅ `project_id` em getAll/update/delete (fix 2026-05-18) |
 | paymentConfig.ts | 316 | payment_configs | ✅ robusto, com cache + auto-refresh |
 | payments.ts | 198 | (abstração) | ✅ resolve provider via DB ou env |
 | portfolios.ts | 172 | portfolios + portfolio_items | ✅ (tabelas criadas em migration 20260504) |
-| production.ts | — | production | ✅ |
-| products.ts | 134 | products | ⚠️ console.log linha 75 · ✅ checkout_mode/variants/allows_custom (Fase B) |
+| production.ts | — | production | ⚠️ tabela SEM coluna `project_id` — getAll aceita arg opcional mas não filtra (ver TODO abaixo) |
+| products.ts | 148 | products | ✅ `project_id` em getAll/update/delete (fix 2026-05-18) · ⚠️ console.log linha 75 |
 | profiles.ts | 46 | profiles | ✅ |
 | projects.ts | 72 | projects | ✅ |
 | email.ts | 143 | (Resend SDK) | ✅ Fase 1 — wrapper Resend, template welcome HTML+texto, graceful sem key (15/05) |
@@ -50,8 +50,9 @@
 
 ## Issues conhecidos
 
-- ✅ ~~`finance.ts` sem `project_id` em queries~~ — corrigido 2026-05-18: `getAll(projectId?)`, `update` + `delete` com `.eq('project_id', ...)`. Store legado usa `getAll()` sem arg (filtra na UI); dashboard V4 usa `getAll(projectId)` direto.
-- ⚠️ **BUG MESMO PADRÃO em outros services** (fora escopo desta task — reportar pra backlog): `ordersService.getAll`, `inventoryService.getAll`, `movementsService.getAll`, `productionService.getAll`, `contentService.getAll`, `decisionsService.getAll`, `leadsService.getAll`, `affiliatesService.getAll`, `productsService.getAll`, `catalogsService.listCatalogs` — todos sem `.eq('project_id', ...)` no `getAll`. Mesma correção necessária antes do dashboard V4 conectar esses services.
+- ✅ ~~`finance.ts` sem `project_id` em queries~~ — corrigido 2026-05-18.
+- ✅ ~~`ordersService`, `inventoryService`, `movementsService`, `contentService`, `decisionsService`, `leadsService`, `affiliatesService`, `productsService`, `catalogsService` sem `project_id`~~ — todos corrigidos 2026-05-18: `getAll(projectId?)` opcional, `update` + `delete` com `.eq('project_id', ...)`. Callers DELETE no store.tsx ajustados com lookup em `prevState`. `tsc --noEmit` passa zero erros.
+- ⚠️ **`productionService` PENDENTE** — tabela `production` não tem coluna `project_id` no schema atual. `ProductionItem` também não tem o campo. Necessário: (1) migration `ALTER TABLE production ADD COLUMN project_id uuid REFERENCES projects(id)`, (2) atualizar `ProductionItem` em `lib/types.ts`, (3) atualizar `toDB` em `production.ts`, (4) aplicar `.eq('project_id', projectId)` no `getAll`. Bloqueado até migration ser aplicada.
 
 - ✅ ~~`orders.ts` colunas e-commerce~~ — migration aplicada 2026-05-04
 - ✅ ~~`portfolios.ts` tabelas inexistentes~~ — migration aplicada 2026-05-04

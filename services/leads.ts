@@ -161,16 +161,18 @@ export const affiliatesService = {
       .update(affToDB(a, userId))
       .eq('id', a.id)
       .eq('user_id', userId)
+      .eq('project_id', a.projectId)
     if (error) serviceError('affiliatesService.update', error)
   },
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, projectId: string): Promise<void> {
     const userId = await requireUserId()
     const { error } = await supabase
       .from('affiliates')
       .delete()
       .eq('id', id)
       .eq('user_id', userId)
+      .eq('project_id', projectId)
     if (error) serviceError('affiliatesService.delete', error)
   },
 }

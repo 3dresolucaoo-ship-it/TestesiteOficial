@@ -288,22 +288,35 @@ async function syncAction(
       }
       break
     }
-    case 'DELETE_ORDER': await ordersService.delete(action.payload); break
+    case 'DELETE_ORDER': {
+      const order = prevState.orders.find(o => o.id === action.payload)
+      if (order) await ordersService.delete(action.payload, order.projectId)
+      break
+    }
 
     // Production
     case 'ADD_PRODUCTION':    await productionService.create(action.payload); break
     case 'UPDATE_PRODUCTION': await productionService.update(action.payload); break
+    // production sem project_id no schema — delete por user_id apenas (ver TODO em production.ts)
     case 'DELETE_PRODUCTION': await productionService.delete(action.payload); break
 
     // Content
     case 'ADD_CONTENT':    await contentService.create(action.payload); break
     case 'UPDATE_CONTENT': await contentService.update(action.payload); break
-    case 'DELETE_CONTENT': await contentService.delete(action.payload); break
+    case 'DELETE_CONTENT': {
+      const content = prevState.content.find(c => c.id === action.payload)
+      if (content) await contentService.delete(action.payload, content.projectId)
+      break
+    }
 
     // Decisions
     case 'ADD_DECISION':    await decisionsService.create(action.payload); break
     case 'UPDATE_DECISION': await decisionsService.update(action.payload); break
-    case 'DELETE_DECISION': await decisionsService.delete(action.payload); break
+    case 'DELETE_DECISION': {
+      const decision = prevState.decisions.find(d => d.id === action.payload)
+      if (decision) await decisionsService.delete(action.payload, decision.projectId)
+      break
+    }
 
     // Transactions
     case 'ADD_TRANSACTION':    await transactionsService.create(action.payload); break
@@ -317,17 +330,29 @@ async function syncAction(
     // Leads
     case 'ADD_LEAD':    await leadsService.create(action.payload); break
     case 'UPDATE_LEAD': await leadsService.update(action.payload); break
-    case 'DELETE_LEAD': await leadsService.delete(action.payload); break
+    case 'DELETE_LEAD': {
+      const lead = prevState.leads.find(l => l.id === action.payload)
+      if (lead) await leadsService.delete(action.payload, lead.projectId)
+      break
+    }
 
     // Affiliates
     case 'ADD_AFFILIATE':    await affiliatesService.create(action.payload); break
     case 'UPDATE_AFFILIATE': await affiliatesService.update(action.payload); break
-    case 'DELETE_AFFILIATE': await affiliatesService.delete(action.payload); break
+    case 'DELETE_AFFILIATE': {
+      const affiliate = prevState.affiliates.find(a => a.id === action.payload)
+      if (affiliate) await affiliatesService.delete(action.payload, affiliate.projectId)
+      break
+    }
 
     // Inventory
     case 'ADD_INVENTORY':    await inventoryService.create(action.payload); break
     case 'UPDATE_INVENTORY': await inventoryService.update(action.payload); break
-    case 'DELETE_INVENTORY': await inventoryService.delete(action.payload); break
+    case 'DELETE_INVENTORY': {
+      const item = prevState.inventory.find(i => i.id === action.payload)
+      if (item) await inventoryService.delete(action.payload, item.projectId)
+      break
+    }
 
     // Stock movement: create record + patch quantity
     case 'ADJUST_STOCK': {
@@ -354,12 +379,20 @@ async function syncAction(
       break
     }
     case 'UPDATE_PRODUCT': await productsService.update(action.payload); break
-    case 'DELETE_PRODUCT': await productsService.delete(action.payload); break
+    case 'DELETE_PRODUCT': {
+      const product = prevState.products.find(p => p.id === action.payload)
+      if (product) await productsService.delete(action.payload, product.projectId)
+      break
+    }
 
     // Catalogs
     case 'ADD_CATALOG':    await catalogsService.createCatalog(action.payload); break
     case 'UPDATE_CATALOG': await catalogsService.updateCatalog(action.payload); break
-    case 'DELETE_CATALOG': await catalogsService.deleteCatalog(action.payload); break
+    case 'DELETE_CATALOG': {
+      const catalog = prevState.catalogs.find(c => c.id === action.payload)
+      if (catalog) await catalogsService.deleteCatalog(action.payload, catalog.projectId)
+      break
+    }
 
     // HYDRATE is read-only — no write needed
     case 'HYDRATE': break

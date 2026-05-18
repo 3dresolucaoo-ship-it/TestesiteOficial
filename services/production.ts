@@ -32,7 +32,17 @@ function toDB(p: ProductionItem, userId: string) {
 }
 
 export const productionService = {
-  async getAll(): Promise<ProductionItem[]> {
+  /**
+   * Busca itens de produção do usuário.
+   * ATENÇÃO: a tabela `production` não possui coluna `project_id` no schema atual.
+   * O tipo `ProductionItem` também não tem o campo `projectId`.
+   * TODO: adicionar migration `ALTER TABLE production ADD COLUMN project_id uuid REFERENCES projects(id)`
+   *       + atualizar `ProductionItem` + `toDB` + aplicar `.eq('project_id', projectId)` aqui.
+   *       Bloqueado até que a migration seja aplicada — fora do escopo do fix 2026-05-18.
+   * O parâmetro `projectId` é aceito na assinatura para compatibilidade futura mas não é usado.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getAll(projectId?: string): Promise<ProductionItem[]> {
     const userId = await requireUserId()
     const { data, error } = await supabase
       .from('production')
