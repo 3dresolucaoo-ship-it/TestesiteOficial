@@ -75,7 +75,7 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 - **Versão**: v0.5 (dashboard V4.8 MVP aprovado 17/05)
 - **Último audit**: `audits/2026-05-04.md` (próximo audit: ~04/06/2026, automático via Routine)
-- **Última sessão**: `sessions/2026-05-18-0200-madrugada-camada3-6agentes-paralelo.md` (Camada 3 ativa + 6 agentes G7 paralelo)
+- **Última sessão**: `sessions/2026-05-18-1852-segunda-tarde-v4-deploy.md` (V4 em prod + ciclo login resolvido + Calculadora Pro paywall + zero em-dashes)
 - **Bugs críticos abertos**: ver `ROADMAP.md` § "🔴 Críticos"
 - **📊 Pillars score atual (17/05 noite)**: média **7.4** (meta 30d: 8.0). Design 9.0 · Anti-IA 8.5 · Segurança 9.0 ⬆️ · Pagamento 8.5 · ver `pillars/SCORES.md`
 - **🎯 V4.8 dashboard APROVADO MVP** — Felipe inicia conversão React seg 20/05 (ADR-014)
