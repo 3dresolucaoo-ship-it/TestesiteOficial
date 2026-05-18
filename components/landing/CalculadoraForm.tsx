@@ -71,6 +71,7 @@ export function CalculadoraForm() {
   const [consumoW, setConsumoW] = useState('150')
   const [margem, setMargem] = useState('50')
   const [copied, setCopied] = useState(false)
+  const [paywallOpen, setPaywallOpen] = useState(false)
   const precoEnergia = 0.85 // R$/kWh média BR 2026 (Aneel) — constante
 
   const { custoFilamento, custoLuz, custoTotal, lucro, precoSugerido, semaforo, alerta } = useMemo(() => {
@@ -365,23 +366,46 @@ export function CalculadoraForm() {
                 )}
 
                 {/* Botão "Copiar pro cliente" (Sofia + Marcos) — geração de viralização */}
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  className="mt-4 inline-flex items-center gap-2 rounded-lg border border-[hsl(var(--fog-50)/0.15)] bg-[hsl(var(--card)/0.6)] px-3 py-2 text-[12.5px] font-medium text-foreground transition-all hover:border-[hsl(var(--petrol-400)/0.5)] hover:bg-[hsl(var(--petrol-400)/0.08)]"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-[hsl(var(--petrol-300))]" strokeWidth={2.5} />
-                      Copiado
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5" strokeWidth={2} />
-                      Copiar para o cliente
-                    </>
-                  )}
-                </button>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopy}
+                    className="inline-flex items-center gap-2 rounded-lg border border-[hsl(var(--fog-50)/0.15)] bg-[hsl(var(--card)/0.6)] px-3 py-2 text-[12.5px] font-medium text-foreground transition-all hover:border-[hsl(var(--petrol-400)/0.5)] hover:bg-[hsl(var(--petrol-400)/0.08)]"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-[hsl(var(--petrol-300))]" strokeWidth={2.5} />
+                        Copiado
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" strokeWidth={2} />
+                        Copiar para o cliente
+                      </>
+                    )}
+                  </button>
+
+                  {/* Exportar PDF — feature Pro, abre paywall */}
+                  <button
+                    type="button"
+                    onClick={() => setPaywallOpen(true)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-[hsl(var(--petrol-400)/0.25)] bg-[hsl(var(--petrol-500)/0.08)] px-3 py-2 text-[12.5px] font-medium transition-all hover:border-[hsl(var(--petrol-400)/0.5)] hover:bg-[hsl(var(--petrol-400)/0.14)]"
+                    style={{ color: 'hsl(var(--petrol-300))' }}
+                    aria-label="Exportar PDF do orçamento (funcionalidade Pro)"
+                  >
+                    <FileText className="h-3.5 w-3.5" strokeWidth={2} />
+                    Exportar PDF
+                    <span
+                      className="rounded px-1 py-0.5 font-mono text-[9px] uppercase tracking-wider"
+                      style={{
+                        background: 'hsl(var(--petrol-500) / 0.2)',
+                        color: 'hsl(var(--petrol-300))',
+                      }}
+                    >
+                      Pro
+                    </span>
+                  </button>
+                </div>
               </div>
 
               {/* Custo + Lucro lado a lado */}
@@ -589,6 +613,13 @@ export function CalculadoraForm() {
           </div>
         </motion.div>
       </div>
+
+      {/* Paywall modal — abre quando user clica "Exportar PDF (Pro)" */}
+      <PaywallModal
+        open={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+        trigger="pdf"
+      />
     </section>
   )
 }
