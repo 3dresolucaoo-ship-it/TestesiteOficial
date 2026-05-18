@@ -14,7 +14,7 @@
 |---|---|---|---|---|---|---|
 | 1 | **Design (UI/UX)** | 9.0 ⬆️ | 9.5 | 9.7 | Diego | 24/05 |
 | 2 | **Anti-IA (autenticidade)** | 8.5 ⬆️ | 9.0 | 9.5 | Carla + Diego | 24/05 |
-| 3 | **Segurança (OWASP 2025)** | 8.5 ⬆️ | 9.0 | 9.5 | Otávio | 24/05 |
+| 3 | **Segurança (OWASP 2025)** | 9.0 ⬆️ | 9.5 | 9.7 | Otávio | 18/05 (Routine) |
 | 4 | **Performance (Web Vitals)** | 6.5 | 7.5 | 8.5 | Felipe + Ricardo | 31/05 |
 | 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Júlia + Felipe | 24/05 |
 | 6 | **Mobile (320-768px)** | 7.0 | 8.5 | 9.0 | Diego + Júlia | 31/05 |
@@ -24,7 +24,7 @@
 | 10 | **Documentação (Diátaxis)** | 8.0 | 8.5 | 9.0 | Lia | 31/05 |
 | 11 | **Backend (DB + APIs)** | 7.5 | 8.5 | 9.0 | Bruna | 24/05 |
 | 12 | **Estratégia (posicionamento)** | 7.5 | 8.5 | 9.0 | Helena | 31/05 |
-| | **MÉDIA GERAL** | **7.3 ⬆️** | **8.0** | **8.8** | Helena | semanal |
+| | **MÉDIA GERAL** | **7.4 ⬆️** | **8.0** | **8.8** | Helena | semanal |
 
 ---
 
@@ -40,7 +40,7 @@
 - **Mobile** (7.0) — V4.3 tem responsive, falta teste em devices reais.
 
 ### 🟢 Expandir (score 8+ = diferencial)
-- **Segurança** (8.5 ⬆️) — Tier 1 100% fechado em 17/05 (CSP report-only + Zod completo + rate-limit DB-based 3 rotas públicas). Falta Tier 2: Dependabot/Renovate, Sentry, audit log.
+- **Segurança** (9.0 ⬆️) — Tier 1 100% fechado em 17/05 (HSTS + honeypot + time-check + rate-limit DB-based + `API_RATE_LIMIT_SALT` random 32 bytes hex em prod + CSP report-only + Zod completo). Falta Tier 2: Dependabot/Renovate, Sentry, audit log.
 - **Documentação** (8.0) — CLAUDE.md por pasta + ADRs + ROADMAP + sistema G7 já é melhor que maioria SaaS.
 
 ---
@@ -66,11 +66,13 @@
 - [ ] +0.5: introduzir 1-2 imperfeições deliberadas (rotação 0.4°, tracking variável)
 - [ ] +0.5: imagery autoral (não Phosphor genérico) — ilustrações próprias
 
-### 3. Segurança · 8.5 ⬆️ → 9.0 (Tier 1 fechado 17/05 noite)
+### 3. Segurança · 9.0 ⬆️ (Tier 1 fechado 17/05 noite — score final 9.0)
 - ✅ 3 fixes críticos aplicados 17/05 manhã (middleware webhooks, MP secret, content/sync)
 - ✅ **+0.5: Zod nas APIs finance + payment-configs** (17/05 noite) — `fixedCostCreateSchema`/`Patch`/`profitGoalSchema`/`paymentConfigSchema` (discriminated union por provider) em `services/apiSchemas.ts`. Bloqueia XSS, oversize, NaN/Infinity em amounts. Reaproveita helper `zodErrorToPtBr`.
 - ✅ **+0.5: CSP report-only header** (17/05 noite) — `next.config.ts`. Cobre 'self' + Vercel scripts + fonts.googleapis + *.supabase.co + api.mercadopago.com + api.stripe.com + js.stripe.com. `unsafe-eval` só em dev. Modo report-only por 2-4 semanas pra observar violações no DevTools antes de promover pra enforcing.
 - ✅ **+0.5: rate-limit DB-based em rotas públicas** (17/05 noite) — `services/apiRateLimit.ts` genérico + migration `20260518_api_rate_limits.sql`. Aplicado em `/api/checkout` (20/min), `/api/encomenda` (20/min), `/api/catalog/quote` (10/min). Mesmo padrão SHA-256(IP+salt) do waitlist. Fail-OPEN se DB cair. Pós-launch: trocar pra Upstash Redis quando passar de 5k req/dia.
+- ✅ **API_RATE_LIMIT_SALT setado em prod + redeploy** (17/05 noite) — valor random 32 bytes hex via Vercel env vars. Deploy `D1YRg3yBF` Ready em 1m 8s. Tier 1 100% operacional em prod.
+- **Nota**: Tier 1 fechado em 2026-05-17; Tier 2 (Dependabot/Sentry/audit log) começa pós-launch conforme ROADMAP.
 - [ ] +0.3: Dependabot/Renovate ativos (Otávio · OWASP A03) — Tier 2
 - [ ] +0.2: Sentry pra erro em prod (Tier 2)
 
@@ -153,7 +155,7 @@
 
 ### 4. Métrica composta
 - **Média geral** = média ponderada dos 12 pilares
-- **Hoje**: 6.9/10 · **Meta 30d**: 8.0 · **Meta 90d**: 8.8
+- **Hoje**: 7.4/10 · **Meta 30d**: 8.0 · **Meta 90d**: 8.8
 - Pós-launch a média deve estar ≥8.0 (todos pilares no "Fortalecer" ou "Expandir")
 
 ---
@@ -196,4 +198,4 @@ Esse documento operacionaliza essa filosofia.
 
 **Mantenedor primário**: Helena (estratégia consolida)
 **Atualização**: toda segunda + via `/rcs` quando evidência aparecer
-**Última atualização**: 2026-05-17 (criação)
+**Última atualização**: 2026-05-17 (Segurança 8.5 → 9.0 · API_RATE_LIMIT_SALT em prod · média 7.3 → 7.4)

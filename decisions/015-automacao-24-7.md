@@ -1,9 +1,23 @@
 # ADR 015 — Automação 24/7: Claude Code Routines (incluso no Max plan)
 
 > **Data**: 17/05/2026 (domingo noite)
-> **Status**: Proposta — aguarda CEO decidir setup
+> **Status**: Implementada — 3 routines ativas em prod (2026-05-17 noite)
 > **Decisor**: Gabriel (CEO)
 > **Custo de reversão**: BAIXO — routines podem ser pausadas a qualquer momento
+
+## Implementação (2026-05-17 noite)
+
+Routines configuradas no dashboard `claude.ai/code/routines`. Repo: TestesiteOficial. Conectores: Supabase + Vercel. Permissão git push direto: OFF (cria PR sempre).
+
+| Routine | Trigger ID | URL |
+|---|---|---|
+| `audit-mensal` | `trig_01DJwCxXJGSP3TLcifcyTqGw` | https://claude.ai/code/routines/trig_01DJwCxXJGSP3TLcifcyTqGw |
+| `pillars-review-semanal` | `trig_01MC2qJxjr6ZC9VmyLSg4fz3` | https://claude.ai/code/routines/trig_01MC2qJxjr6ZC9VmyLSg4fz3 |
+| `estudo-g7-semanal` | `trig_01AEL5ZnaF3Gu186Rinvdzuq` | https://claude.ai/code/routines/trig_01AEL5ZnaF3Gu186Rinvdzuq |
+
+Próximas execuções agendadas: `pillars-review-semanal` roda amanhã 18/05 (segunda 9h BRT); `estudo-g7-semanal` roda 19/05 (terça 9h BRT); `audit-mensal` roda 01/06 (dia 1, 9h BRT).
+
+---
 
 ---
 
@@ -174,14 +188,14 @@ claude login
 
 ---
 
-## Próxima ação se aprovado
+## Próxima ação
 
-1. CEO autoriza ("vamo configurar")
-2. Ricardo (DevOps) configura 3 routines via dashboard `code.claude.com`
-3. Eu valido prompts de cada routine (1ª execução manual)
-4. Esperar 1ª execução agendada (terça 9h)
-5. Revisar output, ajustar prompts se preciso
-6. Documentar em `decisions/015-execucao.md` o que funcionou
+- ✅ CEO autorizou e configurou 3 routines (2026-05-17 noite)
+- [ ] Validar output da 1ª execução de `pillars-review-semanal` (18/05 amanhã)
+- [ ] Validar output da 1ª execução de `estudo-g7-semanal` (19/05)
+- [ ] Validar output da 1ª execução de `audit-mensal` (01/06)
+- [ ] Ajustar prompts se preciso após 1ª rodada
+- [ ] Documentar em `decisions/015-execucao.md` o que funcionou
 
 ---
 

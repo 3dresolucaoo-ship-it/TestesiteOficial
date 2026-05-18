@@ -49,7 +49,7 @@
 - ✅ `20260510_*` (Wave 0 — fix RPC catálogo + 3 migrations Fundação ADR 006) aplicadas em 2026-05-10
 - ✅ `20260513_waitlist_leads.sql` + fix search_path da trigger function aplicadas em 2026-05-13 (Fase 1 — landing pré-launch)
 - ✅ `20260518_webhook_events.sql` (tabela + RPC `process_webhook_atomic`) aplicada em 2026-05-17 via Supabase MCP (`apply_migration`). Resolve race condition / duplicate charge nos webhooks Stripe/MP.
-- ⏳ `20260518_api_rate_limits.sql` (tabela `api_rate_limits` + 2 índices + RLS deny-all) **PENDENTE de aplicação em prod**. CEO aplica via Supabase MCP. Necessária pras rotas `/api/checkout`, `/api/encomenda`, `/api/catalog/quote` — service `apiRateLimit.ts` é fail-OPEN, então rotas funcionam mesmo sem migration (sem rate-limit ativo, com warning no console).
+- ✅ `20260518_api_rate_limits.sql` (tabela `api_rate_limits` + 2 índices + RLS deny-all) **APLICADA em prod em 2026-05-17** (confirmado via Supabase MCP `execute_sql` em 2026-05-17 23h59 — tabela existe com 5 colunas, RLS ativo). Usada pelas rotas `/api/checkout` (20/min), `/api/encomenda` (20/min), `/api/catalog/quote` (10/min) através do `services/apiRateLimit.ts`. Combinada com `API_RATE_LIMIT_SALT` env var setada no Vercel (deploy `D1YRg3yBF` 2026-05-17), rate-limit Tier 1 está 100% funcional.
 
 ## ⚠️ Schema.sql está stale (2026-05-10)
 
