@@ -27,7 +27,7 @@ function DashboardSkeleton() {
   return (
     <div
       className="min-h-screen"
-      style={{ background: 'hsl(var(--night-900))' }}
+      style={{ background: 'var(--v4-surface-0)' }}
       aria-label="Carregando dashboard..."
       role="status"
     >
@@ -39,8 +39,8 @@ function DashboardSkeleton() {
           left: 0,
           width: '248px',
           height: '100vh',
-          background: 'hsl(var(--night-900))',
-          borderRight: '1px solid rgba(242,239,234,0.14)',
+          background: 'var(--v4-surface-0)',
+          borderRight: '1px solid var(--v4-border-soft)',
           zIndex: 10,
         }}
         aria-hidden="true"
@@ -58,7 +58,7 @@ function DashboardSkeleton() {
           style={{
             height: '42px',
             borderRadius: '999px',
-            background: 'hsl(var(--night-850))',
+            background: 'var(--v4-surface-1)',
             width: '220px',
             marginBottom: '36px',
           }}
@@ -69,7 +69,7 @@ function DashboardSkeleton() {
           style={{
             height: '200px',
             borderRadius: '16px',
-            background: 'hsl(var(--night-850))',
+            background: 'var(--v4-surface-1)',
             marginBottom: '44px',
             opacity: 0.7,
           }}
@@ -89,7 +89,7 @@ function DashboardSkeleton() {
               style={{
                 height: '220px',
                 borderRadius: '16px',
-                background: 'hsl(var(--night-850))',
+                background: 'var(--v4-surface-1)',
                 gridColumn: i === 0 ? 'span 2' : 'span 1',
                 opacity: 0.6 - i * 0.06,
               }}
