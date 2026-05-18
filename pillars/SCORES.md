@@ -12,8 +12,8 @@
 
 | # | Pilar | Hoje | Meta 30d | Meta 90d | Owner G7 | Próx. revisão |
 |---|---|---|---|---|---|---|
-| 1 | **Design (UI/UX)** | 7.5 | 8.5 | 9.0 | Diego | 24/05 |
-| 2 | **Anti-IA (autenticidade)** | 7.5 | 8.5 | 9.0 | Carla + Diego | 24/05 |
+| 1 | **Design (UI/UX)** | 8.5 ⬆️ | 9.0 | 9.5 | Diego | 24/05 |
+| 2 | **Anti-IA (autenticidade)** | 8.5 ⬆️ | 9.0 | 9.5 | Carla + Diego | 24/05 |
 | 3 | **Segurança (OWASP 2025)** | 7.0 | 8.5 | 9.0 | Otávio | 24/05 |
 | 4 | **Performance (Web Vitals)** | 6.5 | 7.5 | 8.5 | Felipe + Ricardo | 31/05 |
 | 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Júlia + Felipe | 24/05 |

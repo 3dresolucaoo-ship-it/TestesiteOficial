@@ -65,12 +65,12 @@ const MOCKUPS: Mockup[] = [
   {
     slug: 'dashboard/v4-hibrido.html',
     feature: 'Dashboard Interno',
-    title: 'V4.3 — Híbrido (DEFINITIVO)',
-    variant: 'V4.3',
-    status: 'em-avaliacao',
+    title: 'V4.8 — Híbrido (APROVADO MVP)',
+    variant: 'V4.8',
+    status: 'aprovado',
     description:
-      'CEO escolheu caminho A: hero virou subcategoria (cover 96px + 4 satélites verticais), dark soft #161B1F, light toggle, raízes ANIMADAS no hover (CSS stroke-dashoffset), 9 mecanismos dopamina, próxima ação sugerida, greeting horário+nome, cover-anchor dinâmico (muda copy com performance), aria-labels charts, sidebar overlay mobile. Auditoria G7 Sofia+Júlia+Carla aplicada. 3223 linhas.',
-    author: 'general-purpose + Claude + G7 (Diego/Carla/Sofia/Júlia)',
+      'CEO aprovou MVP 17/05. Hero subcategoria (cover 96px + 4 satélites), dark soft + light marrom elegante (paleta print CEO), raízes animadas hover, glow petrol/cocoa atrás highlights, 9 mecanismos dopamina, cover-anchor dinâmico, próxima ação sugerida, greeting horário+nome, body com gradient radial, ambient glow cocoa light, watermark visível ambos modes, aria-labels charts, sidebar overlay mobile. Auditoria G7 completa (Sofia+Júlia+Carla). Felipe inicia conversão React seg 20/05.',
+    author: 'general-purpose + Claude + G7 (Diego/Carla/Sofia/Júlia/Helena/Bruna)',
     createdAt: '2026-05-17',
   },
   {
