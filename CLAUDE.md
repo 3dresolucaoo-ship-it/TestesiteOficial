@@ -73,9 +73,14 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 ## 🎯 STATUS RÁPIDO
 
-- **Versão**: v0.4
-- **Último audit**: `audits/2026-05-04.md` (próximo audit: ~04/06/2026)
+- **Versão**: v0.5 (dashboard V4.8 MVP aprovado 17/05)
+- **Último audit**: `audits/2026-05-04.md` (próximo audit: ~04/06/2026, automático via Routine)
 - **Bugs críticos abertos**: ver `ROADMAP.md` § "🔴 Críticos"
+- **📊 Pillars score atual (17/05 noite)**: média **7.3** (meta 30d: 8.0). Anti-IA 9.0 · Design 9.0 · Segurança 8.5 · Pagamento 8.5 · ver `pillars/SCORES.md`
+- **🎯 V4.8 dashboard APROVADO MVP** — Felipe inicia conversão React seg 20/05 (ADR-014)
+- **🌱 Sistema G7 com memória ativa em 12/12 agentes** — 85 princípios extraídos no estudo dominical 17/05
+- **⚡ 2 migrations prod aplicadas hoje via Supabase MCP**: `20260518_webhook_events` (bug Paulo morto) + `20260518_api_rate_limits` (Tier 1 segurança)
+- **🤖 Claude Code Routines** disponível pra config (ADR-015) — automation/routines-specs.md pronto. CEO configura 3 routines (15-30min) destrava 24/7
 - **Pendência prioritária #1**: **Marca INPI HAYZER — GRUs EMITIDAS 15/05/2026** ✅ (ADR-012). Titular: **PF (Gabriel Ribeiro Nazareth, CPF 13099225940)**. Nominativa nas classes 35 (gestão comercial) + 42 (SaaS/software), código 389 (lista pré-aprovada, R$ 440/classe = R$ 880 total). **GRU 1**: `29409172357319880` (classe 42, R$ 440) · **GRU 2**: `29409172357319899` (classe 35, R$ 440). Ambas vencem **13/06/2026**. PDFs em `C:\Users\infin\Downloads\`. **Próximo**: CEO paga via PIX (sugerido até 20/05), depois eu deposito a marca em e-Marcas via Chrome MCP usando essas GRUs como referência. Verificação de colisão concluída: HAYZER limpo, HAIZER existe em classe 9 (baterias WG Trade) — risco ~15% de oposição, aceitável.
 - **Pendência prioritária #2**: **Post de divulgação canais maker 3D** (Item C). Plano revisado pelo Marcos (15/05) — LinkedIn é canal #7, não #1. Prioridade real: (1) grupos WhatsApp por estado SP/MG/PR (links em impressao3dbrasil.com.br), (2) Grupo Facebook "Impressão 3D Brasil" (50-150k), (3) Instagram nicho (@3dgeekshow 127k, @3dlab_brasil 81k). Antes de divulgar: povoar grupo Hayzer Beta WhatsApp com 5-10 contatos diretos (Héquison/Falconi).
 - **Pendência prioritária #3**: **Rotacionar SUPABASE_SERVICE_ROLE_KEY** (adiada 15/05 pra janela noturna). Motivo: "Reset JWT Secret" do Supabase invalida anon + service_role AO MESMO TEMPO, causando ~2-5min de downtime. Risco real baixo (chave nunca apareceu em plain text no chat). **RESEND_API_KEY já foi rotacionada** ✅ (nova key `hayzer-prod-v2` ativa em prod, velha deletada via API).
