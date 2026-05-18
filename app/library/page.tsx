@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { getUser } from '@/lib/auth'
 import { isAdminEmail } from '@/lib/isAdmin'
 import { LibraryShell } from './_components/LibraryShell'
+import { AssetSection } from './_components/AssetSection'
 
 export const metadata = {
   title: 'Biblioteca Hayzer — Design System Interno',
@@ -30,7 +31,7 @@ export default async function LibraryPage() {
       style={{ background: 'hsl(200 11% 6%)' }}   // night-800
     >
       <Suspense fallback={<LibraryFallback />}>
-        <LibraryShell />
+        <LibraryShell assetSection={<AssetSection />} />
       </Suspense>
     </div>
   )

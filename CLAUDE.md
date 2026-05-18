@@ -81,7 +81,7 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - **🎯 V4.8 dashboard APROVADO MVP** — Felipe inicia conversão React seg 20/05 (ADR-014)
 - **🌱 Sistema G7 com memória ativa em 12/12 agentes** — 85 princípios extraídos no estudo dominical 17/05
 - **⚡ 2 migrations prod aplicadas hoje via Supabase MCP**: `20260518_webhook_events` (bug Paulo morto) + `20260518_api_rate_limits` (Tier 1 segurança)
-- **🤖 4 Routines ativas em prod** (3 desde 2026-05-17 + pr-review-bot adicionada 2026-05-18 madrugada): `audit-mensal` (dia 1, 9h BRT — `0 12 1 * *` UTC, trig_01DJwCxXJGSP3TLcifcyTqGw), `pillars-review-semanal` (segunda, 9h BRT — `0 12 * * 1` UTC, trig_01MC2qJxjr6ZC9VmyLSg4fz3, **primeira execução HOJE 18/05**), `estudo-g7-semanal` (terça, 9h BRT — `0 12 * * 2` UTC, trig_01AEL5ZnaF3Gu186Rinvdzuq, primeira 19/05), **`pr-review-bot`** (2x/dia 08h e 16h BRT — `0 11,19 * * *` UTC, trig_01HQv1i6JB221jTSH88N33Dn, **primeira execução HOJE 8:05 BRT**). Repo: TestesiteOficial. Conectores: Supabase + Vercel. Permissão git push direto OFF (cria PR sempre, exceto pr-review-bot que faz auto-merge via gh CLI nas condições da Camada 3). Custo: ~70 runs/mês (~16% quota Max). Specs em `automation/routines-specs.md` e `automation/pr-review-bot-spec.md`, ADR-015.
+- **🤖 7 Routines ativas em prod** (4 desde 2026-05-17/18 + 3 adicionadas 2026-05-18): `audit-mensal` (dia 1, 9h BRT — `0 12 1 * *` UTC, trig_01DJwCxXJGSP3TLcifcyTqGw), `pillars-review-semanal` (segunda, 9h BRT — `0 12 * * 1` UTC, trig_01MC2qJxjr6ZC9VmyLSg4fz3), `estudo-g7-semanal` (terca, 9h BRT — `0 12 * * 2` UTC, trig_01AEL5ZnaF3Gu186Rinvdzuq), **`pr-review-bot`** (2x/dia 08h e 16h BRT — `0 11,19 * * *` UTC, trig_01HQv1i6JB221jTSH88N33Dn), **`waitlist-weekly-digest`** (domingo 18h BRT — `0 21 * * 0` UTC, aguardando config), **`vercel-logs-error-scan`** (diario 22h BRT — `0 1 * * *` UTC, aguardando config), **`status-semanal-helena`** (sexta 17h BRT — `0 20 * * 5` UTC, aguardando config). Repo: TestesiteOficial. Conectores: Supabase + Vercel + GitHub. Permissao git push direto OFF (cria PR sempre, exceto pr-review-bot — Camada 3). Custo: ~109 runs/mes (~24% quota Max). Specs completas em `automation/routines-specs.md` e `automation/pr-review-bot-spec.md`, ADR-015.
 - **🛡️ Sistema de auto-revisão de PRs Camadas 1+2+3 ativo** (2026-05-18 madrugada): Camada 1 = email GitHub default (CEO watching o repo) + push mobile opcional. Camada 2 = eu (Claude) verifico PRs pendentes no INÍCIO de cada sessão e aviso CEO (memória persistente). Camada 3 = `pr-review-bot` auto-mergeia PR de Routine + Baixo Risco + Whitelist + 30min wait + zero red flags. Deadline 48h com escape `/extend`. PR fora whitelist (services/, app/, supabase/, etc) NUNCA auto-merge — sempre exige CEO. Camadas 1+2 zero risco. Camada 3 risco baixo, reversível via `git revert`.
 - **🔐 API_RATE_LIMIT_SALT setado + redeploy concluído** (2026-05-17 noite): valor random 32 bytes hex. Tier 1 segurança 100% fechado agora. Deploy `D1YRg3yBF` Ready em 1m 8s.
 - **🧠 Skill /council reforçada com 5 etapas** (2026-05-17 noite): crítica → crítica-da-crítica → pesquisa profunda → reunião → consenso auditado. Princípio CEO: "melhor escolha do que entregar genérico". 3 agentes (critic-user, critic-claude, external-researcher) ganharam modo "Rodada 2".
@@ -187,7 +187,7 @@ Skills = **métodos** (como agir). CLAUDE.md = **estado** (o que existe). Não m
 
 ## 👥 TIME G7 (subagents em `.claude/agents/`)
 
-15 agentes especializados. Chama por nome ou via `/team:*`.
+17 agentes especializados. Chama por nome ou via `/team:*`.
 
 ### Squad Estratégia
 - **helena-strategy** — Diretora, mão direita do CEO
@@ -199,7 +199,7 @@ Skills = **métodos** (como agir). CLAUDE.md = **estado** (o que existe). Não m
 - **otavio-security** · **ricardo-devops** · **paulo-financial** · **lia-docs**
 
 ### Squad Crescimento
-- **carla-copy** · **marcos-marketing** · **sofia-cs**
+- **carla-copy** · **marcos-marketing** · **sofia-cs** · **ana-analytics** · **joana-community**
 
 ### Squad Council (invocado por `/council`)
 - **critic-user** · **critic-claude** · **external-researcher**

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import {
   TapeBadge,
   UnderlineMarker,
@@ -11,15 +11,15 @@ import {
   RootSvg,
 } from '@/components/visual-library'
 import { ComponentCard } from './ComponentCard'
-import { AssetSection } from './AssetSection'
 
 type FilterTab = 'todos' | 'componentes' | 'assets'
 
 /**
  * LibraryShell — shell client da /library. Gerencia filtros por aba,
- * renderiza ComponentCards e AssetSections.
+ * renderiza ComponentCards e a AssetSection (passada como prop pra
+ * preservar Server Component boundary do filesystem).
  */
-export function LibraryShell() {
+export function LibraryShell({ assetSection }: { assetSection: ReactNode }) {
   const [filter, setFilter] = useState<FilterTab>('todos')
 
   const showComponents = filter === 'todos' || filter === 'componentes'
@@ -276,7 +276,7 @@ export function LibraryShell() {
             >
               assets — public/assets/
             </h2>
-            <AssetSection />
+            {assetSection}
           </section>
         )}
 
