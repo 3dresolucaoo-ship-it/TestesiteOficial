@@ -8,21 +8,21 @@
 
 ---
 
-## 📊 Status atual — 2026-05-17
+## 📊 Status atual — 2026-05-18
 
 | # | Pilar | Hoje | Meta 30d | Meta 90d | Owner G7 | Próx. revisão |
 |---|---|---|---|---|---|---|
-| 1 | **Design (UI/UX)** | 9.0 ⬆️ | 9.5 | 9.7 | Diego | 24/05 |
-| 2 | **Anti-IA (autenticidade)** | 8.5 ⬆️ | 9.0 | 9.5 | Carla + Diego | 24/05 |
-| 3 | **Segurança (OWASP 2025)** | 8.5 ⬆️ | 9.0 | 9.5 | Otávio | 24/05 |
+| 1 | **Design (UI/UX)** | 9.0 ⬆️ | 9.5 | 9.7 | Diego | 25/05 |
+| 2 | **Anti-IA (autenticidade)** | 8.5 ⬆️ | 9.0 | 9.5 | Carla + Diego | 25/05 |
+| 3 | **Segurança (OWASP 2025)** | 8.5 ⬆️ | 9.0 | 9.5 | Otávio | 25/05 |
 | 4 | **Performance (Web Vitals)** | 6.5 | 7.5 | 8.5 | Felipe + Ricardo | 31/05 |
-| 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Júlia + Felipe | 24/05 |
+| 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Júlia + Felipe | 25/05 |
 | 6 | **Mobile (320-768px)** | 7.0 | 8.5 | 9.0 | Diego + Júlia | 31/05 |
 | 7 | **Conversão (funil)** | 5.0 | 6.5 | 8.0 | Marcos + Sofia | 07/06 |
 | 8 | **Retenção (habit-forming)** | 5.0 | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
-| 9 | **Pagamento (robustez)** | 8.5 ⬆️ | 9.0 | 9.5 | Paulo + Bruna | 24/05 |
+| 9 | **Pagamento (robustez)** | 8.5 ⬆️ | 9.0 | 9.5 | Paulo + Bruna | 25/05 |
 | 10 | **Documentação (Diátaxis)** | 8.0 | 8.5 | 9.0 | Lia | 31/05 |
-| 11 | **Backend (DB + APIs)** | 7.5 | 8.5 | 9.0 | Bruna | 24/05 |
+| 11 | **Backend (DB + APIs)** | 7.5 | 8.5 | 9.0 | Bruna | 25/05 |
 | 12 | **Estratégia (posicionamento)** | 7.5 | 8.5 | 9.0 | Helena | 31/05 |
 | | **MÉDIA GERAL** | **7.3 ⬆️** | **8.0** | **8.8** | Helena | semanal |
 
@@ -153,7 +153,7 @@
 
 ### 4. Métrica composta
 - **Média geral** = média ponderada dos 12 pilares
-- **Hoje**: 6.9/10 · **Meta 30d**: 8.0 · **Meta 90d**: 8.8
+- **Hoje**: 7.3/10 · **Meta 30d**: 8.0 · **Meta 90d**: 8.8
 - Pós-launch a média deve estar ≥8.0 (todos pilares no "Fortalecer" ou "Expandir")
 
 ---
@@ -196,4 +196,4 @@ Esse documento operacionaliza essa filosofia.
 
 **Mantenedor primário**: Helena (estratégia consolida)
 **Atualização**: toda segunda + via `/rcs` quando evidência aparecer
-**Última atualização**: 2026-05-17 (criação)
+**Última atualização**: 2026-05-18 (revisão semanal inaugural — `pillars/weekly-2026-05-18.md`)
