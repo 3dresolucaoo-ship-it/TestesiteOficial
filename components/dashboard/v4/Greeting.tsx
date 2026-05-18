@@ -60,14 +60,39 @@ interface GreetingProps {
 // ---------------------------------------------------------------------------
 
 export function Greeting({ userName }: GreetingProps) {
-  const [parts, setParts] = useState(() => getGreetingParts(new Date()))
+  // IMPORTANTE: inicia null pra evitar hydration mismatch (React #418).
+  // Server renderiza placeholder, client atualiza com hora local após mount.
+  // Antes: useState(() => getGreetingParts(new Date())) → server usava UTC,
+  // client usava timezone local → mismatch quebrava hydration → remount
+  // disparava bug no AuthContext (supabase.auth.getUser abortado).
+  const [parts, setParts] = useState<{ eyebrow: string; salutation: string } | null>(null)
 
-  // Atualiza a cada 60 segundos para manter horário correto
   useEffect(() => {
-    const tick = () => setParts(getGreetingParts(new Date()))
-    const id = setInterval(tick, 60_000)
+    const update = () => setParts(getGreetingParts(new Date()))
+    update()
+    const id = setInterval(update, 60_000)
     return () => clearInterval(id)
   }, [])
+
+  // SSR + primeira hidratação: placeholder neutro (sem hora) garante
+  // que server e client renderizem HTML idêntico.
+  if (!parts) {
+    return (
+      <div className="greeting fade-in mb-8" id="greetingBlock">
+        <span
+          className="greeting-eyebrow"
+          id="greetingEyebrow"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          &nbsp;
+        </span>
+        <h2 className="greeting-text" id="greetingText">
+          Olá, <em>{userName}</em>.
+        </h2>
+      </div>
+    )
+  }
 
   return (
     <div className="greeting fade-in mb-8" id="greetingBlock">

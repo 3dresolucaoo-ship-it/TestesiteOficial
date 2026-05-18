@@ -31,6 +31,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import { useAuth } from '@/context/AuthContext'
 import { Greeting } from './Greeting'
 import { CoverHero } from './CoverHero'
 import { NextActionCard } from './NextActionCard'
@@ -212,6 +213,7 @@ const NAV_ITEMS = [
 ] as const
 
 function Sidebar({ isOpen, onClose, userName }: SidebarProps) {
+  const { signOut } = useAuth()
   const initials = userName
     .split(' ')
     .slice(0, 2)
@@ -276,6 +278,46 @@ function Sidebar({ isOpen, onClose, userName }: SidebarProps) {
             <span className="user-role">ADMIN</span>
           </div>
         </div>
+        <button
+          type="button"
+          onClick={() => { void signOut() }}
+          aria-label="Sair da conta"
+          className="logout-btn"
+          style={{
+            marginTop: 8,
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            padding: '8px 12px',
+            borderRadius: 8,
+            background: 'transparent',
+            border: '1px solid hsl(var(--border-soft, 220 8% 25%) / 0.6)',
+            color: 'hsl(var(--fog-400, 220 8% 70%))',
+            fontSize: 13,
+            fontWeight: 500,
+            cursor: 'pointer',
+            transition: 'all 160ms ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'hsl(var(--red-500, 0 65% 45%) / 0.08)'
+            e.currentTarget.style.color = 'hsl(var(--red-300, 0 75% 70%))'
+            e.currentTarget.style.borderColor = 'hsl(var(--red-500, 0 65% 45%) / 0.35)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent'
+            e.currentTarget.style.color = 'hsl(var(--fog-400, 220 8% 70%))'
+            e.currentTarget.style.borderColor = 'hsl(var(--border-soft, 220 8% 25%) / 0.6)'
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Sair
+        </button>
       </div>
     </aside>
   )
