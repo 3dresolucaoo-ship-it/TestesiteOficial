@@ -1,7 +1,7 @@
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 export const metadata = {
-  title: 'Calculadora Pro — PDF de orçamento, histórico e multi-impressora · Hayzer',
+  title: 'Calculadora Pro · PDF de orçamento, histórico e multi-impressora · Hayzer',
   description:
     'Calcula uma vez. Manda o orçamento bonito. Cliente fecha. R$ 37 pagamento único, sem mensalidade.',
 }
@@ -96,7 +96,7 @@ export default function CalculadoraProPage() {
               <BenefitCard
                 number="03"
                 title="Várias impressoras, cada uma com seu perfil"
-                body="Tem uma Ender, uma Bambu e uma Anycubic? Cada uma com watt diferente, filamento diferente, custo diferente. Salva os perfis uma vez. Na hora de calcular, escolhe qual rodou — o resto entra automático."
+                body="Tem uma Ender, uma Bambu e uma Anycubic? Cada uma com watt diferente, filamento diferente, custo diferente. Salva os perfis uma vez. Na hora de calcular, escolhe qual rodou, o resto entra automático."
               />
               <BenefitCard
                 number="04"
@@ -304,7 +304,7 @@ function CtaButton() {
         role="status"
         aria-live="polite"
       >
-        Checkout temporariamente indisponível — volta em alguns minutos.
+        Checkout temporariamente indisponível, volta em alguns minutos.
       </div>
     )
   }
@@ -321,7 +321,7 @@ function CtaButton() {
       }}
       aria-label="Comprar Calculadora Pro por R$ 37"
     >
-      Quero a Pro — R$ 37
+      Quero a Pro · R$ 37
     </a>
   )
 }
