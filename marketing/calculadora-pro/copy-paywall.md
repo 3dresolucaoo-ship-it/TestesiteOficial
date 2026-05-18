@@ -15,12 +15,9 @@
 
 ### Hero
 
-> # Para de calcular preço no caderno.
-> ## E no Excel. E de cabeça também.
+> # Para de calcular preço *na cabeça, no Excel ou no zap*.
 >
-> A Calculadora Pro salva seus cálculos, exporta PDF pro cliente
-> e cuida de quantas impressoras você tiver.
-> Pagamento único de R$ 37. Acesso pra sempre.
+> PDF pro cliente, histórico salvo, multi-impressora. R$ 37 pra sempre.
 >
 > [Quero a Pro — R$ 37]
 >
