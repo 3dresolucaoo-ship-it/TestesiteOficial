@@ -24,80 +24,110 @@ import '../globals-v4.css'
 // ---------------------------------------------------------------------------
 
 function DashboardSkeleton() {
+  // Escopo de tema local do skeleton.
+  //
+  // Por quê: o DashboardLayout só seta data-theme="light|dark" em useEffect
+  // (linhas 300-310 em DashboardLayout.tsx). Durante o Suspense fallback,
+  // o <html> ainda não tem data-theme — então :root cai no bloco dark do
+  // globals-v4.css e o skeleton vira escuro mesmo pra user light.
+  //
+  // Solução: usar as vars do design system V4 (--v4-surface-0/1, --v4-border-soft)
+  // que já alternam por data-theme, com fallback @media prefers-color-scheme
+  // pro caso ainda-não-hidratado. Quando o V4 montar, os mesmos tokens
+  // continuam válidos (zero flash). Light mode CEO = sand-mocha-50/100.
+  const localStyles = `
+    [data-skel-root] {
+      --skel-bg:     var(--v4-surface-0);
+      --skel-card:   var(--v4-surface-1);
+      --skel-border: var(--v4-border-soft);
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) [data-skel-root] {
+        --skel-bg:     hsl(var(--sand-mocha-50));
+        --skel-card:   hsl(var(--sand-mocha-100));
+        --skel-border: rgba(15, 10, 9, 0.14);
+      }
+    }
+  `
+
   return (
-    <div
-      className="min-h-screen"
-      style={{ background: 'var(--v4-surface-0)' }}
-      aria-label="Carregando dashboard..."
-      role="status"
-    >
-      {/* Sidebar skeleton */}
+    <>
+      <style dangerouslySetInnerHTML={{ __html: localStyles }} />
       <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '248px',
-          height: '100vh',
-          background: 'var(--v4-surface-0)',
-          borderRight: '1px solid var(--v4-border-soft)',
-          zIndex: 10,
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Main skeleton */}
-      <div
-        style={{
-          marginLeft: '248px',
-          padding: '36px 40px',
-        }}
+        data-skel-root
+        className="min-h-screen"
+        style={{ background: 'var(--skel-bg)' }}
+        aria-label="Carregando dashboard..."
+        role="status"
       >
-        {/* Topbar skeleton */}
+        {/* Sidebar skeleton */}
         <div
           style={{
-            height: '42px',
-            borderRadius: '999px',
-            background: 'var(--v4-surface-1)',
-            width: '220px',
-            marginBottom: '36px',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '248px',
+            height: '100vh',
+            background: 'var(--skel-bg)',
+            borderRight: '1px solid var(--skel-border)',
+            zIndex: 10,
           }}
+          aria-hidden="true"
         />
 
-        {/* Cover skeleton */}
+        {/* Main skeleton */}
         <div
           style={{
-            height: '200px',
-            borderRadius: '16px',
-            background: 'var(--v4-surface-1)',
-            marginBottom: '44px',
-            opacity: 0.7,
-          }}
-        />
-
-        {/* Bento skeleton */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: '18px',
+            marginLeft: '248px',
+            padding: '36px 40px',
           }}
         >
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                height: '220px',
-                borderRadius: '16px',
-                background: 'var(--v4-surface-1)',
-                gridColumn: i === 0 ? 'span 2' : 'span 1',
-                opacity: 0.6 - i * 0.06,
-              }}
-            />
-          ))}
+          {/* Topbar skeleton */}
+          <div
+            style={{
+              height: '42px',
+              borderRadius: '999px',
+              background: 'var(--skel-card)',
+              width: '220px',
+              marginBottom: '36px',
+            }}
+          />
+
+          {/* Cover skeleton */}
+          <div
+            style={{
+              height: '200px',
+              borderRadius: '16px',
+              background: 'var(--skel-card)',
+              marginBottom: '44px',
+              opacity: 0.7,
+            }}
+          />
+
+          {/* Bento skeleton */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '18px',
+            }}
+          >
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  height: '220px',
+                  borderRadius: '16px',
+                  background: 'var(--skel-card)',
+                  gridColumn: i === 0 ? 'span 2' : 'span 1',
+                  opacity: 0.6 - i * 0.06,
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
