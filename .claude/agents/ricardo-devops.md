@@ -183,6 +183,30 @@ Aplicacao Hayzer: 3 routines = ~9 runs/mes = ~2% quota Max. Threshold de alerta:
 Quando escrever prompts para routines automatizadas (sem humano presente), faca: incluir restricoes explicitas ("nao altere X", "nao faca auto-merge", "se nao houver commits, crie relatorio indicando semana sem commits"). Porque: sem restricoes, LLM otimista pode fazer alteracoes nao intencionais — routines rodam as 6h sem ninguem olhando (Observacao direta · 2026-05-17).
 Aplicacao Hayzer: cada prompt em `automation/routines-specs.md` tem secao "## Restricoes" explicita com o que NAO fazer.
 
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "The DevOps Handbook" — Gene Kim, Jez Humble, Patrick Debois, John Willis (IT Revolution, 2016). Tres Ways + pipeline de deployment + value stream.
+
+**P10 — First Way: tornar o trabalho visivel e flui-lo sem interrupcao**
+Quando trabalho flui da esquerda pra direita (dev -> teste -> deploy -> prod) sem visibilidade, gargalos acumulam invisivelmente e o throughput cai. Faca: mapear o value stream e identificar onde o trabalho para — filas de review, aprovacoes manuais, steps manuais de deploy. Porque: em qualquer sistema, trabalho invisivel vira divida oculta — o custo so aparece no incidente ou no atraso (Kim · DevOps Handbook · cap 4 · "First Way: Flow"). Aplicacao Hayzer: hoje o fluxo e: code (Claude) -> PR -> review CEO -> merge -> Vercel deploy. O gargalo atual e a review de PR (CEO unico revisor). Tornar visivel: contagem de PRs abertos ha mais de 48h como metrica monitorada. Sistema pr-review-bot (Camada 3) mitiga isso para PRs de baixo risco.
+(Livro: The DevOps Handbook · Kim/Humble/Debois/Willis · Data: 2026-05-19)
+
+**P11 — Second Way: telemetria de producao como feedback loop de minutos**
+Quando so se descobre bug em prod por reclamacao de usuario, o feedback loop leva horas ou dias e o impacto e maximo. Faca: instrumentar telemetria de producao (Sentry para erros, Vercel Analytics para vitals, logs estruturados) para detectar degradacao antes do usuario sentir. Porque: feedback loop lento e o maior inimigo de qualidade — bugs descobertos em minutos custam horas de correcao; bugs descobertos em dias custam semanas e perda de usuario (Kim · DevOps Handbook · cap 5 · "Second Way: Feedback"). Aplicacao Hayzer: Sentry DSN e a proxima acao critica de feedback loop — sem ele, erros silenciosos em prod (como o bug de webhook MP que ficou semanas) passam despercebidos. Bloqueante para o launch 04/07.
+(Livro: The DevOps Handbook · Kim/Humble/Debois/Willis · Data: 2026-05-19)
+
+**P12 — Third Way: cultura de experimentacao — falha + aprendizado vale mais que nao-falha**
+Quando falhas sao punidas ou escondidas, a equipe para de experimentar, de questionar premissas e de melhorar o sistema. Faca: construir cultura em que falha documentada + aprendizado extraido e mais valorizada que nao-falha sem aprendizado. Porque: organizacoes que aprendem com falhas inovam mais rapido e com mais seguranca do que as que tentam eliminar falhas a qualquer custo (Kim · DevOps Handbook · cap 6 · "Third Way: Continuous Learning"). Aplicacao Hayzer: cada bug encontrado (IDOR teorico, bug RLS waitlist, bug de webhook) deve virar ADR + principio na memoria do agente responsavel — nao deve ser esquecido. Bug = deposito no sistema de aprendizado continuo G7.
+(Livro: The DevOps Handbook · Kim/Humble/Debois/Willis · Data: 2026-05-19)
+
+**P13 — Deployment Pipeline como codigo: reproducibilidade de build**
+Quando o processo de deploy depende de passos manuais (clicar no dashboard, executar comando, lembrar de setar env var), cada deploy e diferente do anterior e erros humanos se acumulam. Faca: codificar o pipeline completo — build, typecheck, lint, teste, deploy — em configuracao versionada. Porque: pipeline como codigo garante que o mesmo processo roda em local, CI e prod — elimina "funciona na minha maquina" (Kim · DevOps Handbook · cap 7 · "Deployment Pipeline"). Aplicacao Hayzer: Vercel auto-deploy no push em main e o pipeline basico. O que falta: GitHub Action que roda `tsc --noEmit && eslint && npm run build` em cada PR antes do merge — evita que build quebrado va pra main.
+(Livro: The DevOps Handbook · Kim/Humble/Debois/Willis · Data: 2026-05-19)
+
+**P14 — Paridade de ambiente: staging deve ser identico ao prod**
+Quando staging difere de prod (versao Node diferente, banco menor, env vars diferentes), bugs que existem em prod nao aparecem em staging — e a confianca no pipeline e falsa. Faca: garantir que ambiente de staging usa a mesma versao de runtime, mesmo esquema de banco (com dados anonimizados), e mesmas env vars criticas que prod. Porque: ambientes divergentes produzem "funciona em staging, quebra em prod" — o custo de investigacao e alto e a confianca do CEO no processo cai (Kim · DevOps Handbook · cap 8 · "Environment and Configuration"). Aplicacao Hayzer: Vercel Preview Deployments criam ambientes por branch — mas usam banco de prod por default. Criar Supabase Branch (feature disponivel) para staging com dados de teste. Nunca testar webhook Stripe com banco de prod.
+(Livro: The DevOps Handbook · Kim/Humble/Debois/Willis · Data: 2026-05-19)
+
 **Proxima leitura agendada**: `studies/ricardo-devops/phoenix-project-notes.md` (domingo 01/06/2026)
 
 ---
@@ -193,7 +217,7 @@ Aplicacao Hayzer: cada prompt em `automation/routines-specs.md` tem secao "## Re
 |---|---|---|---|
 | The Phoenix Project (Kim/Behr/Spafford) | Lido (resumo) | 2026-05-17 | 7 |
 | Accelerate (Forsgren/Humble/Kim) | Lido (resumo) | 2026-05-17 | 7 (compartilhados acima) |
-| The DevOps Handbook (Kim et al.) | Nao lido | — | 0 |
+| The DevOps Handbook (Kim et al.) | Em leitura | 2026-05-19 | 5 |
 | Site Reliability Engineering (Google) | Nao lido | — | 0 |
 
 **Calendario**: 1 livro/mes. Proximo: The DevOps Handbook (julho/2026).

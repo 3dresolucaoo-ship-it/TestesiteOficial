@@ -146,6 +146,30 @@ V<X> porque <razão concreta>
 - **2026-05-17 · Ogilvy (cap 3)**: **Quando descrever benefício, conte em forma de história — "o Zippo que funcionou depois de sair da barriga do peixe" — porque história gruda, lista de feature evapora.** (Ogilvy · cap 3 · classicads). **Aplicação Hayzer**: substituir "controle de pedidos" por mini-narrativa do Rafael ("Era sexta 23h. Rafael abriu a Hayzer e viu: pedido do Carlos, fila 3, prazo terça. Dormiu."). Aplicar em case studies, posts LinkedIn do Marcos, página /sobre.
 - **2026-05-17 · Ogilvy (cap 1)**: **Antes de escrever, pesquise como o cliente fala do produto — que palavra ele usa, que atributo importa, que promessa o faria comprar — porque copy boa é traduzida da fala dele, não inventada na sua mesa.** (Ogilvy · cap 1 · shortform/bookey). **Aplicação Hayzer**: ouvir áudios de WhatsApp do CEO com makers, ler comentários do Instagram @3dlab_brasil, pegar vocabulário cru ("filamento", "fila", "comissão da ML", "recompra") — já está acontecendo, formalizar como check antes de cada copy nova.
 
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "Made to Stick: Why Some Ideas Survive and Others Die" — Chip Heath e Dan Heath (2007). Framework SUCCESs: Simple, Unexpected, Concrete, Credible, Emotional, Stories.
+
+**P1 — Simple: encontrar o nucleo da mensagem e largar o resto**
+Quando tiver 5 beneficios para comunicar em um hero ou CTA, faca: encontrar UM que sintetiza a promessa central e descartar os outros. Porque: mensagem que tenta dizer 3 coisas nao diz nenhuma — o cerebro nao retém lista de beneficios, retém conceito unico com forte analogia (Heath · cap 1 · "The Core"). Aplicacao Hayzer: "Seu negocio, sem caos" ja aplica esse principio — 4 palavras, um conceito. Filtro: antes de entregar copy de qualquer feature, perguntar "se so pudesse dizer UMA coisa sobre isso, o que seria?" — essa e a versao que vai para o headline.
+(Livro: Made to Stick · Heath Brothers · Data: 2026-05-19)
+
+**P2 — Unexpected: abrir curiosity gap antes de fechar**
+Quando a mensagem e previsivel ("controle seus pedidos"), o cerebro processa em piloto automatico e nao retém. Faca: quebrar o padrao esperado com uma afirmacao surpreendente antes de revelar a solucao. Porque: o cerebro so presta atencao quando algo viola expectativa — a surpresa abre uma lacuna de curiosidade que so fecha quando o leitor termina a mensagem (Heath · cap 2 · "The Gap Theory of Curiosity"). Aplicacao Hayzer: ao inves de "calculadora de custo 3D", testar "Voce provavelmente esta perdendo R$ 40 por pedido sem saber". O inesperado e o dado negativo que o maker nao esperava. Aplicar em subject lines de email e primeiras linhas de post LinkedIn.
+(Livro: Made to Stick · Heath Brothers · Data: 2026-05-19)
+
+**P3 — Concrete: imagens senoriais especificas, nao abstracoes**
+Quando usar palavras abstratas ("gestao eficiente", "mais controle"), o leitor cria imagem vaga e nao fixa. Faca: substituir por imagem sensorial especifica — um numero, uma cena, um objeto. Porque: o cerebro recorda imagens concretas, nao conceitos abstratos — "12 pedidos atrasados" ativa uma cena mental que "pedidos em atraso" nao ativa (Heath · cap 3). Aplicacao Hayzer: "calculadora" > "descubra em 8 segundos quanto sobra de verdade". "controle de estoque" > "saiba quando o filamento PLA vai acabar antes de aceitar o proximo pedido". Auditar toda copy ativa por abstracoes e substituir por imagens concretas.
+(Livro: Made to Stick · Heath Brothers · Data: 2026-05-19)
+
+**P4 — Credible: deixar o leitor verificar por conta propria (testable claim)**
+Quando afirmar beneficio sem prova ("a melhor calculadora do mercado"), o leitor ativo descre o claim. Faca: dar uma prova que o leitor pode testar sozinho, sem precisar confiar na sua palavra. Porque: a Anti-Authority (usuario que viveu o problema) e o testemunho mais crivel — mais forte que estatistica ou especialista (Heath · cap 4 · "The Sinatra Test"). Aplicacao Hayzer: calculadora gratuita sem cadastro e o melhor exemplo de credibilidade testavel — o maker ve o gross-up correto com seus proprios numeros antes de se cadastrar. Nunca destruir esse pattern: valor verificavel antes do pedido de cadastro. Tambem: citar "Shopee cobra 14% — voce deveria cobrar R$ X" com dado verificavel e mais forte que qualquer claim.
+(Livro: Made to Stick · Heath Brothers · Data: 2026-05-19)
+
+**P5 — Story: narrativa com heroi, obstaculo e resolucao**
+Quando listar features em bullets, elas evaporam. Quando contar historia com personagem que enfrenta obstaculo e chega a resolucao, a mensagem gruda e gera acao. Faca: transformar pelo menos um ponto da landing ou email em mini-narrativa do Rafael. Porque: historias ativam simulacao mental no leitor — ele "vive" a historia e isso cria empatia e motivacao que lista de features nunca cria (Heath · cap 6 · "Stories as Simulation"). Aplicacao Hayzer: hero alternativo para teste A/B — "Era domingo 23h. Rafael abriu o Instagram e viu 3 mensagens de cliente. Abriu o Hayzer. Via aba de pedidos, respondeu em 40 segundos. Dormiu." Historia > lista. Aplicar em email de boas-vindas e posts LinkedIn.
+(Livro: Made to Stick · Heath Brothers · Data: 2026-05-19)
+
 **Próxima leitura agendada**: `studies/carla-copy/made-to-stick.md` (junho/2026)
 
 ---
@@ -157,7 +181,7 @@ Pasta: `studies/carla-copy/`
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Ogilvy on Advertising | 🟢 sintetizado | 2026-05-17 | 7 |
-| Made to Stick (Heath) | 🔵 não lido | — | 0 |
+| Made to Stick (Heath) | 🟡 em leitura | 2026-05-19 | 5 |
 | The Boron Letters (Halbert) | 🔵 não lido | — | 0 |
 | Copy Hackers vol 1-4 (Wiebe) | 🔵 não lido | — | 0 |
 

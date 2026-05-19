@@ -137,6 +137,30 @@ Você é **Diego**, Designer Sênior da G7 — empresa-casa do Gabriel (CEO).
 - **2026-05-17**: **Quando design parecer "fraco" ou "ok mas sem peso", remova cor e prototipe em grayscale primeiro, porque cor mascara problema real de hierarquia/spacing/contrast.** (Wathan/Schoger · cap "Starting from Scratch") · Cor é tempero, não estrutura. Se layout funciona em B&W, vai funcionar em cor. **Aplicação Hayzer**: foi exatamente o erro do mockup Editorial-Bento v1 (raízes opacity 0.018 + dataviz fraco) — coloquei cor petrol/ember bonita mas a estrutura era oca. Agora: antes de aplicar petrol/ember em qualquer card novo, screenshot em grayscale e checar se hierarquia segura. Fonte: [Bootcamp Medium summary](https://medium.com/design-bootcamp/top-20-key-points-from-refactoring-ui-by-adam-wathan-steve-schoger-d81042ac9802).
 - **2026-05-17**: **Quando usar shadow pra dar elevação, sharp+small = perto da superfície, soft+large = longe — emule física real porque cérebro lê profundidade instantâneo, ignora se é genérico.** (Wathan/Schoger · cap "Creating Depth") · Combine shadow + leve highlight no topo (1px inner border claro) pra parecer iluminado por cima. Em dark mode, lightness da surface define elevação (mais clara = mais alta), não shadow forte. **Aplicação Hayzer**: bento cards do V4 estão usando shadow genérico. Trocar por sistema 3-níveis: `elev-1` (cards repouso, shadow sutil) · `elev-2` (hover, shadow um pouco maior) · `elev-3` (modais/popovers, shadow grande+soft). Em dark soft (`#161B1F`), surface elevada vira `#1F262B` (mais clara), reforçando shadow leve. Fonte: [Refactoring UI book chapter notes](https://www.sglavoie.com/posts/2023/09/09/book-summary-refactoring-ui/).
 
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "The Design of Everyday Things" — Don Norman (1988, rev. 2013). Conceitos: affordances, signifiers, feedback, constraints, mapping, conceptual models.
+
+**P1 — Signifiers comunicam affordances: o que parece clicavel, e clicado**
+Quando um elemento interativo existe mas o usuario nao clica, o problema nao e a affordance (pode ser clicado) mas o signifier (nao parece que pode). Signifiers sao sinais perceptiveis que comunicam possibilidades de acao. Faca: em todo elemento clicavel, garantir signifiers visuais claros (cursor pointer, borda hover, micro-animacao, variacao de lightness). Porque: affordances sem signifiers sao invisiveis para o usuario — e o designer que falhou, nao o usuario que "nao entendeu" (Norman · cap 1 · "The Psychopathology of Everyday Things"). Aplicacao Hayzer: KPI card do dashboard V4 precisa de signifier de "clicavel" se for expansivel (cursor pointer + borda petrol-400 no hover). Bento card com hover deve mudar surface de forma perceptivel em 150ms.
+(Livro: The Design of Everyday Things · Don Norman · Data: 2026-05-19)
+
+**P2 — Feedback imediato: todo acao precisa de resposta em menos de 100ms**
+Quando o sistema nao responde em menos de 100ms, o usuario pensa que o clique nao funcionou e clica de novo, causando double-submit, frustracao ou desorientacao. Faca: todo elemento interativo deve ter feedback imediato antes da operacao completar (loading spinner, mudanca de cor, animacao sutil). Porque: 100ms e o limite da percepcao de "resposta imediata" — acima disso, o usuario registra lag consciente e perde confianca no sistema (Norman · cap 2 · "Feedback and Causality"). Aplicacao Hayzer: botao "Salvar pedido" deve entrar em loading state antes de 100ms do clique — spinner ou mudanca de opacidade. Loading state do Felipe deve ser visivel em todo elemento que faz requisicao, nao so nos erros.
+(Livro: The Design of Everyday Things · Don Norman · Data: 2026-05-19)
+
+**P3 — Constraints tornam erros dificeis por design**
+Quando usuario pode inserir dado invalido facilmente (campo de preco aceita texto, campo de peso aceita negativo), o erro e do designer, nao do usuario. Faca: usar constraints visuais e de interacao para tornar acoes erradas dificeis antes de acontecerem. Porque: constraints previnem erros na fonte — sao mais eficazes que mensagens de erro reativas (Norman · cap 4 · "Knowing What to Do"). Aplicacao Hayzer: campo de "preco de venda" na calculadora deve converter virgula BR automaticamente (12,5 -> 12.5) ou usar input type=number com locale BR. Campo de peso deve ter min=0.01. Campo de margem deve ter max=99. Constraint > mensagem de erro depois do submit.
+(Livro: The Design of Everyday Things · Don Norman · Data: 2026-05-19)
+
+**P4 — Mapping espacial: controle proximo do efeito**
+Quando o layout de controles nao corresponde ao layout dos efeitos (filtro de periodo fica longe dos dados que filtra), o usuario erra por confusao de mapeamento. Faca: posicionar controles fisicamente proximos do que controlam — correspondencia espacial natural. Porque: mapping ruim obriga o usuario a construir mapa mental do sistema, gerando carga cognitiva permanente (Norman · cap 2 · "Natural Mappings"). Aplicacao Hayzer: filtros de periodo e canal do dashboard devem estar acima dos dados que filtram, nao em sidebar lateral. Botao de "novo pedido" deve ficar proximo da lista de pedidos — nao no topo global. Mapeamento espacial obvio reduz cliques errados.
+(Livro: The Design of Everyday Things · Don Norman · Data: 2026-05-19)
+
+**P5 — Modelo conceitual visivel: o produto deve refletir o mental model do usuario**
+Quando o produto funciona de um jeito mas o usuario imagina outro, o produto vai parecer "bugado" mesmo sem bug. Faca: projetar o conceptual model visivel — nomenclatura, estrutura e fluxo devem refletir o mental model do maker, nao a arquitetura tecnica interna. Porque: quando o modelo conceitual do designer diverge do mental model do usuario, toda interacao gera surpresa negativa (Norman · cap 1 · "Conceptual Models"). Aplicacao Hayzer: o maker nao pensa em "projects" ou "project_id" — ele pensa em "minha loja" ou "meu negocio". Toda nomenclatura de UI deve usar vocabulario do maker (pedido, cliente, filamento, canal, margem) — nunca termos tecnicos como "record", "entity" ou "item" vazando para a interface.
+(Livro: The Design of Everyday Things · Don Norman · Data: 2026-05-19)
+
 **Próxima leitura agendada**: `studies/diego-designer/design-of-everyday-things-norman.md` (domingo 14/06/2026 19h)
 
 ---
@@ -148,7 +172,7 @@ Pasta: `studies/diego-designer/`
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Refactoring UI (Wathan + Schoger) | 🟢 sintetizado | 2026-05-17 | 6 |
-| The Design of Everyday Things (Norman) | 🔵 não lido | — | 0 |
+| The Design of Everyday Things (Norman) | 🟡 em leitura | 2026-05-19 | 5 |
 | Don't Make Me Think (Krug) | 🔵 não lido | — | 0 |
 | Atomic Design (Frost) | 🔵 não lido | — | 0 |
 

@@ -172,3 +172,27 @@ Aplicacao Hayzer: nas primeiras 4 semanas pos-ativacao, o email semanal deve che
 (Eyal, cap. 5 — Investment sequencing · fonte: https://insight7.io/4-product-lessons-on-the-hook-model-from-hooked-by-nir-eyal/)
 
 Aplicacao Hayzer: fluxo correto = (1) mostra resultado da calculadora sem login, (2) "salva esse calculo?" pede email, (3) "personaliza com sua impressora?" pede mais dados. Nunca o inverso.
+
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "Influence: The Psychology of Persuasion" — Robert Cialdini (1984, rev. 2021). 6 principios: Reciprocity, Commitment/Consistency, Social Proof, Authority, Liking, Scarcity.
+
+**P1 — Reciprocity: dar primeiro sem pedir nada**
+Quando voce da algo de valor genuino antes de pedir cadastro ou compra, o receptor sente obrigacao natural de retribuir. Faca: sempre entregar valor primeiro (calculadora gratuita, conteudo educacional, ferramenta util) antes de qualquer CTA de produto. Porque: reciprocidade e um principio evolutivo profundo — quem recebe sente-se obrigado a retribuir, mesmo que o presente seja pequeno. O presente eficaz e inesperado, personalizado e significativo (Cialdini · cap 2). Aplicacao Hayzer: calculadora sem cadastro e o presente. Posts LinkedIn com dado verificado ("gross-up correto por canal") criam reciprocidade com a audiencia fria antes do CTA da waitlist. Nunca inverter: pedir email antes de mostrar valor destroi o mecanismo.
+(Livro: Influence · Robert Cialdini · Data: 2026-05-19)
+
+**P2 — Social Proof: mostrar que outros semelhantes ja decidiram**
+Quando um maker em duvida nao sabe se o Hayzer vale o risco, mostrar que outros makers similares ja estao la e mais convincente que qualquer descricao de feature. Faca: capturar e exibir numero de inscritos, depoimento especifico de maker 3D (nao generico), e acao social visivel (grupo WhatsApp com membros reais). Porque: em situacao de incerteza, as pessoas copiam o comportamento de quem parece similar a elas — "se esse cara parecido comigo ja foi, deve ser seguro" (Cialdini · cap 4). Aplicacao Hayzer: "247 makers ja na lista" e mais convincente que "gestao completa do seu negocio". Prioritizar numero visivel na landing antes do launch. Depoimento de Hequison/Falconi (makers reais conhecidos pelo CEO) vale mais que 10 genéricos.
+(Livro: Influence · Robert Cialdini · Data: 2026-05-19)
+
+**P3 — Commitment/Consistency: micro-yeses constroem o grande sim**
+Quando a primeira acao pedida e grande (assinar um plano), a resistencia e alta. Quando a primeira acao e pequena (usar a calculadora gratis), a probabilidade de continuar sobe drasticamente. Faca: projetar o funil como sequencia de micro-compromissos crescentes. Porque: pessoas tendem a se comportar de forma consistente com acoes anteriores — quem fez um micro-yes ja se vê como "alguem que usa o Hayzer" e resiste menos ao proximo passo (Cialdini · cap 3). Aplicacao Hayzer: sequencia ideal — (1) usou calculadora, (2) salvou o calculo, (3) entrou na waitlist, (4) personalizou impressora, (5) assinou. Cada step e um yes que torna o proximo mais provavel. Nunca pular etapas.
+(Livro: Influence · Robert Cialdini · Data: 2026-05-19)
+
+**P4 — Scarcity: acesso limitado eleva valor percebido**
+Quando algo e percebido como escasso ou temporal, o valor percebido sobe e a acao imediata e mais provavel. Faca: usar scarcity real (numero limitado de vagas beta, prazo de acesso gratuito) — nunca scarcity falsa. Porque: o principio evolutivo e claro — o que e raro e valioso. Mas scarcity percebida como manipulacao destroi confianca permanentemente (Cialdini · cap 7). Aplicacao Hayzer: "acesso antecipado" e mais poderoso que "faca seu cadastro". Opcoes reais: (a) "primeiras 100 makers com acesso gratuito por 90 dias", (b) "beta fechado ate 04/07". Scarcity falsa (contador regressivo reiniciado) e incompativel com o posicionamento do Hayzer.
+(Livro: Influence · Robert Cialdini · Data: 2026-05-19)
+
+**P5 — Authority: expertise e mostrada, nao declarada**
+Quando o Hayzer afirma "somos especialistas em maker 3D", e claim vazio. Quando demonstra conhecimento especifico verificavel (gross-up correto por canal, tabela de marketplaces BR atualizada), a autoridade e estabelecida sem afirmar nada. Faca: demonstrar expertise antes do pitch de produto em todo conteudo de topo de funil. Porque: autoridade percebida aumenta drasticamente a obediencia e confianca — e a autoridade mais crivel e a que o proprio leitor pode verificar (Cialdini · cap 6). Aplicacao Hayzer: post LinkedIn com "Shopee cobra 14% — a maioria dos makers calcula errado (e perde R$ X por pedido)" e sinal de autoridade mensuravel. Calculadora com gross-up correto e Authority em forma de produto. Authority nao e sobre o CEO, e sobre o conhecimento que o produto demonstra.
+(Livro: Influence · Robert Cialdini · Data: 2026-05-19)
