@@ -153,7 +153,7 @@ export function CoverHero({ data, satellites }: CoverHeroProps) {
 
   return (
     <section
-      className="cover fade-in delay-1 kpi-hero"
+      className="cover fade-in delay-1"
       aria-label="Visão geral do mês"
     >
       {/* ── COVER LEFT ── */}

@@ -592,10 +592,60 @@ export default function OrdersPage() {
 
   const handleNewOrder = useCallback(() => setCreating(true), [])
 
-  // Placeholder de exportar CSV (nao implementado ainda)
+  // Exporta a lista atual (respeita filtro de projeto + tab + busca quando aplicaveis)
   const handleExportCsv = useCallback(() => {
-    // TODO: implementar export CSV de pedidos
-  }, [])
+    const escapeCell = (v: unknown): string => {
+      if (v == null) return ''
+      const s = String(v)
+      // CSV padrao: envolve em aspas se tiver virgula, aspas, ; ou quebra de linha
+      if (/[",;\n\r]/.test(s)) return `"${s.replace(/"/g, '""')}"`
+      return s
+    }
+
+    const headers = [
+      'Cliente',
+      'Projeto',
+      'Origem',
+      'Item',
+      'Valor (R$)',
+      'Custo Producao (R$)',
+      'Status',
+      'Data',
+    ]
+
+    const rows = byProject.map((o) => {
+      const statusLabel = ORDER_STATUS_CONFIG[o.status]?.label ?? o.status
+      const originLabel = ORDER_ORIGIN_LABELS[o.origin] ?? o.origin
+      return [
+        o.clientName,
+        projectName(o.projectId),
+        originLabel,
+        o.item || productName(o.productId) || '',
+        fmt(o.value || 0),
+        o.productionCost != null ? fmt(o.productionCost) : '',
+        statusLabel,
+        fmtDate(o.date),
+      ]
+    })
+
+    const csvBody = [headers, ...rows]
+      .map((row) => row.map(escapeCell).join(';'))
+      .join('\r\n')
+
+    // BOM UTF-8 garante que Excel BR abre acentos corretamente
+    const csvWithBom = '﻿' + csvBody
+    const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' })
+
+    const url   = URL.createObjectURL(blob)
+    const today = new Date().toISOString().slice(0, 10) // YYYY-MM-DD
+    const link  = document.createElement('a')
+    link.href     = url
+    link.download = `hayzer-pedidos-${today}.csv`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }, [byProject, projectName, productName])
 
   // ---------------------------------------------------------------------------
   // Tabs para ModuleShell
