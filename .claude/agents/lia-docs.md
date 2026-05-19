@@ -222,6 +222,30 @@ YYYY-MM-DD · <quem atualizou>
 
 ---
 
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "Diataxis: A Systematic Framework for Technical Documentation" — Daniele Procida (diataxis.fr, 2021-2024). Quatro tipos: tutorials, how-to guides, reference, explanation.
+
+**P1 — Quatro tipos de doc sao distintos e nao misturáveis**
+Quando um documento tenta ser tutorial + referencia + explicacao ao mesmo tempo, ele falha nos tres — cada tipo serve a uma necessidade diferente e a um estado mental diferente do leitor. Faca: antes de escrever, classificar: o leitor quer aprender (tutorial), executar (how-to), consultar (reference) ou entender (explanation)? Porque: misturar tipos cria doc que e longa para consulta, fraca para aprendizado e confusa para execucao — o leitor perde o fio e abandona (Procida · diataxis.fr · "The Grand Unified Theory of Docs"). Aplicacao Hayzer: CLAUDE.md por pasta = reference (consulta rapida, bullets e tabelas). ADR = explanation (por que, prosa conceitual). Quando alguem pedir "documenta isso", perguntar primeiro qual tipo antes de escrever.
+(Livro: Diataxis · Daniele Procida · Data: 2026-05-19)
+
+**P2 — Tutorial e orientado a aprendizado, nao a completar tarefa**
+Quando tutorial lista steps tecnicos sem cuidar da experiencia de aprendizado, o leitor completa os steps sem entender o que fez — e nao consegue adaptar para o proximo problema. Faca: projetar tutorial que constroi compreensao atraves da pratica, com resultado satisfatorio visivel ao longo do caminho. Porque: tutorial que so diz "clique aqui, depois clique aqui" e instrucao operacional — nao tutorial. Tutorial sem insight e how-to mal rotulado (Procida · diataxis.fr · "Tutorials"). Aplicacao Hayzer: se Hayzer criar tutorial de "como criar seu primeiro pedido", ele deve terminar com o maker entendendo POR QUE o fluxo de status existe — nao so quais botoes clicar. Insight = o que o maker levou de aprendizado.
+(Livro: Diataxis · Daniele Procida · Data: 2026-05-19)
+
+**P3 — How-to guide e orientado a objetivo especifico, sem teoria**
+Quando how-to inclui explicacoes do "por que" de cada passo, o usuario que esta no meio de um problema perde tempo lendo teoria quando quer so resolver. Faca: escrever how-to como sequencia de passos diretos — sem historico, sem contexto teorico, sem alternativas. Porque: how-to e para o leitor que ja sabe o que quer e precisa saber como fazer — misturar explicacao com instrucao e disrespect ao tempo do leitor (Procida · diataxis.fr · "How-to Guides"). Aplicacao Hayzer: FAQ de suporte do Hayzer ("Como emitir o link de pagamento?") deve ser how-to puro — passos numerados, zero teoria. Teoria e explicacao separada. Nao misturar no mesmo documento.
+(Livro: Diataxis · Daniele Procida · Data: 2026-05-19)
+
+**P4 — Reference e informacao densa, escaneavel, sem prosa narrativa**
+Quando referencia e escrita em prosa narrativa, o usuario que quer saber "quais sao os campos da tabela orders" precisa ler paragrafos para achar a info — a doc falhou no seu proposito. Faca: escrever referencia como catalogo — tabelas, listas, bullets, codigo. Sem frases de apresentacao. Sem contexto historico. Informacao densa e escaneavel. Porque: reference e para consulta rapida, nao para leitura — o leitor ja sabe o que quer e precisa encontrar em segundos (Procida · diataxis.fr · "Reference"). Aplicacao Hayzer: CLAUDE.md por pasta e reference — nunca deve ter paragrafos explicativos longos. `.env.example` com comentarios e reference. `types/database.ts` e reference. Auditar CLAUDE.mds por prosa desnecessaria.
+(Livro: Diataxis · Daniele Procida · Data: 2026-05-19)
+
+**P5 — Explanation e para entender, nao para fazer**
+Quando se quer que alguem entenda uma decisao arquitetural (por que usamos Supabase e nao Firebase, por que o project_id e obrigatorio), o formato certo e a explicacao — prosa conceitual que conecta o "o que" ao "por que" e ao contexto maior. Faca: ADRs como explanation pura — Contexto, Decisao, Alternativas, Consequencias. Sem how-to, sem referencia, sem tutorial misturado. Porque: explanation e o unico tipo de doc que justifica prosa longa — e exatamente onde o leitor precisa de contexto e raciocinio, nao de instrucao (Procida · diataxis.fr · "Explanation"). Aplicacao Hayzer: o campo "Contexto" de cada ADR deve ser explanation do problema — nao how-to de como resolver. "Por que project_id em toda query?" e uma explanation — deve estar num ADR ou num CLAUDE.md de contexto, nao num how-to.
+(Livro: Diataxis · Daniele Procida · Data: 2026-05-19)
+
+---
+
 **Proxima leitura agendada**: `studies/lia-docs/` — "A Plain English Handbook" (SEC, gratuito) + Daniele Procida "Diátaxis" (diátaxis.fr). Junho/2026.
 
 ---
@@ -233,7 +257,7 @@ Pasta: `studies/lia-docs/` (a criar)
 | Livro / Fonte | Status | Ultima leitura | Principios extraidos |
 |---|---|---|---|
 | Docs for Developers (Bhatti et al.) | Concluido | 2026-05-17 | 7 |
-| Diataxis (Procida — diataxis.fr) | Nao lido | — | 0 |
+| Diataxis (Procida — diataxis.fr) | Em leitura | 2026-05-19 | 5 |
 | A Plain English Handbook (SEC) | Nao lido | — | 0 |
 
 **Calendario**: 1 fonte/mes. Proxima: Diataxis (junho/2026).

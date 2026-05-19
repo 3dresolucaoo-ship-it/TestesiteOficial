@@ -177,6 +177,30 @@ Aplicação Hayzer: a regra "service-first" existe exatamente pra isso — isola
 (Kleppmann · Cap. 1 · "Reliability" — building reliable systems from unreliable parts)
 Aplicação Hayzer: RLS é a camada de tolerância a falha de autorização — mesmo que a Server Action esqueça de filtrar por `project_id`, o Postgres rejeita via policy. Nunca confiar só na camada de aplicação: RLS + `project_id` na query são defesa em profundidade.
 
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "Designing Data-Intensive Applications" — Martin Kleppmann (O'Reilly, 2017) · Cap. 2: Data Models and Query Languages.
+
+**P1 — Escolha o modelo de dados pela forma dos relacionamentos**
+Quando dados sao hierarquicos e auto-contidos (documento com sub-items que raramente sao acessados isoladamente), o modelo documento (JSON/JSONB) reduz impedance mismatch. Quando ha relacionamentos muitos-para-muitos entre entidades distintas, o modelo relacional e mais adequado. Faca: antes de criar tabela nova, classificar: "esse dado e sempre acessado junto ao pai?" — se sim, JSONB; se precisa de query propria, tabela com FK. Porque: escolha incorreta de modelo gera joins desnecessarios ou denormalizacao desnecessaria — ambos aumentam complexidade sem ganho (Kleppmann · cap 2 · "Relational Model vs Document Model"). Aplicacao Hayzer: `order_items` pode ser JSONB dentro de `orders` (acessado sempre junto). `inventory_items` precisa de query propria ("filamentos em estoque") — tabela separada com FK.
+(Livro: DDIA · Martin Kleppmann · Data: 2026-05-19)
+
+**P2 — Normalizacao previne anomalias de atualizacao**
+Quando o mesmo dado aparece duplicado em multiplas linhas (ex: nome do produto copiado em cada linha de pedido), qualquer atualizacao precisa tocar N linhas e facilmente fica inconsistente. Faca: normalizar dados que mudam — armazenar o dado uma vez em sua tabela e referenciar por FK. Porque: duplicacao cria anomalias de insercao, atualizacao e delecao — o banco fica em estado inconsistente quando parte dos dados e atualizada (Kleppmann · cap 2 · "Many-to-One and Many-to-Many Relationships"). Aplicacao Hayzer: verificar se `orders` copia `customer_name` ou referencia `customer_id`. Se copiar, auditar e migrar para FK + join — dado deve morar em um unico lugar.
+(Livro: DDIA · Martin Kleppmann · Data: 2026-05-19)
+
+**P3 — Modelo documento para dados self-contained, tabela para dados com queries proprias**
+Quando um objeto raramente e acessado em isolamento de seu pai, armazenar como JSONB no pai reduz joins e melhora performance de leitura. Quando o objeto precisa de query propria (filtragem, ordenacao, agregacao independente), tabela propria com FK e obrigatorio. Faca: decidir o modelo pelo padrao de acesso, nao pela estrutura do dado. Porque: JSONB no Postgres e uma alternativa valida para dados hierarquicos — mais rapido para leitura do pai completo, mas sem indexes nas sub-propriedades (Kleppmann · cap 2 · "Document Model in NoSQL"). Aplicacao Hayzer: `items` de um pedido = JSONB (sempre acessados com o pedido). `categories` de inventario = tabela propria (query "todos os produtos na categoria X" precisa de index).
+(Livro: DDIA · Martin Kleppmann · Data: 2026-05-19)
+
+**P4 — Impedance Mismatch e custo de traducao entre modelo de dados e modelo de aplicacao**
+Quando o modelo do DB nao reflete o modelo da aplicacao, cada operacao requer traducao manual — esse custo de complexidade e chamado de impedance mismatch. Faca: usar os tipos gerados via `supabase gen types` diretamente nos services sem criar interfaces paralelas com os mesmos campos. Porque: interfaces paralelas duplicam definicao, criam drift silencioso e aumentam superficie de erro — o tipo do DB ja e a fonte de verdade (Kleppmann · cap 2 · "The Object-Relational Mismatch"). Aplicacao Hayzer: `types/database.ts` gerado via `supabase gen types` deve ser usado diretamente em `services/`. Nao criar interface `Order` com os mesmos campos que `Database['public']['Tables']['orders']['Row']` — usar o tipo gerado ou um alias.
+(Livro: DDIA · Martin Kleppmann · Data: 2026-05-19)
+
+**P5 — SQL declarativo deixa o otimizador trabalhar melhor que loop imperativo em JS**
+Quando a busca com multiplos filtros e feita em loop JS (buscar pedidos, depois filtrar por canal, depois por periodo), o Node processa em memoria e perde os indexes do Postgres. Faca: consolidar filtros complexos em uma unica query SQL com WHERE composto — deixar o otimizador do Postgres escolher o plano de execucao. Porque: o otimizador do Postgres analisa indexes disponeis, estatisticas de distribuicao e custo de planos alternativos — sempre melhor que loop imperativo em JavaScript para dados no banco (Kleppmann · cap 2 · "Declarative vs Imperative"). Aplicacao Hayzer: busca de pedidos por periodo + canal + status deve ser UMA query com WHERE composto + index em `(project_id, status, created_at)`. Candidato: function `searchOrders(filters)` no service — uma chamada, um roundtrip, zero waterfall.
+(Livro: DDIA · Martin Kleppmann · Data: 2026-05-19)
+
 **Proxima leitura agendada**: DDIA Cap. 2 — Data Models and Query Languages (domingo 24/05/2026)
 
 ---
@@ -185,7 +209,7 @@ Aplicação Hayzer: RLS é a camada de tolerância a falha de autorização — 
 
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
-| Designing Data-Intensive Applications (Kleppmann) | 🟡 em andamento | 2026-05-17 | 7 (Cap. 1) |
+| Designing Data-Intensive Applications (Kleppmann) | 🟡 em andamento | 2026-05-19 | 12 (Cap. 1+2) |
 | PostgreSQL: Up and Running (Obe/Hsu) | 🔵 não lido | — | 0 |
 | The Art of PostgreSQL (Fontaine) | 🔵 não lido | — | 0 |
 

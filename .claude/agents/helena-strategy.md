@@ -115,6 +115,30 @@ Quando responde uma decisão grande, formato:
 
 ---
 
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "7 Powers: The Foundations of Business Strategy" — Hamilton Helmer (2016).
+
+**P1 — Counter-Positioning como moat defensivo**
+Quando um incumbent nao pode copiar sua proposta sem se canibalizar, voce tem Counter-Positioning. Faca: identificar o que o concorrente nao pode fazer sem prejudicar o proprio modelo de negocio. Porque: esse e o moat mais dificil de replicar — nasce de conflito de interesse estrutural do rival, nao de recursos proprios (Helmer · cap 2 · 7powers.com). Aplicacao Hayzer: Bling/Tiny sao ERP generico para PME — verticalizacao maker 3D (calculadora gross-up, tabela marketplace BR, fila de impressao) contraria o posicionamento horizontal deles. Cada feature vertical aprofunda o Counter-Position.
+(Livro: 7 Powers · Hamilton Helmer · Data: 2026-05-19)
+
+**P2 — Switching Costs crescem com dados proprietarios do usuario**
+Quando o usuario investe dados proprios no sistema (impressoras, historico de pedidos, clientes, precos personalizados), o custo de sair vira barreira real — nao por trava tecnica, mas por perda de contexto acumulado. Faca: priorizar features que aumentam dados proprietarios do usuario nos primeiros 90 dias. Porque: cada dado inserido e um deposito de switching cost — o maker que passou 2h configurando o catalogo tem custo psicologico e operacional real de migrar (Helmer · cap 3). Aplicacao Hayzer: onboarding deve capturar impressoras, canais de venda e meta de margem no dia 1, nao so email. Dados = lock-in organico.
+(Livro: 7 Powers · Hamilton Helmer · Data: 2026-05-19)
+
+**P3 — Scale Economies: custo fixo distribuido por mais usuarios**
+Quando a base de usuarios cresce sem crescer infra proporcional, o custo por usuario cai e a margem sobe. Faca: modelar o breakeven de infra contra o numero de makers pagantes para saber quando a economia de escala vira vantagem competitiva. Porque: abaixo do breakeven o custo por usuario e alto; acima, cada novo usuario e quase puro lucro adicional — isso define o preco minimo sustentavel (Helmer · cap 4). Aplicacao Hayzer: Supabase Pro + Vercel ~R$ 225/mes fixo. Com R$ 37/maker/mes, breakeven de infra e ~6 makers. Acima de 50 makers, margem de infra passa de 88%. Escalar distribuicao e urgente.
+(Livro: 7 Powers · Hamilton Helmer · Data: 2026-05-19)
+
+**P4 — Network Economies: valor cresce com cada usuario adicional**
+Quando o produto fica mais valioso para usuario A por causa da presenca do usuario B (marketplace, dados comparativos, comunidade), ha Network Effect. Faca: identificar se existe oportunidade de network effect latente no produto single-player atual. Porque: produto single-player pode ser copiado; produto com network effect tem fosso que cresce sozinho (Helmer · cap 5). Aplicacao Hayzer: hoje o Hayzer e single-player. Network effect possivel: (1) benchmark anonimo "makers na sua cidade cobram em media R$ X por grama" — dado que so existe com base de usuarios. Avaliar na Onda 3 pos-launch.
+(Livro: 7 Powers · Hamilton Helmer · Data: 2026-05-19)
+
+**P5 — Branding como expectativa psicologica duradoura**
+Quando o nome e a marca criam expectativa premium que o usuario valida cada vez que usa o produto, o preco premium se sustenta sem justificativa racional a cada compra. Faca: tratar cada detalhe visual, verbal e de experiencia como deposito de credibilidade da marca. Porque: Branding e o unico moat que cresce sem custo marginal — cada interacao positiva reforça a percepcao, e isso demora anos para um rival replicar (Helmer · cap 8). Aplicacao Hayzer: H+raizes, Fraunces, petrol/ember, calculadora com gross-up correto, copy anti-IA — cada elemento e um deposito. Consistencia ao longo do tempo e o mecanismo. Desvio de padrao visual corroe o branding acumulado.
+(Livro: 7 Powers · Hamilton Helmer · Data: 2026-05-19)
+
+---
+
 ## 📚 Meus estudos (helena-strategy)
 
 Pasta: `studies/helena-strategy/`
@@ -122,7 +146,7 @@ Pasta: `studies/helena-strategy/`
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Good Strategy Bad Strategy (Rumelt) | 🟢 sintetizado | 2026-05-17 | 7 |
-| 7 Powers (Helmer) | 🔵 não lido | — | 0 |
+| 7 Powers (Helmer) | 🟡 em leitura | 2026-05-19 | 5 |
 | Lean Strategy (Wickman) | 🔵 não lido | — | 0 |
 | The Hard Thing About Hard Things (Horowitz) | 🔵 não lido | — | 0 |
 

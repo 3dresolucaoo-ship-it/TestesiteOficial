@@ -196,6 +196,30 @@ Quando nao houver tempo para testar tudo (sempre), priorizar os fluxos onde o us
 
 Aplicacao Hayzer: Ordem de prioridade fixa para qualquer release: (1) checkout/pagamento, (2) waitlist/lead capture, (3) calculadora 3D, (4) dashboard/dados, (5) visual/tipografia. Se so tiver 30min antes de um deploy: testar 1 e 2 apenas. Nunca liberar 1 ou 2 sem sessao exploratoria completa.
 
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "Explore It! Reduce Risk and Increase Confidence with Exploratory Testing" — Elisabeth Hendrickson (Pragmatic Programmers, 2013). Charters, tours, variacao de condicoes, paired testing.
+
+**P8 - Test Charter: definir escopo e objetivo, nao roteiro**
+Quando sessao de exploracao nao tem charter, o tester tenta cobrir tudo e nao cobre nada em profundidade - a sessao vira passeio sem foco. Faca: definir um charter por sessao com TARGET (o que explorar), RESOURCES (como e com o que) e INFORMATION (o que queremos aprender) - nao define os passos, so o escopo. Porque: charter sem roteiro libera o tester para seguir bugs onde eles levam, enquanto mantém a sessao produtiva e mensuravel (Hendrickson · cap 2 · "Charters"). Aplicacao Hayzer: pre-deploy 04/07 - criar 1 charter por modulo critico. Exemplo: "Explorar checkout MP em mobile 320px com sinal 3G simulado para descobrir estados inconsistentes de pagamento em fluxo interrompido." Uma missao por sessao de 60-90min.
+(Livro: Explore It! · Elisabeth Hendrickson · Data: 2026-05-19)
+
+**P9 - Tours: metaforas de exploracao para cobrir dimensoes diferentes**
+Quando a exploracao sempre segue o mesmo caminho (golden path + inputs invalidos), deixa de fora dimensoes inteiras de risco. Faca: usar "tours" tematicos que forçam diferentes perspectivas sobre o mesmo produto. Tours uteis: Money Tour (onde o dinheiro muda de mao), Garbage Tour (entradas invalidas em todo campo visivel), Landmark Tour (features mais usadas), Interruption Tour (interromper no meio de cada fluxo). Porque: cada tour ativa uma mentalidade diferente - a diversidade de perspectivas descobre categorias de bugs que perspectiva unica nao descobre (Hendrickson · cap 3 · "Tours"). Aplicacao Hayzer: Money Tour = criar pedido -> adicionar item -> marcar pago MP -> ver no historico. Garbage Tour = email com emoji, preco com "-999", nome com 1000 chars em todo campo do formulario.
+(Livro: Explore It! · Elisabeth Hendrickson · Data: 2026-05-19)
+
+**P10 - Variar condicoes, nao so inputs**
+Quando testes so variam o que o usuario digita (inputs diferentes), deixam de fora variacoes de contexto que causam bugs mais graves em producao: estado da rede, sessao expirada, tab duplicada, interrupcao no meio do fluxo. Faca: alem de inputs extremos, incluir variacoes de contexto em toda sessao - especialmente as que ocorrem em mobile BR. Porque: bugs de condicao sao mais dificeis de reproduzir e mais impactantes em producao - sao exatamente os que escapam de testes de input convencional (Hendrickson · cap 4 · "Vary Your Targets"). Aplicacao Hayzer: testar obrigatoriamente: (a) fechar browser no meio do checkout, (b) abrir mesmo pedido em 2 tabs simultaneas, (c) deixar token expirar (1h) e tentar salvar pedido aberto, (d) perder sinal durante submit. Esses cenarios sao comuns em mobile BR com sinal fraco.
+(Livro: Explore It! · Elisabeth Hendrickson · Data: 2026-05-19)
+
+**P11 - Seguir surpresa como primeiro instinto**
+Quando durante exploracao um comportamento inesperado aparece (campo que nao deveria estar vazio, numero que nao bate, animacao que trava), parar o roteiro e investigar ali imediatamente - nao anotar para depois. Surpresa indica que o codigo esta saindo do caminho esperado e o bug maior esta logo a frente. Faca: tratar qualquer comportamento inesperado como sinal de bug adjacente e explorar variacoes naquele ponto antes de continuar. Porque: o comportamento inesperado revelado na exploracao e exatamente o que escapou dos testes planejados - e o ponto de maior densidade de bugs adjacentes (Hendrickson · cap 5 · "Follow Surprises"). Aplicacao Hayzer: calculadora retorna preco negativo para input valido? Parar tudo e explorar: valor zero, valor decimal, virgula, ponto, campo em branco, numero muito grande. Nao seguir para o proximo campo.
+(Livro: Explore It! · Elisabeth Hendrickson · Data: 2026-05-19)
+
+**P12 - Paired Exploratory Testing para eliminar pontos cegos**
+Quando um tester conhece bem o produto, cria pontos cegos - assume que fluxos familiares funcionam porque os viu funcionar antes. Par com alguem que nao conhece o produto revela o que o "especialista" ja nao ve. Faca: incluir pelo menos 1 sessao de exploracao com pessoa externa (beta user, maker real) antes de cada release importante, sem instrucao previa alguma. Porque: o ponto cego do especialista e exatamente o ponto de atrito do usuario novato - e os gaps de onboarding que nunca aparecem nos testes internos (Hendrickson · cap 7 · "Paired Exploratory Testing"). Aplicacao Hayzer: antes do launch 04/07, sessao de 30min com Hequison ou Falconi (makers reais) sem instrucao. O que eles tentam fazer que o sistema nao deixa? Onde ficam parados? Cada atrito e um bug de UX que Sofia precisa resolver.
+(Livro: Explore It! · Elisabeth Hendrickson · Data: 2026-05-19)
+
 **Proxima leitura agendada**: studies/julia-qa/ (domingo 01/06/2026)
 
 ---
@@ -205,6 +229,6 @@ Aplicacao Hayzer: Ordem de prioridade fixa para qualquer release: (1) checkout/p
 | Livro | Status | Ultima leitura | Principios extraidos |
 |---|---|---|---|
 | Lessons Learned in Software Testing (Kaner/Bach/Pettichord) | Parcial (web sources) | 2026-05-17 | 7 |
-| Explore It! (Hendrickson) | nao lido | -- | 0 |
+| Explore It! (Hendrickson) | em leitura | 2026-05-19 | 5 |
 | Perfect Software (Weinberg) | nao lido | -- | 0 |
 | How Google Tests Software (Whittaker) | nao lido | -- | 0 |

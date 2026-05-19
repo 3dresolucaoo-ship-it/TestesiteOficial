@@ -124,6 +124,30 @@ Quando implementa, mostra:
 - **[Static + Streaming] Quando** uma página tem partes estáticas (hero, nav, footer) e partes dinâmicas (dados do usuário, métricas), **use** Suspense boundaries para isolar o streaming das partes dinâmicas — a página carrega instantaneamente e as partes dinâmicas chegam progressivamente. **Porque** elimina o "tudo ou nada" do SSR bloqueante e melhora LCP/INP. (Patterns.dev · RSC/Streaming · https://www.patterns.dev/react/react-server-components)
   - **Aplicação Hayzer**: `app/dashboard/page.tsx` pode ter `<Suspense fallback={<DashboardSkeleton />}><DashboardMetrics /></Suspense>` para métricas Supabase sem bloquear o shell da página.
 
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir da documentacao oficial "Next.js App Router" — nextjs.org/docs (versao Next.js 15/16, 2024-2026).
+
+**P1 — fetch com cache control explicito em todo Server Component**
+Quando usar fetch em Server Component, especificar explicitamente a estrategia de cache (`cache: 'force-cache'` para dados estaticos, `{ next: { revalidate: N } }` para ISR, `cache: 'no-store'` para dados sempre frescos). Nao depender do default (que mudou entre versoes). Porque: o default de fetch mudou de `force-cache` para `no-store` no Next.js 15 — dependencia de default causa bugs silenciosos apos upgrade (nextjs.org/docs · Data Fetching · Caching). Aplicacao Hayzer: `app/dashboard/page.tsx` busca metricas em tempo real = `{ cache: 'no-store' }`. `app/catalogo/[slug]/page.tsx` busca produtos que mudam pouco = `{ next: { revalidate: 60 } }`. Auditar todos os fetch sem cache explicito no codebase.
+(Livro: Next.js App Router docs · nextjs.org · Data: 2026-05-19)
+
+**P2 — Route Groups para isolamento de layout sem impacto na URL**
+Quando duas rotas precisam do mesmo layout mas nao devem compartilhar segmento de URL, usar Route Groups `(grupo)/`. Tambem util para organizar rotas por dominio funcional (dashboard, marketing, auth) sem criar URLs longas. Porque: Route Groups permitem layouts aninhados independentes sem poluir a URL — o parenteses e ignorado na URL final (nextjs.org/docs · Routing · Route Groups). Aplicacao Hayzer: verificar se existe `app/(marketing)/` para landing/calculadora/waitlist — se nao existir, criar para isolar o layout marketing (sem sidebar de dashboard). `app/(dashboard)/` ja existe; `app/(auth)/` para login/signup pode separar o layout de autenticacao.
+(Livro: Next.js App Router docs · nextjs.org · Data: 2026-05-19)
+
+**P3 — Server Actions para mutacoes sem API Route extra**
+Quando form precisa chamar logica de backend, usar Server Action (`'use server'`) em vez de API Route para eliminacao de roundtrip, type-safety ponta-a-ponta e integracoes mais simples com formularios React. Porque: Server Actions reduzem surface de ataque (sem rota publica exposta), habilitam Progressive Enhancement (funciona sem JS), e tem type-safety via closures TypeScript (nextjs.org/docs · Data Fetching · Server Actions). Aplicacao Hayzer: `app/waitlist/actions.ts` ja usa Server Actions — padrao correto. Estender para criacao de pedido (`app/orders/actions.ts`), upload de imagem de produto. Nao criar API Route nova quando Server Action resolve — preferencia global.
+(Livro: Next.js App Router docs · nextjs.org · Data: 2026-05-19)
+
+**P4 — Parallel Routes para carregamento concorrente de secoes independentes**
+Quando dashboard tem multiplas secoes com dados proprios (KPI, grafico, lista de pedidos), usar Parallel Routes `@slot` para carregar em paralelo sem waterfall. Cada slot tem seu proprio loading e error state. Porque: sem Parallel Routes, o React espera o dado mais lento para renderizar a pagina inteira — com slots, cada secao renderiza quando os SEUS dados chegam (nextjs.org/docs · Routing · Parallel Routes). Aplicacao Hayzer: dashboard V4 pode ter `@kpi`, `@chart`, `@orders` como slots com Suspense individual. KPI carrega em 100ms; grafico em 400ms; lista em 600ms — usuario ve progresso, nao tela branca de 600ms.
+(Livro: Next.js App Router docs · nextjs.org · Data: 2026-05-19)
+
+**P5 — generateMetadata dinamico para SEO de rotas com conteudo dinamico**
+Quando rota tem conteudo dinamico (slug de produto, nome do projeto, nome do maker), exportar `generateMetadata` async que busca dados no servidor e retorna `title`, `description` e `openGraph` especificos para aquela rota. Porque: metadata estatico ("Hayzer - Dashboard") nao e indexado por bots de busca nas rotas dinamicas — `generateMetadata` garante que cada URL tem metadata unico e relevante (nextjs.org/docs · Optimizing · Metadata). Aplicacao Hayzer: `app/catalogo/[slug]/page.tsx` deve ter `generateMetadata` retornando nome e descricao do produto para SEO do catalogo publico do maker. Afeta diretamente a indexacao das lojas dos makers no Google.
+(Livro: Next.js App Router docs · nextjs.org · Data: 2026-05-19)
+
 **Proxima leitura agendada**: `studies/felipe-frontend/` (criar pasta) — "Web Performance in Action" ou documentação oficial Next.js App Router (domingo 24/05/2026)
 
 ---
@@ -135,7 +159,7 @@ Pasta: `studies/felipe-frontend/` (a criar)
 | Fonte | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Patterns.dev (Hallie + Osmani) | 🟢 lido parcial | 2026-05-17 | 7 |
-| Next.js App Router docs (official) | 🔵 não lido | — | 0 |
+| Next.js App Router docs (official) | 🟡 em leitura | 2026-05-19 | 5 |
 | React 19 changelog (react.dev) | 🔵 não lido | — | 0 |
 
 **Calendário**: 1 fonte/mês. Próxima: Next.js App Router docs (junho/2026).

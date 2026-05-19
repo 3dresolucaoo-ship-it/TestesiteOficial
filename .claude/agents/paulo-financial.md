@@ -194,6 +194,30 @@ Caminho de resolução:
 
 ---
 
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "PCI DSS v4.0" — PCI Security Standards Council (pcisecuritystandards.org, 2022). Foco: escopo do Cardholder Data Environment, tokenizacao, criptografia, least privilege, audit trail.
+
+**P1 — Escopo do CDE: delimitar primeiro, compliance depois**
+Quando tudo no sistema e tratado como "area de pagamento", o custo de compliance explode. A primeira acao em PCI DSS e delimitar o Cardholder Data Environment (CDE) — apenas sistemas que tocam, processam ou transmitem dados de cartao entram no escopo. Faca: mapear o fluxo de dados de cartao e isolar os sistemas que tocam esses dados. Porque: reducao de escopo e a estrategia mais eficaz de compliance — menos sistemas no CDE = menos requisitos PCI a atender = menos custo e menos risco (PCI DSS v4.0 · Req 12.5.2 · Scope Documentation). Aplicacao Hayzer: Hayzer nao armazena numero de cartao (Stripe/MP guardam) — o CDE e minimo. Preservar isso: NUNCA logar ou armazenar PAN, CVV ou dados de titular. Toda interacao com cartao passa pelo iframe/SDK do gateway.
+(Livro: PCI DSS v4.0 · PCI SSC · Data: 2026-05-19)
+
+**P2 — Tokenizacao elimina dado sensivel do escopo PCI**
+Quando o gateway entrega um token (Stripe `pm_xxx`, `cus_xxx`; MP token de cartao) em vez do PAN (numero do cartao), o sistema pode trabalhar com o token sem tocar o dado sensivel — saindo do escopo PCI para essas operacoes. Faca: armazenar APENAS tokens do gateway em `payment_methods` — nunca o numero de cartao ou CVV. Porque: tokenizacao e a principal estrategia de reducao de escopo PCI — transforma dado sensivel em referencia sem valor fora do gateway (PCI DSS v4.0 · Req 3.5 · Tokenization). Aplicacao Hayzer: coluna `payment_method_id` deve armazenar token Stripe/MP. Se alguem sugerir "guardar o numero para o usuario nao digitar de novo", recusar categoricamente — e PCI non-compliant e abre responsabilidade legal.
+(Livro: PCI DSS v4.0 · PCI SSC · Data: 2026-05-19)
+
+**P3 — Criptografia em transito E em repouso sao requisitos separados**
+Quando dado sensivel trafega em HTTPS mas e armazenado em texto puro no DB, apenas metade da protecao esta implementada. PCI exige criptografia em AMBOS os estados. Faca: verificar TLS 1.2+ em transito (HTTPS obrigatorio) E criptografia em repouso no DB. Porque: ataque a rede e ataque a dump de banco sao vetores distintos — protecao parcial cria falsa sensacao de seguranca (PCI DSS v4.0 · Req 4 e Req 3). Aplicacao Hayzer: HTTPS forcado pelo Vercel + Supabase criptografa em repouso — correto. Verificar se logs estruturados incluem `customer_email` ou dados sensiveis em texto puro — se sim, mascarar antes de logar.
+(Livro: PCI DSS v4.0 · PCI SSC · Data: 2026-05-19)
+
+**P4 — Least Privilege: acesso a dados de pagamento somente para quem precisa**
+Quando qualquer parte do sistema pode ler dados de pagamento sem necessidade, a superficie de ataque aumenta sem motivo. PCI exige que cada componente tenha apenas o acesso minimo necessario para sua funcao. Faca: auditar quais services usam `getSupabaseAdmin()` (bypass RLS) e verificar se todos realmente precisam de acesso irrestrito. Porque: least privilege reduz o impacto de qualquer comprometimento — servico comprometido acessa apenas o seu escopo (PCI DSS v4.0 · Req 7 · Restrict Access). Aplicacao Hayzer: `getSupabaseAdmin()` somente em Server Actions criticas (waitlist, webhook). Services de catalogo, inventario e dashboard usam cliente com RLS. Auditar imports de `getSupabaseAdmin` no codebase — uso fora de pagamento/auth e suspeito.
+(Livro: PCI DSS v4.0 · PCI SSC · Data: 2026-05-19)
+
+**P5 — Audit Trail imutavel de toda operacao financeira**
+Quando incidente de pagamento acontece (cobranca dupla, refund negado, divergencia gateway vs DB), a investigacao depende de log imutavel e timestampado de cada operacao. Sem ele, e impossivel reconstruir o que aconteceu. PCI exige rastreabilidade de todas as acoes sobre dados de cartao. Faca: criar tabela `payment_audit_log` com INSERT-only via RLS (sem UPDATE/DELETE) registrando toda operacao financeira. Porque: log mutavel nao serve como evidencia de audit — pode ter sido alterado apos o incidente (PCI DSS v4.0 · Req 10 · Audit Logs). Aplicacao Hayzer: tabela `webhook_events` (migration 20260518) e o inicio. Expandir com `payment_audit_log(event_id, actor, action, amount, status, timestamp, metadata_jsonb)` imutavel. Toda operacao financeira deixa rastro que nao pode ser apagado.
+(Livro: PCI DSS v4.0 · PCI SSC · Data: 2026-05-19)
+
+---
+
 ## 📚 Meus estudos (paulo-financial)
 
 Pasta: `studies/paulo-financial/`
@@ -201,7 +225,7 @@ Pasta: `studies/paulo-financial/`
 | Livro/Ref | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Stripe Press (selected) + Stripe Docs | 🟢 sintetizado | 2026-05-17 | 7 |
-| PCI DSS oficial | 🔵 não lido | — | 0 |
+| PCI DSS oficial | 🟡 em leitura | 2026-05-19 | 5 |
 | MP Brazil Marketplace docs | 🟡 em leitura | — | 0 (in-progress) |
 | Webhook patterns (blogs Stripe + MP) | 🟢 incluído acima | 2026-05-17 | 0 |
 

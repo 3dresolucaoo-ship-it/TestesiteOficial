@@ -183,6 +183,30 @@ Sempre cheque cada item antes de aprovar um deploy importante:
 
 ---
 
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "The Web Application Hacker's Handbook" — Dafydd Stuttard e Marcus Pinto (Wiley, 2nd ed. 2011). Capitulos 1-5: mapeamento de aplicacao, autenticacao, gerenciamento de sessao, controle de acesso.
+
+**P1 — IDOR: verificar posse do recurso em todo endpoint que aceita ID externo**
+Quando um endpoint aceita ID na URL ou body (`/api/orders/[id]`) sem verificar se o usuario autenticado tem permissao sobre aquele ID especifico, qualquer usuario pode acessar dados de outros — Insecure Direct Object Reference. Faca: em toda rota que aceita ID de recurso, verificar `project_id` do usuario autenticado contra o `project_id` do registro antes de qualquer operacao. Porque: IDOR e uma das vulnerabilidades mais comuns e mais faceis de explorar — e muitas vezes invisivel para o dev que confia no front-end para filtrar (Stuttard · cap 8 · "Attacking Access Controls"). Aplicacao Hayzer: rotas `/api/orders/[id]`, `/api/customers/[id]`, `/api/inventory/[id]` — verificar se o RLS do Supabase cobre 100% ou se alguma usa `getSupabaseAdmin()` (bypass RLS) sem checar posse manual.
+(Livro: Web App Hacker's Handbook · Stuttard/Pinto · Data: 2026-05-19)
+
+**P2 — Tokens proprios devem ser criptograficamente seguros, nunca previsíveis**
+Quando o sistema emite token proprio (convite de usuario, link de catalogo compartilhado, reset de dado), um token baseado em timestamp, ID sequencial ou hash de dado conhecido e previsivel e pode ser forjado ou enumerado. Faca: sempre usar `crypto.randomBytes(32).toString('hex')` para qualquer token proprio. Nunca usar `Date.now()`, `Math.random()`, `id.toString(36)` ou hash de email como token. Porque: tokens previsíveis permitem que atacante gere tokens validos sem telo recebido — comprometimento de conta zero-click (Stuttard · cap 7 · "Attacking Authentication"). Aplicacao Hayzer: Supabase Auth gera tokens criptograficamente seguros. Mas qualquer token proprio futuro (compartilhamento de catalogo publico do maker) deve seguir esse padrao.
+(Livro: Web App Hacker's Handbook · Stuttard/Pinto · Data: 2026-05-19)
+
+**P3 — Stored XSS em conteudo gerado pelo usuario renderizado para outros usuarios**
+Quando usuario pode inserir texto livre (nome de produto, descricao de catalogo, mensagem de pedido) e esse texto e exibido para outros usuarios sem sanitizacao, o atacante injeta script que roda no browser da vitima. Faca: garantir que todo conteudo de usuario e renderizado como texto, nunca como HTML — verificar que React renderiza `{data}` e nunca `dangerouslySetInnerHTML`. Porque: Stored XSS e persistente — cada usuario que carrega a pagina executa o script; um ataque alcanca toda a base de usuarios que visualizou aquele conteudo (Stuttard · cap 12 · "Attacking Users — XSS"). Aplicacao Hayzer: catalogo publico `/catalogo/[slug]` renderiza nome e descricao de produto inseridos pelo maker. Verificar que todos esses campos usam render de texto, nunca HTML. Se no futuro precisar de rich text, usar DOMPurify antes de `dangerouslySetInnerHTML`.
+(Livro: Web App Hacker's Handbook · Stuttard/Pinto · Data: 2026-05-19)
+
+**P4 — Logic Flaws: preco e condicoes de negocio devem ser calculados no servidor**
+Quando o fluxo de negocio permite que o cliente manipule parametros de preco, desconto ou condicao enviados no body do request (ex: `{ price: 0.01, plan: "pro" }`), o atacante consegue comprar por R$ 0.01 sem exploit tecnico. Faca: calcular preco final sempre no servidor com base nos dados do DB — nunca confiar em preco ou plano enviado pelo cliente. Porque: Logic Flaws nao precisam de SQL injection ou XSS — o atacante usa o fluxo de negocio como projetado, mas com parametros que o designer nao antecipou (Stuttard · cap 11 · "Attacking Application Logic"). Aplicacao Hayzer: checkout deve buscar preco do plano no DB no servidor e ignorar qualquer preco no request body. Validacao Zod deve rejeitar campos de preco no body do checkout — `amount` nunca deve vir do cliente.
+(Livro: Web App Hacker's Handbook · Stuttard/Pinto · Data: 2026-05-19)
+
+**P5 — Session Tokens nunca em URL, sempre em cookie httpOnly**
+Quando JWT ou session token e transmitido em URL (como query param ou hash), ele aparece em logs do servidor, header Referer de requests subsequentes e historico do browser — qualquer desses vazamentos expoe a sessao. Faca: garantir que NENHUMA URL do sistema transmite token como query param — tokens somente em cookies httpOnly + Secure + SameSite=Lax. Porque: URL e o canal mais inseguro para dado sensivel — logs, proxies, CDNs, Referer headers e historico de browser podem registrar URLs sem intencao (Stuttard · cap 7 · "Attacking Session Management"). Aplicacao Hayzer: Supabase Auth usa cookies httpOnly — correto. Verificar que nenhuma rota `/api/*` aceita `?token=` como alternativa de autenticacao. Verificar que o redirecionamento de OAuth nao inclui token em URL de callback visivel.
+(Livro: Web App Hacker's Handbook · Stuttard/Pinto · Data: 2026-05-19)
+
+---
+
 ## 📚 Meus estudos (otavio-security)
 
 Pasta: `studies/otavio-security/`
@@ -190,7 +214,7 @@ Pasta: `studies/otavio-security/`
 | Livro/Ref | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | OWASP Top 10 2025 RC1 | 🟢 sintetizado | 2026-05-17 | 10 categorias |
-| The Web Application Hacker's Handbook (Stuttard) | 🔵 não lido | — | 0 |
+| The Web Application Hacker's Handbook (Stuttard) | 🟡 em leitura | 2026-05-19 | 5 |
 | The Tangled Web (Zalewski) | 🔵 não lido | — | 0 |
 | OWASP Cheat Sheets (Auth + Session) | 🔵 não lido | — | 0 |
 

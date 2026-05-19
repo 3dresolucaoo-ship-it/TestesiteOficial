@@ -188,3 +188,27 @@ Porque Z: múltiplas opções de contato aumentam o esforço percebido na decis�
 Dixon · cap. 3 · conceito: channel navigation e guided channel choice.
 
 Aplicação Hayzer: a tela de suporte do Hayzer não lista "chat / email / WhatsApp / telefone". Começa com uma pergunta ("Qual é o seu problema?") e direciona para o canal com maior taxa de resolução para aquele tipo de dúvida.
+
+---
+
+> Sintetizados em 2026-05-19 (estudo G7 semanal) a partir de "Customer Success: How Innovative Companies Are Reducing Churn and Growing Recurring Revenue" — Nick Mehta, Dan Steinman, Lincoln Murphy (Gainsight, 2016).
+
+**P1 — Health Score: medir sinais de engajamento, nao so NPS anual**
+Quando a unica metrica de satisfacao e o NPS anual, o churn e descoberto depois que ja aconteceu. Faca: criar um health score simples com metricas de engajamento (logins/semana, acoes completadas, dados adicionados) que prediz risco com antecedencia. Porque: NPS mede percepcao passada; health score mede comportamento futuro — e o comportamento que prediz churn (Mehta · cap 4 · health scoring). Aplicacao Hayzer: health score minimo do maker = (logins na semana / 5) + (pedidos criados na semana / 3) + (calculadora usada [sim/nao]). Se score < 2 por 7 dias corridos, dispara email de ativacao segmentado — nao email generica de "sentimos sua falta".
+(Livro: Customer Success · Mehta/Steinman/Murphy · Data: 2026-05-19)
+
+**P2 — Time-to-First-Value: entregar a primeira vitoria em menos de 5 minutos**
+Quando onboarding e longo, o usuario sai antes de ver o produto funcionar. Faca: identificar e otimizar o caminho para a "primeira vitoria" — o momento em que o maker ve valor real pelo esforco minimo. Porque: usuarios que atingem a primeira vitoria em menos de 5 minutos do primeiro login tem retencao no D7 3x maior do que os que nao atingem (Mehta · cap 6 · time-to-value). Aplicacao Hayzer: primeira vitoria do maker = resultado da calculadora com seus proprios dados OU primeiro pedido criado com status visivel. Qualquer tela, campo ou instrucao antes disso e atrito a eliminar.
+(Livro: Customer Success · Mehta/Steinman/Murphy · Data: 2026-05-19)
+
+**P3 — Pre-sinais de churn: atuar antes do usuario decidir sair**
+Quando usuario vai cancelar, ele ja mostrou sinais semanas antes — reducao de logins, nao abrir emails, nao completar tarefas. Faca: definir pre-sinais especificos e criar playbooks de ativacao para cada um. Porque: churn que ja foi decidido nao tem remedio; churn que ainda esta "mornando" tem janela de intervencao de 1-3 semanas (Mehta · cap 8 · early warning system). Aplicacao Hayzer: pre-sinais de churn Hayzer: (1) 0 login em 7 dias apos onboarding, (2) calculadora usada 1x e nunca mais, (3) email transacional nao aberto por 14 dias. Cada pre-sinal dispara playbook diferente — email com dado do negocio do usuario, nao mensagem generica.
+(Livro: Customer Success · Mehta/Steinman/Murphy · Data: 2026-05-19)
+
+**P4 — Proactive Success: ir ate o usuario antes que ele perceba o problema**
+Quando CS so aparece quando o cliente reclama, a relacao ja esta negativa antes do primeiro contato. Faca: mover o CS para o lado proativo — alertar o usuario sobre oportunidade ou risco antes que ele perceba. Porque: proatividade cria percepcao de valor continuo — o usuario sente que o produto "trabalha para ele" mesmo sem interacao (Mehta · cap 7 · proactive vs reactive). Aplicacao Hayzer: no inicio de cada semana, o sistema calcula "pedido mais antigo em aberto" e envia: "Rafael, o pedido do Carlos esta ha 5 dias sem atualizacao — quer resolver hoje?" Proatividade = valor percebido sem feature nova.
+(Livro: Customer Success · Mehta/Steinman/Murphy · Data: 2026-05-19)
+
+**P5 — Expansion Revenue como termometro de saude real**
+Quando a expansao de receita (upgrade, plano maior, feature paga) cresce, e sinal de que o produto entrega valor real — cliente insatisfeito nao paga mais, nao menos. Faca: usar expansao como leading indicator de saude, nao so de receita. Porque: Net Revenue Retention acima de 100% significa que mesmo perdendo clientes a base de receita cresce — o produto entrega valor suficiente para clientes existentes comprarem mais (Mehta · cap 10 · expansion revenue). Aplicacao Hayzer: upsell da Calculadora Pro (R$ 37) nao deve ser ativado por campanha generica, mas por comportamento — maker que usou a calculadora gratuita 3+ vezes e viu margem vermelha e o lead ideal para o Pro. Comportamento > segmentacao demografica.
+(Livro: Customer Success · Mehta/Steinman/Murphy · Data: 2026-05-19)
