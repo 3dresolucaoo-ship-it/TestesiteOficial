@@ -29,6 +29,10 @@ import { calcUnitCost }                   from '@/core/analytics/productionEngin
 import { ModuleShell }                    from '@/components/dashboard/v4'
 import { UnderlineMarker }                from '@/components/visual-library'
 
+// CSS V4 do ModuleShell (mesmo pattern do /dashboard — scoped por rota).
+// Sem isso, page-header / kpi-card / filter-bar viram texto plano.
+import '../globals-v4.css'
+
 // Componentes extraidos (refactor 2026-05-16)
 import {
   ORDER_STATUS_CONFIG,
