@@ -31,7 +31,7 @@
 
 - ❌ `app/inventory/page.tsx` (1472 linhas) — refatorar pra componente
 - ❌ `app/products/page.tsx` (1028 linhas) — refatorar
-- ❌ `app/orders/page.tsx` (668 linhas) — refatorar
+- ✅ `app/orders/page.tsx` — migrado para ModuleShell V4.8 (2026-05-19). KpiRow + FilterBar + search integrados. Validacao visual em prod pendente (CEO).
 - ❌ `app/showcase/page.tsx` — provavelmente legado, avaliar
 - ⏳ Falta `loading.tsx` e `error.tsx` em todas rotas
 - ⏳ `app/projects/[projectId]/{...}` páginas duplicam módulos globais — decidir se ficam
