@@ -43,6 +43,16 @@ Triple-track: (1) fix dashboard quebrado + CSV /orders + Karpathy decisão, (2) 
 16. **Memórias persistentes salvas (5 novas)**: modo hardwork ativo 19/05→27/06, validação visual obrigatória pré-deploy, brief persona Rafael consolidado, escopo cirúrgico, CNPJ Hayzer 55.515.732/0001-06 + lembrete INPI segunda
 17. **CNPJ CEO verificado** via Receita Federal pública: MEI ativo, CNAE 7319-0/99 publicidade. Plano: desenquadrar MEI → ME antes 1ª venda Calc Pro (Sem 3). Adicionar 4 CNAEs
 
+## ❓ Perguntas CEO ainda NÃO respondidas (pra próxima sessão executar)
+
+1. **Automatizar /clear + /rcs via hooks settings.json**: CEO perguntou se dá pra automatizar. Eu disse SIM (hooks SessionStart/UserPromptSubmit/Stop), mas NÃO configurei. **Próxima sessão: Lia + Ricardo configuram hooks na Fase 1 Foundation amanhã.**
+2. **Routine `claude-quota-monitor`**: CEO perguntou "se bater limite API e aí?". Dei 4 camadas de solução. NÃO criei a Routine 7. **Próxima sessão: criar Routine 7 quota-monitor diário 7:30 com fallback 4 camadas.**
+3. **Routines adicionais identificadas mas NÃO criadas**: `sentry-incident-alert`, `supabase-backup-snapshot` (diário 02h), `deploy-health-check` (4h), `google-search-console-weekly` (pós-launch), `nps-beta-feedback` (pós-soft-launch). **Próxima sessão: avaliar criar essas 4 agora ou aguardar gatilhos.**
+4. **Estudo Ybera Club INCOMPLETO**: capturei home + equipe direta + equipe completa + plano de carreira. **Faltou capturar**: Insights Instagram, Dashboard BI, Minhas Metas detalhe, Metas da Equipe, Relatórios, Material de Apoio, Ybera Academy, Central de Ajuda, Sacar/Transferir/Extrato detalhe, Loja Interna, Ybera.com loja externa. **Próxima sessão (se CEO logado ainda): continuar via Chrome MCP em app.yberaclub.com.**
+5. **3 Routines spec manual pendentes**: `mercado-maker-mensal`, `waitlist-funnel-diario`, `anthropic-dev-tools-semanal` — CEO cria copia/colando spec de `automation/routines-specs-pending-2026-05-19.md`. **Próxima sessão: verificar se CEO criou + validar trig IDs.**
+6. **Decisão sobre matar `waitlist-weekly-digest`**: redundante com `waitlist-funnel-diario` nova. CEO não confirmou explicitamente. **Próxima sessão: confirmar com CEO + deletar a antiga se OK.**
+7. **Conectores das 3 routines criadas**: aparecem só "Google Drive" no display. **Próxima sessão: CEO verificar via UI se Sentry/Stripe/Supabase/Vercel realmente sumiram + adicionar se faltar.**
+
 ## 🔴 Blockers / Pendências críticas
 
 - **3 Routines restantes** (mercado-mensal, waitlist-funnel-diario, anthropic-dev-tools): CEO cria amanhã copia/colando spec
