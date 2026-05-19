@@ -171,4 +171,25 @@ export async function getWaitlistStats(): Promise<{
   return { total: data.length, byStatus, bySegment }
 }
 
+// ─── Contagem pública pra social proof na landing ──────────────────────────
+
+/**
+ * Retorna o total de leads na waitlist.
+ * Usa service_role pra evitar problema de RLS + anon SELECT.
+ * Usado no Server Component da landing — sem exposição de dados sensíveis.
+ */
+export async function getWaitlistCount(): Promise<number> {
+  try {
+    const supabase = getSupabaseAdmin()
+    const { count, error } = await supabase
+      .from('waitlist_leads')
+      .select('*', { count: 'exact', head: true })
+
+    if (error || count === null) return 0
+    return count
+  } catch {
+    return 0
+  }
+}
+
 export type { WaitlistLead, WaitlistLeadStep1, WaitlistLeadStep2, LeadCaptureMeta }

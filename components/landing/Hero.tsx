@@ -1,9 +1,19 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Clock } from 'lucide-react'
+import { Clock, Calculator } from 'lucide-react'
+import Link from 'next/link'
 import { Logo } from './Logo'
 import { WaitlistForm } from './WaitlistForm'
+
+interface HeroProps {
+  /**
+   * Total de makers já na fila — lido server-side em app/page.tsx via
+   * getWaitlistCount() e passado como prop (sem fetch client-side).
+   * Fallback: null = não exibe o indicador (erro de leitura, DB vazio).
+   */
+  waitlistCount: number | null
+}
 
 /**
  * Hero v2 (option-c-hybrid): split layout — logo gigante + headline esquerda,
@@ -11,8 +21,12 @@ import { WaitlistForm } from './WaitlistForm'
  *
  * Diego (designer): estrutura do mockup A + paleta do mockup B.
  * Carla (copy): mantém literal "Seu negócio, sem caos." com marker no "caos".
+ *
+ * Quick wins 2026-05-19:
+ *   - #4 CTA secundário pra /calculadora
+ *   - #5 Social proof "X makers na fila"
  */
-export function Hero() {
+export function Hero({ waitlistCount }: HeroProps) {
   return (
     <section
       id="hero"
@@ -90,6 +104,33 @@ export function Hero() {
                 vendedores de marketplace
               </span>
             </motion.div>
+
+            {/* #4 — CTA secundário pra calculadora (quick win 2026-05-19) */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 0.61, 0.36, 1] }}
+              className="mt-8"
+            >
+              <Link
+                href="/calculadora"
+                className="group inline-flex items-center gap-2 rounded-md border px-4 py-2.5 text-[13.5px] font-medium transition-colors"
+                style={{
+                  borderColor: 'hsl(var(--petrol-500) / 0.45)',
+                  color: 'hsl(var(--petrol-300))',
+                  background: 'hsl(var(--petrol-700) / 0.18)',
+                }}
+              >
+                <Calculator className="h-3.5 w-3.5" strokeWidth={2} />
+                Testa a calculadora grátis
+              </Link>
+              <p
+                className="mt-2 text-[12px] leading-snug"
+                style={{ color: 'hsl(var(--fog-400))' }}
+              >
+                Calcula o custo da tua próxima impressão. De graça. Sem cadastro.
+              </p>
+            </motion.div>
           </div>
 
           {/* COLUNA DIREITA — form em "carta" com sticker rotacionado */}
@@ -110,9 +151,37 @@ export function Hero() {
                 <h3 className="display-h2 text-[22px] text-foreground">Lista de espera</h3>
                 <span className="tag">grátis</span>
               </div>
-              <p className="mb-6 text-[13.5px] leading-[1.5] text-muted-foreground">
+              <p className="mb-3 text-[13.5px] leading-[1.5] text-muted-foreground">
                 Receba o convite quando abrir. Sem cobrança agora.
               </p>
+
+              {/* #5 — Social proof "X makers na fila" (quick win 2026-05-19) */}
+              {/* TODO: dinamizar com query waitlist count — atualmente vem via prop server-side */}
+              {waitlistCount !== null && waitlistCount > 0 && (
+                <div
+                  className="mb-5 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11.5px]"
+                  style={{
+                    background: 'hsl(var(--petrol-700) / 0.35)',
+                    border: '1px solid hsl(var(--petrol-500) / 0.30)',
+                    color: 'hsl(var(--petrol-200))',
+                  }}
+                >
+                  <span
+                    className="flex-shrink-0 rounded-full"
+                    style={{
+                      width: 6,
+                      height: 6,
+                      background: 'hsl(var(--petrol-300))',
+                    }}
+                  />
+                  <span>
+                    <strong style={{ fontVariantNumeric: 'tabular-nums' }}>
+                      {waitlistCount.toLocaleString('pt-BR')}
+                    </strong>
+                    {' '}makers já na fila
+                  </span>
+                </div>
+              )}
 
               <WaitlistForm />
             </div>

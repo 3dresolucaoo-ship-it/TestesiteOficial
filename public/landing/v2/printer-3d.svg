@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" aria-label="Impressora 3D">
+  <path d="M22 24 L106 24 L106 100 L22 100 Z" stroke="hsl(173 58% 54%)" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M26 100 L26 110" stroke="hsl(173 58% 54%)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M102 100 L102 110" stroke="hsl(173 58% 54%)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M22 50 L106 50" stroke="hsl(173 58% 64%)" stroke-width="1.6"/>
+  <path d="M58 50 L58 64 L70 64 L70 50" stroke="hsl(28 70% 60%)" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M62 64 L62 70 L66 70 L66 64" stroke="hsl(28 70% 60%)" stroke-width="2" stroke-linejoin="round" fill="hsl(28 70% 60%)" fill-opacity="0.18"/>
+  <path d="M30 88 L98 88" stroke="hsl(173 58% 64%)" stroke-width="2" stroke-linecap="round"/>
+  <path d="M56 76 L72 76 L72 88 L56 88 Z" stroke="hsl(28 70% 60%)" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M56 76 L60 72 L76 72 L72 76" stroke="hsl(28 70% 60%)" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M72 76 L76 72 L76 84 L72 88" stroke="hsl(28 70% 60%)" stroke-width="1.8" stroke-linejoin="round"/>
+  <path d="M64 70 L64 76" stroke="hsl(28 70% 60%)" stroke-width="1.4" stroke-dasharray="2 2" stroke-linecap="round"/>
+  <path d="M30 30 L46 30 L46 38 L30 38 Z" stroke="hsl(173 58% 54%)" stroke-width="1.4" fill="hsl(173 58% 54%)" fill-opacity="0.08"/>
+</svg>

@@ -1,8 +1,10 @@
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import { getUser } from '@/lib/auth'
+import { getWaitlistCount } from '@/services/waitlist'
 import { Header } from '@/components/landing/Header'
 import { Hero } from '@/components/landing/Hero'
+import { ProductPreview } from '@/components/landing/ProductPreview'
 import { Features } from '@/components/landing/Features'
 import { WhyDifferent } from '@/components/landing/WhyDifferent'
 import { FinalCTA } from '@/components/landing/FinalCTA'
@@ -23,13 +25,21 @@ export default async function HomePage() {
     // Sem auth ainda — segue na landing
   }
 
+  // #5 — Conta makers na fila (fail-safe: null se der erro)
+  const waitlistCount = await getWaitlistCount().catch(() => null)
+
   return (
     <div className="bg-background text-foreground">
       <Header />
       {/* Suspense necessário porque WaitlistForm usa useSearchParams */}
       <Suspense fallback={null}>
-        <Hero />
+        {/* #4 e #5 injetados via prop (count lido server-side, sem fetch client) */}
+        <Hero waitlistCount={waitlistCount} />
       </Suspense>
+
+      {/* #1 — Prova visual do produto (Server Component, sem JS cliente) */}
+      <ProductPreview />
+
       <Features />
       <WhyDifferent />
       <FinalCTA />

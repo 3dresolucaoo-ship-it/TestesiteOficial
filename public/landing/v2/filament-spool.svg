@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" aria-label="Spool de filamento">
+  <circle cx="64" cy="64" r="44" stroke="hsl(173 58% 54%)" stroke-width="2"/>
+  <circle cx="64" cy="64" r="36" stroke="hsl(28 70% 60%)" stroke-width="1.6" stroke-opacity="0.95"/>
+  <circle cx="64" cy="64" r="30" stroke="hsl(28 70% 60%)" stroke-width="1.4" stroke-opacity="0.7"/>
+  <circle cx="64" cy="64" r="24" stroke="hsl(28 70% 60%)" stroke-width="1.2" stroke-opacity="0.55"/>
+  <circle cx="64" cy="64" r="14" stroke="hsl(173 58% 54%)" stroke-width="2" fill="hsl(173 58% 54%)" fill-opacity="0.10"/>
+  <circle cx="64" cy="64" r="5" stroke="hsl(173 58% 64%)" stroke-width="1.6"/>
+  <path d="M108 64 C 116 64, 118 72, 122 80" stroke="hsl(28 70% 60%)" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <circle cx="64" cy="52" r="1.4" fill="hsl(173 58% 64%)"/>
+  <circle cx="76" cy="64" r="1.4" fill="hsl(173 58% 64%)"/>
+  <circle cx="64" cy="76" r="1.4" fill="hsl(173 58% 64%)"/>
+  <circle cx="52" cy="64" r="1.4" fill="hsl(173 58% 64%)"/>
+  <text x="64" y="116" font-family="Geist Mono, monospace" font-size="9" font-weight="600" letter-spacing="0.14em" fill="hsl(40 18% 86%)" text-anchor="middle">PLA · 1KG</text>
+</svg>

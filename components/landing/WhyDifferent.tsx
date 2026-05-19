@@ -9,6 +9,10 @@ const today = [
   { label: 'Mais 2 planilhas que ninguém atualiza', price: 'tempo' },
 ]
 
+// Linha Hayzer adicionada na seção "Com Hayzer" (#7 quick win 2026-05-19)
+// Preço provisório — CEO define na Sem 3 com lançamento da Calc Pro
+const HAYZER_PRICE = 'a partir de R$ 49/mês'
+
 const withHayzer = [
   { strong: 'Estoque integrado', sub: 'sem assinar separado' },
   { strong: 'Financeiro que vê o dinheiro real do mês', sub: 'não o bruto' },
@@ -99,13 +103,23 @@ export function WhyDifferent() {
             }}
           >
             <div
-              className="mb-6 flex items-baseline justify-between border-b pb-4"
+              className="mb-6 border-b pb-4"
               style={{ borderColor: 'hsl(var(--petrol-300) / 0.20)' }}
             >
-              <h3 className="display-h2 text-[20px]" style={{ color: 'hsl(var(--petrol-300))' }}>
-                Com Hayzer
-              </h3>
-              <span className="tag">um lugar só</span>
+              <div className="flex items-baseline justify-between">
+                <h3 className="display-h2 text-[20px]" style={{ color: 'hsl(var(--petrol-300))' }}>
+                  Com Hayzer
+                </h3>
+                <span className="tag">um lugar só</span>
+              </div>
+              {/* #7 — Ancora preço pra remover ansiedade silenciosa (quick win 2026-05-19) */}
+              {/* Preço provisório — CEO define na Sem 3. Manter "a partir de" pra flexibilidade */}
+              <div
+                className="mt-2 text-[13px] font-medium"
+                style={{ color: 'hsl(var(--ember-400))' }}
+              >
+                {HAYZER_PRICE}
+              </div>
             </div>
             <ul className="space-y-4">
               {withHayzer.map((row, i) => (

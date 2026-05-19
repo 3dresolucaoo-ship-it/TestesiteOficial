@@ -97,8 +97,16 @@ export function Footer() {
           </div>
         </div>
 
+        {/* #8 — Disclaimer anti-ilusão (quick win 2026-05-19). Carla copy. ZERO em-dash. */}
+        <p
+          className="mt-10 text-center text-[11.5px] leading-relaxed"
+          style={{ color: 'hsl(var(--fog-400))' }}
+        >
+          Sem promessa de renda fácil. Sem milagre. Só controle real do que tu já vende.
+        </p>
+
         <div
-          className="mt-6 flex items-center justify-between border-t pt-6 text-[12.5px]"
+          className="mt-4 flex items-center justify-between border-t pt-5 text-[12.5px]"
           style={{
             borderColor: 'hsl(var(--fog-50) / 0.06)',
             color: 'hsl(var(--fog-400))',
