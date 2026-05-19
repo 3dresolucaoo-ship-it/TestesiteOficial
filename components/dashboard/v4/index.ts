@@ -8,6 +8,7 @@
  */
 
 // Componentes
+export { ModuleShell }      from './ModuleShell'
 export { DashboardLayout }  from './DashboardLayout'
 export { Greeting }         from './Greeting'
 export { CoverHero }        from './CoverHero'
@@ -15,6 +16,16 @@ export { NextActionCard }   from './NextActionCard'
 export { BentoGrid }        from './BentoGrid'
 export { StreakPill }        from './StreakPill'
 export { RootHover }        from './RootHover'
+
+// Tipos do ModuleShell
+export type {
+  ModuleShellProps,
+  ModuleShellAction,
+  ModuleShellHeroKpi,
+  ModuleShellSatelliteKpi,
+  ModuleShellTab,
+  KpiTone,
+} from './ModuleShell'
 
 // Tipos compartilhados
 export type {

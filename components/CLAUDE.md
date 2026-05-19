@@ -28,6 +28,14 @@
 | Modal.tsx | 68 | ✅ helpers de form |
 | ShareButton.tsx | 46 | ✅ |
 
+## dashboard/v4/ModuleShell (novo · 2026-05-18)
+
+Shell editorial V4 reutilizavel para os 12 modulos do dashboard.
+Extrai o pattern do mockup `orders-v4-tom-novo.html` (PageHeader + KpiRow + FilterBar + children).
+Exportado no barrel `@/components/dashboard/v4`. Doc de uso em `ModuleShell.md`.
+TypeScript estrito, zero any, zero ESLint warnings. CSS depende de `app/globals-v4.css`.
+Proxima etapa: migrar `/orders` real como primeiro modulo (valida visual ao vivo).
+
 ## visual-library/ (novo · 2026-05-18)
 
 Biblioteca de assets decorativos e utilitarios da identidade Hayzer.
