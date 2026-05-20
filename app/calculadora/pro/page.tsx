@@ -49,7 +49,7 @@ export default function CalculadoraProPage() {
             {/* Badge Pro com preco */}
             <div className="mb-8 flex justify-center">
               <span className="sticker-amber inline-flex -rotate-1 items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em]">
-                Pro · R${proPrice}/mes · sem limite + PDF + historico
+                Pro · R${proPrice}/mês · sem limite + PDF + histórico
               </span>
             </div>
 
@@ -59,7 +59,7 @@ export default function CalculadoraProPage() {
                 className="italic-soft marker"
                 style={{ boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone' }}
               >
-                Manda orcamento sério
+                Manda orçamento sério
               </span>
             </h1>
 
@@ -73,7 +73,7 @@ export default function CalculadoraProPage() {
               <span className="tag tag-fog">para quem</span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
-                manda orcamento pelo WhatsApp
+                manda orçamento pelo WhatsApp
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
@@ -101,7 +101,7 @@ export default function CalculadoraProPage() {
               className="text-[2rem] font-bold leading-[1.15] tracking-[-0.03em] text-foreground sm:text-[2.5rem]"
               style={{ fontFamily: 'var(--font-serif)' }}
             >
-              Calcula uma vez. Manda o orcamento bonito. Cliente fecha.
+              Calcula uma vez, manda orçamento bonito, cliente fecha
             </h2>
             <p className="mx-auto mt-5 max-w-[560px] text-[16px] leading-[1.65] text-muted-foreground">
               A versão grátis resolve a conta de hoje.
@@ -131,14 +131,14 @@ export default function CalculadoraProPage() {
               <FeatureCard
                 number="02"
                 title="PDF pro cliente"
-                vs="orcamento bonito assinado"
+                vs="orçamento bonito assinado"
                 body='Você calcula, clica "Exportar PDF", manda no WhatsApp. Sai com seu nome, o item, o prazo e o preço final. Cliente recebe um documento, não um número solto na conversa.'
               />
               <FeatureCard
                 number="03"
                 title="Histórico do mês"
                 vs="todo calculo salvo"
-                body="Cada cálculo fica gravado. Mês que vem o mesmo cliente pede a mesma peça? Abre o histórico, copia, envia. Acabou refazer conta do zero."
+                body="Cada cálculo fica gravado. Mês que vem o mesmo cliente pede a mesma peça? Abre o histórico, copia, envia. Acabou de refazer conta do zero."
               />
             </div>
           </div>
@@ -306,7 +306,7 @@ export default function CalculadoraProPage() {
               className="text-[2rem] font-bold leading-[1.15] tracking-[-0.03em] text-foreground sm:text-[2.5rem]"
               style={{ fontFamily: 'var(--font-serif)' }}
             >
-              Pronto pra calcular sem trava e mandar orcamento bonito?
+              Pronto pra calcular sem trava e mandar orçamento bonito?
             </h2>
 
             <div className="mt-8 flex flex-col items-center gap-3">
