@@ -5,6 +5,7 @@ import { Clock, Calculator } from 'lucide-react'
 import Link from 'next/link'
 import { Logo } from './Logo'
 import { WaitlistForm } from './WaitlistForm'
+import { track } from '@/lib/posthog'
 
 interface HeroProps {
   /**
@@ -114,6 +115,7 @@ export function Hero({ waitlistCount }: HeroProps) {
             >
               <Link
                 href="/calculadora"
+                onClick={() => track('calculadora_cta_click', { source: 'hero' })}
                 className="group inline-flex items-center gap-2 rounded-md border px-4 py-2.5 text-[13.5px] font-medium transition-colors"
                 style={{
                   borderColor: 'hsl(var(--petrol-500) / 0.45)',
