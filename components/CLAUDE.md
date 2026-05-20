@@ -28,6 +28,15 @@
 | Modal.tsx | 68 | ✅ helpers de form |
 | ShareButton.tsx | 46 | ✅ |
 
+## dashboard/v4/V4Shell (novo · 2026-05-20)
+
+Shell genérico V4 extraído de DashboardLayout.tsx (onda 3c).
+Encapsula: AmbientLayers, ThemeToggle, Sidebar (drawer mobile + escape + overlay), Topbar (project switcher + status pill + NotificationBell + GlobalSearch), StreakPill fixed.
+Props: `userName`, `projectId`, `projects: V4ShellProject[]`, `streak: StreakData`, `children: ReactNode`.
+DashboardLayout.tsx agora é wrapper fino: `<V4Shell ...>{conteúdo específico /dashboard}</V4Shell>`.
+Próxima etapa (onda 3c.2): migrar /orders /crm /finance /production /inventory /products /content /decisions /catalogs /portfolios /settings usando `<V4Shell>`.
+TypeScript estrito, zero any, zero ESLint warnings. Exportado no barrel `@/components/dashboard/v4`.
+
 ## dashboard/v4/ModuleShell (novo · 2026-05-18)
 
 Shell editorial V4 reutilizavel para os 12 modulos do dashboard.

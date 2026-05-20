@@ -80,6 +80,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Validate session against Supabase server (getUser makes a network round-trip,
     // unlike getSession which reads the local cookie without verifying expiry).
     // This ensures client and middleware use the same auth source of truth.
+    //
+    // Loading unblocks AS SOON AS we know user+session — loadProfile() runs
+    // fire-and-forget. Role defaults to 'user' enquanto profile carrega; admin
+    // promotion chega depois sem manter UI travada. Antes esse await fazia o
+    // shell esperar profiles roundtrip e bloqueava 20-25s em rotas AppShell.
     supabase.auth.getUser().then(async ({ data: { user: validUser } }) => {
       sessionResolved = true
       clearTimeout(safetyTimer)
@@ -87,12 +92,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data: { session } } = await supabase.auth.getSession()
         setSession(session)
         setUser(validUser)
-        await loadProfile(validUser.id)
+        setRole('user')          // optimistic default — loadProfile may upgrade
+        setLoading(false)
+        void loadProfile(validUser.id)
       } else {
         setSession(null)
         setUser(null)
+        setLoading(false)
       }
-      setLoading(false)
     }).catch(err => {
       sessionResolved = true
       clearTimeout(safetyTimer)

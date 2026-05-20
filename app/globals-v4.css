@@ -181,9 +181,10 @@
 
 :root[data-theme="dark"] .ambient-glow {
   background:
-    radial-gradient(ellipse 60% 50% at 18% 14%, rgba(31, 118, 105, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 30% at 60% 50%, rgba(31, 118, 105, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 60% 50% at 18% 14%, rgba(31, 118, 105, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 60% 50%, rgba(31, 118, 105, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 75% 55% at 50% 110%, rgba(31, 118, 105, 0.22) 0%, rgba(31, 118, 105, 0.08) 35%, transparent 65%);
 }
 
 :root[data-theme="light"] .ambient-glow {
@@ -1989,4 +1990,340 @@
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+/* ============================================================
+   MODULE SHELL V4 — PageHeader + KpiRow + FilterBar
+   Extraído de mockups/orders-v4-tom-novo.html linhas 556-790
+   + responsivo linhas 1194-1213 (media queries kpi-row + page-title)
+   ============================================================ */
+
+  /* ============================================================
+     PAGE HEADER editorial — "Pedidos" Fraunces + eyebrow mono
+     ============================================================ */
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .page-header-left { display: flex; flex-direction: column; gap: 12px; max-width: 720px; }
+  .page-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-300);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .page-eyebrow .pill-mini {
+    background: rgba(31, 118, 105, 0.16);
+    color: var(--petrol-300);
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    border: 1px solid rgba(31, 118, 105, 0.28);
+  }
+  .page-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    color: var(--fog-50);
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .page-title .accent-italic {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--fog-100);
+    font-variation-settings: "opsz" 144, "SOFT" 70;
+    font-size: 0.6em;
+    border-bottom: 2px solid var(--ember-500);
+    padding-bottom: 4px;
+  }
+  .page-sub {
+    font-family: 'Geist', sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--fog-200);
+    max-width: 640px;
+  }
+  .page-sub .marker-ember {
+    background: linear-gradient(180deg, transparent 62%, rgba(208, 138, 74, 0.55) 62%, rgba(208, 138, 74, 0.55) 92%, transparent 92%);
+    padding: 0 0.08em;
+    color: var(--fog-50);
+    font-weight: 500;
+  }
+  .page-sub .wavy-petrol {
+    text-decoration: underline wavy var(--petrol-300);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+    color: var(--fog-50);
+  }
+  .page-header-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    background: var(--petrol-500);
+    border: 1px solid var(--petrol-600);
+    border-radius: 10px;
+    color: #F2EFEA;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: var(--shadow-petrol);
+    transition: transform var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+  }
+  .btn-primary:hover {
+    background: var(--petrol-400);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-petrol), 0 0 28px -6px rgba(111, 181, 168, 0.50);
+  }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    border-radius: 10px;
+    color: var(--fog-100);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--t-fast);
+  }
+  .btn-ghost:hover {
+    border-color: var(--petrol-400);
+    background: var(--surface-2);
+    color: var(--fog-50);
+  }
+
+  /* ============================================================
+     KPI ROW — 3 cards lado a lado (1 destaque + 2 normais)
+     ============================================================ */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 36px;
+  }
+  .kpi-card {
+    position: relative;
+    padding: 26px 24px 22px 24px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform var(--t-med), border-color var(--t-med), box-shadow var(--t-med);
+    box-shadow: var(--shadow-card);
+  }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--petrol-400);
+    box-shadow: var(--shadow-card), 0 0 32px -10px rgba(31, 118, 105, 0.35);
+  }
+  .kpi-card .kpi-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fog-300);
+  }
+  .kpi-card .kpi-value {
+    font-family: 'Fraunces', Georgia, serif;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    margin: 10px 0 6px 0;
+    color: var(--fog-50);
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .kpi-card .kpi-value .currency {
+    font-size: 0.42em;
+    color: var(--fog-300);
+    font-style: italic;
+    font-weight: 400;
+    position: relative;
+    top: -0.48em;
+    font-variation-settings: "opsz" 60, "SOFT" 70;
+  }
+  .kpi-card .kpi-value .decimal {
+    font-size: 0.40em;
+    color: var(--fog-200);
+    font-weight: 400;
+    font-style: italic;
+  }
+  .kpi-card .kpi-sub {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    color: var(--fog-200);
+    line-height: 1.4;
+  }
+  .kpi-card .kpi-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+  .kpi-card .kpi-delta.up   { color: var(--petrol-300); }
+  .kpi-card .kpi-delta.down { color: var(--signal-red); }
+
+  /* CARD especial petrol sólido (igual hero V1 dataviz) */
+  .kpi-card.hero-petrol {
+    background: var(--petrol-500);
+    color: #F2EFEA;
+    border-color: var(--petrol-600);
+    box-shadow: var(--shadow-petrol);
+  }
+  .kpi-card.hero-petrol::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.10) 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, rgba(14, 68, 61, 0.40) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .kpi-card.hero-petrol .kpi-eyebrow { color: rgba(242, 239, 234, 0.82); position: relative; z-index: 1; }
+  .kpi-card.hero-petrol .kpi-value   { color: #F2EFEA; position: relative; z-index: 1; }
+  .kpi-card.hero-petrol .kpi-value .currency,
+  .kpi-card.hero-petrol .kpi-value .decimal { color: rgba(242, 239, 234, 0.75); }
+  .kpi-card.hero-petrol .kpi-sub     { color: rgba(242, 239, 234, 0.88); position: relative; z-index: 1; }
+  .kpi-card.hero-petrol .kpi-delta.up { color: var(--ember-300); }
+  /* raízes decorativas no canto do hero (SVG inline) */
+  .kpi-card.hero-petrol .hero-roots {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    width: 110px;
+    height: 110px;
+    opacity: 0.32;
+    pointer-events: none;
+  }
+  .kpi-card.hero-petrol .hero-roots path {
+    stroke: #F2EFEA;
+    stroke-width: 1.4;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .kpi-card.hero-petrol .hero-roots circle { fill: #F2EFEA; }
+  .kpi-card.hero-petrol:hover {
+    box-shadow: var(--shadow-petrol), 0 0 40px -8px rgba(111, 181, 168, 0.55);
+  }
+
+  /* ============================================================
+     FILTROS — tabs horizontais + busca + ordenar
+     ============================================================ */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+  }
+  .filter-tab {
+    padding: 8px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--fog-200);
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    transition: all var(--t-fast);
+  }
+  .filter-tab:hover { color: var(--fog-50); background: var(--surface-2); }
+  .filter-tab.active {
+    background: var(--petrol-500);
+    color: #F2EFEA;
+    box-shadow: 0 4px 12px -4px rgba(31, 118, 105, 0.45);
+  }
+  .filter-tab .count {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(242, 239, 234, 0.08);
+    color: var(--fog-200);
+  }
+  .filter-tab.active .count {
+    background: rgba(255, 255, 255, 0.18);
+    color: #F2EFEA;
+  }
+  .filter-right { display: flex; gap: 10px; align-items: center; }
+  .search-input {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 14px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-md);
+    border-radius: 10px;
+    color: var(--fog-100);
+    min-width: 260px;
+    transition: border-color var(--t-fast), background var(--t-fast);
+  }
+  .search-input:focus-within {
+    border-color: var(--petrol-400);
+    background: var(--surface-2);
+  }
+  .search-input svg { width: 16px; height: 16px; color: var(--fog-300); }
+  .search-input input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--fog-50);
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    flex: 1;
+  }
+  .search-input input::placeholder { color: var(--fog-300); }
+
+/* ============================================================
+   MODULE SHELL — responsivo (media queries)
+   Extraído de mockups/orders-v4-tom-novo.html linhas 1194-1213
+   ============================================================ */
+@media (max-width: 1100px) {
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+  .kpi-row .kpi-card.hero-petrol { grid-column: span 2; }
+}
+@media (max-width: 768px) {
+  .page-title { font-size: 44px; }
+  .kpi-row { grid-template-columns: 1fr; }
+  .kpi-row .kpi-card.hero-petrol { grid-column: span 1; }
 }

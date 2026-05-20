@@ -9,6 +9,7 @@
 
 // Componentes
 export { V4ThemeProvider }  from './V4ThemeProvider'
+export { V4Shell }          from './V4Shell'
 export { ModuleShell }      from './ModuleShell'
 export { DashboardLayout }  from './DashboardLayout'
 export { Greeting }         from './Greeting'
@@ -17,6 +18,12 @@ export { NextActionCard }   from './NextActionCard'
 export { BentoGrid }        from './BentoGrid'
 export { StreakPill }        from './StreakPill'
 export { RootHover }        from './RootHover'
+
+// Tipos do V4Shell
+export type {
+  V4ShellProps,
+  V4ShellProject,
+} from './V4Shell'
 
 // Tipos do ModuleShell
 export type {

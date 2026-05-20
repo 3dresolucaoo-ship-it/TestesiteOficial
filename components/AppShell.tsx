@@ -4,49 +4,94 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { StoreProvider, useStore } from '@/lib/store'
-import { Sidebar, BottomNav } from '@/components/Sidebar'
+import { V4Shell } from '@/components/dashboard/v4/V4Shell'
 import { AlertTriangle, X } from 'lucide-react'
 import type { AppState } from '@/lib/types'
 
-// ─── Loading screen ───────────────────────────────────────────────────────────
+// ─── Loading screen V4 ────────────────────────────────────────────────────────
+// Background preto Hayzer + glow petrol bottom + watermark Fraunces.
+// Visual coerente com V4Shell pra evitar flash de tela escura "antiga" entre
+// auth loading e shell montado.
 
 function LoadingScreen() {
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center"
-      style={{ background: 'var(--t-bg)' }}
+      className="fixed inset-0 flex items-center justify-center overflow-hidden"
+      style={{ background: '#0A0E10' }}
     >
-      {/* Background glow */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2
-            w-[600px] h-[600px] rounded-full"
-          style={{
-            background: 'var(--t-accent)',
-            opacity:    0.06,
-            filter:     'blur(120px)',
-          }}
-        />
+      {/* Glow petrol vindo de baixo (luz suave) */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          bottom:     '-30%',
+          left:       '50%',
+          transform:  'translateX(-50%)',
+          width:      '120vw',
+          height:     '90vh',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 100%, rgba(31, 118, 105, 0.28) 0%, rgba(31, 118, 105, 0.10) 35%, transparent 65%)',
+          filter:     'blur(40px)',
+        }}
+      />
+
+      {/* Glow ember sutil top-right pra dar dimensão */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top:        '-10%',
+          right:      '-15%',
+          width:      '50vw',
+          height:     '50vh',
+          background: 'radial-gradient(ellipse 50% 50% at 50% 50%, rgba(208, 138, 74, 0.12) 0%, transparent 60%)',
+          filter:     'blur(60px)',
+        }}
+      />
+
+      {/* Watermark hayzer Fraunces italic gigante embaixo */}
+      <div
+        aria-hidden="true"
+        style={{
+          position:     'absolute',
+          bottom:       '4%',
+          left:         '50%',
+          transform:    'translateX(-50%)',
+          fontFamily:   'var(--font-fraunces, Fraunces, Georgia, serif)',
+          fontStyle:    'italic',
+          fontSize:     'clamp(120px, 18vw, 280px)',
+          fontWeight:   400,
+          color:        'rgba(166, 212, 204, 0.04)',
+          letterSpacing: '-0.04em',
+          lineHeight:    1,
+          pointerEvents: 'none',
+          userSelect:    'none',
+          whiteSpace:    'nowrap',
+        }}
+      >
+        hayzer
       </div>
-      <div className="relative flex flex-col items-center gap-4">
+
+      {/* Logo H + dots */}
+      <div className="relative flex flex-col items-center gap-5 z-10">
         <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center
-            text-white font-bold text-lg"
+          className="w-12 h-12 rounded-2xl flex items-center justify-center
+            font-bold text-xl"
           style={{
-            background: 'hsl(173 58% 28%)',
-            boxShadow:  '0 0 30px hsl(173 58% 28% / 0.5)',
+            background:  'linear-gradient(135deg, hsl(173 58% 28%), hsl(173 58% 22%))',
+            color:       '#F2EFEA',
+            boxShadow:   '0 0 40px hsl(173 58% 28% / 0.6), 0 0 80px hsl(173 58% 28% / 0.3)',
+            border:      '1px solid hsl(173 35% 40% / 0.5)',
           }}
         >
           H
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {[0, 1, 2].map(i => (
             <div
               key={i}
               className="w-1.5 h-1.5 rounded-full"
               style={{
-                background: 'hsl(173 58% 28%)',
-                animation:  `pulse 1.2s ease-in-out ${i * 0.2}s infinite`,
+                background: 'hsl(173 35% 60%)',
+                animation:  `pulse 1.4s ease-in-out ${i * 0.2}s infinite`,
+                opacity:    0.75,
               }}
             />
           ))}
@@ -99,11 +144,47 @@ function DbErrorToast() {
   )
 }
 
-// ─── TopBar (inline to avoid circular import) ─────────────────────────────────
+// ─── V4Shell adapter ──────────────────────────────────────────────────────────
+// Lê useAuth + useStore (precisa estar DENTRO de StoreProvider) e monta props
+// do V4Shell. Adapter, não shell — V4Shell faz o trabalho real.
 
-import { TopBar } from '@/components/TopBar'
+function V4ShellAdapter({ children }: { children: ReactNode }) {
+  const { user }  = useAuth()
+  const { state } = useStore()
+
+  // Projeto ativo: primeiro projeto disponível. Se zero projetos, V4Shell
+  // recebe '' e renderiza '??' no switcher (tolerado, MVP).
+  const projects = state.projects.map(p => ({
+    id:       p.id,
+    name:     p.name,
+    revenue:  0,
+    isActive: true,
+  }))
+
+  const userName  = user?.user_metadata?.full_name as string | undefined
+    ?? user?.email?.split('@')[0]
+    ?? 'Maker'
+
+  const projectId = projects[0]?.id ?? ''
+  const streak    = { days: 0 }  // TODO Wave 4: popular via streakService
+
+  return (
+    <V4Shell
+      userName={userName}
+      projectId={projectId}
+      projects={projects}
+      streak={streak}
+    >
+      {children}
+    </V4Shell>
+  )
+}
 
 // ─── App Shell ────────────────────────────────────────────────────────────────
+// V4 shell unificado para TODAS as rotas internas (decisao CEO 21/05 A.5):
+// "v4 e antigo entre dentro dele e fique integrado". Sidebar/topbar/ambient
+// do V4Shell envolve children — paginas continuam renderizando seu conteudo
+// (V4 ModuleShell ou legado), independente do shell exterior.
 
 export function AppShell({
   children,
@@ -114,8 +195,8 @@ export function AppShell({
    *  of empty data on pages that read directly from useStore(). */
   initialState?: AppState | null
 }) {
-  const { user, loading } = useAuth()
-  const pathname         = usePathname()
+  const { loading } = useAuth()
+  const pathname    = usePathname()
 
   const isPublicPath =
     pathname === '/login'                     ||
@@ -125,34 +206,16 @@ export function AppShell({
     pathname.startsWith('/portfolio/')        ||
     pathname.startsWith('/checkout')
 
-  // Redirect client-side removido intencionalmente.
-  // middleware.ts:66 já valida a sessão via cookies Supabase antes da rota
-  // carregar — se o usuário chegou aqui, o middleware aprovou.
-  // O useEffect de redirect duplicava essa checagem no cliente e causava loop:
-  // quando AuthProvider.getSession() dava timeout (~5s), loading virava false
-  // com user=null, o router.replace('/login') disparava e o middleware
-  // redirecionava de volta para a rota original — loop infinito.
-
-  // Public pages (login): render without chrome
+  // Public pages (login, showcase, catalogo publico): render sem shell
   if (isPublicPath) return <>{children}</>
 
-  // Auth loading state — só mostrar LoadingScreen se loading=true. Se loading=false
-  // e user=null (getSession timeout), renderizamos o shell mesmo assim trustando
-  // o middleware (middleware.ts:66 ja validou cookies Supabase server-side). Sem
-  // isso, AppShell retornava null em getSession timeout e a pagina virava tela
-  // preta (bug 2026-05-21 madrugada apos remocao do redirect duplicado).
+  // Auth loading. Apos fix A.6 (commit 6a7a376), UI destrava em <3s sem
+  // bloquear no loadProfile. Mantemos LoadingScreen como fallback minimo.
   if (loading) return <LoadingScreen />
 
   return (
     <StoreProvider initialState={initialState}>
-      <Sidebar />
-      <div className="sidebar-content flex flex-col min-h-screen">
-        <TopBar />
-        <main className="flex-1 p-4 sm:p-6 pb-24 lg:pb-6 animate-fade-in-up">
-          {children}
-        </main>
-      </div>
-      <BottomNav />
+      <V4ShellAdapter>{children}</V4ShellAdapter>
       <DbErrorToast />
     </StoreProvider>
   )
