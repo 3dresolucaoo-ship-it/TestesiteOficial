@@ -1,0 +1,90 @@
+{
+  "date": "2026-05-20",
+  "hora": "06:00 BRT",
+  "status": "ALERTA AMARELO",
+  "rotas": {
+    "total": 4,
+    "ok": 3,
+    "falhas": [
+      {
+        "rota": "/waitlist",
+        "status_http": 404,
+        "causa_identificada": "app/waitlist/ nao tem page.tsx — so actions.ts + /obrigado/page.tsx existem",
+        "severity": 3,
+        "acao_sugerida": "Criar app/waitlist/page.tsx ou redirecionar /waitlist -> /#waitlist"
+      }
+    ],
+    "detalhes": [
+      { "rota": "https://hayzer.com.br", "status": 200, "ok": true },
+      { "rota": "https://hayzer.com.br/calculadora", "status": 200, "ok": true },
+      { "rota": "https://hayzer.com.br/waitlist", "status": 404, "ok": false },
+      {
+        "rota": "https://hayzer.com.br/calculadora/pro",
+        "status": 200,
+        "ok": true,
+        "aviso": "Checkout mostrando 'temporariamente indisponivel' — aguarda setup Stripe CEO (decisao pendente documentada)"
+      }
+    ]
+  },
+  "vercel": {
+    "deployment_atual": {
+      "id": "dpl_FuyRNMDdVtUa4cszPRMstWGFjf7H",
+      "commit_hash": "09a2adca",
+      "commit_mensagem": "feat(production): finalize V4 migration (Felipe P0.3 tweaks)",
+      "estado": "READY",
+      "branch": "main",
+      "criado_timestamp_ms": 1779251291098,
+      "idade_horas": 4.5
+    },
+    "deployments_com_erro_24h": 8,
+    "nota_erros": "Todos os 8 ERRORs sao da sessao de dev noturna 20/05 e foram superados pelo deploy atual READY. Nenhum erro ativo em prod.",
+    "builds_travados_30min": 0
+  },
+  "supabase": {
+    "health": "OK",
+    "projeto": "sqyrkisnllrgylnxwudu",
+    "regiao": "sa-east-1",
+    "leads_total": 1,
+    "tabela_leads": true,
+    "tabela_notifications": true,
+    "view_search_index": false,
+    "alertas": [
+      {
+        "item": "view search_index",
+        "status": "AUSENTE",
+        "severity": 2,
+        "nota": "View nao existe no schema public. Pode afetar funcionalidade de busca interna."
+      }
+    ]
+  },
+  "performance": {
+    "fonte": "indisponivel via MCP",
+    "nota": "Core Web Vitals Vercel Analytics nao acessivel via API MCP. TBT 3.6s registrado em sessao anterior (debito documentado no ROADMAP).",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "alertas_ativos": [
+    {
+      "id": "smoke-20260520-001",
+      "severity": 3,
+      "tipo": "ROTA_404",
+      "descricao": "/waitlist retorna 404. Rota publica de captura de leads quebrada. app/waitlist/page.tsx ausente.",
+      "acao": "Criar page.tsx ou redirect 301 -> /#waitlist"
+    },
+    {
+      "id": "smoke-20260520-002",
+      "severity": 2,
+      "tipo": "DB_VIEW_AUSENTE",
+      "descricao": "View search_index nao encontrada no schema public do Supabase.",
+      "acao": "Verificar se foi dropada acidentalmente ou se nunca foi criada. Migration necessaria."
+    },
+    {
+      "id": "smoke-20260520-003",
+      "severity": 1,
+      "tipo": "CHECKOUT_INDISPONIVEL",
+      "descricao": "/calculadora/pro: checkout Stripe mostrando 'temporariamente indisponivel'.",
+      "acao": "Aguarda decisao CEO (NEXT_PUBLIC_STRIPE_PAYMENT_LINK_CALC_PRO). Ja documentado."
+    }
+  ]
+}
