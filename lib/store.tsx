@@ -12,6 +12,18 @@ import type {
 import { initialData } from './mockData'
 import { isSupabaseConfigured } from './supabaseClient'
 import { DEFAULT_ADMIN_CONFIG } from '@/core/admin/config'
+import { projectsService }                    from '@/services/projects'
+import { ordersService }                      from '@/services/orders'
+import { productionService }                  from '@/services/production'
+import { contentService }                     from '@/services/content'
+import { decisionsService }                   from '@/services/decisions'
+import { transactionsService }                from '@/services/finance'
+import { leadsService, affiliatesService }    from '@/services/leads'
+import { inventoryService, movementsService } from '@/services/inventory'
+import { configService }                      from '@/services/config'
+import { productsService }                    from '@/services/products'
+import { catalogsService }                    from '@/services/catalogs'
+import { processNewOrder, processOrderUpdate } from '@/core/flows/processOrder'
 
 /** Deep-merge a DB-loaded config with defaults so new fields are always present. */
 function mergeConfig(loaded: Partial<AdminConfig> | null | undefined): AdminConfig {
@@ -29,18 +41,6 @@ function mergeConfig(loaded: Partial<AdminConfig> | null | undefined): AdminConf
     storefront: { ...DEFAULT_ADMIN_CONFIG.storefront, ...(loaded as AdminConfig).storefront },
   }
 }
-import { projectsService }                    from '@/services/projects'
-import { ordersService }                      from '@/services/orders'
-import { productionService }                  from '@/services/production'
-import { contentService }                     from '@/services/content'
-import { decisionsService }                   from '@/services/decisions'
-import { transactionsService }                from '@/services/finance'
-import { leadsService, affiliatesService }    from '@/services/leads'
-import { inventoryService, movementsService } from '@/services/inventory'
-import { configService }                      from '@/services/config'
-import { productsService }                    from '@/services/products'
-import { catalogsService }                    from '@/services/catalogs'
-import { processNewOrder, processOrderUpdate } from '@/core/flows/processOrder'
 
 // ─── Action types ─────────────────────────────────────────────────────────────
 type Action =
@@ -209,6 +209,8 @@ function reducer(state: AppState, action: Action): AppState {
 // ─── Supabase: load full state ─────────────────────────────────────────────────
 // Each table is wrapped in safeLoad so a single missing/broken table never
 // aborts the whole hydration — the user still sees all other data.
+//
+// Usado apenas no fallback (sem initialState SSR) e no rollback de syncAction.
 async function loadFromSupabase(): Promise<AppState> {
   const [
     projects, orders, production, content, decisions,
@@ -401,6 +403,42 @@ async function syncAction(
   }
 }
 
+// ─── Module lazy-loading types ────────────────────────────────────────────────
+// Keys correspondem a arrays lazy do AppState (projects e config sao eager via SSR).
+export type LazyModuleKey =
+  | 'orders'
+  | 'production'
+  | 'content'
+  | 'decisions'
+  | 'transactions'
+  | 'leads'
+  | 'affiliates'
+  | 'inventory'
+  | 'movements'
+  | 'products'
+  | 'catalogs'
+
+type ModuleStatus = 'idle' | 'loading' | 'loaded' | 'error'
+
+/** Status de carregamento lazy por modulo. Gerenciado fora do reducer (UI-only). */
+type ModuleStatusMap = Partial<Record<LazyModuleKey, ModuleStatus>>
+
+// ─── Supabase: fetchers lazy por modulo ───────────────────────────────────────
+// Cada funcao carrega apenas 1 tabela. Chamada on-demand por useStoreModule().
+const MODULE_FETCHERS: Record<LazyModuleKey, () => Promise<AppState[LazyModuleKey]>> = {
+  orders:       () => safeLoad(() => ordersService.getAll(),         [],   'orders'),
+  production:   () => safeLoad(() => productionService.getAll(),     [],   'production'),
+  content:      () => safeLoad(() => contentService.getAll(),        [],   'content'),
+  decisions:    () => safeLoad(() => decisionsService.getAll(),      [],   'decisions'),
+  transactions: () => safeLoad(() => transactionsService.getAll(),   [],   'transactions'),
+  leads:        () => safeLoad(() => leadsService.getAll(),          [],   'leads'),
+  affiliates:   () => safeLoad(() => affiliatesService.getAll(),     [],   'affiliates'),
+  inventory:    () => safeLoad(() => inventoryService.getAll(),      [],   'inventory'),
+  movements:    () => safeLoad(() => movementsService.getAll(),      [],   'movements'),
+  products:     () => safeLoad(() => productsService.getAll(),       [],   'products'),
+  catalogs:     () => safeLoad(() => catalogsService.listCatalogs(), [],   'catalogs'),
+}
+
 // ─── Context ──────────────────────────────────────────────────────────────────
 type CtxType = {
   state:       AppState
@@ -411,6 +449,10 @@ type CtxType = {
   rawDispatch: (action: Action) => void
   loading:     boolean
   dbError:     string | null
+  /** Status de carregamento lazy por modulo (P2.1). */
+  moduleStatus: ModuleStatusMap
+  /** Dispara fetch lazy de um modulo se ainda nao carregado (P2.1). */
+  loadModule:   (key: LazyModuleKey) => void
 }
 
 const StoreContext = createContext<CtxType | null>(null)
@@ -436,11 +478,39 @@ export function StoreProvider({
   const [loading, setLoading] = useState(isSupabaseConfigured && !initialState)
   const [dbError, setDbError] = useState<string | null>(null)
 
+  // ── P2.1: status lazy por modulo ────────────────────────────────────────────
+  // Modulos comecam em 'idle'. loadModule() transita para 'loading' -> 'loaded'.
+  // Na hydration classica (sem initialState), todos ficam 'loaded' apos HYDRATE.
+  const [moduleStatus, setModuleStatus] = useState<ModuleStatusMap>({})
+
   // Stable ref so syncDispatch closure is never stale
   const stateRef = useRef(state)
   useEffect(() => { stateRef.current = state }, [state])
 
-  // ── Hydration ──────────────────────────────────────────────────────────────
+  // ── P2.1: loadModule — fetch lazy de modulo individual ─────────────────────
+  // Chamado por useStoreModule() quando o modulo ainda esta em 'idle'.
+  const loadModule = useCallback((key: LazyModuleKey) => {
+    setModuleStatus(prev => {
+      const current = prev[key]
+      if (current === 'loading' || current === 'loaded') return prev
+      return { ...prev, [key]: 'loading' }
+    })
+
+    const fetcher = MODULE_FETCHERS[key]
+    fetcher().then(data => {
+      dispatch({
+        type:    'HYDRATE',
+        payload: { ...stateRef.current, [key]: data },
+      })
+      setModuleStatus(prev => ({ ...prev, [key]: 'loaded' }))
+    }).catch(err => {
+      console.error(`[BVaz] loadModule(${key}) failed:`, err)
+      setModuleStatus(prev => ({ ...prev, [key]: 'error' }))
+    })
+  }, [])
+
+  // ── Hydration classica ─────────────────────────────────────────────────────
+  // Usada apenas quando NAO ha initialState SSR. Carrega tudo de uma vez.
   useEffect(() => {
     // SSR already populated the store — skip client-side hydration entirely.
     if (initialState) return
@@ -460,6 +530,14 @@ export function StoreProvider({
         try {
           const data = await Promise.race([loadFromSupabase(), fallback])
           dispatch({ type: 'HYDRATE', payload: data })
+          // Marca todos os modulos como loaded para que useStoreModule
+          // nao tente re-buscar o que acabou de ser carregado.
+          setModuleStatus({
+            orders: 'loaded', production: 'loaded', content: 'loaded',
+            decisions: 'loaded', transactions: 'loaded', leads: 'loaded',
+            affiliates: 'loaded', inventory: 'loaded', movements: 'loaded',
+            products: 'loaded', catalogs: 'loaded',
+          })
         } catch (err) {
           console.error('[BVaz] Supabase hydration error:', err)
           setDbError('Erro ao carregar dados do Supabase.')
@@ -518,17 +596,60 @@ export function StoreProvider({
   }, [setDbError])
 
   return (
-    <StoreContext.Provider value={{ state, dispatch: syncDispatch, rawDispatch, loading, dbError }}>
+    <StoreContext.Provider value={{
+      state, dispatch: syncDispatch, rawDispatch, loading, dbError,
+      moduleStatus, loadModule,
+    }}>
       {children}
     </StoreContext.Provider>
   )
 }
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+// ─── Hooks ────────────────────────────────────────────────────────────────────
 export function useStore() {
   const ctx = useContext(StoreContext)
   if (!ctx) throw new Error('useStore must be used within StoreProvider')
   return ctx
+}
+
+/**
+ * P2.1 — Hook de modulo lazy.
+ *
+ * Retorna os dados do modulo e um flag de loading. Na primeira chamada em que
+ * o modulo esta 'idle', dispara o fetch automaticamente.
+ *
+ * Compatibilidade: componentes que usam `useStore().state.orders` diretamente
+ * continuam funcionando — os dados chegam via HYDRATE parcial no reducer.
+ * Este hook eh apenas para quem quer o feedback visual de loading.
+ *
+ * Uso:
+ *   const { data: orders, isLoading } = useStoreModule('orders')
+ *   if (isLoading) return <OrdersLoading />
+ */
+export function useStoreModule<K extends LazyModuleKey>(key: K): {
+  data:      AppState[K]
+  isLoading: boolean
+  isError:   boolean
+} {
+  const { state, moduleStatus, loadModule } = useStore()
+
+  useEffect(() => {
+    const status = moduleStatus[key]
+    // Dispara fetch apenas se ainda nao foi iniciado.
+    // 'idle' = nunca carregado. undefined = mesmo que idle.
+    if (!status || status === 'idle') {
+      loadModule(key)
+    }
+  // loadModule e estavel (useCallback sem deps). key nao muda na vida do componente.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key])
+
+  const status = moduleStatus[key]
+  return {
+    data:      state[key] as AppState[K],
+    isLoading: !status || status === 'idle' || status === 'loading',
+    isError:   status === 'error',
+  }
 }
 
 export function uid() {
