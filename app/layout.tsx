@@ -3,7 +3,6 @@ import { Geist, Fraunces } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
-import { AuthProvider }      from '@/context/AuthContext'
 import { ThemeProvider }     from '@/context/ThemeContext'
 import { PostHogProvider }   from '@/context/PostHogProvider'
 import { LayoutSwitch }      from '@/components/LayoutSwitch'
@@ -147,11 +146,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <PostHogProvider>
           <ThemeProvider>
-            <AuthProvider>
-              <LayoutSwitch initialState={initialState}>
-                {children}
-              </LayoutSwitch>
-            </AuthProvider>
+            <LayoutSwitch initialState={initialState}>
+              {children}
+            </LayoutSwitch>
           </ThemeProvider>
         </PostHogProvider>
         <Analytics />

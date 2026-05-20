@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import { useEffect, type ReactNode } from 'react'
 import { AppShell } from '@/components/AppShell'
+import { AuthProvider } from '@/context/AuthContext'
 import type { AppState } from '@/lib/types'
 
 const MARKETING_PATHS = ['/', '/waitlist', '/privacidade', '/termos', '/calculadora', '/mockups']
@@ -49,8 +50,16 @@ export function LayoutSwitch({
 
   // V4: rotas com shell próprio (sidebar+topbar). Renderiza children direto.
   if (isV4) {
-    return <>{children}</>
+    return (
+      <AuthProvider>
+        {children}
+      </AuthProvider>
+    )
   }
 
-  return <AppShell initialState={initialState}>{children}</AppShell>
+  return (
+    <AuthProvider>
+      <AppShell initialState={initialState}>{children}</AppShell>
+    </AuthProvider>
+  )
 }
