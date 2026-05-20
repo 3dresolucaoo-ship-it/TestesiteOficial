@@ -44,8 +44,8 @@
 
 **QUA 22/05** — Termina React + Tier 1 restante
 - [ ] Felipe: Fase 1 últimos detalhes (mobile drawer, root-hover animações)
-- [ ] Otávio: Dependabot/Renovate ativo (OWASP A03 Supply Chain)
-- [ ] Otávio: Zod nas APIs autenticadas (`/api/finance/*` + `/api/payment-configs`)
+- [x] Otávio: Dependabot/Renovate ativo (OWASP A03 Supply Chain) ✅ 2026-05-18 (`.github/dependabot.yml` — weekly seg 8h BRT, npm + github-actions, ignore major em libs core)
+- [x] Otávio: Zod nas APIs autenticadas (`/api/finance/*` + `/api/payment-configs`) ✅ 2026-05-17 (8 schemas em `services/apiSchemas.ts`, discriminated union por provider, MP webhookSecret >=16 obrigatório)
 
 **QUI 23/05** — Conecta services + a11y
 - [ ] Felipe: Fase 2 conecta com `services/finance.ts`, `services/financeConfig.ts`, `services/orders.ts`, etc
@@ -204,7 +204,7 @@
 - [x] **🔴 Middleware bloqueando webhooks** — `/api/webhooks` adicionado em `PUBLIC_PATHS` ✅ 2026-05-17
 - [x] **🔴 MP webhookSecret obrigatório** — `payments/mercadopago.ts` throw se faltar, `payment-configs/route.ts` bloqueia salvar MP sem secret ≥16 chars ✅ 2026-05-17
 - [x] **🟠 `/api/content/sync` hardening** — auth + Zod + RLS server client ✅ 2026-05-17
-- [ ] Zod nas APIs autenticadas (`/api/finance/fixed-costs`, `/profit-goal`, `/payment-configs`) — atualmente validação manual `typeof`
+- [x] Zod nas APIs autenticadas (`/api/finance/fixed-costs`, `/profit-goal`, `/payment-configs`) ✅ 2026-05-17 (validação `typeof` manual substituída por schemas Zod + `zodErrorToPtBr` helper PT-BR)
 - [ ] Rate limiting em rotas públicas (`@upstash/ratelimit` ou solução DB-based replicando `waitlistRateLimit.ts`)
 - [ ] CSP report-only header (`next.config.ts`)
 - [ ] HSTS com `preload` (`next.config.ts`)
