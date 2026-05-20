@@ -38,6 +38,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import Image from 'next/image'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { StreakPill } from './StreakPill'
 import { NotificationBell } from './NotificationBell'
@@ -396,6 +397,9 @@ export function V4Shell({
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const overlayRef = useRef<HTMLDivElement>(null)
 
+  // ── Pathname pra marcar nav-item ativo na sidebar ─────────────────────────
+  const pathname = usePathname()
+
   const closeSidebar = useCallback(() => setSidebarOpen(false), [])
   const openSidebar  = useCallback(() => setSidebarOpen(true),  [])
 
@@ -445,6 +449,7 @@ export function V4Shell({
         isOpen={sidebarOpen}
         onClose={closeSidebar}
         userName={userName}
+        activeHref={pathname}
       />
 
       {/* Overlay mobile */}
