@@ -446,6 +446,13 @@ export function V4Shell({
   // ── Pathname pra marcar nav-item ativo na sidebar ─────────────────────────
   const pathname = usePathname()
 
+  // A.5 — sinaliza módulos densos pro CSS reduzir watermark
+  useEffect(() => {
+    const denseRoutes = ['/orders', '/inventory', '/finance', '/production', '/crm', '/products']
+    const isDense = denseRoutes.some((p) => pathname.startsWith(p))
+    document.documentElement.setAttribute('data-route-density', isDense ? 'dense' : 'normal')
+  }, [pathname])
+
   const closeSidebar = useCallback(() => setSidebarOpen(false), [])
   const openSidebar  = useCallback(() => setSidebarOpen(true),  [])
 

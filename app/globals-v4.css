@@ -312,6 +312,14 @@
   color: hsl(var(--sand-mocha-600));
   opacity: 0.09;
 }
+/* A.5 — watermark reduzida em módulos operacionais densos (Onda A Diego) */
+:root[data-route-density="dense"] .watermark-raiz {
+  font-size: clamp(80px, 12vw, 180px);
+  opacity: 0.025;
+}
+:root[data-theme="light"][data-route-density="dense"] .watermark-raiz {
+  opacity: 0.06;
+}
 
 /* ============================================================
    STREAK PILL
