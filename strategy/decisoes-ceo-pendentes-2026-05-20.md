@@ -1,12 +1,27 @@
 # 8 Decisões CEO Pendentes — Matéria de Apoio
 ## Consolidação Helena + Claude · 2026-05-20
 
-> Compilação pra decisão. Cada item tem: contexto curto, prós/contras de cada caminho, recomendação Helena, espaço pra tua resposta.
->
-> **Tempo estimado leitura**: 15min. **Tempo decisão**: 30-45min.
+> **STATUS 20/05 23h**: Bloco 1 (decisões 1-5) RESPONDIDO. Bloco 2 (decisões 6-8): 6 e 8 respondidas, 7 pendente.
 >
 > Bloco 1 (Operação Noturna · 5 decisões) = origem 19/05.
 > Bloco 2 (Hayzer Beauty · 3 decisões) = origem 20/05, deadline 28/06 ou 05/07.
+
+---
+
+## ✅ RESUMO DAS DECISÕES TOMADAS (20/05)
+
+| # | Decisão | Caminho final |
+|---|---|---|
+| 1 | Data ativação Op Noturna | **B · sexta 22/05 22h BRT** |
+| 2 | Canal alerta crítico | **C · Discord webhook** (servidor "Hayzer Ops" criado, 2 canais + 2 webhooks ativos) |
+| 3 | Noites/sem | **B · 5/7** (seg-sex) |
+| 4 | Limite consumo | **2 agents/noite máximo** (cabe na quota Max 5x sem estourar, sem cap monetário pq plano Max não cobra por token) |
+| 5 | Agents piloto 1ª noite | **Bruna + Lia** (Otávio cortado — Tier 1 e Tier 2 fechados) |
+| 6 | Posicionamento Beauty | **A modificado** · sub-marca "Hayzer Beauty" COM identidade própria, MESMO domínio `hayzer.com.br`, arquitetura tipo Humanos Fora da Curva (login único + tela seletora de produto) |
+| 7 | Cobrança Beauty ano 1 | **PENDENTE** · CEO vai pensar mais. Considerar estratégia rede Ybera (gestora-mãe + gestoras + afiliadas = combo time inteiro?) |
+| 8 | Quando briefar G7 Beauty | **B · 28/06 14h** com cláusula escape: se launch 27/06 quebrar bug crítico, vai automático pra 05/07 |
+
+---
 
 ---
 
