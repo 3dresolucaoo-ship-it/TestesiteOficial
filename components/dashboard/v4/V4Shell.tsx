@@ -217,18 +217,12 @@ const NAV_ITEMS = [
   {
     group: 'Crescimento',
     items: [
-      { label: 'Clientes',  href: '/crm'               },
-      { label: 'Leads',     href: '/crm',    badge: 7 as number | undefined },
-      { label: 'Catálogo',  href: '/catalogs'           },
-      { label: 'Produtos',  href: '/products'           },
-      { label: 'Conteúdo',  href: '/content'            },
-    ],
-  },
-  {
-    group: 'Vitrine',
-    items: [
-      { label: 'Portfolios', href: '/portfolios' },
-      { label: 'Decisões',   href: '/decisions'  },
+      { label: 'Clientes',   href: '/crm'                  },
+      { label: 'Leads',      href: '/crm',    badge: 7 as number | undefined },
+      { label: 'Catálogo',   href: '/catalogs'             },
+      { label: 'Produtos',   href: '/products'             },
+      { label: 'Conteúdo',   href: '/content'              },
+      { label: 'Portfólios', href: '/portfolios'           },
     ],
   },
   {
@@ -236,6 +230,7 @@ const NAV_ITEMS = [
     items: [
       { label: 'Projetos',       href: '/projects' },
       { label: 'Métricas',       href: '/metrics'  },
+      { label: 'Decisões',       href: '/decisions'},
       { label: 'Configurações',  href: '/settings' },
     ],
   },
