@@ -46,23 +46,21 @@ Todo provider envia metadata com prefixo `bvaz_*`:
 4. Adicionar no CHECK constraint do DB (`payment_configs.provider`)
 5. Implementar `createPayment` + `parseWebhook`
 
-## Calc Pro Subscription (Paulo 2026-05-20, ADR-023)
+## Calc Pro Subscription (REVOGADA 2026-05-21)
 
-Funcoes exportadas em `stripe.ts` alem do factory:
+ADR-023 foi substituído por ADR-024. Calc Pro freemium não existe mais.
 
-- `getCheckoutUrlSubscription(input)` — cria Checkout Session mode='subscription' usando platform-account STRIPE_SECRET_KEY (nao um merchant). Pra fluxos custom; o Payment Link estatico do Dashboard nao precisa dela.
-- `cancelSubscription({ subscriptionId, when })` — `period_end` (default, recomendado LGPD) ou `immediately`.
-- `createPortalSession({ customerId, returnUrl })` — URL do Customer Portal pra cliente cancelar/atualizar cartao.
+Funções adicionadas em `stripe.ts` para subscription (`getCheckoutUrlSubscription`, `cancelSubscription`, `createPortalSession`) e service layer em `services/calcProSubscription.ts` foram removidos por Felipe e Bruna em 21/05/2026.
 
-Webhook handler dedicado em `app/api/webhooks/payment/route.ts` via `?merchant=calc-pro`. Eventos: `customer.subscription.{created,updated,deleted}` + `invoice.{paid,payment_failed}`.
+Migration `supabase/migrations/20260520_calc_pro_subscriptions.sql` nunca foi aplicada em prod — mantida no repo como referência histórica.
 
-Service layer em `services/calcProSubscription.ts`. Migration em `supabase/migrations/20260520_calc_pro_subscriptions.sql`.
+Ver `decisions/024-calc-gratis-magnet-eterno.md` para o modelo vigente.
 
 ## Related
 
 - `services/payments.ts` — abstração + factory
 - `services/paymentConfig.ts` — credenciais por usuário
-- `services/calcProSubscription.ts` — service da Calc Pro subscription
-- `app/api/webhooks/payment/route.ts` — handler genérico + handler calc-pro
+- `app/api/webhooks/payment/route.ts` — handler genérico
 - `decisions/001-mp-marketplace-vs-checkoutpro.md`
-- `decisions/023-calc-pro-freemium-subscription.md` — ADR Calc Pro Subscription
+- `decisions/023-calc-pro-freemium-subscription.md` — ADR revogado (histórico)
+- `decisions/024-calc-gratis-magnet-eterno.md` — ADR vigente
