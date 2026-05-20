@@ -49,10 +49,14 @@ export interface CoverHeroData {
 }
 
 /**
- * Estado do âncora dinâmico baseado em progressPercent.
+ * Estado do âncora dinâmico baseado em progressPercent + daysLeft + revenue.
  * HTML referência: linha 833-836 (cover-anchor states).
+ *
+ * 'inicio' adicionado em 2026-05-20 (bug fix CEO): maker novo com R$ 0
+ * + muitos dias restantes não deve ver "meta em risco precisa correr"
+ * (alarme falso amedronta antes do primeiro pedido).
  */
-export type CoverAnchorState = 'pico' | 'ok' | 'atencao' | 'alerta'
+export type CoverAnchorState = 'inicio' | 'pico' | 'ok' | 'atencao' | 'alerta'
 
 // ---------------------------------------------------------------------------
 // KPI Satélites

@@ -1,0 +1,72 @@
+{
+  "name": "Hayzer - A raiz do seu negócio",
+  "short_name": "Hayzer",
+  "description": "Sistema pra maker 3D BR organizar pedido do WhatsApp, custo de filamento e lucro real do mês. Tudo num lugar só.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a0d",
+  "theme_color": "#0a0a0d",
+  "lang": "pt-BR",
+  "scope": "/",
+  "categories": ["business", "productivity", "finance"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/logo-hayzer.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-hayzer.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-hayzer.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo-hayzer.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calculadora 3D",
+      "short_name": "Calc",
+      "description": "Calculadora gratuita de preco de impressao 3D",
+      "url": "/calculadora",
+      "icons": [{ "src": "/logo-hayzer.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pedidos",
+      "short_name": "Pedidos",
+      "description": "Lista de pedidos do mes",
+      "url": "/orders",
+      "icons": [{ "src": "/logo-hayzer.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Visao geral do negocio",
+      "url": "/dashboard",
+      "icons": [{ "src": "/logo-hayzer.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/landing/orders-preview.webp",
+      "sizes": "1440x900",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Tela de pedidos com filamento calculado, comissao Shopee descontada e margem real"
+    }
+  ]
+}

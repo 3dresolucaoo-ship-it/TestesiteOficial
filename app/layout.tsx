@@ -121,6 +121,12 @@ export const viewport: Viewport = {
   ],
 }
 
+// PWA: linka manifest.json no <head> (20/05/2026)
+// Next.js auto-injeta via manifest property na metadata
+export const manifestMetadata: Pick<Metadata, 'manifest'> = {
+  manifest: '/manifest.json',
+}
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Pre-fetch the full app state SSR for authenticated users so the client store
   // starts already populated. LayoutSwitch decides whether to wrap with AppShell

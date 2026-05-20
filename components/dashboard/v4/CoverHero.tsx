@@ -33,7 +33,23 @@ function formatBRL(value: number): string {
   })
 }
 
-function getAnchorState(progressPercent: number): CoverAnchorState {
+/**
+ * Calcula estado do âncora considerando progresso + tempo restante + receita absoluta.
+ *
+ * Regra 'inicio' (bug fix 20/05): maker novo (sem receita) com muitos dias restantes
+ * no mês NAO recebe alarme "meta em risco". Mostra mensagem positiva de comeco.
+ *
+ * Threshold: receita 0 + >= 18 dias restantes (mais de 60% do mes ainda).
+ * Apos os 18 dias, transita pra 'alerta' que ai sim faz sentido.
+ */
+function getAnchorState(
+  progressPercent: number,
+  revenue: number,
+  daysLeft: number,
+): CoverAnchorState {
+  // Comeco do mes sem receita: cumprimentar, nao amedrontar
+  if (revenue === 0 && daysLeft >= 18) return 'inicio'
+
   if (progressPercent >= 100) return 'pico'
   if (progressPercent >= 75)  return 'ok'
   if (progressPercent >= 25)  return 'atencao'
@@ -42,6 +58,7 @@ function getAnchorState(progressPercent: number): CoverAnchorState {
 
 /** Textos do âncora dinâmico por estado de meta. */
 const ANCHOR_COPY: Record<CoverAnchorState, React.ReactNode> = {
+  inicio:  <>mês começando, <em>primeira venda</em> destrava o ritmo</>,
   pico:    <>esse mês foi um <em>viraço</em>, meta batida, pode respirar.</>,
   ok:      <>esse mês <em>tá no ritmo</em>, recorde do trimestre, dá pra respirar.</>,
   atencao: <>dá pra recuperar, mas precisa <em>acelerar</em> essa semana.</>,
@@ -148,7 +165,7 @@ interface CoverHeroProps {
 // ---------------------------------------------------------------------------
 
 export function CoverHero({ data, satellites }: CoverHeroProps) {
-  const anchorState = getAnchorState(data.progressPercent)
+  const anchorState = getAnchorState(data.progressPercent, data.revenue, data.daysLeft)
   const anchorCopy  = ANCHOR_COPY[anchorState]
 
   return (

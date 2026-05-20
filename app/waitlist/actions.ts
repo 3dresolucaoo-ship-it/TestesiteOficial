@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies, headers } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import {
   waitlistStep1Schema,
   waitlistStep2Schema,
@@ -152,6 +153,10 @@ export async function submitWaitlistStep1(
   if (!emailResult.ok) {
     console.warn('[waitlist] welcome email não enviado:', emailResult.error)
   }
+
+  // Invalida cache da landing pra contador "X makers na fila" atualizar
+  // imediatamente apos novo lead. getWaitlistCount() em app/page.tsx vai re-rodar.
+  revalidatePath('/')
 
   return { status: 'success', leadId: result.leadId, email: result.email }
 }
