@@ -74,6 +74,8 @@ export interface Order {
   paymentStatus?: OrderPaymentStatus
   /** WhatsApp do comprador (capturado no checkout público) */
   customerWhatsapp?: string
+  /** ID do lead CRM que originou este pedido (golden path #1) */
+  sourceLeadId?: string
 }
 
 // ─── Production ───────────────────────────────────────────────────────────────

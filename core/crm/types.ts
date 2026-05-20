@@ -33,6 +33,8 @@ export interface Lead {
   lastContactAt?: string    // ISO date of last follow-up
   expectedValue?: number    // refined deal value
   assignedTo?:    string    // team member name/id
+  // Golden path #1: lead -> pedido (migration 20260520_leads_converted_order)
+  convertedOrderId?: string // ID do pedido criado via "Converter em pedido"
 }
 
 export interface Affiliate {
