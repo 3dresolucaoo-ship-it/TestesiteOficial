@@ -4,6 +4,7 @@ import { getUser } from '@/lib/auth'
 import { getWaitlistCount } from '@/services/waitlist'
 import { Header } from '@/components/landing/Header'
 import { Hero } from '@/components/landing/Hero'
+import { PrinterShowcase } from '@/components/landing/PrinterShowcase'
 import { ProductPreview } from '@/components/landing/ProductPreview'
 import { Features } from '@/components/landing/Features'
 import { WhatsAppFlow } from '@/components/landing/WhatsAppFlow'
@@ -37,6 +38,9 @@ export default async function HomePage() {
         {/* #4 e #5 injetados via prop (count lido server-side, sem fetch client) */}
         <Hero waitlistCount={waitlistCount} />
       </Suspense>
+
+      {/* Prova de autenticidade · foto real Bambu A1 do CEO (anti-IA) */}
+      <PrinterShowcase />
 
       {/* #1 — Prova visual do produto (Server Component, sem JS cliente) */}
       <ProductPreview />
