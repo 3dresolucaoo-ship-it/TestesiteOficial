@@ -217,9 +217,10 @@ interface DesktopTableProps {
   onMenuToggle:(id: string) => void
   onEdit:      (o: Order) => void
   onDelete:    (id: string) => void
+  today:       Date
 }
 
-function DesktopTable({ orders, projectName, menuOpen, onMenuToggle, onEdit, onDelete }: DesktopTableProps) {
+function DesktopTable({ orders, projectName, menuOpen, onMenuToggle, onEdit, onDelete, today }: DesktopTableProps) {
   if (orders.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto px-6">
@@ -272,8 +273,8 @@ function DesktopTable({ orders, projectName, menuOpen, onMenuToggle, onEdit, onD
             <th scope="col" className="text-left px-4 py-3 text-[#555555] text-xs font-medium uppercase tracking-wide">
               Status
             </th>
-            <th scope="col" className="w-10 px-4 py-3">
-              <span className="sr-only">Acoes</span>
+            <th scope="col" className="text-right px-4 py-3 text-[#555555] text-xs font-medium uppercase tracking-wide">
+              Acao
             </th>
           </tr>
         </thead>
@@ -348,16 +349,46 @@ function DesktopTable({ orders, projectName, menuOpen, onMenuToggle, onEdit, onD
                   <OrderStatusBadge status={o.status} />
                 </td>
                 <td className="px-2 py-3 relative">
-                  <button
-                    type="button"
-                    onClick={() => onMenuToggle(o.id)}
-                    className="p-1.5 text-[#555555] hover:text-[#ebebeb] transition-colors rounded-lg hover:bg-[#2a2a2a]"
-                    aria-label={`Abrir acoes do pedido de ${o.clientName}`}
-                    aria-expanded={menuOpen === o.id}
-                    aria-haspopup="menu"
-                  >
-                    <MoreHorizontal size={15} aria-hidden="true" />
-                  </button>
+                  {/* B.6 — Badge ATRASADO + botao Abrir + menu ... */}
+                  <div className="flex items-center justify-end gap-1.5">
+                    {(() => {
+                      const atraso = diasAtraso(o, today)
+                      if (atraso <= 0) return null
+                      return (
+                        <span
+                          className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide"
+                          style={{
+                            background:    'rgba(208,138,74,0.18)',
+                            color:         'hsl(28 67% 70%)',
+                            border:        '1px solid rgba(208,138,74,0.36)',
+                            fontFamily:    'var(--font-geist-mono, "Geist Mono", monospace)',
+                            letterSpacing: '0.12em',
+                          }}
+                          aria-label={`Pedido atrasado ${atraso} dia${atraso === 1 ? '' : 's'}`}
+                        >
+                          ATRASADO {atraso}D
+                        </span>
+                      )
+                    })()}
+                    <button
+                      type="button"
+                      onClick={() => onEdit(o)}
+                      className="px-2.5 py-1.5 rounded-lg bg-[#1c1c1c] border border-[#2a2a2a] text-[#888888] hover:text-[#ebebeb] hover:border-[#3a3a3a] text-xs transition-colors"
+                      aria-label={`Abrir pedido de ${o.clientName}`}
+                    >
+                      Abrir
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onMenuToggle(o.id)}
+                      className="p-1.5 text-[#555555] hover:text-[#ebebeb] transition-colors rounded-lg hover:bg-[#2a2a2a]"
+                      aria-label={`Mais acoes do pedido de ${o.clientName}`}
+                      aria-expanded={menuOpen === o.id}
+                      aria-haspopup="menu"
+                    >
+                      <MoreHorizontal size={15} aria-hidden="true" />
+                    </button>
+                  </div>
                   {menuOpen === o.id && (
                     <div
                       role="menu"
@@ -524,8 +555,6 @@ export default function OrdersPage() {
   const totalAbertos = byProject.filter(
     (o) => o.status === 'lead' || o.status === 'quote_sent',
   ).length
-
-  const totalEntregues = byProject.filter((o) => o.status === 'delivered').length
 
   // ---------------------------------------------------------------------------
   // Metricas derivadas (Onda B) — calculadas com helpers de services/ordersMetrics
@@ -893,12 +922,26 @@ export default function OrdersPage() {
         searchPlaceholder="Buscar pedido, cliente..."
         onSearch={handleSearch}
       >
-        {/* Filtro de projeto — nao tem slot no FilterBar, vai antes das listas */}
-        <ProjectFilter
-          projects={state.projects}
-          value={filterProject}
-          onChange={(v) => { setFilterProject(v) }}
-        />
+        {/* B.5 — Barra superior: filtro de projeto + botao Filtros */}
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
+          <ProjectFilter
+            projects={state.projects}
+            value={filterProject}
+            onChange={(v) => { setFilterProject(v) }}
+          />
+          <button
+            type="button"
+            onClick={() => setFiltrosOpen(true)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#141414] border border-[#2a2a2a] text-[#888888] hover:text-[#ebebeb] hover:border-[#3a3a3a] text-sm transition-colors"
+            aria-label="Abrir filtros avancados"
+          >
+            <Filter size={14} aria-hidden="true" />
+            Filtros
+            {(filtroProjetoAdv !== 'all' || filtroPeriodo !== 'todos' || filtroValorMin !== '') && (
+              <span className="ml-1 w-2 h-2 rounded-full bg-[hsl(28_67%_65%)]" aria-label="Filtros ativos" />
+            )}
+          </button>
+        </div>
 
         {/* Cards mobile */}
         <div className="sm:hidden">
@@ -922,6 +965,7 @@ export default function OrdersPage() {
             onMenuToggle={handleMenuToggle}
             onEdit={(o) => { setEditing(o); setMenuOpen(null) }}
             onDelete={handleDelete}
+            today={today}
           />
         </div>
       </ModuleShell>
@@ -973,6 +1017,99 @@ export default function OrdersPage() {
             onSave={handleEdit}
             onClose={() => setEditing(null)}
           />
+        </Modal>
+      )}
+
+      {/* B.5 — Modal de filtros avancados */}
+      {filtrosOpen && (
+        <Modal title="Filtros avancados" onClose={() => setFiltrosOpen(false)}>
+          <div className="flex flex-col gap-5 min-w-[300px]">
+
+            {/* Filtro: projeto */}
+            {state.projects.length > 1 && (
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="filtro-adv-projeto" className="text-xs font-medium text-[#888888] uppercase tracking-wide">
+                  Projeto
+                </label>
+                <select
+                  id="filtro-adv-projeto"
+                  value={filtroProjetoAdv}
+                  onChange={(e) => setFiltroProjetoAdv(e.target.value)}
+                  className="bg-[#1c1c1c] border border-[#2a2a2a] text-[#ebebeb] text-sm rounded-lg px-3 py-2 outline-none focus:border-[hsl(173_58%_35%)] transition-colors"
+                  aria-label="Filtrar por projeto"
+                >
+                  <option value="all">Todos os projetos</option>
+                  {state.projects.map((p) => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Filtro: periodo */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs font-medium text-[#888888] uppercase tracking-wide">Periodo</span>
+              <div className="flex gap-2 flex-wrap">
+                {([
+                  { value: 'todos',       label: 'Todos' },
+                  { value: 'mes-atual',   label: 'Este mes' },
+                  { value: 'mes-passado', label: 'Mes passado' },
+                ] as const).map(({ value, label }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setFiltroPeriodo(value)}
+                    className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
+                      filtroPeriodo === value
+                        ? 'bg-[hsl(173_58%_28%)] border-[hsl(173_58%_35%)] text-[#ebebeb]'
+                        : 'bg-[#1c1c1c] border-[#2a2a2a] text-[#888888] hover:text-[#ebebeb] hover:border-[#3a3a3a]'
+                    }`}
+                    aria-pressed={filtroPeriodo === value}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Filtro: valor minimo */}
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="filtro-adv-valor" className="text-xs font-medium text-[#888888] uppercase tracking-wide">
+                Valor minimo (R$)
+              </label>
+              <input
+                id="filtro-adv-valor"
+                type="number"
+                min={0}
+                step={10}
+                value={filtroValorMin}
+                onChange={(e) => setFiltroValorMin(e.target.value)}
+                placeholder="Ex: 100"
+                className="bg-[#1c1c1c] border border-[#2a2a2a] text-[#ebebeb] text-sm rounded-lg px-3 py-2 outline-none focus:border-[hsl(173_58%_35%)] transition-colors placeholder:text-[#555555]"
+                aria-label="Valor minimo do pedido"
+              />
+            </div>
+
+            {/* Acoes */}
+            <div className="flex justify-between items-center pt-1 border-t border-[#2a2a2a]">
+              <button
+                type="button"
+                onClick={handleLimparFiltros}
+                className="text-sm text-[#888888] hover:text-[#ef4444] transition-colors"
+                aria-label="Limpar todos os filtros"
+              >
+                Limpar filtros
+              </button>
+              <button
+                type="button"
+                onClick={() => setFiltrosOpen(false)}
+                className="px-4 py-2 rounded-lg bg-[hsl(173_58%_28%)] border border-[hsl(173_58%_35%)] text-[#ebebeb] text-sm hover:bg-[hsl(173_58%_32%)] transition-colors"
+                aria-label="Aplicar filtros e fechar"
+              >
+                Aplicar
+              </button>
+            </div>
+          </div>
         </Modal>
       )}
     </>
