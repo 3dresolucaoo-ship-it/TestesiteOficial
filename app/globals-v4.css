@@ -457,6 +457,17 @@
   color: var(--v4-fog-50);
   border-left-color: hsl(var(--petrol-500));
 }
+/* Ícones Lucide na sidebar — A.1 (Onda A Diego) */
+.nav-item .nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: color 160ms ease, filter 160ms ease;
+}
+.nav-item.active .nav-icon {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
 .nav-item .badge {
   margin-left: auto;
   background: hsl(var(--ember-500));
