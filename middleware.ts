@@ -83,6 +83,11 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|html)$).*)',
+    // Exclude:
+    //  - _next/static, _next/image (Next.js internals)
+    //  - favicon.ico
+    //  - robots.txt, sitemap.xml (SEO files, Lighthouse audit 2026-05-20)
+    //  - arquivos estaticos por extensao (.svg, .png, .jpg, etc + .txt, .xml, .ico)
+    '/((?!_next/static|_next/image|favicon\\.ico|robots\\.txt|sitemap\\.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|html|txt|xml|ico)$).*)',
   ],
 }
