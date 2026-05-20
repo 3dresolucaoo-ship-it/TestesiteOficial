@@ -73,38 +73,70 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 ## 🎯 STATUS RÁPIDO
 
-- **Versão**: v0.5 · Fase 1 em curso · launch público **27/06/2026** (acelerado de 04/07)
-- **Último audit**: `audits/2026-05-04.md` (próximo: ~04/06/2026, automático via Routine)
-- **Última sessão**: `sessions/2026-05-20-sessao-ybera-beauty-academy-completo.md`
-- **PRÓXIMA SESSÃO COMEÇA POR**: `memory/feedback_proximas_acoes_sessao_21-05.md`
+- **Versão**: v0.6 · Fase 1 em curso · soft launch **11/06** · launch público **27/06/2026**
+- **Último audit**: `audits/2026-05-04.md` (próximo: ~04/06/2026)
+- **Última sessão maratona**: 20/05 noite (~10h, 33 commits push)
+- **Pillars score**: **7.7** (era 7.4, meta 30d: 8.0) · ver `pillars/SCORES.md`
+
+### ⚠️ Status REAL do produto (modo crítico CEO 20/05 23h)
+
+**Landing + setup técnico**: ~85% pronto
+**Produto interno (módulos)**: ~50% pronto
+**Integração entre módulos** (golden path real do maker): ~30% pronto
+
+**Average ponderado real**: ~**60-65% pra ter usuário real usando o sistema sem bug grave**.
+
+#### O que TÁ pronto pra mostrar (landing/marketing)
+- Landing maker 8 sections (Hero, PrinterShowcase com foto real CEO, ProductPreview com mockup orders V4, Features SVGs, WhatsAppFlow, WhyDifferent, FinalCTA, Footer)
+- 4 SVGs maker + foto real Bambu A1 do CEO + screenshot mockup
+- PostHog ativo (7 eventos waitlist + calc), env vars Vercel, redeploy READY
+- SEO 100/100 + robots.txt + sitemap (texto + imagens) + OG metadata
+- WebP -91% otimização imagens
+- 404 page paleta Hayzer + manifest.json PWA + /api/health
+- Calc grátis + Calc Pro freemium (UI Felipe pronto, aguarda Stripe CEO)
+
+#### O que precisa REFACTOR pra ficar usável (módulos internos)
+- Dashboard V4 só 1 módulo migrado (orders). Faltam 11 módulos pro shell V4: customers, leads, inventory, products, production, finance, content, decisions, catalogs, portfolios, settings
+- Inventory.tsx + Products.tsx refatorados em sub-componentes hoje, MAS não testados visualmente em prod com user real
+- Sidebar + FinanceView idem (refatorados, não testados em prod)
+- Mobile dos módulos internos: caos. Só landing foi auditada
+- Empty states quase inexistentes (Sofia mapeou FP-01/02/03 mas não implementou)
+- Onboarding zero (first-time experience inexistente)
+
+#### O que NÃO EXISTE ainda (Wave 1+)
+- Tela /customers completa (lista + perfil + LTV + "sumiu há X dias")
+- Tela /admin protegida (audit log + email massa)
+- Integração WhatsApp → pedido → produção → estoque → financeiro end-to-end
+- Catálogo público polido (bugs reais reportados)
+- Sequência email D+1/D+3/D+7
+
+#### Bugs/débitos críticos pra launch 27/06
+- **TBT 3.6s** em prod (perfomance) — Hero motion + WaitlistForm Zod no first paint
+- **MP OAuth bloqueado** desde 07/05 (painel MP bugado, Stripe Connect cobre)
+- **Lighthouse só rodou em /** — rotas internas não medidas
+- **Júlia QA agent não existe** (substituí por general-purpose) — sem QA dedicado
+- **Sentry não aplicado** (programado 17/06)
+- **Cap quota Anthropic** rodando 4-5 agents/noite pode bater limite Max 5x
 
 ### Foco atual: MAKER hardwork (19/05 → 27/06)
 
-- Soft launch: 11-13/06 · Launch público: 27/06 · Beauty pausado (volta 05/07)
-- Ownership Matrix em `.claude/ownership-matrix.md`
-- 13 agents G7 em 3 fases/dia (manhã/tarde/noite)
+- Soft launch: 11-13/06 (GO Otávio + GO QA fixed) · Launch público: 27/06 · Beauty pausado (volta 05/07)
+- Operação noturna oficial: sexta 22/05 22h com Bruna + Lia (ADR-020)
 
-### Decisões CEO pendentes (8 abertas)
+### Decisões CEO pendentes (5 abertas)
 
-1. Hooks `settings.json` (aguarda Lia+Ricardo Fase 1)
-2. INPI: pagar PIX GRU 1 R$ 440 classe 42 ANTES de 13/06 (ver `decisions/parecer-inpi-pagamento-2026-05-18.md`)
-3. CNPJ: desenquadrar MEI→ME antes Semana 3 venda Calc Pro (ver `memory/project_empresa_cnpj.md`)
-4. Calc Pro: modelo freemium confirmado (5 cálculos/dia grátis → upsell SaaS)
-5. Arquitetura multi-vertical: schema `vertical_type` + CSS multi-tema (Bruna+Felipe, ~3h)
-6. Routines: 3 specs novas pendentes de aprovação CEO (`automation/routines-specs-pending-2026-05-19.md`)
-7. Hayzer Beauty: 3 decisões de posicionamento antes de 05/07 (ver `strategy/briefing-hayzer-beauty-05-07-executivo.md`)
-8. Migration `20260518_notifications_and_search.sql` aguarda apply do CEO via Supabase MCP
+1. **Setup Stripe Calc Pro freemium** (10min): criar Product + Price R$ 19/mês + Payment Link subscription + atualizar Vercel env vars. Guide: `payments/setup-stripe-calc-pro.md`
+2. **INPI**: pagar PIX GRU 1 R$ 440 classe 42 antes 13/06 (ver `decisions/parecer-inpi-pagamento-2026-05-18.md`)
+3. **CNPJ MEI→ME**: desenquadrar antes 1ª venda paga (Stripe Calc Pro ativa)
+4. **Decisão 7 doc P3**: cobrança Hayzer Beauty (R$ 197 único vs 3 tiers vs combo gestora-mãe)
+5. **Aplicar migration** `20260520_calc_pro_subscriptions.sql` via Supabase MCP
 
-### Estado técnico atual
+### Tarefas operacionais TU faz (não eu)
+- Postar Post #1 no grupo WhatsApp Hayzer Beta (texto pronto Marcos)
+- Conversar Heshiley (3 perguntas: beta tester, co-host, listar 5 gestoras) — sem deadline
+- Limpar 7 branches GitHub `claude/*` not-merged via UI
 
-- Dashboard V4.8 MVP aprovado (ADR-014) · Felipe converte React semana 20-24/05
-- Routines: 13 ativas em prod (ver `automation/CLAUDE.md`)
-- Visual Library: 9 componentes em prod (ver `components/visual-library/CLAUDE.md`)
-- Bugs críticos abertos: ver `ROADMAP.md` § "Críticos"
-- Pillars score: média **7.4** (meta 30d: 8.0) · ver `pillars/SCORES.md`
-- 36+ memórias persistentes ativas em `memory/`
-
-> Historico de mudancas pre-20/05 em `audits/_rolling.md`.
+> Historico de mudancas pre-20/05 em `audits/_rolling.md`. Sessão maratona 20/05 detalhe em `sessions/`.
 
 ---
 
