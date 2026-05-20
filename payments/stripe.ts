@@ -138,7 +138,7 @@ export function stripeProvider(creds: ProviderCredentials): PaymentProviderClien
 
 // ─── Hayzer Calc Pro — subscription (platform account) ────────────────────────
 
-const STRIPE_API_VERSION: Stripe.StripeConfig['apiVersion'] = '2026-03-25.dahlia'
+const STRIPE_API_VERSION = Stripe.API_VERSION
 
 /**
  * Cliente Stripe da platform account.
