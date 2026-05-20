@@ -8,23 +8,38 @@
 
 ---
 
-## 📊 Status atual — 2026-05-17
+## 📊 Status atual — 2026-05-20
 
 | # | Pilar | Hoje | Meta 30d | Meta 90d | Owner G7 | Próx. revisão |
 |---|---|---|---|---|---|---|
-| 1 | **Design (UI/UX)** | 9.0 ⬆️ | 9.5 | 9.7 | Diego | 24/05 |
-| 2 | **Anti-IA (autenticidade)** | 8.5 ⬆️ | 9.0 | 9.5 | Carla + Diego | 24/05 |
-| 3 | **Segurança (OWASP 2025)** | 9.0 ⬆️ | 9.5 | 9.7 | Otávio | 18/05 (Routine) |
-| 4 | **Performance (Web Vitals)** | 6.5 | 7.5 | 8.5 | Felipe + Ricardo | 31/05 |
-| 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Júlia + Felipe | 24/05 |
-| 6 | **Mobile (320-768px)** | 7.0 | 8.5 | 9.0 | Diego + Júlia | 31/05 |
-| 7 | **Conversão (funil)** | 5.0 | 6.5 | 8.0 | Marcos + Sofia | 07/06 |
+| 1 | **Design (UI/UX)** | 9.0 | 9.5 | 9.7 | Diego | 27/05 |
+| 2 | **Anti-IA (autenticidade)** | 9.0 ⬆️ | 9.5 | 9.5 | Carla + Diego | 27/05 |
+| 3 | **Segurança (OWASP 2025)** | 9.2 ⬆️ | 9.5 | 9.7 | Otávio | 24/06 |
+| 4 | **Performance (Web Vitals)** | 7.0 ⬆️ | 8.0 | 8.5 | Felipe + Ricardo | 27/05 |
+| 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Felipe (Júlia ⌀) | 24/05 |
+| 6 | **Mobile (320-768px)** | 7.5 ⬆️ | 8.5 | 9.0 | Diego + Felipe | 27/05 |
+| 7 | **Conversão (funil)** | 6.5 ⬆️ | 7.5 | 8.5 | Marcos + Sofia + Ana | 07/06 |
 | 8 | **Retenção (habit-forming)** | 5.0 | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
-| 9 | **Pagamento (robustez)** | 8.5 ⬆️ | 9.0 | 9.5 | Paulo + Bruna | 24/05 |
-| 10 | **Documentação (Diátaxis)** | 8.0 | 8.5 | 9.0 | Lia | 31/05 |
-| 11 | **Backend (DB + APIs)** | 7.5 | 8.5 | 9.0 | Bruna | 24/05 |
-| 12 | **Estratégia (posicionamento)** | 7.5 | 8.5 | 9.0 | Helena | 31/05 |
-| | **MÉDIA GERAL** | **7.4 ⬆️** | **8.0** | **8.8** | Helena | semanal |
+| 9 | **Pagamento (robustez)** | 8.5 | 9.0 | 9.5 | Paulo + Bruna | 24/05 |
+| 10 | **Documentação (Diátaxis)** | 8.5 ⬆️ | 9.0 | 9.5 | Lia | 27/05 |
+| 11 | **Backend (DB + APIs)** | 8.0 ⬆️ | 8.5 | 9.0 | Bruna | 27/05 |
+| 12 | **Estratégia (posicionamento)** | 8.0 ⬆️ | 8.5 | 9.0 | Helena | 27/05 |
+| | **MÉDIA GERAL** | **7.7 ⬆️** | **8.0** | **8.8** | Helena | semanal |
+
+### Mudanças desde 17/05 (sessao maratona 20/05)
+
+- **+0.5 Anti-IA**: foto real Bambu A1 do CEO substituiu render IA, 4 SVGs maker autenticos (line-art HSL), 3 headlines sem ponto final, ZERO em-dash em toda copy.
+- **+0.2 Segurança**: Otávio audit GO pra soft launch 11/06 (OWASP 8 verdes / 2 amarelos / 0 vermelho). Dependabot + Zod + CSP confirmados desde 17-18/05.
+- **+0.5 Performance**: WebP -91% (1.05MB→93KB), fonts swap+preload, lazy framer-motion below-the-fold, robots.txt fix middleware. SEO 92→100 ✅. LCP/TBT ainda alto (Hero motion + WaitlistForm Zod no first paint, refactor profundo necessário).
+- **+0.5 Mobile**: 5 bugs dashboard V4 + 3 bugs landing (PrinterShowcase aspect 9/16→4/3, Hero sticker overflow, WhyDifferent gap-12→6).
+- **+1.5 Conversão**: PostHog ATIVO em prod com 7 eventos (calculadora_cta_click, _view, _calculated, _result_copied, waitlist_submit_attempt/success/error). Keys Vercel setadas + redeploy concluído 20/05 23h. revalidatePath('/') no waitlist actions. Social proof "X makers na fila" dinamico.
+- **+0.5 Documentação**: 3 ADRs novos (020 Discord webhooks, 021 Sub-marca Beauty, 022 Launch acelerado 04/07→27/06), sitemap-images, manifest.json doc, database.types.ts gerado, Doc P3 (8 decisões CEO), Op noturna config, setup-stripe-calc-pro pendente.
+- **+0.5 Backend**: migration `vertical_type` aplicada em prod via Supabase MCP, types TS regenerados, /api/health endpoint, posthog service, sanitizer PII helper.
+- **+0.5 Estratégia**: 3 ADRs estratégicos cravados, Doc P3 com 7 de 8 decisões CEO consolidadas, Otávio GO pra 11/06.
+
+### Bug crítico resolvido (era 0.5 risco)
+
+- **`_sentry-prepared` quebrava ALL deploys desde 18/05** (8 deploys ERROR). Site servia versão antiga de cache. Bug encontrado via Vercel MCP get_deployment_build_logs + Chrome MCP. Fix em 1 linha tsconfig exclude. Custo de NÃO ter pego: zero novas features chegavam em prod até soft launch.
 
 ---
 

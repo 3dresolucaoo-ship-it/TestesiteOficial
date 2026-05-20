@@ -6,6 +6,8 @@ import Link from 'next/link'
 import { Calculator, ArrowRight, Copy, Check, FileText } from 'lucide-react'
 import { PaywallModal } from '@/components/calculadora/PaywallModal'
 import { track } from '@/lib/posthog'
+import { useCalcRateLimitContext } from '@/components/calculadora/CalcRateLimitContext'
+import { useCalcRateLimit } from '@/lib/hooks/useCalcRateLimit'
 import {
   Disc,           // rolo de filamento (3D look)
   Cube,           // peça 3D
@@ -75,6 +77,10 @@ export function CalculadoraForm() {
   const [paywallOpen, setPaywallOpen] = useState(false)
   const precoEnergia = 0.85
 
+  // Rate limit: lê do context (wrapper gerencia pill + modal)
+  const { onCalcSuccess } = useCalcRateLimitContext()
+  const { limitReached } = useCalcRateLimit()
+
   // ─── Analytics: calculadora_view (uma vez no mount) ─────────────────────
   const viewTracked = useRef(false)
   useEffect(() => {
@@ -128,9 +134,11 @@ export function CalculadoraForm() {
         preco_sugerido:  Math.round(precoSugerido * 100) / 100,
         semaforo:        semaforo.label,
       })
+      // Incrementa contador diário de cálculos bem-sucedidos
+      onCalcSuccess()
     }, 1500)
     return () => { if (calcDebounce.current) clearTimeout(calcDebounce.current) }
-  }, [precoFilamento, peso, horas, consumoW, margem, precoSugerido, alerta, semaforo.label])
+  }, [precoFilamento, peso, horas, consumoW, margem, precoSugerido, alerta, semaforo.label, onCalcSuccess])
 
   function handleCopy() {
     // Só o valor formatado. Cliente não precisa ver o cálculo.
@@ -398,7 +406,28 @@ export function CalculadoraForm() {
                   </div>
                 )}
 
-                {/* Botão "Copiar pro cliente" (Sofia + Marcos) — geração de viralização */}
+                {/* Banner de limite atingido — não bloqueia tela, só contextualiza */}
+                {limitReached && (
+                  <div
+                    className="mt-4 rounded-lg px-3 py-2.5 text-[12.5px] leading-[1.5]"
+                    style={{
+                      background: 'hsl(var(--ember-500) / 0.10)',
+                      border: '1px solid hsl(var(--ember-400) / 0.3)',
+                      color: 'hsl(var(--ember-300))',
+                    }}
+                  >
+                    Voce usou os 5 calculos de hoje.{' '}
+                    <Link
+                      href="/calculadora/pro"
+                      className="font-semibold underline underline-offset-2 hover:text-[hsl(var(--ember-200))] transition-colors"
+                    >
+                      Pro libera sem limite
+                    </Link>
+                    {' '}por R${process.env.NEXT_PUBLIC_CALC_PRO_PRICE_MONTHLY ?? '19'}/mes.
+                  </div>
+                )}
+
+              {/* Botão "Copiar pro cliente" (Sofia + Marcos) — geração de viralização */}
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     type="button"
