@@ -71,21 +71,62 @@ Só posta em `#critico` se:
 
 ---
 
-## Primeira noite (22/05 sexta 22h)
+## Primeira noite (22/05 sexta 22h) — TASKS DEFINIDAS
 
-**Agents piloto**: Bruna + Lia (Otávio cortado — Tier 1 fechou)
+**Agents piloto**: Bruna + Lia (Otávio cortado — Tier 1 + Tier 2 fechados)
 
-**Tarefa Bruna**:
-- Auditar e refatorar `services/dashboard.ts` (543 linhas) — extrair tipos pro `database.types.ts` recém-gerado
-- Reportar oportunidades de simplificar query
+### Tarefa Bruna (4-5h)
 
-**Tarefa Lia**:
-- Sweep CLAUDE.md por pasta — atualizar status nas pastas afetadas pelas mudanças de hoje (20/05)
-- Listar 3 ADRs faltantes pra criar próxima noite
+1. **Auditar `services/dashboard.ts`** (543 linhas)
+   - Mapear todas as queries Supabase
+   - Identificar N+1 queries (uma query que dispara N outras)
+   - Identificar queries que não usam index (verificar via EXPLAIN)
+2. **Extrair tipos pro `lib/supabase/database.types.ts`** (criado 20/05)
+   - Substituir `any` por tipos gerados
+   - Tipos de retorno de getDashboardData, getKpis, getProductsTop5
+3. **Refactor cirúrgico** (apenas o que detectou no passo 1):
+   - Combinar queries quando faz sentido
+   - Adicionar projection (`.select('col1, col2')` em vez de `.select('*')`)
+4. **NÃO**: aplicar migration, mudar schema, mexer em RLS
+5. **Reportar**: arquivo com diff, N queries antes/depois, ms estimado salvo
 
-**Duração estimada**: 3-4h cada. Termino ~2h madrugada.
+### Tarefa Lia (3-4h)
 
-**Digest matinal**: 7h sábado 23/05 com resumo.
+1. **Sweep `CLAUDE.md` por pasta** — atualizar status do que mudou 20/05:
+   - `app/CLAUDE.md`: rota `/dashboard/v4` sandbox criada
+   - `components/landing/CLAUDE.md`: ProductPreview + WhatsAppFlow novos (já atualizou Felipe, validar)
+   - `automation/CLAUDE.md`: Discord webhooks + operação noturna ativa
+   - `decisions/CLAUDE.md` ou `decisions/_index.md`: índice dos 19 ADRs
+2. **Criar 3 ADRs faltantes** identificados no audit:
+   - ADR-020 Discord webhooks operação noturna (decisão dia 20/05)
+   - ADR-021 sub-marca Hayzer Beauty mesmo domínio (decisão 6 CEO 20/05)
+   - ADR-022 launch acelerado 04/07 → 27/06 (decisão hardwork 19/05)
+3. **NÃO**: criar docs por criar, mexer em código
+4. **Reportar**: arquivos criados/editados, links cruzados nos ADRs
+
+### Limites técnicos primeira noite
+
+- Cada agent 1 prompt de ~600 palavras pré-pronto
+- Timeout 5h por agent
+- Se algum bater bloqueio (precisa decisão CEO), pausa + #digest aviso
+- Eu (Claude) monitoro a cada 30min, NÃO interfere a não ser que travou
+- Custo estimado: ~8-12h Opus (cabe folga em 75h/sem)
+
+### Digest matinal sábado 23/05 7h BRT
+
+Deve conter:
+1. ✅/❌ pra cada tarefa
+2. Diff resumido por agent
+3. Bloqueios (se houve)
+4. Próximos passos sugeridos
+5. Consumo Opus da noite (% janela semanal)
+
+### Plano de escape primeira noite
+
+Se algo crítico acontecer:
+- Bruna mexer em código que afete prod = stop imediato + `#critico`
+- Lia criar conflito com docs Felipe/Diego = stop + reverter
+- Custo Opus > 20h consumidas = pausar (manter folga semanal)
 
 ---
 
