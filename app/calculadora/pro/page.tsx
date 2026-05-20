@@ -23,21 +23,23 @@ export default function CalculadoraProPage() {
       <main>
         {/* ── HERO ──────────────────────────────────────────────────────── */}
         <section className="vignette grain relative overflow-hidden">
-          {/* Glows ambientes: petrol esquerda, ember direita */}
+          {/* Glows ambientes: petrol esquerda, ember direita.
+              position: 'absolute' inline porque .grain > * (globals.css:641)
+              sobrescreve a utility .absolute do Tailwind pra position:relative. */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -top-32 -left-32 h-[520px] w-[520px] rounded-full blur-[110px]"
-            style={{ background: 'hsl(var(--petrol-500) / 0.22)', zIndex: 0 }}
+            className="pointer-events-none -top-32 -left-32 h-[520px] w-[520px] rounded-full blur-[110px]"
+            style={{ position: 'absolute', background: 'hsl(var(--petrol-500) / 0.22)', zIndex: 0 }}
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute top-40 -right-40 h-[460px] w-[460px] rounded-full blur-[120px]"
-            style={{ background: 'hsl(var(--ember-500) / 0.16)', zIndex: 0 }}
+            className="pointer-events-none top-40 -right-40 h-[460px] w-[460px] rounded-full blur-[120px]"
+            style={{ position: 'absolute', background: 'hsl(var(--ember-500) / 0.16)', zIndex: 0 }}
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute bottom-[-160px] left-1/3 h-[380px] w-[380px] rounded-full blur-[110px]"
-            style={{ background: 'hsl(var(--petrol-400) / 0.12)', zIndex: 0 }}
+            className="pointer-events-none bottom-[-160px] left-1/3 h-[380px] w-[380px] rounded-full blur-[110px]"
+            style={{ position: 'absolute', background: 'hsl(var(--petrol-400) / 0.12)', zIndex: 0 }}
           />
 
           <div className="container-warm relative mx-auto max-w-[1000px] px-6 pt-20 pb-24 text-center md:px-10 md:pt-28 md:pb-32">
