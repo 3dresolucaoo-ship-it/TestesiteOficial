@@ -21,8 +21,9 @@
 
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { useRouter, useSearchParams }     from 'next/navigation'
-import { useStore, uid }                  from '@/lib/store'
+import { useStore, useStoreModule, uid }  from '@/lib/store'
 import { isSupabaseConfigured }           from '@/lib/supabaseClient'
+import OrdersLoading                      from './loading'
 import type { Order, OrderStatus }        from '@/lib/types'
 import { Plus, Pencil, Trash2, MoreHorizontal, Cpu, ShoppingCart, Download, Filter } from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
@@ -500,7 +501,9 @@ function DesktopTable({ orders, allOrdersCount, projectName, menuOpen, onMenuTog
 // ---------------------------------------------------------------------------
 
 export default function OrdersPage() {
-  const { state, dispatch, loading } = useStore()
+  const { state, dispatch } = useStore()
+  // P2.2 — lazy load do modulo orders. Exibe skeleton enquanto carrega.
+  const { isLoading: ordersLoading } = useStoreModule('orders')
   const router       = useRouter()
   const searchParams = useSearchParams()
 
@@ -930,10 +933,12 @@ export default function OrdersPage() {
   }, [subtitleData, byProject.length])
 
   // ---------------------------------------------------------------------------
-  // Guard de loading
+  // Guard de loading (P2.2)
+  // Exibe skeleton V4 enquanto o modulo orders carrega lazy.
+  // Nunca mais retorna null — usuario ve estrutura imediatamente.
   // ---------------------------------------------------------------------------
 
-  if (loading) return null
+  if (ordersLoading) return <OrdersLoading />
 
   // ---------------------------------------------------------------------------
   // Render

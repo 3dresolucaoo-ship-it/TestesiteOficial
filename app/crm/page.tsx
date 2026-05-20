@@ -21,8 +21,9 @@
  */
 
 import { useState, useMemo, useCallback } from 'react'
-import { useStore, uid }                  from '@/lib/store'
+import { useStore, useStoreModule, uid }  from '@/lib/store'
 import type { Lead, LeadStatus, Order }   from '@/lib/types'
+import CrmLoading                         from './loading'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
 import { Plus, Pencil, Trash2 }           from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
@@ -194,7 +195,12 @@ function LeadListView({ leads, projectName, onEdit, onDelete, onAdvance }: LeadL
 // ---------------------------------------------------------------------------
 
 export default function GlobalCrmPage() {
-  const { state, dispatch, loading } = useStore()
+  const { state, dispatch } = useStore()
+  // P2.2 — lazy load dos modulos leads + orders (CRM usa ambos).
+  // isLoading true enquanto qualquer um dos dois ainda nao carregou.
+  const { isLoading: leadsLoading }  = useStoreModule('leads')
+  const { isLoading: ordersLoading } = useStoreModule('orders')
+  const crmLoading = leadsLoading || ordersLoading
 
   // Estado de UI
   const [activeTab,     setActiveTab]     = useState<CrmTab>('pipeline')
@@ -358,10 +364,11 @@ export default function GlobalCrmPage() {
   )
 
   // ---------------------------------------------------------------------------
-  // Guard de loading
+  // Guard de loading (P2.2)
+  // Exibe skeleton V4 enquanto leads + orders carregam lazy.
   // ---------------------------------------------------------------------------
 
-  if (loading) return null
+  if (crmLoading) return <CrmLoading />
 
   // ---------------------------------------------------------------------------
   // Render
