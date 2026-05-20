@@ -1,10 +1,26 @@
 # ADR 023 — Calculadora Pro: troca de Lifetime R$ 37 por Freemium SaaS Subscription
 
+> ⚠️ **STATUS: REVOGADA EM 2026-05-21**
+> Substituída por `decisions/024-calc-gratis-magnet-eterno.md`.
+> Conteúdo abaixo mantido como registro histórico do raciocínio.
+
 > **Data**: 2026-05-20
-> **Status**: Aceito (aguarda execução do CEO no Stripe Dashboard + Vercel)
+> **Status**: ~~Aceito~~ **Revogada** (21/05/2026 — CEO)
 > **Decisor**: Gabriel (CEO) — input de Helena (estratégia) + Paulo (financeiro) + Felipe (frontend, em paralelo)
 > **Custo de reversão**: MÉDIO — backend novo isolado em `calc_pro_subscriptions` (tabela nova, não toca catálogo) + UI da `/calculadora` precisa retroceder. Stripe Price antigo pode ser reativado em <5 min. Compras lifetime já realizadas (se houver) ficam grandfathered.
 > **Substitui**: parte da `payments/calc-pro-integration-spec.md` referente a Payment Link único de R$ 37 lifetime (essa decisão suspende o modelo lifetime — não deleta o spec antigo, deixa como histórico).
+
+---
+
+## Por que foi revogada
+
+Decisão de madrugada 21/05/2026, CEO Gabriel após comparar com concorrência real (Vultrix3D).
+
+- **Calc isolada não tem moat real**: qualquer dev replica em 1 semana. Cobrar R$ 19/mês por uma calculadora de filamento, sem contexto de sistema, não sustenta.
+- **Concorrência infinita**: Shopee tem calculadoras de custo. ZoomCalc3D é grátis. O mercado já precificou calculadoras como commodities — tentar monetizar direto é nadar contra a maré.
+- **PDF + histórico justificam mensalidade fraca**: as features Pro eram genuínas, mas insuficientes para criar hábito de pagamento recorrente. Usuário paga mensalidade quando não consegue viver sem o sistema — e o sistema é o Hayzer completo (CRM + finance + production + etc), não a calc.
+- **Cap de 5/dia gera fricção que afasta lead**: o limite diário da tier grátis, pensado para forçar conversão, na prática afasta o maker exatamente no momento de maior interesse. Lead que bate no cap e vai embora não volta.
+- **Modelo certo identificado**: Calc Grátis sem cap = magnet de topo de funil. Hayzer completo = produto pago. A calc serve para capturar email via waitlist, não para cobrar. Ver `decisions/024-calc-gratis-magnet-eterno.md`.
 
 ---
 

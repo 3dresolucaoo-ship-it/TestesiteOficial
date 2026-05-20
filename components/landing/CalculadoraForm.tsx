@@ -3,10 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Calculator, ArrowRight, Copy, Check, FileText } from 'lucide-react'
-import { PaywallModal } from '@/components/calculadora/PaywallModal'
+import { Calculator, ArrowRight, Copy, Check } from 'lucide-react'
 import { track } from '@/lib/posthog'
-import { useCalcRateLimitContext } from '@/components/calculadora/CalcRateLimitContext'
 import {
   Disc,           // rolo de filamento (3D look)
   Cube,           // peça 3D
@@ -73,11 +71,7 @@ export function CalculadoraForm() {
   const [consumoW, setConsumoW] = useState('150')
   const [margem, setMargem] = useState('50')
   const [copied, setCopied] = useState(false)
-  const [paywallOpen, setPaywallOpen] = useState(false)
   const precoEnergia = 0.85
-
-  // Rate limit: lê do context (wrapper gerencia pill + modal + estado)
-  const { onCalcSuccess, limitReached } = useCalcRateLimitContext()
 
   // ─── Analytics: calculadora_view (uma vez no mount) ─────────────────────
   const viewTracked = useRef(false)
@@ -132,11 +126,9 @@ export function CalculadoraForm() {
         preco_sugerido:  Math.round(precoSugerido * 100) / 100,
         semaforo:        semaforo.label,
       })
-      // Incrementa contador diário de cálculos bem-sucedidos
-      onCalcSuccess()
     }, 1500)
     return () => { if (calcDebounce.current) clearTimeout(calcDebounce.current) }
-  }, [precoFilamento, peso, horas, consumoW, margem, precoSugerido, alerta, semaforo.label, onCalcSuccess])
+  }, [precoFilamento, peso, horas, consumoW, margem, precoSugerido, alerta, semaforo.label])
 
   function handleCopy() {
     // Só o valor formatado. Cliente não precisa ver o cálculo.
@@ -404,27 +396,6 @@ export function CalculadoraForm() {
                   </div>
                 )}
 
-                {/* Banner de limite atingido — não bloqueia tela, só contextualiza */}
-                {limitReached && (
-                  <div
-                    className="mt-4 rounded-lg px-3 py-2.5 text-[12.5px] leading-[1.5]"
-                    style={{
-                      background: 'hsl(var(--ember-500) / 0.10)',
-                      border: '1px solid hsl(var(--ember-400) / 0.3)',
-                      color: 'hsl(var(--ember-300))',
-                    }}
-                  >
-                    Voce usou os 5 calculos de hoje.{' '}
-                    <Link
-                      href="/calculadora/pro"
-                      className="font-semibold underline underline-offset-2 hover:text-[hsl(var(--ember-200))] transition-colors"
-                    >
-                      Pro libera sem limite
-                    </Link>
-                    {' '}por R${process.env.NEXT_PUBLIC_CALC_PRO_PRICE_MONTHLY ?? '19'}/mes.
-                  </div>
-                )}
-
               {/* Botão "Copiar pro cliente" (Sofia + Marcos) — geração de viralização */}
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
@@ -443,27 +414,6 @@ export function CalculadoraForm() {
                         Copiar para o cliente
                       </>
                     )}
-                  </button>
-
-                  {/* Exportar PDF — feature Pro, abre paywall */}
-                  <button
-                    type="button"
-                    onClick={() => setPaywallOpen(true)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-[hsl(var(--petrol-400)/0.25)] bg-[hsl(var(--petrol-500)/0.08)] px-3 py-2 text-[12.5px] font-medium transition-all hover:border-[hsl(var(--petrol-400)/0.5)] hover:bg-[hsl(var(--petrol-400)/0.14)]"
-                    style={{ color: 'hsl(var(--petrol-300))' }}
-                    aria-label="Exportar PDF do orçamento (funcionalidade Pro)"
-                  >
-                    <FileText className="h-3.5 w-3.5" strokeWidth={2} />
-                    Exportar PDF
-                    <span
-                      className="rounded px-1 py-0.5 font-mono text-[9px] uppercase tracking-wider"
-                      style={{
-                        background: 'hsl(var(--petrol-500) / 0.2)',
-                        color: 'hsl(var(--petrol-300))',
-                      }}
-                    >
-                      Pro
-                    </span>
                   </button>
                 </div>
               </div>
@@ -674,12 +624,6 @@ export function CalculadoraForm() {
         </motion.div>
       </div>
 
-      {/* Paywall modal — abre quando user clica "Exportar PDF (Pro)" */}
-      <PaywallModal
-        open={paywallOpen}
-        onClose={() => setPaywallOpen(false)}
-        trigger="pdf"
-      />
     </section>
   )
 }

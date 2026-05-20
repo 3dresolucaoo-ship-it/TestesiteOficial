@@ -1,7 +1,6 @@
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 import { CalculadoraForm } from '@/components/landing/CalculadoraForm'
-import { CalcRateLimitWrapper } from '@/components/calculadora/CalcRateLimitWrapper'
 
 export const metadata = {
   title: 'Calculadora de custo de impressão 3D · Hayzer',
@@ -13,9 +12,7 @@ export default function CalculadoraPage() {
   return (
     <div className="grain bg-background text-foreground">
       <Header />
-      <CalcRateLimitWrapper>
-        <CalculadoraForm />
-      </CalcRateLimitWrapper>
+      <CalculadoraForm />
       <Footer />
     </div>
   )

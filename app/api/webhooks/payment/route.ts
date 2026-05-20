@@ -4,12 +4,6 @@
  * Generic payment webhook — delegates signature verification and payload parsing
  * to the active PaymentProvider for the given merchant (resolved from DB config).
  *
- * Special route: ?merchant=calc-pro
- *   Roteado para o handler de Calculadora Pro Subscription (Paulo 2026-05-20,
- *   ADR-023). Eventos suportados: customer.subscription.{created,updated,
- *   deleted}, invoice.{paid,payment_failed}. NAO usa paymentConfig — usa
- *   platform-account STRIPE_SECRET_KEY + STRIPE_CALC_PRO_WEBHOOK_SECRET.
- *
  * URL pattern (catalog):
  *   For Mercado Pago: set `notification_url` in the preference to include
  *     ?merchant=<user_id> so each merchant's webhook is routed here correctly.
@@ -41,11 +35,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe                        from 'stripe'
 import { getPaymentProvider }        from '@/services/payments'
 import { getSupabaseAdmin }          from '@/lib/supabaseAdmin'
-import { upsertSubscription }        from '@/services/calcProSubscription'
-import type { CalcProSubscriptionStatus } from '@/services/calcProSubscription'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -78,19 +69,11 @@ export async function POST(req: NextRequest) {
   // ── 1. Validate merchantId from URL ───────────────────────────────────────
   // merchantId identifies which merchant's payment config to load.
   // Must be a valid UUID — rejects mis-configured or tampered webhook URLs.
-  //
-  // Excecao: merchant=calc-pro vai pro handler de Calculadora Pro subscription
-  // (Paulo 2026-05-20, ADR-023). Esse handler nao usa paymentConfig por
-  // merchant — Calc Pro eh produto da platform account Hayzer.
   const merchantId = req.nextUrl.searchParams.get('merchant')
 
   if (!merchantId) {
     console.warn('[webhook/payment] Missing ?merchant= query param')
     return NextResponse.json({ received: true })
-  }
-
-  if (merchantId === 'calc-pro') {
-    return handleCalcProSubscriptionWebhook(req)
   }
 
   if (!isValidUUID(merchantId)) {
