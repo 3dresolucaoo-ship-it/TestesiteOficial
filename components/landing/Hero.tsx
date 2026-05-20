@@ -143,9 +143,15 @@ export function Hero({ waitlistCount }: HeroProps) {
             id="waitlist"
             className="scroll-mt-20 lg:col-span-5"
           >
+            {/*
+              * Bug fix 2026-05-19: border-radius + overflow implícito do card-letter
+              * clipava o sticker absolute -top-3 -right-3 em mobile (375px).
+              * Wrapper overflow-visible + pt-3 abre espaço pro sticker aparecer acima.
+              */}
+            <div className="relative overflow-visible pt-3">
             <div className="card-letter relative rounded-[14px] p-7 md:p-8">
               {/* Carimbo rotacionado no canto */}
-              <div className="sticker-amber absolute -top-3 -right-3 rotate-6 rounded-sm px-2.5 py-1 text-[10px] font-mono uppercase tracking-widest">
+              <div className="sticker-amber absolute -top-3 -right-3 z-10 rotate-6 rounded-sm px-2.5 py-1 text-[10px] font-mono uppercase tracking-widest">
                 acesso antecipado
               </div>
 
@@ -186,6 +192,7 @@ export function Hero({ waitlistCount }: HeroProps) {
               )}
 
               <WaitlistForm />
+            </div>
             </div>
           </motion.div>
         </div>

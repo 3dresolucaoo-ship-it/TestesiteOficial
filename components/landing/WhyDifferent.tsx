@@ -26,7 +26,8 @@ export function WhyDifferent() {
       <div className="container-warm relative mx-auto max-w-[1180px] px-6 py-20 md:px-10 md:py-28">
 
         {/* Cabeçalho 2 colunas — heading esquerda, copy explicativa direita */}
-        <div className="mb-14 grid gap-12 lg:grid-cols-12">
+        {/* Bug fix 2026-05-19: gap-12 (48px) em mobile single-column era excessivo entre heading e parágrafo */}
+        <div className="mb-14 grid gap-6 lg:gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <div className="tag mb-3">por quê</div>
             <h2 className="display-h2 text-[2.5rem] text-foreground md:text-[3.5rem]">

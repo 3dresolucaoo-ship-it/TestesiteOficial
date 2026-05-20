@@ -31,10 +31,14 @@ export function PrinterShowcase() {
 
           {/* Foto — coluna esquerda (5/12 em desktop, full em mobile) */}
           <div className="lg:col-span-5">
+            {/*
+              * Bug fix 2026-05-19: ratio 9/16 portrait em mobile 375px gerava imagem
+              * ~667px de altura, enterrando a copy abaixo do fold imediatamente.
+              * Solução: aspect-[4/3] mobile → aspect-[9/16] lg+ via classes Tailwind.
+              */}
             <div
-              className="relative mx-auto max-w-[420px] overflow-hidden rounded-[14px] lg:max-w-none"
+              className="relative mx-auto aspect-[4/3] max-w-[420px] overflow-hidden rounded-[14px] lg:aspect-[9/16] lg:max-w-none"
               style={{
-                aspectRatio: '9 / 16',
                 borderColor: 'hsl(var(--petrol-600) / 0.30)',
                 boxShadow:
                   '0 0 0 1px hsl(var(--petrol-500) / 0.25), 0 32px 80px hsl(var(--night-950) / 0.7), inset 0 0 120px hsl(var(--night-950) / 0.4)',
