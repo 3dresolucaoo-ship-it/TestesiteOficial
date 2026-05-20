@@ -18,7 +18,7 @@
 | File | Provider | Status |
 |---|---|---|
 | mercadopago.ts | Mercado Pago | ✅ OK — preference API + HMAC verification |
-| stripe.ts | Stripe | ✅ OK — Checkout Sessions API + Calc Pro subscription helpers (Paulo 2026-05-20) |
+| stripe.ts | Stripe | ✅ OK — factory `stripeProvider()` para checkout de catalogo (marketplace). Helpers Calc Pro removidos 2026-05-21. |
 | setup-stripe-calc-pro.md | Doc CEO | ⚠️ ARQUIVADO 2026-05-21 — redirect para `_archived/setup-stripe-calc-pro.md` (ADR-024 revogou) |
 | calc-pro-integration-spec.md | Histórico | ⚠️ Spec antigo lifetime — superseded por ADR-023 |
 
@@ -52,7 +52,7 @@ ADR-023 foi substituído por ADR-024. Calc Pro freemium não existe mais.
 
 Funções adicionadas em `stripe.ts` para subscription (`getCheckoutUrlSubscription`, `cancelSubscription`, `createPortalSession`) e service layer em `services/calcProSubscription.ts` foram removidos por Felipe e Bruna em 21/05/2026.
 
-Migration `supabase/migrations/20260520_calc_pro_subscriptions.sql` nunca foi aplicada em prod — mantida no repo como referência histórica.
+Migration `supabase/migrations/20260520_calc_pro_subscriptions.sql` nunca foi aplicada em prod e foi DELETADA do repo em 2026-05-21 para evitar aplicacao acidental.
 
 Ver `decisions/024-calc-gratis-magnet-eterno.md` para o modelo vigente.
 
