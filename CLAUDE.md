@@ -93,7 +93,7 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - SEO 100/100 + robots.txt + sitemap (texto + imagens) + OG metadata
 - WebP -91% otimização imagens
 - 404 page paleta Hayzer + manifest.json PWA + /api/health
-- Calc grátis + Calc Pro freemium (UI Felipe pronto, aguarda Stripe CEO)
+- Calc grátis SEM CAP (magnet eterno — Calc Pro freemium REVOGADA 21/05, ver `decisions/024-calc-gratis-magnet-eterno.md`. Cobrança = Hayzer completo)
 
 #### O que precisa REFACTOR pra ficar usável (módulos internos)
 - Dashboard V4 só 1 módulo migrado (orders). Faltam 11 módulos pro shell V4: customers, leads, inventory, products, production, finance, content, decisions, catalogs, portfolios, settings
@@ -123,13 +123,13 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - Soft launch: 11-13/06 (GO Otávio + GO QA fixed) · Launch público: 27/06 · Beauty pausado (volta 05/07)
 - Operação noturna oficial: sexta 22/05 22h com Bruna + Lia (ADR-020)
 
-### Decisões CEO pendentes (5 abertas)
+### Decisões CEO pendentes (3 abertas)
 
-1. **Setup Stripe Calc Pro freemium** (10min): criar Product + Price R$ 19/mês + Payment Link subscription + atualizar Vercel env vars. Guide: `payments/setup-stripe-calc-pro.md`
-2. **INPI**: pagar PIX GRU 1 R$ 440 classe 42 antes 13/06 (ver `decisions/parecer-inpi-pagamento-2026-05-18.md`)
-3. **CNPJ MEI→ME**: desenquadrar antes 1ª venda paga (Stripe Calc Pro ativa)
-4. **Decisão 7 doc P3**: cobrança Hayzer Beauty (R$ 197 único vs 3 tiers vs combo gestora-mãe)
-5. **Aplicar migration** `20260520_calc_pro_subscriptions.sql` via Supabase MCP
+1. **INPI**: pagar PIX GRU 1 R$ 440 classe 42 antes 13/06 (ver `decisions/parecer-inpi-pagamento-2026-05-18.md`)
+2. **CNPJ MEI→ME**: desenquadrar antes 1ª venda paga do Hayzer completo
+3. **Decisão 7 doc P3**: cobrança Hayzer Beauty (R$ 197 único vs 3 tiers vs combo gestora-mãe)
+
+> Calc Pro freemium REVOGADA 21/05 — ver `decisions/024-calc-gratis-magnet-eterno.md`. Setup Stripe Calc Pro e migration `20260520_calc_pro_subscriptions.sql` cancelados.
 
 ### Tarefas operacionais TU faz (não eu)
 - Postar Post #1 no grupo WhatsApp Hayzer Beta (texto pronto Marcos)

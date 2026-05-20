@@ -19,7 +19,7 @@
 |---|---|---|
 | mercadopago.ts | Mercado Pago | ✅ OK — preference API + HMAC verification |
 | stripe.ts | Stripe | ✅ OK — Checkout Sessions API + Calc Pro subscription helpers (Paulo 2026-05-20) |
-| setup-stripe-calc-pro.md | Doc CEO | ✅ Passo-a-passo Stripe Dashboard + Vercel (Paulo 2026-05-20) |
+| setup-stripe-calc-pro.md | Doc CEO | ⚠️ ARQUIVADO 2026-05-21 — redirect para `_archived/setup-stripe-calc-pro.md` (ADR-024 revogou) |
 | calc-pro-integration-spec.md | Histórico | ⚠️ Spec antigo lifetime — superseded por ADR-023 |
 
 ## Metadata padronizada

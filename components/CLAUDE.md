@@ -81,6 +81,8 @@ Exports publicos mantidos identicos: `Sidebar`, `MobileNav`, `BottomNav` via `co
 - ✅ ~~`SettingsView.tsx` e `DashboardView.tsx` gigantes~~ — refatorados em 2026-05-04
 - ❌ Design "sem peso" — ver feedback em `ROADMAP.md` § Design
 - ✅ ~~`BuyButton.tsx` pode estar morto~~ — removido em 2026-05-09; substituído por `app/catalogo/[slug]/CatalogActionButton.tsx` (4 modos: direct/variant/quote/contact_only)
+- ✅ ~~`CalcUpsellModal.tsx`~~ — removido 2026-05-21 (Calc Pro freemium revogada, ver `decisions/024`)
+- ✅ ~~`CalcRateLimitWrapper` / cap diário~~ — removido 2026-05-21 (idem)
 
 ## Pendências de design (do usuário)
 
