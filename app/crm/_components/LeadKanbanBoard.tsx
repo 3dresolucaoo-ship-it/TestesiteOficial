@@ -20,9 +20,10 @@ interface LeadKanbanBoardProps {
   onEdit:      (l: Lead) => void
   onDelete:    (id: string) => void
   onAdvance:   (l: Lead) => void
+  onConvert:   (l: Lead) => void
 }
 
-export function LeadKanbanBoard({ leads, projectName, onEdit, onDelete, onAdvance }: LeadKanbanBoardProps) {
+export function LeadKanbanBoard({ leads, projectName, onEdit, onDelete, onAdvance, onConvert }: LeadKanbanBoardProps) {
   return (
     <div className="overflow-x-auto pb-2" role="region" aria-label="Kanban de leads">
       {/* min-w-max garante que as colunas nao colapsom em mobile */}
@@ -67,6 +68,7 @@ export function LeadKanbanBoard({ leads, projectName, onEdit, onDelete, onAdvanc
                     onEdit={onEdit}
                     onDelete={onDelete}
                     onAdvance={onAdvance}
+                    onConvert={onConvert}
                     canAdvance={canAdvance}
                   />
                 ))}
