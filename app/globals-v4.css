@@ -312,6 +312,14 @@
   color: hsl(var(--sand-mocha-600));
   opacity: 0.09;
 }
+/* A.5 — watermark reduzida em módulos operacionais densos (Onda A Diego) */
+:root[data-route-density="dense"] .watermark-raiz {
+  font-size: clamp(80px, 12vw, 180px);
+  opacity: 0.025;
+}
+:root[data-theme="light"][data-route-density="dense"] .watermark-raiz {
+  opacity: 0.06;
+}
 
 /* ============================================================
    STREAK PILL
@@ -457,6 +465,17 @@
   color: var(--v4-fog-50);
   border-left-color: hsl(var(--petrol-500));
 }
+/* Ícones Lucide na sidebar — A.1 (Onda A Diego) */
+.nav-item .nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: color 160ms ease, filter 160ms ease;
+}
+.nav-item.active .nav-icon {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
 .nav-item .badge {
   margin-left: auto;
   background: hsl(var(--ember-500));
@@ -1758,6 +1777,69 @@
   border: 1px solid rgba(31, 118, 105, 0.32);
   font-weight: 500;
 }
+
+/* ============================================================
+   BADGES SEMÂNTICOS — A.4 (Onda A Diego)
+   Uso futuro: <span class="badge-ok">Pago</span>
+               <span class="badge-warn">Atrasado</span>
+               <span class="badge-danger">Cancelado</span>
+               <span class="badge-neutral">Pendente</span>
+   NÃO substitui badges existentes (ex: OrderStatusBadge) —
+   classes disponíveis para adoção incremental.
+   ============================================================ */
+
+.badge-ok {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: hsl(var(--petrol-500) / 0.18);
+  color: hsl(var(--petrol-200));
+  border: 1px solid hsl(var(--petrol-500) / 0.4);
+}
+.badge-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: hsl(var(--ember-500) / 0.18);
+  color: hsl(var(--ember-300));
+  border: 1px solid hsl(var(--ember-500) / 0.4);
+}
+.badge-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: hsl(14 66% 52% / 0.18);
+  color: hsl(14 70% 70%);
+  border: 1px solid hsl(14 66% 52% / 0.4);
+}
+.badge-neutral {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  background: hsl(220 8% 35% / 0.18);
+  color: hsl(var(--fog-300));
+  border: 1px solid hsl(220 8% 35% / 0.3);
+}
 .health-dot {
   width: 8px;
   height: 8px;
@@ -2142,6 +2224,14 @@
     text-transform: uppercase;
     letter-spacing: 0.18em;
     color: var(--fog-300);
+    transition: color 200ms ease;
+  }
+  /* A.3 — hover bento card: eyebrow vira petrol sólido (Onda A Diego) */
+  .kpi-card:hover .kpi-eyebrow {
+    color: hsl(var(--petrol-300));
+  }
+  .kpi-card.hero-petrol:hover .kpi-eyebrow {
+    color: hsl(var(--petrol-200));
   }
   .kpi-card .kpi-value {
     font-family: 'Fraunces', Georgia, serif;

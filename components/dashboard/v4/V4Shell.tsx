@@ -39,6 +39,24 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Printer,
+  Package,
+  Wallet,
+  Users,
+  UserPlus,
+  Store,
+  Box,
+  Image as ImageIcon,
+  FolderOpen,
+  FolderKanban,
+  TrendingUp,
+  Lightbulb,
+  Settings,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
 import { StreakPill } from './StreakPill'
 import { NotificationBell } from './NotificationBell'
@@ -204,38 +222,59 @@ function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
 // Sub-componente: Sidebar
 // ---------------------------------------------------------------------------
 
-const NAV_ITEMS = [
+// Cores dos grupos de nav
+const NAV_GROUP_COLORS = {
+  Núcleo:      { default: 'hsl(173 35% 60%)',  active: 'hsl(173 42% 48%)' }, // petrol-300 / petrol-400
+  Crescimento: { default: 'hsl(27 67% 65%)',   active: 'hsl(27 60% 53%)' }, // ember-400  / ember-500
+  Sistema:     { default: 'hsl(38 7% 51%)',    active: 'hsl(38 7% 68%)' }, // fog-300    / fog-200
+} as const
+
+type NavGroup = keyof typeof NAV_GROUP_COLORS
+
+interface NavItemDef {
+  label:  string
+  href:   string
+  icon:   LucideIcon
+  badge?: number
+}
+
+interface NavGroupDef {
+  group: NavGroup
+  items: NavItemDef[]
+}
+
+const NAV_ITEMS: NavGroupDef[] = [
   {
     group: 'Núcleo',
     items: [
-      { label: 'Início',       href: '/dashboard'   },
-      { label: 'Pedidos',      href: '/orders',    badge: 3 as number | undefined },
-      { label: 'Produção',     href: '/production'  },
-      { label: 'Estoque',      href: '/inventory'   },
-      { label: 'Financeiro',   href: '/finance'     },
+      { label: 'Início',     href: '/dashboard',  icon: LayoutDashboard },
+      { label: 'Pedidos',    href: '/orders',     icon: ShoppingCart,   badge: 3 },
+      { label: 'Produção',   href: '/production', icon: Printer },
+      { label: 'Estoque',    href: '/inventory',  icon: Package },
+      { label: 'Financeiro', href: '/finance',    icon: Wallet },
     ],
   },
   {
     group: 'Crescimento',
     items: [
-      { label: 'Clientes',   href: '/crm'                  },
-      { label: 'Leads',      href: '/crm',    badge: 7 as number | undefined },
-      { label: 'Catálogo',   href: '/catalogs'             },
-      { label: 'Produtos',   href: '/products'             },
-      { label: 'Conteúdo',   href: '/content'              },
-      { label: 'Portfólios', href: '/portfolios'           },
+      { label: 'Clientes',   href: '/crm',        icon: Users },
+      { label: 'Leads',      href: '/crm',        icon: UserPlus, badge: 7 },
+      { label: 'Catálogo',   href: '/catalogs',   icon: Store },
+      { label: 'Produtos',   href: '/products',   icon: Box },
+      { label: 'Conteúdo',   href: '/content',    icon: ImageIcon },
+      { label: 'Portfólios', href: '/portfolios', icon: FolderOpen },
     ],
   },
   {
     group: 'Sistema',
     items: [
-      { label: 'Projetos',       href: '/projects' },
-      { label: 'Métricas',       href: '/metrics'  },
-      { label: 'Decisões',       href: '/decisions'},
-      { label: 'Configurações',  href: '/settings' },
+      { label: 'Projetos',      href: '/projects',  icon: FolderKanban },
+      { label: 'Métricas',      href: '/metrics',   icon: TrendingUp },
+      { label: 'Decisões',      href: '/decisions', icon: Lightbulb },
+      { label: 'Configurações', href: '/settings',  icon: Settings },
     ],
   },
-] as const
+]
 
 interface SidebarProps {
   isOpen: boolean
@@ -282,6 +321,9 @@ function Sidebar({ isOpen, onClose, userName, activeHref }: SidebarProps) {
             const isActive = activeHref
               ? item.href === activeHref
               : item.href === '/dashboard'
+            const colors = NAV_GROUP_COLORS[group]
+            const iconColor = isActive ? colors.active : colors.default
+            const Icon = item.icon
             return (
               <a
                 key={item.label}
@@ -290,9 +332,13 @@ function Sidebar({ isOpen, onClose, userName, activeHref }: SidebarProps) {
                 aria-current={isActive ? 'page' : undefined}
                 onClick={onClose}
               >
-                {/* TODO: mapear ícones Lucide por label (Wave 3) */}
+                <Icon
+                  className="nav-icon"
+                  aria-hidden="true"
+                  style={{ color: iconColor, strokeWidth: 1.8 }}
+                />
                 <span>{item.label}</span>
-                {'badge' in item && item.badge != null && (
+                {item.badge != null && (
                   <span className="badge" aria-label={`${item.badge} itens`}>
                     {item.badge}
                   </span>
@@ -399,6 +445,13 @@ export function V4Shell({
 
   // ── Pathname pra marcar nav-item ativo na sidebar ─────────────────────────
   const pathname = usePathname()
+
+  // A.5 — sinaliza módulos densos pro CSS reduzir watermark
+  useEffect(() => {
+    const denseRoutes = ['/orders', '/inventory', '/finance', '/production', '/crm', '/products']
+    const isDense = denseRoutes.some((p) => pathname.startsWith(p))
+    document.documentElement.setAttribute('data-route-density', isDense ? 'dense' : 'normal')
+  }, [pathname])
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), [])
   const openSidebar  = useCallback(() => setSidebarOpen(true),  [])

@@ -24,6 +24,7 @@ import { useCallback, useState, useId } from 'react'
 import { UnderlineMarker } from '@/components/visual-library'
 import { GlowPetrol }      from '@/components/visual-library'
 import { RootSvg }         from '@/components/visual-library'
+import { useCountUp }      from '@/lib/hooks/useCountUp'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -105,7 +106,33 @@ export interface ModuleShellProps {
 // Sub: KpiHeroCard
 // ---------------------------------------------------------------------------
 
-function KpiHeroCard({ kpi }: { kpi: ModuleShellHeroKpi }) {
+/** Extrai número de string formatada tipo "R$ 4.280" ou "90". Retorna null se não houver. */
+function extractNumber(value: string): number | null {
+  const cleaned = value.replace(/[^\d,]/g, '').replace(',', '.')
+  const n = parseFloat(cleaned)
+  return isNaN(n) ? null : Math.round(n)
+}
+
+/** Extrai prefixo textual antes do número. Ex: "R$ 4.280" → "R$ " */
+function extractPrefix(value: string): string {
+  const match = value.match(/^([^\d]*)[\d]/)
+  return match ? match[1] : ''
+}
+
+interface KpiHeroCardProps {
+  kpi: ModuleShellHeroKpi
+}
+
+function KpiHeroCard({ kpi }: KpiHeroCardProps) {
+  const numericTarget = extractNumber(kpi.value)
+  const prefix        = extractPrefix(kpi.value)
+  const animated      = useCountUp(numericTarget ?? 0, 800)
+
+  // Formata número animado com separador de milhar BR
+  const animatedFormatted = (numericTarget !== null)
+    ? animated.toLocaleString('pt-BR')
+    : null
+
   return (
     <article
       className="kpi-card hero-petrol fade-in delay-1"
@@ -123,7 +150,13 @@ function KpiHeroCard({ kpi }: { kpi: ModuleShellHeroKpi }) {
       <span className="kpi-eyebrow">{kpi.label}</span>
 
       <div className="kpi-value num" style={{ fontFamily: 'var(--font-fraunces, Fraunces, Georgia, serif)' }}>
-        {kpi.value}
+        {animatedFormatted !== null ? (
+          <>
+            {prefix}{animatedFormatted}
+          </>
+        ) : (
+          kpi.value
+        )}
         {kpi.unit && (
           <span className="decimal">{kpi.unit}</span>
         )}
