@@ -1,78 +1,39 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-
 /**
- * FinalCTA — encerra a página com pergunta-convite + link de volta pro form do hero.
+ * FinalCTA — encerra a landing com pergunta-convite + link pro form do hero.
+ *
+ * Shell SSR: section com vignette + grain-heavy. Conteúdo carregado via dynamic
+ * import (FinalCTAAnimated) para isolar o bundle do framer-motion.
+ *
+ * Estratégia 2026-05-19 (lazy load Framer Motion):
+ * - Terceiro componente below-the-fold movido para dynamic ssr:false
+ * - FinalCTA está no fundo da página, é o último elemento visto pelo usuário
+ *   — candidato ideal: dynamic import não causa nenhum layout shift perceptível
+ *
  * Diego: vignette + grain-heavy aqui pra fechar com peso visual.
  */
+
+import dynamic from 'next/dynamic'
+
+const FinalCTAAnimated = dynamic(
+  () => import('./FinalCTAAnimated').then((m) => m.FinalCTAAnimated),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        aria-hidden="true"
+        style={{ minHeight: 200 }}
+      />
+    ),
+  }
+)
+
 export function FinalCTA() {
   return (
     <section className="vignette grain grain-heavy relative overflow-hidden border-t border-border/40">
       <div className="container-warm relative mx-auto max-w-[1180px] px-6 py-24 md:px-10 md:py-32">
-        <div className="max-w-[760px]">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="tag mb-5"
-          >
-            o convite
-          </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="display-h2 text-[2.75rem] text-foreground md:text-[4.25rem]"
-          >
-            Bora tirar isso<br />
-            da <span className="italic-soft">cabeça</span>?
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 max-w-[460px] text-[17px] leading-[1.55] text-muted-foreground"
-          >
-            Sai quando quiser. Sem cartão agora, sem letra miúda.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-10"
-          >
-            <Link
-              href="#waitlist"
-              className="btn-light inline-flex items-center gap-2 rounded-md px-6 py-3 text-[14.5px]"
-            >
-              Entrar na lista de espera
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-14 flex items-center gap-3 text-[12px]"
-            style={{ color: 'hsl(var(--fog-400))' }}
-          >
-            <span style={{ fontFamily: 'ui-monospace, "Geist Mono", monospace' }}>27.06.2026</span>
-            <span className="h-px w-8" style={{ background: 'hsl(var(--fog-400) / 0.3)' }} />
-            <span>lançamento público</span>
-          </motion.div>
-        </div>
+        <FinalCTAAnimated />
       </div>
     </section>
   )
