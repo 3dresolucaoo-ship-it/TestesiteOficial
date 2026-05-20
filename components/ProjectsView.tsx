@@ -5,7 +5,7 @@ import { useStore, uid } from '@/lib/store'
 import type { Project, ProjectStatus } from '@/lib/types'
 import { getProjectColor } from '@/lib/moduleConfig'
 import { calcRevenue, calcProfit } from '@/core/finance/engine'
-import { Plus, ArrowRight, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { Plus, ArrowRight, MoreHorizontal, Pencil, Trash2, FolderOpen, ShoppingCart, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
 import { PROJECT_MODULES_BY_TYPE } from '@/lib/types'
@@ -252,11 +252,124 @@ export function ProjectsView({
       )}
 
       {projects.length === 0 && (
-        <div className="py-20 text-center">
-          <p className="text-[#555555] text-sm">Nenhum projeto ainda.</p>
-          <button onClick={() => setCreating(true)} className="mt-3 text-[#7c3aed] text-sm hover:text-[#a78bfa] transition-colors">
-            Criar primeiro projeto →
-          </button>
+        <div className="py-16 max-w-2xl mx-auto px-4">
+          {/* Glow central petrol */}
+          <div className="flex flex-col items-center text-center mb-10">
+            <div
+              className="w-16 h-16 mb-6 rounded-2xl flex items-center justify-center"
+              style={{
+                background: 'hsl(173 58% 28% / 0.15)',
+                border: '1px solid hsl(173 58% 28% / 0.30)',
+                boxShadow: '0 0 48px hsl(173 58% 28% / 0.22)',
+              }}
+              aria-hidden="true"
+            >
+              <FolderOpen size={28} className="text-[hsl(173_30%_57%)]" />
+            </div>
+
+            {/* Watermark editorial italic sutil */}
+            <div className="relative mb-3">
+              <span
+                className="absolute inset-0 flex items-center justify-center select-none pointer-events-none"
+                style={{
+                  fontFamily: 'var(--font-fraunces, Georgia, serif)',
+                  fontStyle: 'italic',
+                  fontSize: '4rem',
+                  color: 'hsl(173 58% 28% / 0.07)',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1,
+                  whiteSpace: 'nowrap',
+                  top: '-14px',
+                }}
+                aria-hidden="true"
+              >
+                comeca aqui
+              </span>
+              <h2
+                className="relative text-2xl font-semibold text-foreground tracking-tight"
+                style={{ fontFamily: 'var(--font-fraunces, Georgia, serif)' }}
+              >
+                Projetos organizam tudo
+              </h2>
+            </div>
+
+            <p className="text-sm text-foreground/65 leading-relaxed max-w-md">
+              Pode ser o nome do seu atelie, da sua impressora ou da sua loja. Crie o primeiro e o Hayzer conecta pedidos, estoque e financeiro automaticamente.
+            </p>
+          </div>
+
+          {/* 3 passos numerados */}
+          <div className="space-y-2 mb-8">
+            {([
+              {
+                n: 1,
+                icon: FolderOpen,
+                title: 'Crie um projeto',
+                description: 'Nome livre. Pode ser "Bambu A1 do Rafael", "Loja 3D" ou so seu nome mesmo.',
+              },
+              {
+                n: 2,
+                icon: ShoppingCart,
+                title: 'Adicione pedidos',
+                description: 'WhatsApp, Instagram, Mercado Livre, balcao. Todos num so lugar.',
+              },
+              {
+                n: 3,
+                icon: TrendingUp,
+                title: 'Veja o lucro real',
+                description: 'O Hayzer calcula custo de material, margem e break-even automaticamente.',
+              },
+            ] as const).map(({ n, icon: Icon, title, description }) => (
+              <div
+                key={n}
+                className="flex items-start gap-4 p-4 rounded-xl"
+                style={{
+                  background: 'hsl(200 11% 9%)',
+                  border: '1px solid hsl(200 11% 14%)',
+                }}
+              >
+                <div
+                  className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold"
+                  style={{
+                    background: 'hsl(173 58% 28% / 0.18)',
+                    color: 'hsl(173 30% 57%)',
+                  }}
+                  aria-hidden="true"
+                >
+                  {n}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <Icon size={15} className="text-[hsl(173_30%_57%)]" aria-hidden="true" />
+                    <p className="text-sm font-semibold text-foreground">{title}</p>
+                  </div>
+                  <p className="text-xs text-foreground/60 leading-relaxed">{description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA primary petrol */}
+          <div className="flex flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setCreating(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-white font-medium text-sm transition-colors"
+              style={{
+                background: 'hsl(173 58% 28%)',
+                boxShadow: '0 0 32px hsl(173 58% 28% / 0.35)',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'hsl(173 58% 32%)' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'hsl(173 58% 28%)' }}
+              aria-label="Criar primeiro projeto no Hayzer"
+            >
+              <Plus size={16} aria-hidden="true" />
+              Criar primeiro projeto
+            </button>
+            <p className="text-xs text-foreground/40">
+              Voce pode editar ou excluir depois. Nada e definitivo.
+            </p>
+          </div>
         </div>
       )}
 
