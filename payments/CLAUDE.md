@@ -18,7 +18,9 @@
 | File | Provider | Status |
 |---|---|---|
 | mercadopago.ts | Mercado Pago | ✅ OK — preference API + HMAC verification |
-| stripe.ts | Stripe | ✅ OK — Checkout Sessions API |
+| stripe.ts | Stripe | ✅ OK — Checkout Sessions API + Calc Pro subscription helpers (Paulo 2026-05-20) |
+| setup-stripe-calc-pro.md | Doc CEO | ✅ Passo-a-passo Stripe Dashboard + Vercel (Paulo 2026-05-20) |
+| calc-pro-integration-spec.md | Histórico | ⚠️ Spec antigo lifetime — superseded por ADR-023 |
 
 ## Metadata padronizada
 
@@ -44,9 +46,23 @@ Todo provider envia metadata com prefixo `bvaz_*`:
 4. Adicionar no CHECK constraint do DB (`payment_configs.provider`)
 5. Implementar `createPayment` + `parseWebhook`
 
+## Calc Pro Subscription (Paulo 2026-05-20, ADR-023)
+
+Funcoes exportadas em `stripe.ts` alem do factory:
+
+- `getCheckoutUrlSubscription(input)` — cria Checkout Session mode='subscription' usando platform-account STRIPE_SECRET_KEY (nao um merchant). Pra fluxos custom; o Payment Link estatico do Dashboard nao precisa dela.
+- `cancelSubscription({ subscriptionId, when })` — `period_end` (default, recomendado LGPD) ou `immediately`.
+- `createPortalSession({ customerId, returnUrl })` — URL do Customer Portal pra cliente cancelar/atualizar cartao.
+
+Webhook handler dedicado em `app/api/webhooks/payment/route.ts` via `?merchant=calc-pro`. Eventos: `customer.subscription.{created,updated,deleted}` + `invoice.{paid,payment_failed}`.
+
+Service layer em `services/calcProSubscription.ts`. Migration em `supabase/migrations/20260520_calc_pro_subscriptions.sql`.
+
 ## Related
 
 - `services/payments.ts` — abstração + factory
 - `services/paymentConfig.ts` — credenciais por usuário
-- `app/api/webhooks/payment/route.ts` — handler genérico
+- `services/calcProSubscription.ts` — service da Calc Pro subscription
+- `app/api/webhooks/payment/route.ts` — handler genérico + handler calc-pro
 - `decisions/001-mp-marketplace-vs-checkoutpro.md`
+- `decisions/023-calc-pro-freemium-subscription.md` — ADR Calc Pro Subscription

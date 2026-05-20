@@ -28,9 +28,10 @@
 | `/api/finance/fixed-costs/[id]` | PATCH, DELETE | ✅ OK — Zod (Otávio 17/05) |
 | `/api/finance/profit-goal` | GET, PUT | ✅ OK — Zod (Otávio 17/05) |
 | `/api/catalog/quote` | POST | ✅ OK — endpoint público, Zod + rate-limit 10/min (Otávio 17/05). Cria Lead via admin client; resolve dono via catalog.slug (Fase B) |
-| `/api/webhooks/payment` | POST | ✅ OK — middleware libera (Otávio 17/05), MP signature obrigatória |
+| `/api/webhooks/payment` | POST | ✅ OK — middleware libera (Otávio 17/05), MP signature obrigatória. **`?merchant=calc-pro`** roteado pra handler de Calc Pro Subscription (Paulo 20/05, ADR-023) — eventos `customer.subscription.*` + `invoice.{paid,payment_failed}`, idempotencia via `webhook_events` |
 | `/api/webhooks/stripe` | POST | ✅ deletado em 2026-05-04 (substituído por `/api/webhooks/payment`) |
 | `/api/content/sync` | POST | ✅ OK — auth + Zod + RLS server client (hardening Otávio 17/05) |
+| `/api/calc-pro/status` | GET | ✅ Paulo 20/05 — auth obrigatorio, retorna `{ active, status, trial_end, period_end, cancel_at_period_end }` da subscription do user logado (RLS calc_pro_sub_select_own). Fail-CLOSED em erro (active=false) |
 
 ## Issues conhecidos
 

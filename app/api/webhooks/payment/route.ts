@@ -4,7 +4,13 @@
  * Generic payment webhook — delegates signature verification and payload parsing
  * to the active PaymentProvider for the given merchant (resolved from DB config).
  *
- * URL pattern:
+ * Special route: ?merchant=calc-pro
+ *   Roteado para o handler de Calculadora Pro Subscription (Paulo 2026-05-20,
+ *   ADR-023). Eventos suportados: customer.subscription.{created,updated,
+ *   deleted}, invoice.{paid,payment_failed}. NAO usa paymentConfig — usa
+ *   platform-account STRIPE_SECRET_KEY + STRIPE_CALC_PRO_WEBHOOK_SECRET.
+ *
+ * URL pattern (catalog):
  *   For Mercado Pago: set `notification_url` in the preference to include
  *     ?merchant=<user_id> so each merchant's webhook is routed here correctly.
  *   For Stripe: register the webhook URL in the Stripe dashboard with the same
@@ -35,8 +41,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import Stripe                        from 'stripe'
 import { getPaymentProvider }        from '@/services/payments'
 import { getSupabaseAdmin }          from '@/lib/supabaseAdmin'
+import { upsertSubscription }        from '@/services/calcProSubscription'
+import type { CalcProSubscriptionStatus } from '@/services/calcProSubscription'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -69,11 +78,19 @@ export async function POST(req: NextRequest) {
   // ── 1. Validate merchantId from URL ───────────────────────────────────────
   // merchantId identifies which merchant's payment config to load.
   // Must be a valid UUID — rejects mis-configured or tampered webhook URLs.
+  //
+  // Excecao: merchant=calc-pro vai pro handler de Calculadora Pro subscription
+  // (Paulo 2026-05-20, ADR-023). Esse handler nao usa paymentConfig por
+  // merchant — Calc Pro eh produto da platform account Hayzer.
   const merchantId = req.nextUrl.searchParams.get('merchant')
 
   if (!merchantId) {
     console.warn('[webhook/payment] Missing ?merchant= query param')
     return NextResponse.json({ received: true })
+  }
+
+  if (merchantId === 'calc-pro') {
+    return handleCalcProSubscriptionWebhook(req)
   }
 
   if (!isValidUUID(merchantId)) {
@@ -219,4 +236,326 @@ export async function POST(req: NextRequest) {
   )
 
   return NextResponse.json({ received: true })
+}
+
+// ─── Calc Pro Subscription Handler (Paulo 2026-05-20, ADR-023) ───────────────
+//
+// Eventos suportados:
+//   customer.subscription.created  — assinatura iniciada (trial ou paid imediato)
+//   customer.subscription.updated  — mudanca de status (trial→active, cancel_at_period_end, past_due)
+//   customer.subscription.deleted  — assinatura terminou (cancelada ou expirada)
+//   invoice.paid                   — pagamento recorrente OK (re-confirma active)
+//   invoice.payment_failed         — pagamento falhou (status vira past_due, dunning Stripe rodando)
+//
+// Idempotencia: usa a mesma tabela webhook_events do handler principal. Lock
+// atomico via UNIQUE (provider, event_id). Retry duplicado retorna 200 silent.
+//
+// Atomicidade: nao usa RPC dedicada porque o conjunto de writes eh menor (1 row
+// em calc_pro_subscriptions). Usamos 2 inserts/updates separados — risco de
+// crash entre eles eh mitigado por UNIQUE em stripe_subscription_id +
+// idempotencia do proximo retry. Risco aceito + documentado em ADR-023.
+
+const SUPPORTED_CALC_PRO_EVENTS = new Set([
+  'customer.subscription.created',
+  'customer.subscription.updated',
+  'customer.subscription.deleted',
+  'invoice.paid',
+  'invoice.payment_failed',
+])
+
+const STRIPE_API_VERSION: Stripe.StripeConfig['apiVersion'] = '2026-03-25.dahlia'
+
+interface CalcProEventData {
+  event:            Stripe.Event
+  subscriptionId:   string
+  customerId:       string
+  status:           Stripe.Subscription.Status
+  currentPeriodStart: number | null
+  currentPeriodEnd:   number | null
+  trialEnd:         number | null
+  cancelAtPeriodEnd: boolean
+  canceledAt:       number | null
+  priceId:          string | null
+  email:            string | null
+  userId:           string | null
+}
+
+/**
+ * Extrai dados padronizados de qualquer um dos 5 eventos suportados.
+ * Retorna null se o evento nao tiver informacao de subscription utilizavel.
+ *
+ * IMPORTANTE: invoice.paid e invoice.payment_failed vem com subscription como
+ * campo direto da invoice (string id ou objeto). Customer.subscription.* vem
+ * como object direto.
+ */
+async function extractCalcProEventData(
+  event: Stripe.Event,
+  stripe: Stripe,
+): Promise<CalcProEventData | null> {
+  let subscription: Stripe.Subscription | null = null
+
+  if (event.type.startsWith('customer.subscription.')) {
+    subscription = event.data.object as Stripe.Subscription
+  } else if (event.type === 'invoice.paid' || event.type === 'invoice.payment_failed') {
+    const invoice = event.data.object as Stripe.Invoice
+    // invoice.subscription pode ser string (id) ou objeto expandido
+    const subRef = (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription | null })
+      .subscription
+    if (!subRef) {
+      console.info(`[webhook/payment/calc-pro] invoice sem subscription_id — ignorando (event=${event.id})`)
+      return null
+    }
+    if (typeof subRef === 'string') {
+      // Retrieve subscription pra ter periodos atualizados
+      subscription = await stripe.subscriptions.retrieve(subRef)
+    } else {
+      subscription = subRef
+    }
+  }
+
+  if (!subscription) {
+    return null
+  }
+
+  // Email e user_id vem da metadata da subscription (setada no Checkout Session
+  // ou no Payment Link). Fallback pra customer.email se metadata ausente
+  // (caso Payment Link sem metadata configurada).
+  const metadata = subscription.metadata ?? {}
+  const userId = metadata.hayzer_user_id ?? null
+
+  let email: string | null = null
+  const customerRef = subscription.customer
+  if (typeof customerRef === 'string') {
+    const customer = await stripe.customers.retrieve(customerRef)
+    if (!('deleted' in customer) || !customer.deleted) {
+      email = (customer as Stripe.Customer).email ?? null
+    }
+  } else if (customerRef && !('deleted' in customerRef && customerRef.deleted)) {
+    email = (customerRef as Stripe.Customer).email ?? null
+  }
+
+  // ATENCAO: Stripe Basil (2025-03-31+) removeu current_period_start/end do
+  // Subscription e moveu pra subscription.items.data[0]. Aplicavel a nossa
+  // API version 2026-03-25.dahlia. Cast defensivo cobre os 2 casos —
+  // Subscription "legado" ou Subscription Basil.
+  // Fonte: https://docs.stripe.com/changelog/basil/2025-03-31/deprecate-subscription-current-period-start-and-end
+  const firstItem = subscription.items?.data?.[0] as
+    | (Stripe.SubscriptionItem & {
+        current_period_start?: number | null
+        current_period_end?:   number | null
+      })
+    | undefined
+
+  const priceId = firstItem?.price?.id ?? null
+
+  const subLegacy = subscription as Stripe.Subscription & {
+    current_period_start?: number | null
+    current_period_end?:   number | null
+  }
+
+  const currentPeriodStart =
+    firstItem?.current_period_start ?? subLegacy.current_period_start ?? null
+  const currentPeriodEnd =
+    firstItem?.current_period_end   ?? subLegacy.current_period_end   ?? null
+
+  return {
+    event,
+    subscriptionId:     subscription.id,
+    customerId:         typeof customerRef === 'string'
+      ? customerRef
+      : (customerRef as Stripe.Customer | null)?.id ?? '',
+    status:             subscription.status,
+    currentPeriodStart,
+    currentPeriodEnd,
+    trialEnd:           subscription.trial_end ?? null,
+    cancelAtPeriodEnd:  Boolean(subscription.cancel_at_period_end),
+    canceledAt:         subscription.canceled_at ?? null,
+    priceId,
+    email,
+    userId,
+  }
+}
+
+/**
+ * Resolve user_id Hayzer a partir do email Stripe.
+ * Caso metadata.hayzer_user_id esteja presente, usamos direto. Senao busca em
+ * auth.users por email.
+ *
+ * Retorna null se nao conseguir resolver — webhook handler loga warning e
+ * registra evento mesmo assim (admin reprocessa manualmente).
+ */
+async function resolveUserId(
+  email: string | null,
+  metadataUserId: string | null,
+): Promise<string | null> {
+  if (metadataUserId && isValidUUID(metadataUserId)) {
+    return metadataUserId
+  }
+  if (!email) return null
+
+  const admin = getSupabaseAdmin()
+  // listUsers em batch pequeno + filtro local. Em prod com volume alto, trocar
+  // por RPC dedicada que busca em auth.users por email diretamente.
+  const { data, error } = await admin.auth.admin.listUsers({ perPage: 200 })
+  if (error) {
+    console.error(`[webhook/payment/calc-pro] auth.admin.listUsers error: ${error.message}`)
+    return null
+  }
+  const match = data.users.find(u => u.email?.toLowerCase() === email.toLowerCase())
+  return match?.id ?? null
+}
+
+function unixToIso(seconds: number | null): string | null {
+  if (seconds === null || seconds === undefined) return null
+  return new Date(seconds * 1000).toISOString()
+}
+
+/**
+ * Handler principal dedicado a Calc Pro subscription.
+ * Sempre retorna 200 quando processamento OK ou duplicate. Retorna 4xx/5xx
+ * apenas em casos onde queremos que Stripe retry (config invalida, DB down,
+ * signature invalida).
+ */
+async function handleCalcProSubscriptionWebhook(req: NextRequest): Promise<NextResponse> {
+  const webhookSecret = process.env.STRIPE_CALC_PRO_WEBHOOK_SECRET
+  const stripeSecret  = process.env.STRIPE_SECRET_KEY
+
+  if (!webhookSecret) {
+    console.error('[webhook/payment/calc-pro] STRIPE_CALC_PRO_WEBHOOK_SECRET ausente')
+    return NextResponse.json({ error: 'Not configured' }, { status: 500 })
+  }
+  if (!stripeSecret) {
+    console.error('[webhook/payment/calc-pro] STRIPE_SECRET_KEY ausente')
+    return NextResponse.json({ error: 'Not configured' }, { status: 500 })
+  }
+
+  // 1. Signature ANTES de qualquer coisa
+  const sig = req.headers.get('stripe-signature')
+  if (!sig) {
+    console.warn('[webhook/payment/calc-pro] stripe-signature ausente')
+    return NextResponse.json({ error: 'Missing signature' }, { status: 401 })
+  }
+
+  const rawBody = Buffer.from(await req.arrayBuffer())
+  const stripe  = new Stripe(stripeSecret, { apiVersion: STRIPE_API_VERSION })
+
+  let event: Stripe.Event
+  try {
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.warn(`[webhook/payment/calc-pro] Invalid signature: ${msg}`)
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+  }
+
+  // 2. Filtrar eventos suportados
+  if (!SUPPORTED_CALC_PRO_EVENTS.has(event.type)) {
+    return NextResponse.json({ received: true })   // silent ack
+  }
+
+  // 3. Lock atomico via webhook_events (mesma tabela do handler de catalogo)
+  const admin = getSupabaseAdmin()
+  const { error: lockError } = await admin
+    .from('webhook_events')
+    .insert({
+      provider:   'stripe',
+      event_id:   event.id,
+      event_type: event.type,
+      payload:    { source: 'calc_pro_subscription', event_type: event.type },
+    })
+
+  if (lockError) {
+    // 23505 = unique_violation em (provider, event_id) — duplicate ack silent
+    if (lockError.code === '23505') {
+      console.info(
+        `[webhook/payment/calc-pro] Duplicate event ${event.id} (${event.type}) — ack silent`,
+      )
+      return NextResponse.json({ received: true })
+    }
+    console.error(`[webhook/payment/calc-pro] webhook_events insert failed: ${lockError.message}`)
+    return NextResponse.json({ error: 'DB error' }, { status: 500 })
+  }
+
+  // 4. Extrair dados da subscription a partir do evento
+  let extracted: CalcProEventData | null
+  try {
+    extracted = await extractCalcProEventData(event, stripe)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error(`[webhook/payment/calc-pro] extract failed (event=${event.id}): ${msg}`)
+    // Evento ja registrado em webhook_events. Retry vai cair em duplicate.
+    // Retornamos 500 pra Stripe re-tentar — talvez seja erro transient.
+    return NextResponse.json({ error: 'Extract failed' }, { status: 500 })
+  }
+
+  if (!extracted) {
+    console.info(`[webhook/payment/calc-pro] Sem subscription data no evento (event=${event.id}) — ack`)
+    await markEventProcessed(event.id)
+    return NextResponse.json({ received: true })
+  }
+
+  // 5. Resolver user_id Hayzer
+  const userId = await resolveUserId(extracted.email, extracted.userId)
+  if (!userId) {
+    console.warn(
+      `[webhook/payment/calc-pro] Nao consegui resolver user_id | email=${extracted.email} | subscriptionId=${extracted.subscriptionId}`,
+    )
+    // Evento ja gravado — admin reprocessa manualmente. Retorna 200 (nao queremos
+    // retry infinito de evento que nunca vai resolver).
+    await markEventProcessed(event.id)
+    return NextResponse.json({ received: true })
+  }
+
+  // 6. Validar email — sem email nao da pra atrelar
+  if (!extracted.email) {
+    console.warn(
+      `[webhook/payment/calc-pro] Email ausente | subscriptionId=${extracted.subscriptionId}`,
+    )
+    await markEventProcessed(event.id)
+    return NextResponse.json({ received: true })
+  }
+
+  // 7. Upsert na tabela calc_pro_subscriptions
+  try {
+    await upsertSubscription({
+      userId,
+      email:                extracted.email,
+      stripeCustomerId:     extracted.customerId,
+      stripeSubscriptionId: extracted.subscriptionId,
+      stripePriceId:        extracted.priceId,
+      status:               extracted.status as CalcProSubscriptionStatus,
+      currentPeriodStart:   unixToIso(extracted.currentPeriodStart),
+      currentPeriodEnd:     unixToIso(extracted.currentPeriodEnd),
+      trialEnd:             unixToIso(extracted.trialEnd),
+      cancelAtPeriodEnd:    extracted.cancelAtPeriodEnd,
+      canceledAt:           unixToIso(extracted.canceledAt),
+      lastEventId:          event.id,
+    })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error(
+      `[webhook/payment/calc-pro] upsertSubscription failed (event=${event.id}, sub=${extracted.subscriptionId}): ${msg}`,
+    )
+    // Evento ja gravado em webhook_events. Retornamos 500 pra Stripe re-tentar
+    // — pode ser DB transient. Retry vai cair em duplicate em webhook_events
+    // se ja processado, ou refazer o upsert se foi falha real.
+    return NextResponse.json({ error: 'Upsert failed' }, { status: 500 })
+  }
+
+  // 8. Marca evento como processado
+  await markEventProcessed(event.id)
+
+  console.info(
+    `[webhook/payment/calc-pro] OK | event=${event.type} | sub=${extracted.subscriptionId} | status=${extracted.status} | user=${userId}`,
+  )
+  return NextResponse.json({ received: true })
+}
+
+async function markEventProcessed(eventId: string): Promise<void> {
+  const admin = getSupabaseAdmin()
+  await admin
+    .from('webhook_events')
+    .update({ processed_at: new Date().toISOString() })
+    .eq('provider', 'stripe')
+    .eq('event_id', eventId)
 }
