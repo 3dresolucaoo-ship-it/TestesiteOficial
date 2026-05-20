@@ -49,7 +49,7 @@
 - ✅ Skeleton screens implementados em 4 rotas pesadas (orders/dashboard/crm/finance).
 - ✅ `lottie-react` lazy via `next/dynamic` — elimina ~150KB do chunk inicial.
 - ⚠️ TODO CEO: validar em Network tab prod que Fraunces weight 600 tem `Highest` priority. Next.js 16 + `preload: true` deve gerar automaticamente, mas confirmar.
-- ⚠️ Queries do store cliente (`loadFromSupabase`) ainda fazem 13 queries no mount client-side. Próximo passo: lazy por modulo no store.
+- ✅ Lazy loading por modulo no store (Onda Perf 2 — branch `feature/v4-onda-perf2-store`): useStoreModule('orders') + useStoreModule('leads'). Mount client: 2 queries SSR + queries on-demand. /orders e /crm exibem skeleton V4 durante fetch, nunca mais retornam null.
 
 ## Related
 
