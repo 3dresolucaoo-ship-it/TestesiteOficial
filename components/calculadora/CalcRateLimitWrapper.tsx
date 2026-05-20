@@ -29,13 +29,9 @@ export function CalcRateLimitWrapper({ children }: CalcRateLimitWrapperProps) {
   const onCalcSuccess = useCallback(() => {
     const next = increment()
 
-    if (next > cap) {
-      // Tentativa além do cap: só abre modal, não incrementa mais
+    if (next >= cap) {
+      // Bateu ou ultrapassou o cap: abre modal upsell
       setAttemptN(n => n + 1)
-      setUpsellOpen(true)
-    } else if (next >= cap) {
-      // Bateu exatamente no cap: incrementa e abre modal
-      setAttemptN(cap + 1)
       setUpsellOpen(true)
     }
     // Se next < cap: só incrementa, pill atualiza via estado
@@ -45,7 +41,7 @@ export function CalcRateLimitWrapper({ children }: CalcRateLimitWrapperProps) {
   const usedGe4 = count >= 4
 
   return (
-    <CalcRateLimitContext.Provider value={{ onCalcSuccess }}>
+    <CalcRateLimitContext.Provider value={{ onCalcSuccess, limitReached: count >= cap, count, cap }}>
       {children}
 
       {/* Pill contador — visível só se pelo menos 1 cálculo foi feito */}

@@ -7,7 +7,6 @@ import { Calculator, ArrowRight, Copy, Check, FileText } from 'lucide-react'
 import { PaywallModal } from '@/components/calculadora/PaywallModal'
 import { track } from '@/lib/posthog'
 import { useCalcRateLimitContext } from '@/components/calculadora/CalcRateLimitContext'
-import { useCalcRateLimit } from '@/lib/hooks/useCalcRateLimit'
 import {
   Disc,           // rolo de filamento (3D look)
   Cube,           // peça 3D
@@ -77,9 +76,8 @@ export function CalculadoraForm() {
   const [paywallOpen, setPaywallOpen] = useState(false)
   const precoEnergia = 0.85
 
-  // Rate limit: lê do context (wrapper gerencia pill + modal)
-  const { onCalcSuccess } = useCalcRateLimitContext()
-  const { limitReached } = useCalcRateLimit()
+  // Rate limit: lê do context (wrapper gerencia pill + modal + estado)
+  const { onCalcSuccess, limitReached } = useCalcRateLimitContext()
 
   // ─── Analytics: calculadora_view (uma vez no mount) ─────────────────────
   const viewTracked = useRef(false)

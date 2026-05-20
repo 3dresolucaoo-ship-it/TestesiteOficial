@@ -11,7 +11,7 @@
  *   const { count, cap, remaining, limitReached, increment } = useCalcRateLimit()
  */
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 const CAP = 5
 
@@ -52,16 +52,15 @@ interface UseCalcRateLimitReturn {
 }
 
 export function useCalcRateLimit(): UseCalcRateLimitReturn {
-  const [count, setCount] = useState<number>(0)
-
-  // Lê do localStorage no mount (client-only)
-  useEffect(() => {
-    setCount(readCount())
-  }, [])
+  // Lazy initializer: lê localStorage no primeiro render (client-only via 'use client').
+  // Em SSR retorna 0 (typeof window === 'undefined' em readCount).
+  // Não usa useEffect para setar estado: evita cascading renders e ESLint react-hooks/set-state-in-effect.
+  const [count, setCount] = useState<number>(() => readCount())
 
   const increment = useCallback((): number => {
     const current = readCount()
-    const next = current + 1
+    // Não incrementa além do cap — evita count infinito no localStorage
+    const next = Math.min(current + 1, CAP + 1)
     writeCount(next)
     setCount(next)
     return next

@@ -1,22 +1,29 @@
 import { Header } from '@/components/landing/Header'
 import { Footer } from '@/components/landing/Footer'
 import { Logo } from '@/components/landing/Logo'
+import { CalcProHeroTracker } from './_components/CalcProHeroTracker'
+import { CalcProCtaButton } from './_components/CalcProCtaButton'
+
 export const metadata = {
-  title: 'Calculadora Pro · PDF de orçamento, histórico e multi-impressora · Hayzer',
+  title: 'Calculadora Pro · Sem limite, PDF e histórico · Hayzer',
   description:
-    'Calcula uma vez. Manda o orçamento bonito. Cliente fecha. R$ 37 pagamento único, sem mensalidade.',
+    'Calc grátis tem cap de 5/dia. Pro libera tudo: sem limite diário, PDF pro cliente e histórico do mês. R$ 19/mês, cancela quando quiser.',
 }
 
 const stripeLink = process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_CALC_PRO
+const proPrice = process.env.NEXT_PUBLIC_CALC_PRO_PRICE_MONTHLY ?? '19'
 
 export default function CalculadoraProPage() {
   return (
     <div className="bg-background text-foreground">
       <Header />
+      {/* Rastreia visualização do pitch Pro (PostHog: calc_pro_pitch_view) */}
+      <CalcProHeroTracker />
+
       <main>
         {/* ── HERO ──────────────────────────────────────────────────────── */}
         <section className="vignette grain relative overflow-hidden">
-          {/* Glows ambientes nos cantos: verde-petrol esquerda, ember direita */}
+          {/* Glows ambientes: petrol esquerda, ember direita */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -top-32 -left-32 h-[520px] w-[520px] rounded-full blur-[110px]"
@@ -34,45 +41,43 @@ export default function CalculadoraProPage() {
           />
 
           <div className="container-warm relative mx-auto max-w-[1000px] px-6 pt-20 pb-24 text-center md:px-10 md:pt-28 md:pb-32">
-            {/* Logo gigante: mesma alma do hero do waitlist */}
+            {/* Logo */}
             <div className="mb-10 flex justify-center">
               <Logo size="lg" pulse />
             </div>
 
-            {/* Badge sticker âmbar tilt: paralelo ao "ACESSO ANTECIPADO" do waitlist */}
+            {/* Badge Pro com preco */}
             <div className="mb-8 flex justify-center">
               <span className="sticker-amber inline-flex -rotate-1 items-center gap-2 rounded-sm px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em]">
-                Pro Lifetime · R$ 37 · pagamento único
+                Pro · R${proPrice}/mes · sem limite + PDF + historico
               </span>
             </div>
 
             <h1 className="display-h1 mx-auto max-w-[820px] text-[3rem] text-foreground sm:text-[3.75rem] md:text-[4.75rem] lg:text-[5.25rem]">
-              Para de calcular preço{' '}
+              Calcula sem limite.{' '}
               <span
                 className="italic-soft marker"
                 style={{ boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone' }}
               >
-                na cabeça
+                Manda orcamento sério
               </span>
-              ,{' '}
-              <span className="italic-soft">no Excel ou no zap</span>.
             </h1>
 
             <p className="mx-auto mt-7 max-w-[580px] text-[17px] leading-[1.6] text-muted-foreground md:text-[18px]">
-              PDF pro cliente, histórico salvo, multi-impressora.
-              R$&nbsp;37 pra sempre.
+              Cap de 5/dia da grátis te trava no pico das vendas.
+              Pro libera tudo: sem limite diário, PDF pro cliente e histórico do mês.
             </p>
 
-            {/* Lista "para makers que": paralelo ao "construído para" do hero waitlist */}
+            {/* Tags "para makers que" */}
             <div className="mx-auto mt-10 flex max-w-[680px] flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[13px]">
               <span className="tag tag-fog">para quem</span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
-                manda orçamento pelo WhatsApp
+                manda orcamento pelo WhatsApp
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
-                tem mais de uma impressora
+                tem pico de pedidos no fim de semana
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'hsl(var(--petrol-400))' }} />
@@ -81,32 +86,33 @@ export default function CalculadoraProPage() {
             </div>
 
             <div className="mt-12 flex flex-col items-center gap-3">
-              <CtaButton />
+              <CalcProCtaButton stripeLink={stripeLink} proPrice={proPrice} />
               <p className="text-[12px] text-muted-foreground">
-                pagamento único · sem mensalidade · 7 dias pra pedir reembolso
+                Cancela a qualquer hora. Sem fidelidade.
               </p>
             </div>
           </div>
         </section>
 
-        {/* ── FRASE ÂNCORA ──────────────────────────────────────────────── */}
+        {/* ── FRASE ANCORA ──────────────────────────────────────────────── */}
         <section className="py-16 md:py-20">
           <div className="mx-auto max-w-[860px] px-6 text-center md:px-10">
             <h2
               className="text-[2rem] font-bold leading-[1.15] tracking-[-0.03em] text-foreground sm:text-[2.5rem]"
               style={{ fontFamily: 'var(--font-serif)' }}
             >
-              Calcula uma vez. Manda o orçamento bonito. Cliente fecha.
+              Calcula uma vez. Manda o orcamento bonito. Cliente fecha.
             </h2>
             <p className="mx-auto mt-5 max-w-[560px] text-[16px] leading-[1.65] text-muted-foreground">
-              A versão grátis resolve a conta. A Pro resolve o resto:
-              o PDF que o cliente recebe, o histórico que você consulta semana que vem,
-              e o perfil de cada impressora que você tem na bancada.
+              A versão grátis resolve a conta de hoje.
+              A Pro resolve o resto: o PDF que o cliente recebe,
+              o histórico que você consulta semana que vem
+              e o perfil de cada impressora na bancada.
             </p>
           </div>
         </section>
 
-        {/* ── 5 BENEFÍCIOS ──────────────────────────────────────────────── */}
+        {/* ── 3 FEATURES PRINCIPAIS ─────────────────────────────────────── */}
         <section className="py-16 md:py-20">
           <div className="mx-auto max-w-[1100px] px-6 md:px-10">
             <div className="mb-12 text-center">
@@ -115,37 +121,30 @@ export default function CalculadoraProPage() {
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <BenefitCard
+            <div className="grid gap-6 md:grid-cols-3">
+              <FeatureCard
                 number="01"
-                title="PDF de orçamento pra mandar pro cliente"
-                body="Você calcula, clica em &quot;Exportar PDF&quot;, manda no WhatsApp. Sai com seu nome, o item, o prazo e o preço final. Cliente recebe um documento, não um número solto na conversa."
+                title="Sem limite diário"
+                vs="vs 5/dia grátis"
+                body="Sem cap. Teu pico de sábado não te trava mais no meio do orçamento. Calcula quanto precisar, quando precisar."
               />
-              <BenefitCard
+              <FeatureCard
                 number="02"
-                title="Histórico salvo no seu navegador"
-                body="Cada cálculo fica gravado. Mês que vem o mesmo cliente pede a mesma peça? Abre o histórico, copia, envia. Acabou refazer conta do zero."
+                title="PDF pro cliente"
+                vs="orcamento bonito assinado"
+                body='Você calcula, clica "Exportar PDF", manda no WhatsApp. Sai com seu nome, o item, o prazo e o preço final. Cliente recebe um documento, não um número solto na conversa.'
               />
-              <BenefitCard
+              <FeatureCard
                 number="03"
-                title="Várias impressoras, cada uma com seu perfil"
-                body="Tem uma Ender, uma Bambu e uma Anycubic? Cada uma com watt diferente, filamento diferente, custo diferente. Salva os perfis uma vez. Na hora de calcular, escolhe qual rodou, o resto entra automático."
-              />
-              <BenefitCard
-                number="04"
-                title="Cobra cliente de fora em dólar ou euro"
-                body="Vendeu pra gringo? Inverte a moeda, ajusta o câmbio do dia, e o preço sai em USD ou EUR direto no PDF. Sem planilha auxiliar."
-              />
-              <BenefitCard
-                number="05"
-                title="Sem propaganda. Sem marca d'água."
-                body="A versão grátis tem uma faixinha no rodapé do PDF. A Pro não tem. Seu orçamento, seu nome, sem ruído."
+                title="Histórico do mês"
+                vs="todo calculo salvo"
+                body="Cada cálculo fica gravado. Mês que vem o mesmo cliente pede a mesma peça? Abre o histórico, copia, envia. Acabou refazer conta do zero."
               />
             </div>
           </div>
         </section>
 
-        {/* ── GRÁTIS vs PRO ─────────────────────────────────────────────── */}
+        {/* ── GRATIS vs PRO ─────────────────────────────────────────────── */}
         <section className="py-16 md:py-20">
           <div className="mx-auto max-w-[820px] px-6 md:px-10">
             <div className="grid gap-6 md:grid-cols-2">
@@ -162,7 +161,7 @@ export default function CalculadoraProPage() {
                     Versão Grátis
                   </p>
                   <p className="mt-1 text-[13px] text-muted-foreground">
-                    continua grátis pra sempre
+                    5 cálculos por dia · sem cadastro
                   </p>
                 </div>
                 <ul className="space-y-2.5">
@@ -172,7 +171,8 @@ export default function CalculadoraProPage() {
                     'Preço por canal (WhatsApp, ML, Shopee, Amazon, Americanas)',
                     'Slider visual de margem',
                     '1 impressora por cálculo',
-                    'Marca d\'água "feito com Hayzer" no rodapé',
+                    'Marca d\'água "feito com Hayzer" no rodapé do PDF',
+                    '5 cálculos por dia (reseta meia-noite)',
                   ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-[14px] text-muted-foreground">
                       <span
@@ -195,23 +195,26 @@ export default function CalculadoraProPage() {
                 }}
               >
                 <div className="mb-5">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em]"
-                    style={{ color: 'hsl(var(--petrol-300))' }}>
+                  <p
+                    className="font-mono text-[11px] uppercase tracking-[0.18em]"
+                    style={{ color: 'hsl(var(--petrol-300))' }}
+                  >
                     Versão Pro
                   </p>
-                  <p className="mt-1 text-[13px] text-foreground font-semibold">
-                    R$ 37 uma vez, pra sempre
+                  <p className="mt-1 text-[13px] font-semibold text-foreground">
+                    R${proPrice}/mês · cancela quando quiser
                   </p>
                 </div>
                 <ul className="space-y-2.5">
                   {[
                     'Tudo da Grátis',
+                    'Sem limite diário de cálculos',
                     'PDF profissional pra mandar pro cliente',
                     'Histórico de cálculos (volta no que você fez semana passada)',
                     'Múltiplas impressoras com perfis salvos',
                     'Suporte a USD e EUR (cliente gringo)',
                     'Sem marca d\'água',
-                    'Acesso a feature nova sem pagar de novo',
+                    'Novas features sem custo extra',
                   ].map((item, i) => (
                     <li key={item} className="flex items-start gap-2.5 text-[14px] text-foreground">
                       <span
@@ -238,15 +241,22 @@ export default function CalculadoraProPage() {
               }}
             >
               <p className="text-[18px] font-semibold leading-[1.45] text-foreground md:text-[20px]">
-                A gente sabe que R$ 37 não é trocado de bolso.
+                Sem fidelidade, sem pegadinha.
               </p>
               <p className="mt-4 text-[15px] leading-[1.65] text-muted-foreground">
-                Por isso o pagamento é único. Não tem mensalidade. Não tem renovação automática.
-                Você paga uma vez, recebe o acesso pelo email, usa pra sempre.
+                Você assina mês a mês. Se em qualquer momento achar que não vale,
+                cancela pelo painel Stripe, sem pergunta, sem formulário.
+                A cobrança para no fim do ciclo.
               </p>
               <p className="mt-4 text-[15px] leading-[1.65] text-muted-foreground">
-                Se em 7 dias você achar que não vale, devolve o dinheiro. Sem pergunta, sem formulário,
-                sem &ldquo;deixa eu tentar te convencer&rdquo;. Manda email, eu estorno no mesmo dia.
+                Dúvida?{' '}
+                <a
+                  href="mailto:suporte@hayzer.com.br"
+                  className="underline underline-offset-2 transition-colors hover:text-foreground"
+                >
+                  suporte@hayzer.com.br
+                </a>
+                . Respondo no mesmo dia.
               </p>
             </div>
           </div>
@@ -266,24 +276,24 @@ export default function CalculadoraProPage() {
 
             <div className="space-y-4">
               <FaqItem
-                question="Isso é mensalidade?"
-                answer="Não. Pagamento único de R$ 37. Você paga, recebe o acesso, usa pra sempre. Não tem cobrança no mês que vem, no ano que vem, em lugar nenhum."
+                question="É mensalidade mesmo?"
+                answer={`Sim. R$ ${proPrice}/mês. Cancela quando quiser pelo painel Stripe, sem ligar pra ninguém. Não tem multa, não tem fidelidade mínima.`}
               />
               <FaqItem
-                question="E se sair feature nova depois?"
-                answer="Vem junto, sem cobrar de novo. A Pro é uma única compra que vale pra todas as melhorias futuras da calculadora."
+                question="O que acontece com meu histórico se eu cancelar?"
+                answer="Você continua com acesso até o fim do ciclo que já pagou. Depois cai pra versão grátis (cap 5/dia). Histórico fica no seu navegador, você não perde nada."
+              />
+              <FaqItem
+                question="O limite de 5/dia é por dispositivo?"
+                answer="Sim, por navegador. Se você usa no celular e no notebook, cada um tem seu próprio contador. O cap reseta todo dia à meia-noite."
               />
               <FaqItem
                 question="Funciona offline?"
-                answer="A calculadora roda no seu navegador. Depois que carregou uma vez, faz cálculo sem internet. O histórico fica salvo localmente. PDF gera offline. (Câmbio USD/EUR precisa de internet pra atualizar a cotação do dia.)"
+                answer="A calculadora roda no navegador. Depois que carregou uma vez, faz cálculo sem internet. O histórico fica salvo localmente. PDF gera offline. (Câmbio USD/EUR precisa de internet pra atualizar cotação.)"
               />
               <FaqItem
-                question="Posso pedir reembolso?"
-                answer="Sim. Em até 7 dias depois da compra, manda um email pra suporte@hayzer.com.br pedindo o estorno. A gente devolve no mesmo dia, sem pergunta."
-              />
-              <FaqItem
-                question="Como recebo o acesso?"
-                answer="Você paga pelo Stripe (cartão ou PIX), e em alguns minutos cai um email com seu link de acesso. Salva o link nos favoritos, é por ali que você entra."
+                question="Como recebo o acesso Pro?"
+                answer="Você paga pelo Stripe (cartão ou PIX) e em alguns minutos cai um email com seu link de acesso. Salva o link nos favoritos."
               />
             </div>
           </div>
@@ -296,25 +306,24 @@ export default function CalculadoraProPage() {
               className="text-[2rem] font-bold leading-[1.15] tracking-[-0.03em] text-foreground sm:text-[2.5rem]"
               style={{ fontFamily: 'var(--font-serif)' }}
             >
-              Pronto pra mandar orçamento bonito?
+              Pronto pra calcular sem trava e mandar orcamento bonito?
             </h2>
 
             <div className="mt-8 flex flex-col items-center gap-3">
-              <CtaButton />
+              <CalcProCtaButton stripeLink={stripeLink} proPrice={proPrice} />
               <p className="text-[12px] text-muted-foreground">
-                pagamento único pelo Stripe · cartão ou PIX · 7 dias pra reembolso
+                pagamento pelo Stripe · cartão ou PIX · cancela a qualquer hora
               </p>
             </div>
 
-            <p className="mt-8 text-[13px] text-muted-foreground">
-              Dúvida?{' '}
+            <div className="mt-6">
               <a
-                href="mailto:suporte@hayzer.com.br"
-                className="underline underline-offset-2 transition-colors hover:text-foreground"
+                href="/calculadora"
+                className="text-[13px] text-muted-foreground underline underline-offset-2 transition-colors hover:text-foreground"
               >
-                suporte@hayzer.com.br
+                Voltar pra calculadora grátis
               </a>
-            </p>
+            </div>
           </div>
         </section>
       </main>
@@ -325,41 +334,17 @@ export default function CalculadoraProPage() {
 
 // ── Componentes internos ─────────────────────────────────────────────────────
 
-function CtaButton() {
-  if (!stripeLink) {
-    return (
-      <div
-        className="rounded-xl px-6 py-3 text-[14px] text-muted-foreground"
-        style={{
-          background: 'hsl(var(--card) / 0.5)',
-          border: '1px solid hsl(var(--fog-50) / 0.08)',
-        }}
-        role="status"
-        aria-live="polite"
-      >
-        Checkout temporariamente indisponível, volta em alguns minutos.
-      </div>
-    )
-  }
-
-  return (
-    <a
-      href={stripeLink}
-      className="group inline-flex items-center justify-center rounded-xl px-8 py-4 text-[16px] font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_0_28px_hsl(var(--petrol-400)/0.55),0_18px_44px_-12px_hsl(var(--petrol-500)/0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-300))] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      style={{
-        background: 'linear-gradient(180deg, hsl(var(--petrol-400)) 0%, hsl(var(--petrol-500)) 100%)',
-        color: 'hsl(var(--fog-50))',
-        boxShadow:
-          '0 1px 0 rgba(255,255,255,0.15) inset, 0 8px 24px -8px hsl(var(--petrol-500) / 0.55)',
-      }}
-      aria-label="Comprar Calculadora Pro por R$ 37"
-    >
-      Quero a Pro · R$ 37
-    </a>
-  )
-}
-
-function BenefitCard({ number, title, body }: { number: string; title: string; body: string }) {
+function FeatureCard({
+  number,
+  title,
+  vs,
+  body,
+}: {
+  number: string
+  title: string
+  vs: string
+  body: string
+}) {
   return (
     <div
       className="rounded-2xl p-6"
@@ -368,19 +353,18 @@ function BenefitCard({ number, title, body }: { number: string; title: string; b
         border: '1px solid hsl(var(--fog-50) / 0.08)',
       }}
     >
-      <div
-        className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em]"
-        style={{ color: 'hsl(var(--petrol-300))' }}
-      >
+      <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.2em]" style={{ color: 'hsl(var(--petrol-300))' }}>
         {number}
       </div>
-      <h3 className="mb-3 text-[15px] font-semibold leading-[1.35] text-foreground">
+      <h3 className="mb-0.5 text-[15px] font-semibold leading-[1.35] text-foreground">
         {title}
       </h3>
-      <p
-        className="text-[13.5px] leading-[1.6] text-muted-foreground"
-        dangerouslySetInnerHTML={{ __html: body }}
-      />
+      <p className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.15em] text-muted-foreground/70">
+        {vs}
+      </p>
+      <p className="text-[13.5px] leading-[1.6] text-muted-foreground">
+        {body}
+      </p>
     </div>
   )
 }
