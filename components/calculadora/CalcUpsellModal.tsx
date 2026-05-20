@@ -50,7 +50,7 @@ export function CalcUpsellModal({ open, onClose, attemptN }: CalcUpsellModalProp
   // Rastreia abertura do modal (PostHog)
   useEffect(() => {
     if (open) {
-      track('calc_grátis_limite_atingido', { tentativa_n: attemptN })
+      track('calc_free_limite_atingido', { tentativa_n: attemptN })
     }
   }, [open, attemptN])
 
