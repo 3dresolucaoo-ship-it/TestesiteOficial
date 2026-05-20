@@ -31,6 +31,7 @@ function orderFromDB(r: any): Order {
     paymentId:        r.payment_id         ?? undefined,
     paymentStatus:    r.payment_status     ?? undefined,
     customerWhatsapp: r.customer_whatsapp  ?? undefined,
+    sourceLeadId:     r.source_lead_id     ?? undefined,
   }
 }
 
@@ -157,12 +158,8 @@ export const leadsService = {
       .eq('project_id', projectId)
       .single()
 
-    if (fetchError || !leadRow) {
-      serviceError(
-        'leadsService.convertToOrder.fetch',
-        fetchError ?? { message: 'Lead not found', details: '', hint: '', code: '404' },
-      )
-    }
+    if (fetchError) serviceError('leadsService.convertToOrder.fetch', fetchError)
+    if (!leadRow) throw new Error('[leadsService.convertToOrder] Lead not found')
 
     const lead = leadFromDB(leadRow)
 
@@ -196,8 +193,8 @@ export const leadsService = {
     const today   = new Date().toISOString().slice(0, 10)
 
     // Extrai whatsapp do contato se o campo parecer ser um número
-    const whatsappContact = lead.contact.replace(/\D/g, '')
-    const customerWhatsapp = whatsappContact.length >= 8 ? whatsappContact : undefined
+    const whatsappContact   = lead.contact.replace(/\D/g, '')
+    const customerWhatsapp  = whatsappContact.length >= 8 ? whatsappContact : undefined
 
     const newOrder: Order = {
       id:              orderId,
@@ -213,9 +210,10 @@ export const leadsService = {
       productId:       partialOrder.productId,
       source:          'manual',
       customerWhatsapp,
+      sourceLeadId:    leadId,
     }
 
-    // 4a. Insere pedido com source_lead_id (campo novo da migration 20260520)
+    // 4a. Insere pedido com source_lead_id (campo da migration 20260520_leads_converted_order)
     const { error: insertError } = await supabase.from('orders').insert({
       id:                newOrder.id,
       project_id:        newOrder.projectId,

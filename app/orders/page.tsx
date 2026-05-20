@@ -565,15 +565,6 @@ export default function OrdersPage() {
   const semanaISO      = useMemo(() => isoWeekNumber(today), [today])
   const entreguesNoMes = useMemo(() => totalEntreguesNoMes(byProject, today), [byProject, today])
 
-  // ---------------------------------------------------------------------------
-  // Metricas derivadas (Onda B) — calculadas com helpers de services/ordersMetrics
-  // ---------------------------------------------------------------------------
-
-  // B.1 — Semana ISO + total entregues no mes
-  const today          = useMemo(() => new Date(), [])
-  const semanaISO      = useMemo(() => isoWeekNumber(today), [today])
-  const entreguesNoMes = useMemo(() => totalEntreguesNoMes(byProject, today), [byProject, today])
-
   // Mes corrente para eyebrow
   const mesAtual = useMemo(
     () => today.toLocaleString('pt-BR', { month: 'long' }).toUpperCase(),
