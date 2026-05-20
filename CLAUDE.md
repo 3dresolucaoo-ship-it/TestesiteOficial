@@ -75,8 +75,18 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 - **Versão**: v0.6 · Fase 1 em curso · soft launch **11/06** · launch público **27/06/2026**
 - **Último audit**: `audits/2026-05-04.md` (próximo: ~04/06/2026)
-- **Última sessão maratona**: 20/05 noite (~10h, 33 commits push)
+- **Última sessão**: 20/05 noite → 21/05 madrugada (~7h, 22 commits push) — ver `sessions/2026-05-21-madrugada-v4-3c-G7-diagnose.md`
 - **Pillars score**: **7.7** (era 7.4, meta 30d: 8.0) · ver `pillars/SCORES.md`
+
+### 🚨 BLOQUEADOR ABERTO (21/05 madrugada) — A.3 vs A.4
+
+CEO escolheu "opção A 3c" (migrar TODOS módulos pro V4 igual /dashboard). 4 módulos foram migrados (/crm /finance /production /orders). MAS classes CSS do ModuleShell (`.kpi-card`, `.filter-bar`, `.page-header`, etc) NUNCA foram extraídas pro `globals-v4.css` — vivem só em `mockups/orders-v4-tom-novo.html` linhas 556-790 + 1195-1213. Resultado: módulos renderizam mas com KPIs em texto cru.
+
+3 vozes G7 (read-only diagnose):
+- **Felipe + Diego**: A.4 — fix 45-60min, extrair CSS do mockup. Resultado híbrido (KPIs V4 + sidebar antiga).
+- **Helena**: A.3 — reverter 4 módulos, foca golden path. V4 completo fica pra Onda 2 pós-launch.
+
+**Decisão CEO pendente.** Estado atual em prod (commit `284fa2c`): /dashboard perfeito, outros 4 renderizam feio mas funcionais. Sem decisão, não migramos os 7 módulos restantes.
 
 ### ⚠️ Status REAL do produto (modo crítico CEO 20/05 23h)
 
