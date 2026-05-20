@@ -19,8 +19,8 @@
  * Dependência de interatividade: count-up + âncora dinâmica → 'use client'.
  */
 
-import { useEffect, useRef, useState } from 'react'
 import type { CoverHeroData, CoverAnchorState, KpiSatellite } from './types'
+import { useCountUp } from '@/lib/hooks/useCountUp'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -65,58 +65,7 @@ const ANCHOR_COPY: Record<CoverAnchorState, React.ReactNode> = {
   alerta:  <>meta em risco. <em>precisa correr</em> pro mês não fechar no vermelho.</>,
 }
 
-// ---------------------------------------------------------------------------
-// Sub-componente: count-up
-// ---------------------------------------------------------------------------
-
-interface CountUpProps {
-  target: number
-  /** Duração em ms. */
-  duration?: number
-}
-
-function CountUp({ target, duration = 1200 }: CountUpProps) {
-  const [displayed, setDisplayed] = useState(0)
-  const rafRef = useRef<number | null>(null)
-
-  useEffect(() => {
-    // Respeitar prefers-reduced-motion — usa requestAnimationFrame pra evitar
-    // setState síncrono dentro de effect (react-hooks/set-state-in-effect).
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduced) {
-      const raf = requestAnimationFrame(() => setDisplayed(target))
-      return () => cancelAnimationFrame(raf)
-    }
-
-    const start     = performance.now()
-    const easeOut   = (t: number) => 1 - Math.pow(1 - t, 3)
-
-    const step = (now: number) => {
-      const elapsed  = Math.min(now - start, duration)
-      const progress = easeOut(elapsed / duration)
-      setDisplayed(Math.round(target * progress))
-      if (elapsed < duration) {
-        rafRef.current = requestAnimationFrame(step)
-      }
-    }
-
-    rafRef.current = requestAnimationFrame(step)
-    return () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
-    }
-  }, [target, duration])
-
-  // Reinicia count-up ao voltar pelo bfcache
-  useEffect(() => {
-    const handlePageShow = (e: PageTransitionEvent) => {
-      if (e.persisted) setDisplayed(0)
-    }
-    window.addEventListener('pageshow', handlePageShow)
-    return () => window.removeEventListener('pageshow', handlePageShow)
-  }, [])
-
-  return <>{formatBRL(displayed)}</>
-}
+// CountUp agora via useCountUp (lib/hooks/useCountUp.ts) — sem duplicação
 
 // ---------------------------------------------------------------------------
 // Sub-componente: KPI mini-card (satélite)
@@ -165,8 +114,9 @@ interface CoverHeroProps {
 // ---------------------------------------------------------------------------
 
 export function CoverHero({ data, satellites }: CoverHeroProps) {
-  const anchorState = getAnchorState(data.progressPercent, data.revenue, data.daysLeft)
-  const anchorCopy  = ANCHOR_COPY[anchorState]
+  const anchorState    = getAnchorState(data.progressPercent, data.revenue, data.daysLeft)
+  const anchorCopy     = ANCHOR_COPY[anchorState]
+  const revenueAnimated = useCountUp(data.revenue, 1200)
 
   return (
     <section
@@ -183,7 +133,7 @@ export function CoverHero({ data, satellites }: CoverHeroProps) {
         {/* Figura Fraunces 96px */}
         <h1 className="cover-figure num">
           <span className="currency">R$</span>
-          <CountUp target={data.revenue} />
+          {formatBRL(revenueAnimated)}
           <span className="decimal">,00</span>
         </h1>
 
