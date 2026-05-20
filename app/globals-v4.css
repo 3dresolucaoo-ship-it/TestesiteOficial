@@ -2417,3 +2417,65 @@
   .kpi-row { grid-template-columns: 1fr; }
   .kpi-row .kpi-card.hero-petrol { grid-column: span 1; }
 }
+
+/* ============================================================
+   SKELETON SCREENS — shimmer placeholders para loading.tsx
+   Usados em app/{orders,dashboard,crm,finance}/loading.tsx.
+   ============================================================ */
+
+@keyframes skeleton-pulse {
+  0%, 100% { background-position: 200% 0; }
+  50%       { background-position: -200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--fog-400) / 0.08) 0%,
+    hsl(var(--fog-300) / 0.16) 50%,
+    hsl(var(--fog-400) / 0.08) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+  border-radius: 8px;
+  min-height: 1em;
+}
+
+/* Variante para valores numericos grandes (KPI hero) */
+.skeleton-kpi-value {
+  height: 48px;
+  width: 140px;
+  border-radius: 6px;
+}
+
+/* Variante para linhas de texto */
+.skeleton-text {
+  height: 14px;
+  border-radius: 4px;
+}
+
+/* Variante para linhas de tabela */
+.skeleton-row {
+  height: 52px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+}
+
+/* Variante para titulo da page (h1 grande) */
+.skeleton-title {
+  height: 64px;
+  width: 260px;
+  border-radius: 8px;
+}
+
+/* Light mode — shimmer mais visivel em fundo bege */
+:root[data-theme="light"] .skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 10, 9, 0.06) 0%,
+    rgba(15, 10, 9, 0.12) 50%,
+    rgba(15, 10, 9, 0.06) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
