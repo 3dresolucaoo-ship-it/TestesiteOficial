@@ -120,25 +120,62 @@ function ProjectFilter({ projects, value, onChange }: ProjectFilterProps) {
 // ---------------------------------------------------------------------------
 
 interface MobileCardsProps {
-  orders:      Order[]
-  projectName: (id: string) => string
-  productName: (id: string | undefined) => string | undefined
-  onEdit:      (o: Order) => void
-  onDelete:    (id: string) => void
+  orders:         Order[]
+  allOrdersCount: number
+  projectName:    (id: string) => string
+  productName:    (id: string | undefined) => string | undefined
+  onEdit:         (o: Order) => void
+  onDelete:       (id: string) => void
+  onNewOrder:     () => void
+  onClearFilters: () => void
 }
 
-function MobileCards({ orders, projectName, productName, onEdit, onDelete }: MobileCardsProps) {
+function MobileCards({ orders, allOrdersCount, projectName, productName, onEdit, onDelete, onNewOrder, onClearFilters }: MobileCardsProps) {
   if (orders.length === 0) {
+    // Filtro ativo sem resultado
+    if (allOrdersCount > 0) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12 text-center px-4">
+          <ShoppingCart size={28} className="text-foreground/20 mb-3" aria-hidden="true" />
+          <p className="text-sm text-foreground/60 mb-3">
+            Nenhum pedido com esses filtros.
+          </p>
+          <button
+            type="button"
+            onClick={onClearFilters}
+            className="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-foreground/70 hover:text-foreground"
+            style={{ border: '1px solid hsl(200 11% 20%)' }}
+            aria-label="Limpar filtros e ver todos os pedidos"
+          >
+            Limpar filtros pra ver tudo
+          </button>
+        </div>
+      )
+    }
+
+    // Estado inicial: nenhum pedido ainda
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center px-4">
         <ShoppingCart size={32} className="text-[hsl(173_30%_57%)] mb-3" aria-hidden="true" />
         <h3 className="text-base font-semibold text-foreground mb-1.5">
-          Sua primeira venda esta esperando
+          Sem pedido por enquanto
         </h3>
-        <p className="text-xs text-foreground/65 leading-relaxed max-w-xs">
-          Registre pedidos do WhatsApp, Instagram ou Mercado Livre aqui. O Hayzer conecta o pedido
-          ao produto e desconta o filamento.
+        <p className="text-xs text-foreground/65 leading-relaxed max-w-xs mb-4">
+          Pedido novo aparece aqui assim que voce registrar. WhatsApp, Insta, balcao, da onde vier.
         </p>
+        <button
+          type="button"
+          onClick={onNewOrder}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium text-sm transition-colors"
+          style={{
+            background: 'hsl(173 58% 28%)',
+            boxShadow: '0 0 20px hsl(173 58% 28% / 0.28)',
+          }}
+          aria-label="Registrar primeiro pedido"
+        >
+          <Plus size={15} aria-hidden="true" />
+          Registrar primeiro pedido
+        </button>
       </div>
     )
   }
@@ -211,17 +248,42 @@ function MobileCards({ orders, projectName, productName, onEdit, onDelete }: Mob
 // ---------------------------------------------------------------------------
 
 interface DesktopTableProps {
-  orders:      Order[]
-  projectName: (id: string) => string
-  menuOpen:    string | null
-  onMenuToggle:(id: string) => void
-  onEdit:      (o: Order) => void
-  onDelete:    (id: string) => void
-  today:       Date
+  orders:         Order[]
+  allOrdersCount: number
+  projectName:    (id: string) => string
+  menuOpen:       string | null
+  onMenuToggle:   (id: string) => void
+  onEdit:         (o: Order) => void
+  onDelete:       (id: string) => void
+  onNewOrder:     () => void
+  onClearFilters: () => void
+  today:          Date
 }
 
-function DesktopTable({ orders, projectName, menuOpen, onMenuToggle, onEdit, onDelete, today }: DesktopTableProps) {
+function DesktopTable({ orders, allOrdersCount, projectName, menuOpen, onMenuToggle, onEdit, onDelete, onNewOrder, onClearFilters, today }: DesktopTableProps) {
   if (orders.length === 0) {
+    // Filtro ativo sem resultado
+    if (allOrdersCount > 0) {
+      return (
+        <div className="flex flex-col items-center justify-center py-16 text-center max-w-sm mx-auto px-6">
+          <ShoppingCart size={28} className="text-foreground/20 mb-3" aria-hidden="true" />
+          <p className="text-sm text-foreground/60 mb-3">
+            Nenhum pedido com esses filtros. Limpe os filtros pra ver tudo.
+          </p>
+          <button
+            type="button"
+            onClick={onClearFilters}
+            className="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-foreground/70 hover:text-foreground"
+            style={{ border: '1px solid hsl(200 11% 20%)' }}
+            aria-label="Limpar filtros e ver todos os pedidos"
+          >
+            Limpar filtros
+          </button>
+        </div>
+      )
+    }
+
+    // Estado inicial: nenhum pedido ainda
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto px-6">
         <div
@@ -229,20 +291,31 @@ function DesktopTable({ orders, projectName, menuOpen, onMenuToggle, onEdit, onD
           style={{
             background: 'hsl(173 58% 28% / 0.12)',
             border: '1px solid hsl(173 58% 28% / 0.25)',
+            boxShadow: '0 0 36px hsl(173 58% 28% / 0.18)',
           }}
           aria-hidden="true"
         >
           <ShoppingCart size={28} className="text-[hsl(173_30%_57%)]" aria-hidden="true" />
         </div>
         <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-          Sua primeira venda esta esperando
+          Sem pedido por enquanto
         </h3>
-        <p className="text-sm text-foreground/70 leading-relaxed mb-2">
-          Registre pedidos do WhatsApp, Instagram ou Mercado Livre aqui.
+        <p className="text-sm text-foreground/65 leading-relaxed mb-5">
+          Pedido novo aparece aqui assim que voce registrar. WhatsApp, Insta, balcao, da onde vier.
         </p>
-        <p className="text-sm text-foreground/60 leading-relaxed">
-          O Hayzer conecta o pedido ao produto e desconta o filamento do estoque automaticamente.
-        </p>
+        <button
+          type="button"
+          onClick={onNewOrder}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium text-sm transition-colors"
+          style={{
+            background: 'hsl(173 58% 28%)',
+            boxShadow: '0 0 24px hsl(173 58% 28% / 0.30)',
+          }}
+          aria-label="Registrar primeiro pedido"
+        >
+          <Plus size={15} aria-hidden="true" />
+          Registrar primeiro pedido
+        </button>
       </div>
     )
   }
@@ -947,10 +1020,13 @@ export default function OrdersPage() {
         <div className="sm:hidden">
           <MobileCards
             orders={sorted}
+            allOrdersCount={state.orders.length}
             projectName={projectName}
             productName={productName}
             onEdit={(o) => setEditing(o)}
             onDelete={handleDelete}
+            onNewOrder={handleNewOrder}
+            onClearFilters={handleLimparFiltros}
           />
         </div>
 
@@ -960,11 +1036,14 @@ export default function OrdersPage() {
         >
           <DesktopTable
             orders={sorted}
+            allOrdersCount={state.orders.length}
             projectName={projectName}
             menuOpen={menuOpen}
             onMenuToggle={handleMenuToggle}
             onEdit={(o) => { setEditing(o); setMenuOpen(null) }}
             onDelete={handleDelete}
+            onNewOrder={handleNewOrder}
+            onClearFilters={handleLimparFiltros}
             today={today}
           />
         </div>
