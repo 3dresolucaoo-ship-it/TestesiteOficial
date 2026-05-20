@@ -1,0 +1,450 @@
+{
+  "meta": {
+    "data_pesquisa": "2026-05-20",
+    "versao": "1.0",
+    "responsavel": "routine-concorrencia-semanal",
+    "proxima_execucao": "2026-05-27"
+  },
+  "concorrentes_saas": [
+    {
+      "nome": "MakerFlow 3D",
+      "url": "https://www.makerflow3d.com.br",
+      "status_site": "online",
+      "preco_planos": {
+        "mensal": "R$ 29,90/mes",
+        "trimestral": "R$ 69,90/trimestre (destaque 'Mais Popular')",
+        "anual": "nao informado"
+      },
+      "features_principais": [
+        "Dashboard com metricas em tempo real",
+        "Gestao completa de vendas",
+        "Gestao de estoque dinamico",
+        "Fila de producao visual",
+        "Controle de impressoras",
+        "Calculadora de custos 3D",
+        "Gestao financeira completa",
+        "Integracao com Mercado Livre e Shopee (sincronizacao automatica OAuth)",
+        "Suporte via WhatsApp",
+        "PRO Market Analysis (sistema de creditos)"
+      ],
+      "frase_ancora_home": "Gerencie sua operacao 3D de forma inteligente",
+      "novidades_recentes": "sem blog identificado",
+      "observacoes": "Integracao OAuth com ML+Shopee ativa. Plano trimestral como carro-chefe em vez de anual. Concorrente direto mais proximo."
+    },
+    {
+      "nome": "3D Control",
+      "url": "https://3dcontrol.com.br",
+      "status_site": "online",
+      "preco_planos": {
+        "mensal": "R$ 39,99/mes",
+        "anual": "nao informado"
+      },
+      "features_principais": [
+        "Dashboard financeiro com metricas em tempo real",
+        "Gestao ilimitada de pedidos com calculo automatico de custos",
+        "Controle de estoque e filamentos com alertas",
+        "CRM integrado com ranking de clientes",
+        "Gerenciamento de frota de impressoras",
+        "Suporte a multiplas plataformas (Shopee, Mercado Livre, Elo7, Instagram)",
+        "Relatorios e analises avancadas",
+        "Suporte prioritario"
+      ],
+      "frase_ancora_home": "Transforme seu Hobby em um Negocio Lucrativo",
+      "novidades_recentes": "sem blog identificado",
+      "observacoes": "Plano unico mais caro do segmento (R$ 39,99). Menciona Elo7 como canal suportado. CRM com ranking de clientes e diferencial."
+    },
+    {
+      "nome": "AppCustos3D / Custos3D",
+      "url": "https://appcustos3d.com.br",
+      "status_site": "online",
+      "preco_planos": {
+        "basic_mensal": "R$ 29,90/mes",
+        "basic_semestral": "R$ 102,00 (R$ 17,00/mes, -10%)",
+        "pro_mensal": "R$ 69,90/mes",
+        "pro_semestral": "R$ 216,00 (R$ 36,00/mes, -10%)"
+      },
+      "features_principais": [
+        "Gestao de estoque com custo medio ponderado",
+        "Calculo de custo real (energia e depreciacao)",
+        "Taxa de falha embutida no preco",
+        "Smart Production: leitura de G-code (PRO)",
+        "Analise tecnica de arquivo G-code (PRO)",
+        "Importacao de pedidos Shopee via planilha (PRO)",
+        "Simulador de orcamento (PRO)",
+        "PDF Detalhado com composicao de custos",
+        "Integracao WhatsApp PRO para formatacao de propostas",
+        "Demo gratis 3 dias sem cartao"
+      ],
+      "frase_ancora_home": "Pare de decidir no escuro. Custo e margem visiveis na impressao 3D.",
+      "novidades_recentes": "PDF Detalhado com composicao de custos (feature nova). WhatsApp PRO integration para proposta automatizada.",
+      "observacoes": "Leitura de G-code no PRO e diferencial tecnico relevante. URL appcustos3d.com.br redireciona para custos3d.com.br."
+    },
+    {
+      "nome": "PrintWorks3D",
+      "url": "https://www.printworks3d.com.br",
+      "status_site": "online (JS-heavy, dados parciais)",
+      "preco_planos": {
+        "modelo": "aparentemente gratuito (fontes externas)"
+      },
+      "features_principais": [
+        "Gerenciamento de filamentos",
+        "Controle de impressoras",
+        "Controle de custos",
+        "Gestao de vendas",
+        "Gestao financeira"
+      ],
+      "frase_ancora_home": "O Melhor Gerenciador de Impressao 3D e Gestao de Negocios",
+      "novidades_recentes": "sem blog identificado",
+      "observacoes": "Site rende via JS client-side, dados incompletos. Aparentemente gratuito."
+    },
+    {
+      "nome": "ZoomCalc3D",
+      "url": "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d",
+      "status_site": "online",
+      "preco_planos": {
+        "modelo": "100% gratuito"
+      },
+      "features_principais": [
+        "Configuracao de farm/maquinas",
+        "Controle de estoque de filamentos",
+        "Suporte a multi-materiais (PLA, PETG, ABS, TPU, ASA, resina)",
+        "Calculo de custo em tempo real",
+        "Margem de risco de falha configuravel",
+        "Simulacao de ROI/Payback",
+        "Historico de projetos e exportacao CSV",
+        "Entrega de orcamento via WhatsApp",
+        "Integracao com IA Gemini",
+        "Backup e restauracao de dados"
+      ],
+      "frase_ancora_home": "ZoomCalc3D: Precificacao inteligente para impressao 3D",
+      "novidades_recentes": "Blog ativo: post 07/05/2026 'Impressao 3D: O Guia Completo'; post 21/04/2026 'Como Escolher sua Primeira Impressora 3D em 2026'",
+      "observacoes": "ALERTA: ferramenta gratuita com IA Gemini integrada. Eleva baseline do mercado free. Blog mais ativo do segmento."
+    },
+    {
+      "nome": "custos3d.com.br",
+      "url": "https://custos3d.com.br",
+      "status_site": "offline - dominio parked (Hostinger)",
+      "preco_planos": {},
+      "features_principais": [],
+      "frase_ancora_home": "nao disponivel",
+      "novidades_recentes": "nao disponivel",
+      "observacoes": "Dominio estacionado. Possivelmente descontinuado."
+    },
+    {
+      "nome": "Calc 3D Lab",
+      "url": "https://3dlab.com.br/calculadora-de-preco-impressao-3d",
+      "status_site": "erro HTTP 403",
+      "preco_planos": { "modelo": "gratuito (portal de conteudo)" },
+      "features_principais": [],
+      "frase_ancora_home": "nao disponivel",
+      "novidades_recentes": "nao disponivel",
+      "observacoes": "3DLab e portal de conteudo, nao SaaS. Maior referencia em 3D no BR segundo fontes externas. Curso Intensivo por R$ 497 no Hotmart."
+    },
+    {
+      "nome": "Calc 3D Prime",
+      "url": "https://3dprime.com.br/calculadora-de-custo-de-impressao-3d",
+      "status_site": "online",
+      "preco_planos": { "modelo": "gratuito" },
+      "features_principais": [
+        "Calculo por tipo de material (PLA, PETG, ABS, TPU, Nylon)",
+        "Consumo de energia",
+        "Tempo de impressao",
+        "Mao de obra e custos fixos opcionais",
+        "Margem de lucro configuravel",
+        "Geracao de orcamento em PDF com marca da empresa"
+      ],
+      "frase_ancora_home": "nao identificada",
+      "novidades_recentes": "sem blog na calculadora",
+      "observacoes": "3D Prime e primariamente loja de filamentos e impressoras (Bambu, Creality). Calculadora e feature free do portal."
+    },
+    {
+      "nome": "Bling ERP",
+      "url": "https://www.bling.com.br",
+      "status_site": "online",
+      "preco_planos": {
+        "cobalto_mensal": "R$ 55/mes",
+        "titanio_mensal": "R$ 120/mes",
+        "diamante_mensal": "R$ 650/mes",
+        "elite": "sob consulta",
+        "trial": "30 dias gratis"
+      },
+      "features_principais": [
+        "Emissao NF-e, NFC-e, NFS-e",
+        "Controle de pedidos e estoque multi-canal",
+        "PDV para loja fisica",
+        "Gestao de producao",
+        "Integracao Melhor Envio",
+        "PIX, boleto, link de pagamento, POS",
+        "Bling Conta Digital (PJ gratuita)",
+        "250+ integracoes com marketplaces"
+      ],
+      "frase_ancora_home": "Gestao inteligente para vender mais e se preocupar menos, tem no Bling!",
+      "novidades_recentes": "sem blog identificado na home",
+      "observacoes": "ERP generalista, concorrente indireto. Entrada R$ 55/mes, sem features especificas de 3D."
+    },
+    {
+      "nome": "Tiny ERP (Olist Tiny)",
+      "url": "https://tiny.com.br",
+      "status_site": "online",
+      "preco_planos": {
+        "avance_mensal": "R$ 55/mes",
+        "construa_mensal": "R$ 143/mes",
+        "impulsione_mensal": "R$ 312/mes",
+        "domine_mensal": "R$ 758/mes"
+      },
+      "features_principais": [
+        "Usuarios ilimitados em todos os planos",
+        "Emissao NF-e, NFC-e, NFS-e",
+        "Gestao de estoque",
+        "Cotacao de frete",
+        "CRM (Construa+)",
+        "Multiempresas 2.0 (Construa+)"
+      ],
+      "frase_ancora_home": "Lancamento: multiempresas 2.0",
+      "novidades_recentes": "Multiempresas 2.0 lancado recentemente",
+      "observacoes": "ERP generalista (grupo Olist). Multiempresas 2.0 relevante para makers com multiplas farms/CNPJs."
+    }
+  ],
+  "concorrentes_adicionais": [
+    {
+      "nome": "Precifi3D",
+      "url": "https://precifi3d.com",
+      "status_site": "online",
+      "preco_planos": {
+        "starter": "gratuito",
+        "pro": "pago (valor nao divulgado)",
+        "enterprise": "pago (valor nao divulgado)"
+      },
+      "features_principais": [
+        "Suporte a FDM, Resina e Laser (unico a cobrir os 3)",
+        "Marketplace de fornecedores",
+        "Materiais e orcamentos ilimitados (PRO)",
+        "Exportacao PDF (PRO)",
+        "Gestao de equipe (Enterprise)"
+      ],
+      "frase_ancora_home": "Calcule com precisao os custos de impressao 3D (FDM, Resina, Laser) e defina precos de venda otimizados.",
+      "novidades_recentes": "sem blog identificado",
+      "observacoes": "NAO ESTAVA NA LISTA ORIGINAL. Unico a suportar Laser alem de FDM e Resina. Freemium. Preco PRO nao publico."
+    },
+    {
+      "nome": "CalculaSTL",
+      "url": "https://calculastl.com.br",
+      "status_site": "online",
+      "preco_planos": { "modelo": "gratuito" },
+      "features_principais": [
+        "Depreciacao de maquina",
+        "Impressao multi-color",
+        "Integracao calculo de taxas ML e Shopee",
+        "Gestao de estoque de materiais"
+      ],
+      "frase_ancora_home": "Calculadora de Preco Impressao 3D - CalculaSTL",
+      "novidades_recentes": "Atualizado jan/2026",
+      "observacoes": "Calculo de taxas de marketplace embutido. Gratuito e ativo."
+    },
+    {
+      "nome": "Quanto Custa 3D",
+      "url": "https://quantocusta3d.com.br",
+      "status_site": "online",
+      "preco_planos": { "modelo": "gratuito" },
+      "features_principais": [
+        "Peso, tempo, margem, embalagem, taxa de falha",
+        "Taxas Shopee e Mercado Livre embutidas"
+      ],
+      "frase_ancora_home": "Calculadora de Precificacao para Impressao 3D",
+      "novidades_recentes": "sem blog",
+      "observacoes": "Desenvolvido por Paralelo Labs. Ferramenta simples/basica."
+    }
+  ],
+  "marketplaces": {
+    "mercadolivre": {
+      "top_categorias": [
+        "Servico de impressao 3D personalizada (FDM e resina)",
+        "Impressoras 3D (hardware) - Creality, Elegoo, Bambu Lab",
+        "Filamentos - ELEGOO PLA lidera com +25.000 unidades/mes",
+        "Componentes e acessorios",
+        "Objetos impressos prontos"
+      ],
+      "faixa_preco_servico": "R$ 4-90+ por peca. Hora de maquina ~R$ 5/h. Peca simples (20g, 4h): custo ~R$ 26,50, venda ~R$ 36,50",
+      "volume_estimado": "23+ anuncios de servico de impressao ativos. Categoria de hardware/filamentos muito maior.",
+      "concentracao_regional": "SP (8/23 ofertas de servico), MG (5), PR e RJ (3 cada)"
+    },
+    "shopee": {
+      "top_vendedores": [
+        "3D Brothers (operacao consolidada com promocoes 7.7, 9.9)",
+        "A3D Print",
+        "Multiplos vendedores de servico personalizado FDM e resina"
+      ],
+      "faixa_preco": "Servicos FDM: ~R$ 15-30 para pecas pequenas. Resina: 30-50% mais caro que FDM equivalente.",
+      "observacoes": "Canal ativo para makers BR. MakerFlow3D ja oferece integracao OAuth com Shopee."
+    }
+  },
+  "hotmart": {
+    "top_cursos": [
+      {
+        "nome": "Curso Completo IMPRESSAO 3D by Lello (BrMakers)",
+        "instrutor": "Lello - canal BrMakers (200+ videos YouTube)",
+        "preco": "Nao capturado (nicho: R$ 97-497)",
+        "alunos_estimados": "Comunidade Telegram 100+ membros ativos",
+        "avaliacao": "Maior visibilidade organica do nicho - referencia de mercado"
+      },
+      {
+        "nome": "Curso de Impressao 3D Intensivo",
+        "instrutor": "3D Lab",
+        "preco": "R$ 497,00 (acesso vitalicio)",
+        "alunos_estimados": "Maior referencia BR em tecnologia 3D",
+        "avaliacao": "Inclui cupons para loja propria + suporte de especialistas"
+      },
+      {
+        "nome": "Curso Completo de Impressao 3D: Do Zero ao Avancado",
+        "instrutor": "Mercado Com Digital",
+        "preco": "Nao capturado",
+        "avaliacao": "Foco em Cura3D (slicing)"
+      },
+      {
+        "nome": "Curso Impressao 3D Para Iniciantes",
+        "instrutor": "Oswaldo Salzano",
+        "preco": "Nao capturado",
+        "avaliacao": "Foco em iniciantes"
+      },
+      {
+        "nome": "Metodo de Impressao 3D para Colecionaveis",
+        "instrutor": "Leandro Correa Peres",
+        "preco": "Nao capturado",
+        "avaliacao": "Nicho de colecionaveis - mercado em crescimento no BR"
+      }
+    ]
+  },
+  "ecossistema": {
+    "bambu_lab": {
+      "novidades_semana": [
+        {
+          "item": "Controversia OrcaSlicer-BambuLab: Cease-and-desist contra fork que reativava cloud direto",
+          "data": "Semana 20/05/2026",
+          "detalhe": "Developer Pawel Jarczak removeu projeto do GitHub. Louis Rossmann ($10k fundo legal), GamersNexus ($10k + rehosting), Jeff Geerling declararam boicote. FULU Foundation republicou o codigo."
+        },
+        {
+          "item": "X2D lancado em abril 2026 - flagship desktop dual extruder",
+          "data": "14/04/2026",
+          "detalhe": "Preco: $649 base / $899 Combo. Dual nozzle, camara 65 graus C, LiDAR, 31 sensores, AMS2 Pro no Combo."
+        },
+        {
+          "item": "A1 Combo venceu Parents Award 2026 - Educational Aid",
+          "data": "Maio 2026",
+          "detalhe": "Posicionamento consumer/educacao."
+        }
+      ],
+      "firmware_updates": [
+        {
+          "item": "Authorization Control System - obrigatorio desde firmware 01.08.03.00+ (X1)",
+          "impacto": "OrcaSlicer e software terceirizado exigem Bambu Connect como middleware. HomeAssistant perde controle ativo.",
+          "versao_minima_x1": "01.08.03.00+"
+        },
+        {
+          "item": "Problemas pos-update abril 2026 - A1 Mini com falhas via Bambu Studio",
+          "impacto": "Sem correcao publica listada."
+        }
+      ],
+      "controversias": [
+        {
+          "titulo": "Cease-and-desist contra OrcaSlicer fork - maior crise de PR de 2026",
+          "severidade": "Alta",
+          "atores": ["Louis Rossmann", "GamersNexus", "Jeff Geerling", "FULU Foundation"],
+          "impacto_makers_br": "Makers avancados (OrcaSlicer, HomeAssistant) os mais afetados. Janela para alternativas open-friendly."
+        }
+      ]
+    },
+    "makerworld": {
+      "top_categorias_semana": [
+        "Copa do Mundo 2026 (#FootballspiritWC) - trending ativo",
+        "Organizacao parametrica",
+        "Windspinner / Artesanato",
+        "Animais de estimacao (#3DPrintedPets)",
+        "Arquitetura e escadas parametricas"
+      ],
+      "tendencias": [
+        "Copa do Mundo impulsionando modelos esportivos e interativos",
+        "Design parametrico dominante",
+        "Pets como nicho em crescimento",
+        "Challenge LED S-shape ativo"
+      ]
+    },
+    "mercado_br": {
+      "tamanho": "R$ 850M em 2023 (maior mercado 3D da America Latina), projecao R$ 1,8B em 2025, CAGR 18,1% ate 2033",
+      "tendencias": [
+        "Democratizacao por preco: impressoras ate R$ 5k viabilizaram adocao em massa",
+        "Profissionalizacao de farms: investimento em upgrades supera compras de impressoras novas",
+        "Maker Market: plataforma marketplace com R$ 1M investido (CEO do Melhor Envio/Locaweb)",
+        "Case viral: maker de 18 anos fatura R$ 1,6M/mes em jan/2026"
+      ],
+      "eventos": [
+        "Expo3DBr - outubro/novembro (proxima edicao esperada 2026, Maua)",
+        "SP3DExpo - SP",
+        "Feira do Empreendedor Sebrae 2026: 19-22 outubro, gratuito"
+      ]
+    }
+  },
+  "analise": {
+    "diffs_vs_semana_passada": [
+      {
+        "item": "MakerFlow3D - integracao OAuth ML+Shopee confirmada ativa",
+        "impacto_hayzer": "Feature parity obrigatoria. Se Hayzer nao tiver sync de marketplace, perde no comparativo direto.",
+        "prioridade": "Alta"
+      },
+      {
+        "item": "ZoomCalc3D integrou IA Gemini (gratuito)",
+        "impacto_hayzer": "Baseline do mercado free subiu. Hayzer precisa justificar custo com algo que a IA gratuita nao entrega.",
+        "prioridade": "Media"
+      },
+      {
+        "item": "Bambu Lab crise open source + Authorization Control System",
+        "impacto_hayzer": "Janela para posicionamento como plataforma aberta. Makers insatisfeitos buscam alternativas.",
+        "prioridade": "Media"
+      },
+      {
+        "item": "Precifi3D identificado como novo competidor (nao estava no radar)",
+        "impacto_hayzer": "Freemium com FDM+Resina+Laser + marketplace de fornecedores. Precisa ser monitorado.",
+        "prioridade": "Media-Alta"
+      },
+      {
+        "item": "Copa do Mundo 2026 trending no MakerWorld (#FootballspiritWC)",
+        "impacto_hayzer": "Janela de demanda de 4-6 semanas para produtos esportivos/colecionaveis.",
+        "prioridade": "Alta (urgente)"
+      }
+    ],
+    "oportunidade_nova": {
+      "titulo": "Copa do Mundo 2026 - demanda de curto prazo para makers BR",
+      "detalhe": "MakerWorld ja tem hashtag #FootballspiritWC trending. Janela: agora ate julho. Hayzer pode criar conteudo de precificacao especifico para produtos Copa (brindes personalizados, mini-trofeus, decoracao) e atrair novos makers que querao escalar producao sazonal. Acao de marketing de baixo custo com alto potencial de aquisicao organica."
+    },
+    "ameaca_nova": {
+      "titulo": "Precifi3D com freemium + marketplace de fornecedores",
+      "detalhe": "Concorrente nao mapeado anteriormente. Modelo freemium (Starter gratuito) reduz barreira de entrada. O marketplace de fornecedores cria lock-in diferente: se makers usam para comprar filamento, ficam na plataforma. Unico a suportar Laser alem de FDM e Resina - pode capturar segmento de laser cutting/engraving que Hayzer nao cobre. Preco PRO nao publico sugere traction ainda baixa ou modelo de vendas consultivo."
+    },
+    "frases_ancora_novas": [
+      {
+        "fonte": "MakerFlow 3D",
+        "frase": "Gerencie sua operacao 3D de forma inteligente",
+        "angulo": "gestao operacional / producao"
+      },
+      {
+        "fonte": "3D Control",
+        "frase": "Transforme seu Hobby em um Negocio Lucrativo",
+        "angulo": "profissionalizacao / aspiracao"
+      },
+      {
+        "fonte": "AppCustos3D",
+        "frase": "Pare de decidir no escuro. Custo e margem visiveis na impressao 3D.",
+        "angulo": "clareza financeira / dor"
+      },
+      {
+        "fonte": "PrintWorks3D",
+        "frase": "O Melhor Gerenciador de Impressao 3D e Gestao de Negocios",
+        "angulo": "posicionamento abrangente"
+      },
+      {
+        "fonte": "Precifi3D",
+        "frase": "Calcule com precisao os custos de impressao 3D (FDM, Resina, Laser) e defina precos de venda otimizados.",
+        "angulo": "precisao tecnica / multi-tecnologia"
+      }
+    ]
+  }
+}
