@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { submitWaitlistStep1, type WaitlistStep1State } from '@/app/waitlist/actions'
+import { track, identify } from '@/lib/posthog'
 import { Loader2, ArrowRight } from 'lucide-react'
 
 const initial: WaitlistStep1State = { status: 'idle' }
@@ -20,17 +21,52 @@ export function WaitlistForm() {
     setRenderedAt(Date.now())
   }, [])
 
-  // Sucesso → vai pra /waitlist/obrigado
+  // Sucesso → identifica usuario (LGPD: consent_lgpd=true foi required no form)
+  // e vai pra /waitlist/obrigado
   useEffect(() => {
     if (state.status === 'success') {
+      // Identifica pelo email somente — consentimento foi dado no formulário
+      // (checkbox consent_lgpd required). Não passa nome nem whatsapp.
+      if (state.email && state.leadId !== 'honeypot-blocked' && state.leadId !== 'time-check-blocked') {
+        identify(state.email)
+        track('waitlist_submit_success', {
+          is_duplicate: state.leadId === 'duplicate',
+          has_utm:      !!searchParams.get('utm_source'),
+          utm_source:   searchParams.get('utm_source') ?? undefined,
+          utm_medium:   searchParams.get('utm_medium') ?? undefined,
+          utm_campaign: searchParams.get('utm_campaign') ?? undefined,
+        })
+      }
       router.push('/waitlist/obrigado')
     }
-  }, [state, router])
+
+    if (state.status === 'error') {
+      track('waitlist_submit_error', {
+        // Não envia o message completo — pode conter dados do user em edge cases
+        error_type: state.fieldErrors ? 'validation' : 'server',
+        has_field_errors: !!state.fieldErrors,
+      })
+    }
+  }, [state, router, searchParams])
+
+  function handleSubmitAttempt() {
+    // Dispara antes da Server Action executar (no onSubmit do form)
+    // Metadados comportamentais apenas — zero PII
+    const form = formRef.current
+    track('waitlist_submit_attempt', {
+      has_whatsapp: !!(form?.querySelector<HTMLInputElement>('[name="whatsapp"]')?.value?.trim()),
+      name_length:  form?.querySelector<HTMLInputElement>('[name="name"]')?.value?.trim().length ?? 0,
+      // email_length como proxy de preenchimento sem expor o email
+      email_filled: !!(form?.querySelector<HTMLInputElement>('[name="email"]')?.value?.trim()),
+      has_utm:      !!searchParams.get('utm_source'),
+    })
+  }
 
   return (
     <form
       ref={formRef}
       action={action}
+      onSubmit={handleSubmitAttempt}
       className="space-y-3"
     >
       {/* Honeypot — humano nunca preenche, bot que varre form preenche.

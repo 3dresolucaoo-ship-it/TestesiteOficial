@@ -1,10 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Calculator, ArrowRight, Copy, Check, FileText } from 'lucide-react'
 import { PaywallModal } from '@/components/calculadora/PaywallModal'
+import { track } from '@/lib/posthog'
 import {
   Disc,           // rolo de filamento (3D look)
   Cube,           // peça 3D
@@ -72,7 +73,19 @@ export function CalculadoraForm() {
   const [margem, setMargem] = useState('50')
   const [copied, setCopied] = useState(false)
   const [paywallOpen, setPaywallOpen] = useState(false)
-  const precoEnergia = 0.85 // R$/kWh média BR 2026 (Aneel) — constante
+  const precoEnergia = 0.85
+
+  // ─── Analytics: calculadora_view (uma vez no mount) ─────────────────────
+  const viewTracked = useRef(false)
+  useEffect(() => {
+    if (viewTracked.current) return
+    viewTracked.current = true
+    track('calculadora_view')
+  }, [])
+
+  // ─── Analytics: calculadora_calculated (debounced 1.5s apos ultima mudanca) ─
+  // Dispara somente quando resultado valido (precoSugerido > 0, sem alerta critico).
+  const calcDebounce = useRef<ReturnType<typeof setTimeout> | null>(null) // R$/kWh média BR 2026 (Aneel) — constante
 
   const { custoFilamento, custoLuz, custoTotal, lucro, precoSugerido, semaforo, alerta } = useMemo(() => {
     const filamentN = parseFloat(precoFilamento) || 0
@@ -102,11 +115,31 @@ export function CalculadoraForm() {
     return { custoFilamento, custoLuz, custoTotal, lucro, precoSugerido, semaforo, alerta }
   }, [precoFilamento, peso, horas, consumoW, margem])
 
+  useEffect(() => {
+    if (calcDebounce.current) clearTimeout(calcDebounce.current)
+    if (precoSugerido <= 0 || alerta) return
+    calcDebounce.current = setTimeout(() => {
+      track('calculadora_calculated', {
+        filamento_r_kg:  parseFloat(precoFilamento) || 0,
+        peso_g:          parseFloat(peso) || 0,
+        horas:           parseFloat(horas) || 0,
+        consumo_w:       parseFloat(consumoW) || 0,
+        margem_pct:      parseFloat(margem) || 0,
+        preco_sugerido:  Math.round(precoSugerido * 100) / 100,
+        semaforo:        semaforo.label,
+      })
+    }, 1500)
+    return () => { if (calcDebounce.current) clearTimeout(calcDebounce.current) }
+  }, [precoFilamento, peso, horas, consumoW, margem, precoSugerido, alerta, semaforo.label])
+
   function handleCopy() {
     // Só o valor formatado. Cliente não precisa ver o cálculo.
     navigator.clipboard.writeText(formatBRL(precoSugerido)).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2200)
+      track('calculadora_result_copied', {
+        preco_sugerido: Math.round(precoSugerido * 100) / 100,
+      })
     })
   }
 
