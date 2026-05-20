@@ -24,6 +24,8 @@ function fromDB(r: any): Order {
     paymentId:        r.payment_id        ?? undefined,
     paymentStatus:    r.payment_status    ?? undefined,
     customerWhatsapp: r.customer_whatsapp ?? undefined,
+    // CRM traceability
+    sourceLeadId:     r.source_lead_id    ?? undefined,
   }
 }
 
@@ -48,6 +50,8 @@ function toDB(o: Order, userId: string) {
     payment_id:        o.paymentId         ?? null,
     payment_status:    o.paymentStatus     ?? null,
     customer_whatsapp: o.customerWhatsapp  ?? null,
+    // CRM traceability
+    source_lead_id:    o.sourceLeadId      ?? null,
   }
 }
 

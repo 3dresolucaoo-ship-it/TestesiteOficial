@@ -394,6 +394,86 @@ export function FinanceView({
           onChange={setFilterProject}
         />
 
+        {/* Empty state inicial: sem nenhuma transacao nem custo fixo */}
+        {transactions.length === 0 && fixedCosts.length === 0 && (
+          <div className="flex flex-col items-center text-center py-12 px-4 mb-6 rounded-2xl"
+            style={{
+              background: 'hsl(200 11% 9%)',
+              border: '1px solid hsl(200 11% 14%)',
+            }}
+            role="status"
+            aria-label="Financeiro sem lancamentos"
+          >
+            <div
+              className="w-14 h-14 mb-5 rounded-2xl flex items-center justify-center"
+              style={{
+                background: 'hsl(173 58% 28% / 0.15)',
+                border: '1px solid hsl(173 58% 28% / 0.30)',
+                boxShadow: '0 0 36px hsl(173 58% 28% / 0.20)',
+              }}
+              aria-hidden="true"
+            >
+              <Plus size={24} className="text-[hsl(173_30%_57%)]" />
+            </div>
+
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-2"
+              style={{ fontFamily: 'var(--font-geist-mono, monospace)', color: 'hsl(173 30% 57%)' }}
+            >
+              FINANCEIRO
+            </p>
+
+            <h3
+              className="text-xl font-semibold text-foreground tracking-tight mb-2"
+              style={{ fontFamily: 'var(--font-fraunces, Georgia, serif)' }}
+            >
+              Sem dinheiro entrando, sem dinheiro saindo
+            </h3>
+
+            <p className="text-sm text-foreground/65 leading-relaxed max-w-sm mb-6">
+              Registre a primeira receita ou despesa e o Hayzer mostra lucro real, margem e break-even do seu negocio.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setCreating(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium text-sm transition-colors"
+                style={{
+                  background: 'hsl(173 58% 28%)',
+                  boxShadow: '0 0 24px hsl(173 58% 28% / 0.30)',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'hsl(173 58% 32%)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'hsl(173 58% 28%)' }}
+                aria-label="Adicionar primeira receita no financeiro"
+              >
+                <Plus size={15} aria-hidden="true" />
+                Adicionar receita
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setCreating(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-foreground/70 font-medium text-sm border transition-colors hover:text-foreground"
+                style={{ border: '1px solid hsl(200 11% 20%)' }}
+                aria-label="Adicionar primeira despesa no financeiro"
+              >
+                <Plus size={15} aria-hidden="true" />
+                Adicionar despesa
+              </button>
+
+              <span
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-foreground/30 font-medium text-sm border cursor-not-allowed select-none"
+                style={{ border: '1px solid hsl(200 11% 14%)' }}
+                title="Em breve"
+                aria-label="Importar planilha, disponivel em breve"
+              >
+                Importar planilha (em breve)
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Feedback de reconciliacao */}
         {reconcileMsg && (
           <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border mb-4 ${
