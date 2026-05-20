@@ -11,7 +11,7 @@
  *   const { count, cap, remaining, limitReached, increment } = useCalcRateLimit()
  */
 
-import { useCallback, useState } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 
 const CAP = 5
 
@@ -51,18 +51,47 @@ interface UseCalcRateLimitReturn {
   increment: () => number
 }
 
+// useSyncExternalStore é a API oficial do React para sincronizar estado externo
+// (localStorage, IndexedDB, window events) sem causar hydration mismatch.
+// O terceiro argumento (getServerSnapshot) retorna 0, que é o valor usado no SSR.
+// O cliente usa getClientSnapshot, que lê localStorage após a hydration.
+// Resultado: SSR=0, primeiro render client=0, re-render após mount=valor real → zero mismatch.
+const _listeners = new Set<() => void>()
+
+function _notifyListeners(): void {
+  _listeners.forEach(l => l())
+}
+
+function _subscribeCount(listener: () => void): () => void {
+  _listeners.add(listener)
+  return () => { _listeners.delete(listener) }
+}
+
+function _getClientSnapshot(): number {
+  return readCount()
+}
+
+function _getServerSnapshot(): number {
+  return 0
+}
+
 export function useCalcRateLimit(): UseCalcRateLimitReturn {
-  // Lazy initializer: lê localStorage no primeiro render (client-only via 'use client').
-  // Em SSR retorna 0 (typeof window === 'undefined' em readCount).
-  // Não usa useEffect para setar estado: evita cascading renders e ESLint react-hooks/set-state-in-effect.
-  const [count, setCount] = useState<number>(() => readCount())
+  // useSyncExternalStore: SSR snapshot=0, client snapshot=readCount().
+  // O React compara SSR snapshot com o valor inicial do cliente durante hydration
+  // e usa _getServerSnapshot() como âncora — hydration sempre limpa.
+  const count = useSyncExternalStore(
+    _subscribeCount,
+    _getClientSnapshot,
+    _getServerSnapshot,
+  )
 
   const increment = useCallback((): number => {
     const current = readCount()
     // Não incrementa além do cap — evita count infinito no localStorage
     const next = Math.min(current + 1, CAP + 1)
     writeCount(next)
-    setCount(next)
+    // Força re-render de todos os consumidores do store externo
+    _notifyListeners()
     return next
   }, [])
 
