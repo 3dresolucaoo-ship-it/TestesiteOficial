@@ -45,6 +45,9 @@ const scriptSrcParts: string[] = [
   "va.vercel-scripts.com",
   "vitals.vercel-insights.com",
   "js.stripe.com",
+  // PostHog (Ana 20/05): SDK + asset CDN. us-assets serve recordings/replays JS.
+  "us.i.posthog.com",
+  "us-assets.i.posthog.com",
 ];
 if (isDev) scriptSrcParts.splice(2, 0, "'unsafe-eval'");
 const scriptSrc = scriptSrcParts.join(' ');
@@ -55,7 +58,8 @@ const cspReportOnly = [
   "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
   "font-src 'self' fonts.gstatic.com data:",
   "img-src 'self' data: blob: https:",
-  "connect-src 'self' *.supabase.co va.vercel-scripts.com vitals.vercel-insights.com api.mercadopago.com api.stripe.com",
+  // PostHog connect: ingest events + decide flags + assets CDN
+  "connect-src 'self' *.supabase.co va.vercel-scripts.com vitals.vercel-insights.com api.mercadopago.com api.stripe.com us.i.posthog.com us-assets.i.posthog.com",
   "frame-src 'self' js.stripe.com checkout.stripe.com www.mercadopago.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",

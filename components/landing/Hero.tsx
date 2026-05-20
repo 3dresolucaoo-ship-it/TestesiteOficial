@@ -126,10 +126,7 @@ export function Hero({ waitlistCount }: HeroProps) {
                 <Calculator className="h-3.5 w-3.5" strokeWidth={2} />
                 Testa a calculadora grátis
               </Link>
-              <p
-                className="mt-2 text-[12px] leading-snug"
-                style={{ color: 'hsl(var(--fog-400))' }}
-              >
+              <p className="mt-2 text-[12px] leading-snug text-muted-foreground">
                 Calcula o custo da tua próxima impressão. De graça. Sem cadastro.
               </p>
             </motion.div>
@@ -156,7 +153,7 @@ export function Hero({ waitlistCount }: HeroProps) {
               </div>
 
               <div className="mb-1 flex items-baseline justify-between">
-                <h3 className="display-h2 text-[22px] text-foreground">Lista de espera</h3>
+                <h2 className="display-h2 text-[22px] text-foreground">Lista de espera</h2>
                 <span className="tag">grátis</span>
               </div>
               <p className="mb-3 text-[13.5px] leading-[1.5] text-muted-foreground">

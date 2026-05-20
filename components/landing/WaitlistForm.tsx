@@ -118,6 +118,8 @@ export function WaitlistForm() {
             autoComplete="given-name"
             className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
             aria-label="Seu nome"
+            onInvalid={(e) => e.currentTarget.setCustomValidity('Coloca teu nome aqui.')}
+            onInput={(e) => e.currentTarget.setCustomValidity('')}
           />
         </div>
         <div>
@@ -132,6 +134,13 @@ export function WaitlistForm() {
             inputMode="email"
             className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
             aria-label="Seu email"
+            onInvalid={(e) => {
+              const t = e.currentTarget
+              if (t.validity.valueMissing) t.setCustomValidity('Coloca teu email pra eu te avisar.')
+              else if (t.validity.typeMismatch) t.setCustomValidity('Esse email não tá certo. Tipo: voce@email.com')
+              else t.setCustomValidity('')
+            }}
+            onInput={(e) => e.currentTarget.setCustomValidity('')}
           />
         </div>
       </div>
@@ -153,14 +162,15 @@ export function WaitlistForm() {
         />
       </div>
 
-      {/* Consentimento LGPD */}
+      {/* Consentimento LGPD — opt-in ATIVO (QA audit 20/05: defaultChecked fere LGPD Art. 5° VIII) */}
       <label className="flex cursor-pointer items-start gap-2.5 pt-1">
         <input
           type="checkbox"
           name="consent_lgpd"
           required
-          defaultChecked
-          className="mt-0.5 h-4 w-4"
+          onInvalid={(e) => e.currentTarget.setCustomValidity('Precisa aceitar a Política de Privacidade pra entrar na lista.')}
+          onInput={(e) => e.currentTarget.setCustomValidity('')}
+          className="mt-0.5 h-5 w-5"
           style={{ accentColor: 'hsl(var(--petrol-400))' }}
         />
         <span className="text-[12.5px] leading-[1.5] text-muted-foreground">
