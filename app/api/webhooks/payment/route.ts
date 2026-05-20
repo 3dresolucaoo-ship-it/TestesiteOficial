@@ -298,9 +298,13 @@ async function extractCalcProEventData(
     subscription = event.data.object as Stripe.Subscription
   } else if (event.type === 'invoice.paid' || event.type === 'invoice.payment_failed') {
     const invoice = event.data.object as Stripe.Invoice
-    // invoice.subscription pode ser string (id) ou objeto expandido
-    const subRef = (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription | null })
-      .subscription
+    // Stripe Basil moveu invoice.subscription pra invoice.parent.subscription_details.subscription.
+    // Cobrimos os 2 layouts (cast defensivo pra layouts mais antigos).
+    const subRef =
+      invoice.parent?.subscription_details?.subscription
+      ?? (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription | null })
+        .subscription
+      ?? null
     if (!subRef) {
       console.info(`[webhook/payment/calc-pro] invoice sem subscription_id — ignorando (event=${event.id})`)
       return null
@@ -379,10 +383,14 @@ async function extractCalcProEventData(
 /**
  * Resolve user_id Hayzer a partir do email Stripe.
  * Caso metadata.hayzer_user_id esteja presente, usamos direto. Senao busca em
- * auth.users por email.
+ * auth.users por email via service_role.
  *
  * Retorna null se nao conseguir resolver — webhook handler loga warning e
  * registra evento mesmo assim (admin reprocessa manualmente).
+ *
+ * TODO Paulo: trocar listUsers O(n) por RPC SECURITY DEFINER `find_user_by_email`
+ * quando volume superar ~200 users (pra evitar paginar). Por enquanto perPage=200
+ * cobre todos os users beta do Hayzer pre-launch (ver memory hayzer-sem-usuarios).
  */
 async function resolveUserId(
   email: string | null,
@@ -394,14 +402,13 @@ async function resolveUserId(
   if (!email) return null
 
   const admin = getSupabaseAdmin()
-  // listUsers em batch pequeno + filtro local. Em prod com volume alto, trocar
-  // por RPC dedicada que busca em auth.users por email diretamente.
   const { data, error } = await admin.auth.admin.listUsers({ perPage: 200 })
   if (error) {
     console.error(`[webhook/payment/calc-pro] auth.admin.listUsers error: ${error.message}`)
     return null
   }
-  const match = data.users.find(u => u.email?.toLowerCase() === email.toLowerCase())
+  const normalizedEmail = email.toLowerCase()
+  const match = data.users.find(u => u.email?.toLowerCase() === normalizedEmail)
   return match?.id ?? null
 }
 
