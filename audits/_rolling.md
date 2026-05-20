@@ -37,6 +37,20 @@
 
 ---
 
+## 📋 Sessão 20/05 noite → 21/05 madrugada (~7h, 22 commits)
+
+**Tema**: migração V4 dos módulos internos + morte da Calc Pro freemium + bug visual não resolvido.
+
+- **Calc Pro freemium REVOGADA** (ADR-024): ADR-023 cancelado. Calc permanece grátis sem cap, sem modal de upsell. Cobrança = Hayzer completo (R$ 49-99/mês pós-launch). 9 arquivos front + backend service + migration deletados. ENV vars Calc Pro a remover do Vercel manualmente.
+- **4 módulos migrados para shell V4**: /crm, /finance, /production (novos) + /orders (já estava). MAS classes CSS do ModuleShell (`.kpi-card`, `.filter-bar`, `.page-header`, etc) nunca foram extraídas do mockup `orders-v4-tom-novo.html` para `globals-v4.css` — resultado: KPIs em texto cru nos 4 módulos em prod. Bug diagnosticado por Felipe + Diego; causa raiz confirmada.
+- **Bloqueador aberto**: CEO precisa decidir A.3 (reverter 4 módulos pro AppShell antigo, foca golden path) ou A.4 (Felipe extrai CSS do mockup em 45-60min, resultado híbrido). 7 módulos restantes (/inventory /products /content /decisions /catalogs /portfolios /settings) aguardam decisão.
+- **Outros fixes entregues**: Stripe SDK `StripeConfig` → `API_VERSION` (desbloqueou 7 deploys ERROR), hydration #418, AppShell loop + trust middleware, V4ThemeProvider, globals-v4.css no root layout.
+- **3 quick wins golden path**: /products → /orders pré-preenchido, `processNewOrder` com projectId (multi-tenant), empty states com CTA em /content /decisions /catalogs.
+- **V4Shell genérico foi revertido** (quebrou /dashboard em prod — commit e63125e é rollback do f0a2700).
+- Detalhe completo: `sessions/2026-05-21-madrugada-v4-3c-G7-diagnose.md`
+
+---
+
 ## 📋 Historico de sessoes (pre-20/05/2026)
 
 > Movido do CLAUDE.md raiz em 2026-05-20 por Lia (limpeza Status Rapido).
