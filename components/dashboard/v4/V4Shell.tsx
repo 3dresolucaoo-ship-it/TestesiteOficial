@@ -220,13 +220,23 @@ const NAV_ITEMS = [
       { label: 'Clientes',  href: '/crm'               },
       { label: 'Leads',     href: '/crm',    badge: 7 as number | undefined },
       { label: 'Catálogo',  href: '/catalogs'           },
+      { label: 'Produtos',  href: '/products'           },
+      { label: 'Conteúdo',  href: '/content'            },
+    ],
+  },
+  {
+    group: 'Vitrine',
+    items: [
+      { label: 'Portfolios', href: '/portfolios' },
+      { label: 'Decisões',   href: '/decisions'  },
     ],
   },
   {
     group: 'Sistema',
     items: [
-      { label: 'Configurações', href: '/settings' },
-      { label: 'Ajuda',        href: '/help'     },
+      { label: 'Projetos',       href: '/projects' },
+      { label: 'Métricas',       href: '/metrics'  },
+      { label: 'Configurações',  href: '/settings' },
     ],
   },
 ] as const
