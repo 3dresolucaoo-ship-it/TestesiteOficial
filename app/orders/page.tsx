@@ -805,7 +805,7 @@ export default function OrdersPage() {
 
       {/* Modal: novo pedido (suporta pré-seleção de produto via ?quote=) */}
       {creating && (
-        <Modal title="Novo Pedido" onClose={() => { setCreating(false); setQuoteProductId('') }}>
+        <Modal title="Novo Pedido" onClose={() => setCreating(false)}>
           <OrderForm
             projects={state.projects}
             inventory={state.inventory}
@@ -814,8 +814,8 @@ export default function OrdersPage() {
               projectId:       state.projects[0]?.id ?? '',
               clientName:      '',
               origin:          'whatsapp',
-              item:            state.products.find((p) => p.id === quoteProductId)?.name ?? '',
-              value:           String(state.products.find((p) => p.id === quoteProductId)?.salePrice ?? ''),
+              item:            quoteProduct?.name ?? '',
+              value:           String(quoteProduct?.salePrice ?? ''),
               status:          'quote_sent',
               date:            new Date().toISOString().slice(0, 10),
               inventoryItemId: '',
@@ -823,7 +823,7 @@ export default function OrdersPage() {
               productId:       quoteProductId,
             } : undefined}
             onSave={handleCreate}
-            onClose={() => { setCreating(false); setQuoteProductId('') }}
+            onClose={() => setCreating(false)}
           />
         </Modal>
       )}
