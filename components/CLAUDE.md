@@ -18,7 +18,7 @@
 | SettingsView.tsx | **220** | ✅ refatorado — tabs em `settings/` (8 sub-componentes) |
 | DashboardView.tsx | **483** | ✅ refatorado — shared em `dashboard/shared.tsx` |
 | Sidebar.tsx | 36 | ✅ refatorado — sub-componentes em `sidebar/` (7 arquivos) |
-| FinanceView.tsx | 595 | 🟧 grande |
+| FinanceView.tsx | 362 | ✅ refatorado — sub-componentes em `finance/` (6 arquivos · 2026-05-20) |
 | FinanceCharts.tsx | 465 | ✅ |
 | PortfoliosView.tsx | 445 | ✅ |
 | CatalogsView.tsx | 313 | ✅ |
@@ -43,6 +43,22 @@ Biblioteca de assets decorativos e utilitarios da identidade Hayzer.
 Barrel export via `index.ts`. Doc completa em `components/visual-library/README.md`.
 Showcase vivo em `/library` (admin only).
 Dep nova instalada: `lottie-react`.
+
+## finance/ (novo · 2026-05-20)
+
+FinanceView decomposto em 6 arquivos focados dentro de `components/finance/`.
+Export publico mantido identico: `FinanceView` via `components/FinanceView.tsx`.
+
+| Arquivo | Responsabilidade |
+|---|---|
+| `types.ts` | `FinanceTab`, `FormData`, `ALL_LABELS`, `fmt`, `parseDate`, keys legacy |
+| `FinanceKpis.tsx` | Grid 4 cards KPI (receita / despesas / lucro / margem) |
+| `FinanceFixedCosts.tsx` | `FixedCostRow` (inline edit) + `FinanceFixedCosts` (lista + form add) + `ProgressBar` |
+| `FinanceTransactionForm.tsx` | `TransactionForm` + `CreateTransactionModal` + `EditTransactionModal` |
+| `FinanceBreakEven.tsx` | `BreakEvenSection` completo (header educacional + projeto selector + fixed-costs + profit goal + tabela produtos) |
+| `FinanceTransactions.tsx` | `FinanceFilterBar` + `FinanceTransactionList` + `FinanceChartsPanel` + `FinanceMonthlySummary` |
+
+ESLint: 2 erros pre-existentes de `react-hooks/set-state-in-effect` (herdados do arquivo original, nao introduzidos — BUG pendente correcao futura).
 
 ## sidebar/ (novo · 2026-05-19)
 
