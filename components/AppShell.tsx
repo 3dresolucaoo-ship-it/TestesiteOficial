@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { StoreProvider, useStore } from '@/lib/store'
-import { Sidebar, BottomNav } from '@/components/Sidebar'
+import { V4Shell } from '@/components/dashboard/v4/V4Shell'
 import { AlertTriangle, X } from 'lucide-react'
 import type { AppState } from '@/lib/types'
 
@@ -99,11 +99,47 @@ function DbErrorToast() {
   )
 }
 
-// ─── TopBar (inline to avoid circular import) ─────────────────────────────────
+// ─── V4Shell adapter ──────────────────────────────────────────────────────────
+// Lê useAuth + useStore (precisa estar DENTRO de StoreProvider) e monta props
+// do V4Shell. Adapter, não shell — V4Shell faz o trabalho real.
 
-import { TopBar } from '@/components/TopBar'
+function V4ShellAdapter({ children }: { children: ReactNode }) {
+  const { user }  = useAuth()
+  const { state } = useStore()
+
+  // Projeto ativo: primeiro projeto disponível. Se zero projetos, V4Shell
+  // recebe '' e renderiza '??' no switcher (tolerado, MVP).
+  const projects = state.projects.map(p => ({
+    id:       p.id,
+    name:     p.name,
+    revenue:  0,
+    isActive: true,
+  }))
+
+  const userName  = user?.user_metadata?.full_name as string | undefined
+    ?? user?.email?.split('@')[0]
+    ?? 'Maker'
+
+  const projectId = projects[0]?.id ?? ''
+  const streak    = { days: 0 }  // TODO Wave 4: popular via streakService
+
+  return (
+    <V4Shell
+      userName={userName}
+      projectId={projectId}
+      projects={projects}
+      streak={streak}
+    >
+      {children}
+    </V4Shell>
+  )
+}
 
 // ─── App Shell ────────────────────────────────────────────────────────────────
+// V4 shell unificado para TODAS as rotas internas (decisao CEO 21/05 A.5):
+// "v4 e antigo entre dentro dele e fique integrado". Sidebar/topbar/ambient
+// do V4Shell envolve children — paginas continuam renderizando seu conteudo
+// (V4 ModuleShell ou legado), independente do shell exterior.
 
 export function AppShell({
   children,
@@ -114,8 +150,8 @@ export function AppShell({
    *  of empty data on pages that read directly from useStore(). */
   initialState?: AppState | null
 }) {
-  const { user, loading } = useAuth()
-  const pathname         = usePathname()
+  const { loading } = useAuth()
+  const pathname    = usePathname()
 
   const isPublicPath =
     pathname === '/login'                     ||
@@ -125,34 +161,16 @@ export function AppShell({
     pathname.startsWith('/portfolio/')        ||
     pathname.startsWith('/checkout')
 
-  // Redirect client-side removido intencionalmente.
-  // middleware.ts:66 já valida a sessão via cookies Supabase antes da rota
-  // carregar — se o usuário chegou aqui, o middleware aprovou.
-  // O useEffect de redirect duplicava essa checagem no cliente e causava loop:
-  // quando AuthProvider.getSession() dava timeout (~5s), loading virava false
-  // com user=null, o router.replace('/login') disparava e o middleware
-  // redirecionava de volta para a rota original — loop infinito.
-
-  // Public pages (login): render without chrome
+  // Public pages (login, showcase, catalogo publico): render sem shell
   if (isPublicPath) return <>{children}</>
 
-  // Auth loading state — só mostrar LoadingScreen se loading=true. Se loading=false
-  // e user=null (getSession timeout), renderizamos o shell mesmo assim trustando
-  // o middleware (middleware.ts:66 ja validou cookies Supabase server-side). Sem
-  // isso, AppShell retornava null em getSession timeout e a pagina virava tela
-  // preta (bug 2026-05-21 madrugada apos remocao do redirect duplicado).
+  // Auth loading. Apos fix A.6 (commit 6a7a376), UI destrava em <3s sem
+  // bloquear no loadProfile. Mantemos LoadingScreen como fallback minimo.
   if (loading) return <LoadingScreen />
 
   return (
     <StoreProvider initialState={initialState}>
-      <Sidebar />
-      <div className="sidebar-content flex flex-col min-h-screen">
-        <TopBar />
-        <main className="flex-1 p-4 sm:p-6 pb-24 lg:pb-6 animate-fade-in-up">
-          {children}
-        </main>
-      </div>
-      <BottomNav />
+      <V4ShellAdapter>{children}</V4ShellAdapter>
       <DbErrorToast />
     </StoreProvider>
   )
