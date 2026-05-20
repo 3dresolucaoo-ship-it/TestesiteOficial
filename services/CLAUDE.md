@@ -31,9 +31,9 @@
 | finance.ts | 90 | transactions | ✅ `project_id` adicionado em todas as queries (fix 2026-05-18) |
 | financeConfig.ts | 100 | fixed_costs + profit_goals | ✅ Onda 3 (custos fixos + meta por projeto) |
 | inventory.ts | 305 | inventory + movements | ✅ `project_id` em getAll/update/delete de inventoryService e movementsService (fix 2026-05-18) |
-| leads.ts | 185 | leads + affiliates | ✅ `project_id` em getAll/update/delete de leadsService e affiliatesService (fix 2026-05-18) |
+| leads.ts | ~270 | leads + affiliates | ✅ `project_id` em getAll/update/delete. `leadsService.convertToOrder()` adicionado (Etapa 3 golden path #1, 2026-05-20). `leadFromDB` mapeia `convertedOrderId`. `leadToDB` persiste `converted_order_id`. |
 | mpTokenRefresh.ts | 92 | payment_configs | ✅ refresh OAuth MP |
-| orders.ts | 110 | orders | ✅ `project_id` em getAll/update/delete (fix 2026-05-18) |
+| orders.ts | ~115 | orders | ✅ `project_id` em getAll/update/delete (fix 2026-05-18). `fromDB`/`toDB` mapeiam `sourceLeadId` ↔ `source_lead_id` (Etapa 3 golden path #1, 2026-05-20). |
 | paymentConfig.ts | 316 | payment_configs | ✅ robusto, com cache + auto-refresh |
 | payments.ts | 198 | (abstração) | ✅ resolve provider via DB ou env |
 | portfolios.ts | 172 | portfolios + portfolio_items | ✅ (tabelas criadas em migration 20260504) |
