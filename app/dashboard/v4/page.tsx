@@ -1,21 +1,27 @@
 /**
- * app/dashboard/v4/page.tsx — Rota de desenvolvimento V4.8 (dados mockados)
+ * app/dashboard/v4/page.tsx — Sandbox V4.8 (dados reais com fallback mockado)
  *
  * Rota ISOLADA para desenvolvimento e validacao visual sem tocar em
  * app/dashboard/page.tsx (prod com dados reais).
  *
- * Fase 1 (20/05/2026): dados hardcoded que replicam o mockup aprovado.
- * Fase 2 (21-22/05/2026): conectar services/dashboard.ts com dados reais.
+ * Fase 2 (21/05/2026): conecta getDashboardData quando usuario autenticado.
+ * Fallback: dados mockados quando nao autenticado (qualquer um pode ver visualmente).
  *
- * Server Component: passa DashboardData mockada para DashboardLayout (Client).
- * CSS V4: importado via globals-v4.css (tokens dark/light, grain, keyframes).
+ * Regra: NAO redireciona para /login — sandbox deve ser acessivel sem auth.
+ * Prod (/dashboard) tem o redirect obrigatorio.
  *
- * Ref: decisions/014-dashboard-v4-aprovado-mvp.md
+ * Server Component: passa DashboardData para DashboardLayout (Client).
+ * CSS V4: importado via globals-v4.css.
+ *
+ * Ref: decisions/014-dashboard-v4-plano-execucao.md
  * Mockup aprovado: mockups/dashboard/v4-hibrido.html
  */
 
-import { Suspense }        from 'react'
-import { DashboardLayout } from '@/components/dashboard/v4'
+import { Suspense }           from 'react'
+import { DashboardLayout }    from '@/components/dashboard/v4'
+import { getUser }            from '@/lib/auth'
+import { createServerClient } from '@/lib/supabaseServer'
+import { getDashboardData }   from '@/services/dashboard'
 import type { DashboardData } from '@/components/dashboard/v4/types'
 import '../../globals-v4.css'
 
@@ -245,16 +251,78 @@ function DashboardV4Skeleton() {
 // Inner (async — permite Suspense wrapping)
 // ---------------------------------------------------------------------------
 
+/** Resolve DashboardData para usuario autenticado ou retorna null em falha. */
+async function resolveRealData(userId: string): Promise<DashboardData | null> {
+  const supabase = await createServerClient()
+
+  // Primeiro projeto ativo do usuario
+  const { data: projectRows } = await supabase
+    .from('projects')
+    .select('id, name')
+    .eq('user_id', userId)
+    .eq('status', 'active')
+    .order('created_at', { ascending: true })
+    .limit(1)
+
+  let projectId: string | null = projectRows?.[0]?.id ?? null
+
+  // Fallback: qualquer projeto
+  if (!projectId) {
+    const { data: anyProject } = await supabase
+      .from('projects')
+      .select('id')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+    projectId = anyProject?.[0]?.id ?? null
+  }
+
+  if (!projectId) return null
+
+  // Nome do usuario
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name')
+    .eq('id', userId)
+    .maybeSingle()
+
+  const user = await getUser()
+  const userName: string =
+    (profile as { full_name?: string } | null)?.full_name ??
+    user?.user_metadata?.full_name ??
+    user?.email?.split('@')[0] ??
+    'Maker'
+
+  return getDashboardData(userId, projectId, userName)
+}
+
 async function DashboardV4Inner() {
-  /*
-   * FASE 1: dados hardcoded (mockup phase).
-   * FASE 2 (terça 21/05): substituir por:
-   *   const user = await getUser()
-   *   if (!user) redirect('/login')
-   *   const data = await getDashboardData(user.id, projectId, userName)
-   *   return <DashboardLayout data={data} />
-   */
-  return <DashboardLayout data={MOCK_DATA} />
+  // Tenta autenticar — sem redirect (sandbox deve ser acessivel sem auth)
+  const user = await getUser()
+
+  if (!user) {
+    // Nao autenticado: exibe dados mockados
+    return <DashboardLayout data={MOCK_DATA} />
+  }
+
+  // Autenticado: tenta dados reais, com fallback gracioso
+  let resolvedData: DashboardData | null = null
+  try {
+    resolvedData = await resolveRealData(user.id)
+  } catch {
+    // Servico indisponivel — continua com mock
+  }
+
+  if (!resolvedData) {
+    // Sem projeto ou erro: mock com nome real do usuario
+    const mockWithUser: DashboardData = {
+      ...MOCK_DATA,
+      userName: user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? 'Maker',
+    }
+    return <DashboardLayout data={mockWithUser} />
+  }
+
+  return <DashboardLayout data={resolvedData} />
 }
 
 // ---------------------------------------------------------------------------

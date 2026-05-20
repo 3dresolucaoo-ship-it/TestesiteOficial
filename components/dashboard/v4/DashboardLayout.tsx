@@ -416,19 +416,19 @@ export function DashboardLayout({ data }: DashboardLayoutProps) {
         onProjectChange={setActiveProjectId}
       />
 
-      {/* Overlay mobile */}
+      {/* Overlay mobile — BUG-FIX: classe is-open controla visibilidade (não aria-hidden) */}
       <div
         id="sidebar-overlay"
-        className="sidebar-overlay"
+        className={`sidebar-overlay${sidebarOpen ? ' is-open' : ''}`}
         aria-hidden="true"
         ref={overlayRef}
         onClick={closeSidebar}
       />
 
-      {/* Main content */}
+      {/* Main content — margem desktop via CSS var, mobile zerada por media query */}
       <main
         className="main"
-        style={{ marginLeft: `${SIDEBAR_WIDTH}px` }}
+        style={{ ['--sidebar-w' as string]: `${SIDEBAR_WIDTH}px`, marginLeft: `${SIDEBAR_WIDTH}px` }}
       >
         {/* Topbar */}
         <div className="topbar">

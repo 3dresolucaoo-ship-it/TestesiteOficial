@@ -1902,7 +1902,8 @@
   .kpi-mini-card  { flex: 1 1 calc(50% - 5px); }
 }
 @media (max-width: 768px) {
-  .main { margin-left: 0 !important; padding: 80px 20px 120px 20px; }
+  /* BUG-FIX M1: margem e padding corretos no mobile (sidebar via transform, não layout) */
+  .main { margin-left: 0 !important; padding: 80px 16px 120px 16px; }
   .bento-grid { grid-template-columns: 1fr; }
   .bento-card.span-2,
   .bento-card.span-3,
@@ -1911,16 +1912,68 @@
   .cover { gap: 28px; }
   .streak-pill { left: 16px; bottom: 16px; }
   .watermark-raiz { display: none; }
-  .alert-filament { grid-template-columns: auto 1fr; }
-  .alert-filament .alert-cta { grid-column: 1 / -1; }
-  .donut-wrap { grid-template-columns: 1fr; }
-  .donut-svg { margin: 0 auto; }
+  /* BUG-FIX M2: alert-filament colapsa CTA para linha separada no mobile */
+  .alert-filament {
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    padding: 18px 16px;
+  }
+  .alert-filament .alert-cta {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+  /* BUG-FIX M3: donut stacked no mobile com largura controlada */
+  .donut-wrap { grid-template-columns: 1fr; gap: 20px; }
+  .donut-svg { margin: 0 auto; width: 160px; height: 160px; }
+  /* BUG-FIX M4: topbar-right sem overflow no mobile */
+  .topbar {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px;
+    align-items: center;
+  }
+  .topbar-right { gap: 8px; }
+  /* Oculta status-pill no mobile (ocupa espaço valioso em 375px) */
+  .status-pill { display: none; }
+  /* BUG-FIX M5: bento-card padding reduzido em mobile */
+  .bento-card { padding: 18px 16px 16px 16px; }
+  /* BentoGrid: donut-legend sem overflow */
+  .donut-legend { gap: 6px; }
+  .legend-row { font-size: 13px; padding: 5px 6px; }
 }
 @media (max-width: 480px) {
+  .main { padding: 72px 12px 100px 12px; }
   .cover-figure { font-size: 48px; }
   .kpi-mini-card { flex: 1 1 100%; }
-  .topbar { flex-direction: column; align-items: flex-start; }
-  .topbar-right { align-self: flex-end; }
+  /* Em 480px topbar só mostra switcher + toggle, sem quebrar linha */
+  .topbar { gap: 8px; }
+  .topbar-right { gap: 6px; }
+  /* BentoGrid 480: barras horizontais com labels legíveis */
+  .bars-vertical { gap: 8px; }
+  .bar-val { font-size: 10px; }
+  .bar-label { font-size: 9px; letter-spacing: 0.06em; }
+  .queue-day { font-size: 9px; letter-spacing: 0.06em; }
+  /* Gauge: reduz tamanho max no mobile pequeno */
+  .gauge-wrap { max-width: 200px; }
+  .gauge-value { font-size: 30px; }
+}
+@media (max-width: 375px) {
+  .main { padding: 68px 10px 100px 10px; }
+  .cover-figure { font-size: 40px; }
+  .bento-card { padding: 14px 12px 12px 12px; }
+  /* Esconde root-hover em telas muito pequenas (desnecessário sem hover) */
+  .root-hover { display: none; }
+  .card-eyebrow { margin-left: 0; }
+}
+/* BUG-FIX M4 (cont): overlay ativado via classe js-open (não aria-hidden) */
+.sidebar-overlay {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--t-med);
+}
+.sidebar-overlay.is-open {
+  pointer-events: auto;
+  opacity: 1;
 }
 
 /* prefers-reduced-motion */
