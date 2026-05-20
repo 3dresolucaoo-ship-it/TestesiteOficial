@@ -73,6 +73,7 @@ export async function loadInitialState(
     production: safe(prod.data).map((r): ProductionItem => ({
       id:             r.id,
       orderId:        r.order_id ?? '',
+      projectId:      r.project_id ?? '',
       clientName:     r.client_name,
       item:           r.item,
       printer:        r.printer,

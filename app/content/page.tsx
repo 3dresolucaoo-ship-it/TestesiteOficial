@@ -5,6 +5,7 @@ import { useStore, uid } from '@/lib/store'
 import type { ContentItem, ContentStatus, ContentPlatform } from '@/lib/types'
 import { Plus, Pencil, Trash2, MoreHorizontal, Eye, Users, ShoppingCart, ExternalLink } from 'lucide-react'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
+import { ContentEmptyState } from './_components/ContentEmptyState'
 
 const statusConfig: Record<ContentStatus, { label: string; color: string; next?: ContentStatus; nextLabel?: string }> = {
   idea:     { label: 'Ideia',    color: 'text-[#888888] bg-[#88888818] border-[#88888833]', next: 'recorded', nextLabel: 'Marcar Gravado' },
@@ -230,9 +231,12 @@ export default function ContentPage() {
           </div>
         ))}
 
-        {sorted.length === 0 && (
+        {sorted.length === 0 && byProject.length === 0 && (
+          <ContentEmptyState onCreateClick={() => setCreating(true)} />
+        )}
+        {sorted.length === 0 && byProject.length > 0 && (
           <div className="py-16 text-center">
-            <p className="text-[#555555] text-sm">Nenhum conteúdo ainda.</p>
+            <p className="text-[#555555] text-sm">Nenhum conteúdo neste filtro.</p>
           </div>
         )}
       </div>

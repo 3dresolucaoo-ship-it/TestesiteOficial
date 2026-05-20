@@ -392,40 +392,39 @@ export default function OrdersPage() {
   const router       = useRouter()
   const searchParams = useSearchParams()
 
+  // ---------------------------------------------------------------------------
+  // Leitura de ?quote=<productId> — pré-seleção de produto ao chegar de /products.
+  // Derivado diretamente do searchParams (sem setState), o que evita re-render
+  // extra e não viola react-hooks/set-state-in-effect.
+  // ---------------------------------------------------------------------------
+  const paramProductId  = searchParams.get('quote') ?? ''
+  const quoteProduct    = paramProductId
+    ? state.products.find((p) => p.id === paramProductId)
+    : undefined
+  // Valida existência do produto; se inválido, ignora o param.
+  const quoteProductId  = quoteProduct ? paramProductId : ''
+
   // Estado de UI
-  const [creating,         setCreating]         = useState(false)
-  const [quoteProductId,   setQuoteProductId]   = useState<string>('')
-  const [editing,          setEditing]          = useState<Order | null>(null)
-  const [menuOpen,         setMenuOpen]         = useState<string | null>(null)
-  const [filterProject,    setFilterProject]    = useState<string>('all')
+  // O modal de criação abre no mount quando há quoteProductId válido.
+  // useState(() => ...) garante que o valor inicial só é calculado uma vez.
+  const [creating,      setCreating]      = useState(() => Boolean(quoteProductId))
+  const [editing,       setEditing]       = useState<Order | null>(null)
+  const [menuOpen,      setMenuOpen]      = useState<string | null>(null)
+  const [filterProject, setFilterProject] = useState<string>('all')
 
   // Tab e busca controlados pelo ModuleShell via callbacks
-  const [activeTab,  setActiveTab]  = useState<TabId>(ALL)
+  const [activeTab,   setActiveTab]   = useState<TabId>(ALL)
   const [searchQuery, setSearchQuery] = useState<string>('')
 
-  // ---------------------------------------------------------------------------
-  // Leitura de ?quote=<productId> — abre modal de novo pedido com produto
-  // pré-selecionado quando o maker chega via /products "Gerar orçamento".
-  // Roda apenas no mount (uma vez), depois limpa o param da URL.
-  // ---------------------------------------------------------------------------
+  // Limpa o param ?quote= da URL após o mount, sem re-render de estado.
   useEffect(() => {
-    const paramProductId = searchParams.get('quote')
     if (!paramProductId) return
-
-    // Valida que o produto existe no store antes de abrir
-    const productExists = state.products.some((p) => p.id === paramProductId)
-    if (productExists) {
-      setQuoteProductId(paramProductId)
-      setCreating(true)
-    }
-
-    // Remove o param da URL sem recarregar a página
     const params = new URLSearchParams(searchParams.toString())
     params.delete('quote')
     const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname
     router.replace(newUrl)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // mount-only: intencionalmente sem deps para não reabrir em re-renders
+  }, []) // mount-only: apenas limpa a URL, não aciona estado
 
   // ---------------------------------------------------------------------------
   // Derivacoes de estado

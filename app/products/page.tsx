@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { useStore } from '@/lib/store'
 import type { Product } from '@/lib/types'
 import { Plus, Package, AlertTriangle, LayoutGrid, Wrench } from 'lucide-react'
@@ -21,6 +22,7 @@ import { fmtPct }           from './_components/helpers'
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function ProductsPage() {
   const { state, dbError, loading } = useStore()
+  const router = useRouter()
   const [creating,       setCreating]       = useState(false)
   const [editing,        setEditing]        = useState<Product | null>(null)
   const [filterProject,  setFilterProject]  = useState('all')
@@ -198,7 +200,7 @@ export default function ProductsPage() {
               filamentItem={getFilament(product)}
               onEdit={() => setEditing(product)}
               onDelete={() => handleDelete(product.id)}
-              onQuote={() => { window.location.href = `/orders?quote=${product.id}` }}
+              onQuote={() => { router.push(`/orders?quote=${product.id}`) }}
             />
           ))}
         </div>

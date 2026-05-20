@@ -5,6 +5,7 @@ import { useStore, uid } from '@/lib/store'
 import type { Decision, DecisionStatus } from '@/lib/types'
 import { Plus, Pencil, Trash2, MoreHorizontal, CheckCircle2, XCircle } from 'lucide-react'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
+import { DecisionsEmptyState } from './_components/DecisionsEmptyState'
 
 const statusConfig: Record<DecisionStatus, { label: string; color: string; icon: React.ElementType }> = {
   active:    { label: 'Ativa',     color: 'text-[#10b981] bg-[#10b9811a] border-[#10b98133]', icon: CheckCircle2 },
@@ -198,9 +199,12 @@ export default function DecisionsPage() {
           </div>
         ))}
 
-        {sorted.length === 0 && (
+        {sorted.length === 0 && state.decisions.length === 0 && (
+          <DecisionsEmptyState onCreateClick={() => setCreating(true)} />
+        )}
+        {sorted.length === 0 && state.decisions.length > 0 && (
           <div className="py-16 text-center">
-            <p className="text-[#555555] text-sm">Nenhuma decisão registrada ainda.</p>
+            <p className="text-[#555555] text-sm">Nenhuma decisão neste filtro.</p>
           </div>
         )}
       </div>

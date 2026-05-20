@@ -38,9 +38,9 @@ export const initialData: AppState = {
   ],
 
   production: [
-    { id: 'pr1', orderId: 'o1', clientName: 'Carlos Silva',  item: 'Suporte celular customizado', printer: 'bambu',      status: 'printing', estimatedHours: 3, priority: 1 },
-    { id: 'pr2', orderId: 'o5', clientName: 'João Ferreira', item: 'Miniatura personalizada',     printer: 'bambu',      status: 'waiting',  estimatedHours: 8, priority: 2 },
-    { id: 'pr3', orderId: 'o3', clientName: 'Pedro Lima',    item: 'Case para controle',          printer: 'flashforge', status: 'waiting',  estimatedHours: 4, priority: 3 },
+    { id: 'pr1', orderId: 'o1', projectId: 'p1', clientName: 'Carlos Silva',  item: 'Suporte celular customizado', printer: 'bambu',      status: 'printing', estimatedHours: 3, priority: 1 },
+    { id: 'pr2', orderId: 'o5', projectId: 'p1', clientName: 'João Ferreira', item: 'Miniatura personalizada',     printer: 'bambu',      status: 'waiting',  estimatedHours: 8, priority: 2 },
+    { id: 'pr3', orderId: 'o3', projectId: 'p1', clientName: 'Pedro Lima',    item: 'Case para controle',          printer: 'flashforge', status: 'waiting',  estimatedHours: 4, priority: 3 },
   ],
 
   content: [
