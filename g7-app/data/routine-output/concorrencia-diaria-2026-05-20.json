@@ -1,0 +1,152 @@
+{
+  "data": "2026-05-20",
+  "rotina": "Routine 9 - Monitoramento Diario Concorrencia",
+  "gerado_por": "external-researcher (G7)",
+
+  "alertas": [
+    {
+      "tipo": "ALERTA",
+      "descricao": "SP3DFEST 2026 acontece em 19-21/06/2026 em Sao Paulo (Av. Brigadeiro Luis Antonio, 580 - Bela Vista), entrada gratuita. E o maior evento gratuito de impressao 3D do Brasil, com trilha de empreendedorismo, expositores e fabricantes globais. O Hayzer tem menos de 30 dias ate o evento e sem presenca confirmada. Concorrentes podem aparecer como expositores 8 dias antes do launch publico de 27/06.",
+      "urgencia": "alta"
+    },
+    {
+      "tipo": "ALERTA",
+      "descricao": "Vultrix3D esta em beta fechado com IA integrada (analise de despesas automatizada, gamificacao com XP, importacao de .3mf e .gcode). Se sair do beta antes do launch do Hayzer (27/06), entra como concorrente com diferencial de IA e gamificacao num nicho ainda pouco explorado.",
+      "urgencia": "alta"
+    },
+    {
+      "tipo": "ALERTA",
+      "descricao": "Bling registrou instabilidade confirmada em 12/05/2026 (quase 5 horas fora do ar). Makers que usam Bling como ERP estao com dor ativa agora. Janela de captura de churn disponivel para campanha de awareness ou retargeting.",
+      "urgencia": "media"
+    },
+    {
+      "tipo": "INFO",
+      "descricao": "EXPO3DBR 2026 foi realizada em maio/2026 (cobertura @3dgeekshow em 13/05). Comunidade maker aquecida pos-evento.",
+      "urgencia": "media"
+    },
+    {
+      "tipo": "INFO",
+      "descricao": "ZoomCalc3D e 100% gratuita, atualizada em 15/01/2026, com integracao IA Gemini. Compete diretamente com o modulo calculadora do Hayzer por preco zero.",
+      "urgencia": "media"
+    },
+    {
+      "tipo": "INFO",
+      "descricao": "@3dgeekshow ainda distribui planilha de custos gratuita como lead magnet em 2026 (127k seguidores, 120k makers ativos). Sinal de que o mercado ainda nao foi convertido para SaaS.",
+      "urgencia": "baixa"
+    },
+    {
+      "tipo": "INFO",
+      "descricao": "3D Print Academy (50K seguidores, 6.000+ alunos formados, MEC+Cogna) forma makers continuamente. Alunos = persona Rafael recem-profissionalizada. Canal de parceria B2B/afiliado nao capturado por concorrentes.",
+      "urgencia": "baixa"
+    }
+  ],
+
+  "instagram_posts": [
+    {
+      "perfil": "@3dgeekshow",
+      "tipo": "reels",
+      "resumo": "Post 19/05: hashtags gerais impressao 3D. Em 16/05 publicou 'Cuidado! Sua Peca 3D Pode Estar CRIANDO Fungo!' (conservacao de material). Em 13/05 cobertura da EXPO3DBR 2026. Em 09/05: '1/3 do Seu Filamento VAI PRO LIXO' (desperdicio). Distribui planilha de custos gratuita e e-book empreendedor como lead magnet.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "Canal com 127 mil seguidores. Ainda usa planilha gratuita como lead magnet -- mercado SaaS ainda nao saturado. Oportunidade de content partnership ou aparicao no canal posicionando Hayzer contra a planilha."
+    },
+    {
+      "perfil": "@artbox3d",
+      "tipo": "reels",
+      "resumo": "Reel institucional de abertura de loja fisica SP. 'Voce ja visitou a ARTBOX3D? Nossa loja esta aberta'. Outro reel: 'Impressao 3D - ja conhece?'",
+      "engajamento_estimado": "medio",
+      "relevancia_hayzer": "82K seguidores. Foco em venda de produtos e loja fisica SP. Persona Rafael acompanha este canal. Conteudo nao menciona software de gestao -- gap exploravel."
+    },
+    {
+      "perfil": "@3dlab_brasil",
+      "tipo": "reels",
+      "resumo": "Reel recente: '@careca3d veio aqui relembrar voces de todos os...' (colaboracao com influencer maker). Posts anteriores incluem promocao de filamentos.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "81K seguidores. Canal de venda de insumos e impressoras. Audiencia de makers ativos compradores. Possivel canal de distribuicao/parceria para Hayzer."
+    },
+    {
+      "perfil": "@3dprintacademy",
+      "tipo": "carrossel",
+      "resumo": "Canal educacional com 6.000+ alunos formados, parceria MEC e Cogna. Oferece cursos pagos e bundles com impressoras Bambu Lab. Foco em formacao tecnica e empreendedorismo.",
+      "engajamento_estimado": "medio",
+      "relevancia_hayzer": "50K seguidores. Alunos = persona Rafael recem-profissionalizada buscando ferramentas de gestao. Canal estrategico para parceria B2B ou afiliados."
+    },
+    {
+      "perfil": "@appcustos3d",
+      "tipo": "desconhecido",
+      "resumo": "Conta Instagram ativa nao identificada com este handle nos resultados de busca publica. Opera principalmente via site appcustos3d.com.br.",
+      "engajamento_estimado": "baixo",
+      "relevancia_hayzer": "Ausencia de presenca social relevante -- possivel fraqueza competitiva em aquisicao organica via Instagram."
+    }
+  ],
+
+  "reclamacoes_reclameaqui": [
+    {
+      "empresa": "Bling ERP",
+      "queixa": "Sistema fora do ar com frequencia -- incidente confirmado em 12/05/2026 (09h50 a 14h10, ~5 horas). Suporte com tempo medio de resposta de 9 dias e 17 horas (out/2025-mar/2026). Falhas de sincronizacao de estoque com Mercado Livre e Shopee em volumes grandes. Usuarios relatam 'instabilidade cronica' e 'rombos no estoque cada vez maiores e mais frequentes'. Preco: R$ 55-200+/mes.",
+      "recorrente": true,
+      "oportunidade_hayzer": "Bling e ERP generico nao construido para fluxo maker 3D (gcode, filamento, impressora). Reclamacoes de estoque e instabilidade abrem espaco para SaaS vertical como Hayzer que resolve especificamente custo por peca. Janela de churn ativa agora."
+    },
+    {
+      "empresa": "AppCustos3D (Custos3D)",
+      "queixa": "Nenhuma reclamacao rastreavel encontrada no Reclame Aqui. Reclame Aqui bloqueou acesso direto (HTTP 403).",
+      "recorrente": false,
+      "oportunidade_hayzer": "Ausencia de reclamacoes indica base de usuarios ainda pequena (early-stage). Preco: BASIC R$ 29,90/mes, PRO R$ 69,90/mes. Pedidos Mercado Livre via planilha manual -- fricao identificada."
+    },
+    {
+      "empresa": "MakerFlow 3D",
+      "queixa": "Nenhuma reclamacao rastreavel encontrada. MakerFlow anuncia 'precisao de custo 99.8%' e integracao OAuth ML/Shopee. Modelo de IA com creditos de consumo pode frustrar usuarios acostumados a uso ilimitado.",
+      "recorrente": false,
+      "oportunidade_hayzer": "Modelo de creditos para IA e fricao potencial. Preco R$ 29,90/mes ou R$ 69,90/trimestre."
+    },
+    {
+      "empresa": "3D Control",
+      "queixa": "Nenhuma reclamacao rastreavel encontrada. Plano unico R$ 39,99/mes sem limite de funcionalidades.",
+      "recorrente": false,
+      "oportunidade_hayzer": "Integra ML, Shopee, Elo7 e Instagram. Plano unico sem tier pode limitar upsell conforme o maker cresce."
+    }
+  ],
+
+  "mapa_competitivo_precos": [
+    { "nome": "ZoomCalc3D", "preco": "Gratuito", "foco": "Calculadora + IA Gemini", "integracao_ml": false },
+    { "nome": "QuantoCusta3D", "preco": "Gratuito", "foco": "Calculadora basica", "integracao_ml": false },
+    { "nome": "MakerFlow 3D", "preco": "R$ 29,90/mes ou R$ 69,90/trim", "foco": "Gestao completa + ML/Shopee OAuth + IA creditos", "integracao_ml": true },
+    { "nome": "AppCustos3D (Custos3D)", "preco": "R$ 29,90 (Basic) / R$ 69,90 (PRO)", "foco": "Custo por peca + gcode + Shopee", "integracao_ml": "parcial (planilha)" },
+    { "nome": "3D Control", "preco": "R$ 39,99/mes (tudo incluido)", "foco": "Gestao + ML/Shopee/Elo7/Instagram", "integracao_ml": true },
+    { "nome": "Precifi3D", "preco": "Freemium (Pro e Enterprise valores nao divulgados)", "foco": "Calculadora + marketplace fornecedores", "integracao_ml": false },
+    { "nome": "Vultrix3D", "preco": "Gratuito (beta fechado)", "foco": "IA + gamificacao + gcode import", "integracao_ml": false },
+    { "nome": "Bling ERP", "preco": "R$ 55-200+/mes", "foco": "ERP generico + fiscal + marketplace (nao especializado 3D)", "integracao_ml": true }
+  ],
+
+  "acao_recomendada": {
+    "para": "Marcos + Helena",
+    "urgencia": "alta",
+    "acao": "Avaliar presenca no SP3DFEST 19-21/06 em SP ESTA SEMANA. O evento acontece 8 dias antes do launch publico do Hayzer (27/06) e e entrada gratuita para visitantes. Opcoes: (1) estande de expositores (verificar prazo de inscricao), (2) participacao como visitante ativo com QR code de waitlist, (3) parceria/patrocinio com influencer presente (@3dgeekshow, @3dlab_brasil). Decisao necessaria antes de 25/05 para viabilizar logistica.",
+    "contexto": "Todos os concorrentes tem a mesma janela. Se Hayzer nao aparecer la, o Rafael do mundo real vai ver o concorrente primeiro."
+  },
+
+  "fontes_consultadas": [
+    "https://appcustos3d.com.br/",
+    "https://www.makerflow3d.com.br/",
+    "https://3dcontrol.com.br/",
+    "https://precifi3d.com/",
+    "https://www.vultrix3d.com.br/ferramenta",
+    "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d/",
+    "https://quantocusta3d.com.br/",
+    "https://analister.com/ferramentas/bling",
+    "https://3dgeekshow.com.br/",
+    "https://expo3dbr.com.br/",
+    "https://www.sympla.com.br/evento/sp3dfest/3053392",
+    "https://www.reclameaqui.com.br/bling/sistema-bling-instavel-fora-do-ar-frequentemente-e-suporte-inacessivel_qIX2PnyTjcVRkXKW/",
+    "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/",
+    "https://3dprintacademy.com.br/"
+  ],
+
+  "limitacoes": [
+    "Instagram: nenhuma URL de reel/post retornou conteudo legisel via WebFetch (HTTP 429 / base64). Dados extraidos indiretamente via indexacao Google (titulos de reels, hashtags) sem metricas numericas de engajamento.",
+    "Reclame Aqui: todas as URLs diretas retornaram HTTP 403. Dados do Bling obtidos via Google (InforChannel, Analister). Sem dados de data exata das reclamacoes mais recentes.",
+    "AppCustos3D, MakerFlow, 3D Control no Reclame Aqui: bloqueado por HTTP 403. Nenhuma reclamacao encontrada em fontes alternativas.",
+    "@appcustos3d no Instagram: conta ativa nao encontrada com este handle exato.",
+    "Vultrix3D: beta fechado, sem preco publico e sem dados de adocao.",
+    "Precifi3D: valores Pro e Enterprise nao publicados no site."
+  ]
+}
