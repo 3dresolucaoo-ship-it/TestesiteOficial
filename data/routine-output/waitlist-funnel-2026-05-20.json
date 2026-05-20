@@ -1,0 +1,43 @@
+{
+  "date": "2026-05-20",
+  "generated_at": "2026-05-20T09:00:00-03:00",
+  "last_24h": {
+    "total_new": 1,
+    "completed_step_2": 1,
+    "pct_step_2": 100.0,
+    "email_confirmed": 0,
+    "by_utm_source": [
+      { "utm_source": "direct", "leads": 1, "pct": 100.0 }
+    ]
+  },
+  "accumulated": {
+    "total_waitlist": 2,
+    "total_step_2": 2,
+    "total_email_confirmed": 0,
+    "total_converted": 0
+  },
+  "7d_trend": {
+    "days": [
+      { "day": "2026-05-20", "leads": 1, "step2": 1 },
+      { "day": "2026-05-19", "leads": 0, "step2": 0 },
+      { "day": "2026-05-18", "leads": 0, "step2": 0 },
+      { "day": "2026-05-17", "leads": 0, "step2": 0 },
+      { "day": "2026-05-16", "leads": 0, "step2": 0 },
+      { "day": "2026-05-15", "leads": 1, "step2": 1 },
+      { "day": "2026-05-14", "leads": 0, "step2": 0 }
+    ],
+    "total_7d": 2,
+    "daily_avg_7d": 0.29,
+    "today_vs_avg": "acima",
+    "growth_vs_prev_7d": "n/a (base zero)"
+  },
+  "top_utm_accumulated": [
+    { "utm_source": "direct", "total": 2, "pct": 100.0 }
+  ],
+  "avg_min_to_email_confirm_24h": null,
+  "notes": {
+    "step_2_proxy": "whatsapp IS NOT NULL",
+    "email_confirmed_concern": true,
+    "utm_tracking_active": false
+  }
+}
