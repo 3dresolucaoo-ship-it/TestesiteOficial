@@ -30,7 +30,7 @@ export function ContentEmptyState({ onCreateClick }: ContentEmptyStateProps) {
         Nenhum conteúdo registrado ainda
       </h3>
       <p className="text-sm text-foreground/70 leading-relaxed mb-6">
-        Aqui você guarda anotações, pesquisas e referências do seu negócio. Registre uma ideia de post, acompanhe o status e veja quantas views cada conteúdo gerou.
+        Aqui tu guarda anotação, pesquisa e referência do teu negócio. Registra uma ideia de post, acompanha o status e vê quantas views cada conteúdo deu.
       </p>
       <button
         onClick={onCreateClick}

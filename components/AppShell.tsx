@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { StoreProvider, useStore } from '@/lib/store'
 import { V4Shell } from '@/components/dashboard/v4/V4Shell'
+import { OnboardingController } from '@/components/onboarding/OnboardingController'
 import { AlertTriangle, X } from 'lucide-react'
 import type { AppState } from '@/lib/types'
 
@@ -217,6 +218,7 @@ export function AppShell({
     <StoreProvider initialState={initialState}>
       <V4ShellAdapter>{children}</V4ShellAdapter>
       <DbErrorToast />
+      <OnboardingController />
     </StoreProvider>
   )
 }

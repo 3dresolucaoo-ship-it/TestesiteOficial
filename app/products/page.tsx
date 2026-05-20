@@ -292,10 +292,10 @@ export default function ProductsPage() {
                 <Package size={28} className="text-[hsl(173_30%_57%)]" aria-hidden="true" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-                Cadastre o que voce vende
+                Cadastra o que tu vende
               </h3>
               <p className="text-sm text-foreground/70 leading-relaxed mb-2">
-                Um produto aqui e qualquer peca que voce imprime e vende: suporte de celular, miniatura, peca tecnica.
+                Produto aqui é qualquer peca que tu imprime e vende: suporte de celular, miniatura, peca tecnica.
               </p>
               <p className="text-sm text-foreground/70 leading-relaxed mb-6">
                 Ao cadastrar, o Hayzer calcula custo de impressao, margem de lucro e preco sugerido por marketplace.

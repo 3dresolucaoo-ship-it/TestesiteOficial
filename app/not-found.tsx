@@ -18,7 +18,7 @@ import Link from 'next/link'
 
 export const metadata = {
   title: '404',
-  description: 'A pagina que voce procurou nao existe ou foi movida.',
+  description: 'A pagina que tu procurou nao existe ou foi movida.',
   robots: { index: false, follow: false },
 }
 

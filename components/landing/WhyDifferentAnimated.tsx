@@ -53,7 +53,7 @@ export function WhyDifferentAnimated() {
             className="mb-6 flex items-baseline justify-between border-b pb-4"
             style={{ borderColor: 'hsl(var(--fog-50) / 0.10)' }}
           >
-            <h3 className="display-h2 text-[20px] text-muted-foreground">Hoje você tem</h3>
+            <h3 className="display-h2 text-[20px] text-muted-foreground">Hoje tu tem</h3>
             <span className="tag" style={{ color: 'hsl(var(--ember-400))' }}>R$ 407/mês</span>
           </div>
           <ul className="space-y-4">

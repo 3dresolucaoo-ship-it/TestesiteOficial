@@ -133,11 +133,11 @@ export function WaitlistForm() {
             autoComplete="email"
             inputMode="email"
             className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
-            aria-label="Seu email"
+            aria-label="Teu email"
             onInvalid={(e) => {
               const t = e.currentTarget
               if (t.validity.valueMissing) t.setCustomValidity('Coloca teu email pra eu te avisar.')
-              else if (t.validity.typeMismatch) t.setCustomValidity('Esse email não tá certo. Tipo: voce@email.com')
+              else if (t.validity.typeMismatch) t.setCustomValidity('Esse email não tá certo. Exemplo: nome@email.com')
               else t.setCustomValidity('')
             }}
             onInput={(e) => e.currentTarget.setCustomValidity('')}

@@ -13,7 +13,7 @@ export function ProductionTab({ draft, setDraft }: SettingsTabProps) {
   return (
     <div className="space-y-4">
       <SectionCard title="Tipos de Impressora">
-        <p className="text-[#555555] text-xs -mt-2">Modelos de impressoras que você usa. Aparece no cadastro de tarefas de produção.</p>
+        <p className="text-[#555555] text-xs -mt-2">Modelos de impressora que tu usa. Aparece no cadastro de tarefa de produção.</p>
         <CategoryListEditor
           items={draft.production.printerTypes}
           onChange={v => updateProduction({ printerTypes: v })}
