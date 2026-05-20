@@ -24,20 +24,23 @@ import { useState, useMemo, useCallback } from 'react'
 import { useStore, uid }                  from '@/lib/store'
 import type { Lead, LeadStatus, Order }   from '@/lib/types'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
-import { Plus, Pencil, Trash2 }           from 'lucide-react'
+import { Plus, Pencil, Trash2, ShoppingCart, CheckCircle } from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
 import { ModuleShell, V4ThemeProvider }   from '@/components/dashboard/v4'
 
 import '../globals-v4.css'
 
-import { LeadForm }         from './_components/LeadForm'
-import { LeadKanbanBoard }  from './_components/LeadKanbanBoard'
-import { CustomerList }     from './_components/CustomerList'
-import { CrmEmptyState }    from './_components/CrmEmptyState'
-import { fmtBRL }           from './_components/helpers'
-import type { LeadFormData }  from './_components/helpers'
-import type { DerivedClient } from './_components/CustomerRow'
-import { STATUS_BADGE_CLASS } from './_components/helpers'
+import { LeadForm }              from './_components/LeadForm'
+import { LeadKanbanBoard }       from './_components/LeadKanbanBoard'
+import { CustomerList }          from './_components/CustomerList'
+import { CrmEmptyState }         from './_components/CrmEmptyState'
+import { fmtBRL }                from './_components/helpers'
+import type { LeadFormData }     from './_components/helpers'
+import type { DerivedClient }    from './_components/CustomerRow'
+import { STATUS_BADGE_CLASS }    from './_components/helpers'
+import { ConvertToOrderModal }   from './_components/ConvertToOrderModal'
+import type { ConvertFormData }  from './_components/ConvertToOrderModal'
+import { leadsService }          from '@/services/leads'
 
 // ---------------------------------------------------------------------------
 // Tipo de tab
@@ -126,11 +129,12 @@ interface LeadListViewProps {
   onEdit:      (l: Lead) => void
   onDelete:    (id: string) => void
   onAdvance:   (l: Lead) => void
+  onConvert:   (l: Lead) => void
 }
 
 const ADVANCE_ORDER: LeadStatus[] = ['new', 'contacted', 'negotiating', 'won']
 
-function LeadListView({ leads, projectName, onEdit, onDelete, onAdvance }: LeadListViewProps) {
+function LeadListView({ leads, projectName, onEdit, onDelete, onAdvance, onConvert }: LeadListViewProps) {
   return (
     <div className="space-y-2">
       {leads.map((l) => (
@@ -154,14 +158,33 @@ function LeadListView({ leads, projectName, onEdit, onDelete, onAdvance }: LeadL
             <p className="text-[#ebebeb] text-sm font-medium">{l.name}</p>
             {l.contact && <p className="text-[#555555] text-xs">{l.contact}</p>}
             {l.notes && <p className="text-[#888888] text-xs mt-1">{l.notes}</p>}
+            {/* Badge de convertido */}
+            {l.convertedOrderId && (
+              <div className="flex items-center gap-1 mt-1">
+                <CheckCircle size={10} className="text-[#10b981]" aria-hidden="true" />
+                <span className="text-[#10b981] text-[10px] font-medium">Pedido criado</span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-1 shrink-0">
+            {/* Botao converter (so quando nao convertido) */}
+            {!l.convertedOrderId && (
+              <button
+                type="button"
+                onClick={() => onConvert(l)}
+                className="flex items-center gap-1 text-xs text-[hsl(173_58%_45%)] hover:text-[hsl(173_58%_60%)] px-2 py-1 rounded-lg hover:bg-[hsl(173_58%_28%_/_0.12)] transition-colors"
+                aria-label={`Converter lead ${l.name} em pedido`}
+              >
+                <ShoppingCart size={11} aria-hidden="true" />
+                Pedido
+              </button>
+            )}
             {l.status !== 'won' && l.status !== 'lost' && ADVANCE_ORDER.includes(l.status) && (
               <button
                 type="button"
                 onClick={() => onAdvance(l)}
                 className="text-xs text-[#7c3aed] hover:text-[#a78bfa] px-2 py-1 rounded-lg hover:bg-[#7c3aed1a] transition-colors"
-                aria-label={`Avançar lead ${l.name}`}
+                aria-label={`Avancar lead ${l.name}`}
               >
                 Avancar →
               </button>
@@ -201,8 +224,10 @@ export default function GlobalCrmPage() {
   const [view,          setView]          = useState<'kanban' | 'list'>('kanban')
   const [filterProject, setFilterProject] = useState<string>('all')
   const [searchQuery,   setSearchQuery]   = useState<string>('')
-  const [creating,      setCreating]      = useState(false)
-  const [editing,       setEditing]       = useState<Lead | null>(null)
+  const [creating,       setCreating]      = useState(false)
+  const [editing,        setEditing]       = useState<Lead | null>(null)
+  const [converting,     setConverting]    = useState<Lead | null>(null)
+  const [convertLoading, setConvertLoading] = useState(false)
 
   // ---------------------------------------------------------------------------
   // Derivacoes
@@ -357,6 +382,50 @@ export default function GlobalCrmPage() {
     [dispatch],
   )
 
+  /**
+   * Handler de conversao lead → pedido.
+   * Chama leadsService.convertToOrder (atomico) e sincroniza o store local:
+   *  - ADD_ORDER  → pedido novo aparece em /orders
+   *  - UPDATE_LEAD → lead recebe convertedOrderId + status 'won'
+   */
+  const handleConvertSubmit = useCallback(
+    async (d: ConvertFormData) => {
+      if (!converting) return
+      setConvertLoading(true)
+      try {
+        const { order, alreadyConverted } = await leadsService.convertToOrder(
+          converting.id,
+          converting.projectId,
+          {
+            item:   d.item,
+            value:  parseFloat(d.value) || 0,
+            status: d.status,
+            date:   d.date,
+          },
+        )
+        if (!alreadyConverted) {
+          // Sincroniza store local: pedido + lead atualizados
+          dispatch({ type: 'ADD_ORDER', payload: order })
+          dispatch({
+            type: 'UPDATE_LEAD',
+            payload: {
+              ...converting,
+              status:           'won',
+              convertedOrderId: order.id,
+            },
+          })
+        }
+        setConverting(null)
+      } catch (err) {
+        // TODO: substituir por toast quando tivermos sistema de notificacao
+        console.error('[CRM] convertToOrder falhou', err)
+      } finally {
+        setConvertLoading(false)
+      }
+    },
+    [converting, dispatch],
+  )
+
   // ---------------------------------------------------------------------------
   // Guard de loading
   // ---------------------------------------------------------------------------
@@ -455,6 +524,7 @@ export default function GlobalCrmPage() {
                 onEdit={setEditing}
                 onDelete={handleDelete}
                 onAdvance={handleAdvance}
+                onConvert={setConverting}
               />
             ) : (
               <LeadListView
@@ -463,6 +533,7 @@ export default function GlobalCrmPage() {
                 onEdit={setEditing}
                 onDelete={handleDelete}
                 onAdvance={handleAdvance}
+                onConvert={setConverting}
               />
             )}
           </>
@@ -509,6 +580,21 @@ export default function GlobalCrmPage() {
             }}
             onSave={handleEdit}
             onClose={() => setEditing(null)}
+          />
+        </Modal>
+      )}
+
+      {/* Modal: converter lead em pedido */}
+      {converting && (
+        <Modal
+          title="Converter em Pedido"
+          onClose={() => !convertLoading && setConverting(null)}
+        >
+          <ConvertToOrderModal
+            lead={converting}
+            onSave={handleConvertSubmit}
+            onClose={() => setConverting(null)}
+            loading={convertLoading}
           />
         </Modal>
       )}
