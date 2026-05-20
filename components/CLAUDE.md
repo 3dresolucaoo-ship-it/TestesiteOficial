@@ -18,7 +18,7 @@
 | SettingsView.tsx | **220** | ✅ refatorado — tabs em `settings/` (8 sub-componentes) |
 | DashboardView.tsx | **483** | ✅ refatorado — shared em `dashboard/shared.tsx` |
 | Sidebar.tsx | 36 | ✅ refatorado — sub-componentes em `sidebar/` (7 arquivos) |
-| FinanceView.tsx | 362 | ✅ refatorado — sub-componentes em `finance/` (6 arquivos · 2026-05-20) |
+| FinanceView.tsx | ~420 | ✅ migrado ModuleShell V4 (2026-05-20) — KpiRow hero+3 satellites, tabs Lancamentos/Custos Fixos/Break Even, FilterBar integrado |
 | FinanceCharts.tsx | 465 | ✅ |
 | PortfoliosView.tsx | 445 | ✅ |
 | CatalogsView.tsx | 313 | ✅ |
@@ -51,8 +51,8 @@ Export publico mantido identico: `FinanceView` via `components/FinanceView.tsx`.
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `types.ts` | `FinanceTab`, `FormData`, `ALL_LABELS`, `fmt`, `parseDate`, keys legacy |
-| `FinanceKpis.tsx` | Grid 4 cards KPI (receita / despesas / lucro / margem) |
+| `types.ts` | `FormData`, `ALL_LABELS`, `fmt`, `parseDate`, keys legacy (FinanceTab V4 agora em FinanceView.tsx) |
+| `FinanceKpis.tsx` | Grid 4 cards KPI legado (nao usado pelo ModuleShell V4 — substituido por KpiRow declarativo) |
 | `FinanceFixedCosts.tsx` | `FixedCostRow` (inline edit) + `FinanceFixedCosts` (lista + form add) + `ProgressBar` |
 | `FinanceTransactionForm.tsx` | `TransactionForm` + `CreateTransactionModal` + `EditTransactionModal` |
 | `FinanceBreakEven.tsx` | `BreakEvenSection` completo (header educacional + projeto selector + fixed-costs + profit goal + tabela produtos) |

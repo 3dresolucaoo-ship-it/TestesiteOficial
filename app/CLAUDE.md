@@ -32,6 +32,8 @@
 - ✅ `app/inventory/page.tsx` — refatorado 2026-05-19 (1001→372 linhas). 11 sub-componentes em `app/inventory/_components/` (types.ts, ItemForm, MovementForm, InventoryKpiRow, InventoryCatBreakdown, InventoryTopProfit, InventoryLowStockBanner, InventoryFilters, InventoryEmptyState, InventoryMovementLog + pré-existentes: CatBadge, ItemCard, ItemRow, ImageUploader, helpers.ts). TSC 0 erros, ESLint 0 warnings.
 - ✅ `app/products/page.tsx` — refatorado (604 → 285 linhas). Sub-componentes em `app/products/_components/`: ProductCard, ProductKpiRow, ProductBestWorst, ProductFilters, useProductActions, helpers. (2026-05-19)
 - ✅ `app/orders/page.tsx` — migrado para ModuleShell V4.8 (2026-05-19). KpiRow + FilterBar + search integrados. Validacao visual em prod pendente (CEO).
+- ✅ `app/crm/page.tsx` — migrado para ModuleShell V4 (2026-05-20). KpiRow hero (leads ativos) + 3 satellites + tabs Pipeline/Clientes.
+- ✅ `app/finance/page.tsx` — migrado para ModuleShell V4 (2026-05-20). KpiRow hero (lucro liquido mes) + 3 satellites (receita/despesas/margem com alerta amber <15%) + tabs Lancamentos/Custos Fixos/Break Even. globals-v4.css importado na page. Validacao visual em prod pendente (CEO).
 - ❌ `app/showcase/page.tsx` — provavelmente legado, avaliar
 - ⏳ Falta `loading.tsx` e `error.tsx` em todas rotas
 - ⏳ `app/projects/[projectId]/{...}` páginas duplicam módulos globais — decidir se ficam

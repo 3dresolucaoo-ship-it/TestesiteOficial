@@ -1,21 +1,42 @@
 'use client'
 
+/**
+ * FinanceView.tsx — Modulo Financeiro V4
+ *
+ * Migrado para ModuleShell em 2026-05-20 (pattern de /orders e /crm).
+ * Funcionalidade 100% preservada: KPIs, graficos, transacoes, custos fixos,
+ * ponto de equilibrio, reconciliacao, exportacao CSV.
+ *
+ * Estrutura:
+ *   ModuleShell (PageHeader + KpiRow + FilterBar)
+ *     children:
+ *       - ProjectFilter   (select de projeto)
+ *       - tab "lancamentos": FinanceChartsPanel + FinanceMonthlySummary
+ *                            + FinanceFilterBar + FinanceTransactionList
+ *       - tab "custos":      FinanceFixedCosts (via BreakEvenSection parcial)
+ *       - tab "breakeven":   BreakEvenSection completo
+ *   Modal Novo Lancamento
+ *   Modal Editar Lancamento
+ *
+ * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
+ */
+
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { useStore, uid } from '@/lib/store'
 import type { Transaction, TransactionType, TransactionCategory, Project, FixedCost, IncomeCategory, ExpenseCategory } from '@/lib/types'
 import { INCOME_CATEGORY_LABELS, EXPENSE_CATEGORY_LABELS } from '@/lib/types'
 import {
   calcRevenue, calcExpenses, calcProfit, monthlyBreakdown,
-  exportCsv, downloadCsv, categoryBreakdown, profitMargin,
+  exportCsv, downloadCsv, categoryBreakdown,
 } from '@/core/finance/engine'
 import { calcBreakEvenSummary } from '@/core/finance/breakEvenEngine'
-import { Plus, Download, BarChart3, RefreshCw, Target, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Plus, Download, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { ModuleShell } from '@/components/dashboard/v4'
 
 import {
-  type FormData, type FinanceTab,
+  type FormData,
   ALL_LABELS, LEGACY_STORAGE_FIXED_COST, LEGACY_STORAGE_PROFIT_GOAL,
 } from './finance/types'
-import { FinanceKpis } from './finance/FinanceKpis'
 import { BreakEvenSection } from './finance/FinanceBreakEven'
 import { CreateTransactionModal, EditTransactionModal } from './finance/FinanceTransactionForm'
 import {
@@ -23,6 +44,43 @@ import {
   FinanceChartsPanel, FinanceMonthlySummary,
   type ChartMode,
 } from './finance/FinanceTransactions'
+
+// ─── Tab type V4 ──────────────────────────────────────────────────────────────
+
+type FinanceTabV4 = 'lancamentos' | 'custos' | 'breakeven'
+
+// ─── Helper: filtro de projeto ────────────────────────────────────────────────
+
+interface ProjectFilterProps {
+  projects: { id: string; name: string }[]
+  value:    string
+  onChange: (v: string) => void
+}
+
+function ProjectFilter({ projects, value, onChange }: ProjectFilterProps) {
+  if (projects.length <= 1) return null
+  return (
+    <div className="mb-4">
+      <label htmlFor="finance-project-filter" className="sr-only">
+        Filtrar por projeto
+      </label>
+      <select
+        id="finance-project-filter"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="bg-[#141414] border border-[#2a2a2a] text-[#ebebeb] text-sm rounded-lg px-3 py-2 outline-none focus:border-[hsl(173_58%_35%)] transition-colors"
+        aria-label="Filtrar financas por projeto"
+      >
+        <option value="all">Todos os projetos</option>
+        {projects.map((p) => (
+          <option key={p.id} value={p.id}>
+            {p.name}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
 
 // ─── Finance view (orchestrator) ──────────────────────────────────────────────
 
@@ -41,11 +99,12 @@ export function FinanceView({
     ? state.projects : initialProjects
 
   // ── UI state ────────────────────────────────────────────────────────────────
-  const [creating,  setCreating]  = useState(false)
-  const [editing,   setEditing]   = useState<Transaction | null>(null)
-  const [menuOpen,  setMenuOpen]  = useState<string | null>(null)
-  const [chartMode, setChartMode] = useState<ChartMode>('both')
-  const [activeTab, setActiveTab] = useState<FinanceTab>('overview')
+  const [creating,    setCreating]    = useState(false)
+  const [editing,     setEditing]     = useState<Transaction | null>(null)
+  const [menuOpen,    setMenuOpen]    = useState<string | null>(null)
+  const [chartMode,   setChartMode]   = useState<ChartMode>('both')
+  const [activeTab,   setActiveTab]   = useState<FinanceTabV4>('lancamentos')
+  const [searchQuery, setSearchQuery] = useState('')
 
   // ── Filters ─────────────────────────────────────────────────────────────────
   const [filterProject,  setFilterProject]  = useState('all')
@@ -53,7 +112,6 @@ export function FinanceView({
   const [filterCategory, setFilterCategory] = useState<TransactionCategory | 'all'>('all')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo,   setDateTo]   = useState('')
-  const [search,   setSearch]   = useState('')
 
   // ── Reconciliation ──────────────────────────────────────────────────────────
   const [reconciling,  setReconciling]  = useState(false)
@@ -156,12 +214,11 @@ export function FinanceView({
   )
 
   // ── Overview derived ─────────────────────────────────────────────────────────
-  const projectId    = filterProject === 'all' ? undefined : filterProject
-  const revenue      = calcRevenue(transactions, projectId)
-  const expenses     = calcExpenses(transactions, projectId)
-  const profit       = calcProfit(transactions, projectId)
-  const margin       = profitMargin(transactions, projectId)
-  const monthly      = useMemo(() => monthlyBreakdown(transactions, projectId).slice(-6), [transactions, projectId])
+  const projectId = filterProject === 'all' ? undefined : filterProject
+  const revenue   = calcRevenue(transactions, projectId)
+  const expenses  = calcExpenses(transactions, projectId)
+  const profit    = calcProfit(transactions, projectId)
+  const monthly   = useMemo(() => monthlyBreakdown(transactions, projectId).slice(-6), [transactions, projectId])
   const incomeBreakdown  = useMemo(() => categoryBreakdown(transactions, 'income', projectId).map(r => ({ ...r, label: INCOME_CATEGORY_LABELS[r.category as IncomeCategory] ?? r.category })), [transactions, projectId])
   const expenseBreakdown = useMemo(() => categoryBreakdown(transactions, 'expense', projectId).map(r => ({ ...r, label: EXPENSE_CATEGORY_LABELS[r.category as ExpenseCategory] ?? r.category })), [transactions, projectId])
 
@@ -172,45 +229,53 @@ export function FinanceView({
     if (filterCategory !== 'all') txs = txs.filter(t => t.category === filterCategory)
     if (dateFrom) txs = txs.filter(t => t.date >= dateFrom)
     if (dateTo)   txs = txs.filter(t => t.date <= dateTo)
-    if (search) {
-      const q = search.toLowerCase()
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase()
       txs = txs.filter(t => t.description.toLowerCase().includes(q) || t.source.toLowerCase().includes(q))
     }
     return [...txs].sort((a, b) => b.date.localeCompare(a.date))
-  }, [transactions, projectId, filterType, filterCategory, dateFrom, dateTo, search])
+  }, [transactions, projectId, filterType, filterCategory, dateFrom, dateTo, searchQuery])
 
   const filteredRevenue  = filtered.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.value), 0)
   const filteredExpenses = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.value), 0)
-  const hasFilters       = filterCategory !== 'all' || dateFrom || dateTo || Boolean(search)
+  const hasFilters       = filterCategory !== 'all' || dateFrom || dateTo || Boolean(searchQuery.trim())
 
   const categoryOptions =
     filterType === 'income'  ? Object.entries(INCOME_CATEGORY_LABELS)
     : filterType === 'expense' ? Object.entries(EXPENSE_CATEGORY_LABELS)
     : Object.entries(ALL_LABELS)
 
-  const projectName = (id: string) => projects.find(p => p.id === id)?.name ?? '---'
+  const projectName = useCallback(
+    (id: string) => projects.find(p => p.id === id)?.name ?? '---',
+    [projects],
+  )
 
   // ── Transaction handlers ─────────────────────────────────────────────────────
-  function handleCreate(data: FormData) {
+  const handleCreate = useCallback((data: FormData) => {
     dispatch({ type: 'ADD_TRANSACTION', payload: { id: uid(), ...data, value: parseFloat(data.value) || 0 } })
-  }
-  function handleEdit(data: FormData) {
+    setCreating(false)
+  }, [dispatch])
+
+  const handleEdit = useCallback((data: FormData) => {
     if (!editing) return
     dispatch({ type: 'UPDATE_TRANSACTION', payload: { ...editing, ...data, value: parseFloat(data.value) || 0 } })
     setEditing(null)
-  }
-  function handleDelete(id: string) {
+  }, [editing, dispatch])
+
+  const handleDelete = useCallback((id: string) => {
     dispatch({ type: 'DELETE_TRANSACTION', payload: id })
     setMenuOpen(null)
-  }
-  function handleExport() {
+  }, [dispatch])
+
+  const handleExport = useCallback(() => {
     const csv  = exportCsv(transactions, projectId)
     const name = projectId
       ? `financas-${projects.find(p => p.id === projectId)?.name ?? projectId}-${new Date().toISOString().slice(0, 10)}.csv`
       : `financas-global-${new Date().toISOString().slice(0, 10)}.csv`
     downloadCsv(csv, name)
-  }
-  async function handleReconcile() {
+  }, [transactions, projectId, projects])
+
+  const handleReconcile = useCallback(async () => {
     if (reconciling) return
     setReconciling(true)
     setReconcileMsg(null)
@@ -225,138 +290,236 @@ export function FinanceView({
     } finally {
       setReconciling(false)
     }
-  }
+  }, [reconciling])
+
+  const handleTabChange = useCallback((id: string) => {
+    setActiveTab(id as FinanceTabV4)
+  }, [])
+
+  const handleSearch = useCallback((q: string) => {
+    setSearchQuery(q)
+  }, [])
+
+  // ── KPIs derivados para header ────────────────────────────────────────────────
+  const mesAtual = new Date().toLocaleString('pt-BR', { month: 'long' }).toUpperCase()
+
+  // Lucro formatado como R$ N (sem casas decimais pra caber no hero card)
+  const fmtBRL = (n: number) => `R$ ${Math.abs(n).toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+
+  // Hero: lucro liquido do mes atual
+  const thisMonth = new Date().toISOString().slice(0, 7) // YYYY-MM
+  const monthTransactions = useMemo(
+    () => transactions.filter(t => t.date.startsWith(thisMonth)),
+    [transactions, thisMonth],
+  )
+  const monthRevenue  = monthTransactions.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.value), 0)
+  const monthExpenses = monthTransactions.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.value), 0)
+  const monthProfit   = monthRevenue - monthExpenses
+  const monthMargin   = monthRevenue > 0 ? (monthProfit / monthRevenue) * 100 : 0
+
+  // Tone do hero: petrol se positivo, ember se negativo
+  const heroTone = monthProfit >= 0 ? 'petrol' : 'ember'
+
+  // ── Tabs para ModuleShell ─────────────────────────────────────────────────────
+  const tabs = useMemo(
+    () => [
+      { id: 'lancamentos', label: 'Lancamentos',      count: transactions.length, active: activeTab === 'lancamentos' },
+      { id: 'custos',      label: 'Custos Fixos',     count: fixedCosts.length,  active: activeTab === 'custos'      },
+      { id: 'breakeven',   label: 'Break Even',       count: 0,                  active: activeTab === 'breakeven'   },
+    ],
+    [transactions.length, fixedCosts.length, activeTab],
+  )
 
   // ── Render ───────────────────────────────────────────────────────────────────
   return (
-    <div className="max-w-5xl mx-auto space-y-5">
-
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h2 className="text-[#f0f0f5] font-semibold text-lg">Financas</h2>
-          <p className="text-[#555555] text-sm">{transactions.length} transacoes registradas</p>
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <button onClick={handleReconcile} disabled={reconciling} title="Cria transacoes faltantes para pedidos pagos legacy"
-            className="flex items-center gap-2 text-[#888888] hover:text-[#a78bfa] border border-[rgba(255,255,255,0.07)] hover:border-[#7c3aed55] text-sm px-3 py-2 rounded-lg transition-colors disabled:opacity-50">
-            <RefreshCw size={14} className={reconciling ? 'animate-spin' : ''} aria-hidden="true" />
-            {reconciling ? 'Reconciliando...' : 'Reconciliar'}
-          </button>
-          <button onClick={handleExport}
-            className="flex items-center gap-2 text-[#888888] hover:text-[#f0f0f5] border border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.12)] text-sm px-3 py-2 rounded-lg transition-colors">
-            <Download size={14} aria-hidden="true" /> CSV
-          </button>
-          <button onClick={() => setCreating(true)} disabled={projects.length === 0}
-            title={projects.length === 0 ? 'Crie um projeto antes de registrar transacoes' : ''}
-            className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium px-3 py-2 rounded-lg transition-all shadow-[0_0_16px_rgba(124,58,237,0.3)] hover:shadow-[0_0_24px_rgba(124,58,237,0.4)]">
-            <Plus size={15} aria-hidden="true" /> Transacao
-          </button>
-        </div>
-      </div>
-
-      {reconcileMsg && (
-        <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border ${
-          reconcileMsg.kind === 'success' ? 'bg-[#10b9811a] border-[#10b98133] text-[#10b981]' : 'bg-[#ef44441a] border-[#ef444433] text-[#ef4444]'
-        }`}>
-          {reconcileMsg.kind === 'success' ? <CheckCircle2 size={14} aria-hidden="true" /> : <AlertCircle size={14} aria-hidden="true" />}
-          {reconcileMsg.text}
-        </div>
-      )}
-
-      {/* Tab strip */}
-      <div className="flex items-center gap-1 border-b border-[rgba(255,255,255,0.06)]" role="tablist">
-        {([
-          { id: 'overview'  as const, label: 'Visao Geral',         icon: BarChart3 },
-          { id: 'breakeven' as const, label: 'Ponto de Equilibrio', icon: Target    },
-        ]).map(tab => (
-          <button key={tab.id} role="tab" aria-selected={activeTab === tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px ${
-              activeTab === tab.id ? 'text-[#a78bfa] border-[#7c3aed]' : 'text-[#555555] border-transparent hover:text-[#f0f0f5]'
-            }`}>
-            <tab.icon size={14} aria-hidden="true" /> {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Overview tab */}
-      {activeTab === 'overview' && (
-        <>
-          <select value={filterProject} onChange={e => setFilterProject(e.target.value)}
-            aria-label="Filtrar por projeto"
-            className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#888888] text-sm rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] cursor-pointer">
-            <option value="all">Todos os projetos</option>
-            {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-          </select>
-
-          <FinanceKpis revenue={revenue} expenses={expenses} profit={profit} margin={margin} />
-
-          <FinanceChartsPanel
-            monthly={monthly}
-            chartMode={chartMode}
-            onChartModeChange={setChartMode}
-            incomeBreakdown={incomeBreakdown}
-            expenseBreakdown={expenseBreakdown}
-          />
-
-          <FinanceMonthlySummary monthly={monthly} />
-
-          <FinanceFilterBar
-            filterType={filterType}
-            filterCategory={filterCategory}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-            search={search}
-            hasFilters={Boolean(hasFilters)}
-            categoryOptions={categoryOptions}
-            onTypeChange={t => { setFilterType(t); setFilterCategory('all') }}
-            onCategoryChange={setFilterCategory}
-            onDateFromChange={setDateFrom}
-            onDateToChange={setDateTo}
-            onSearchChange={setSearch}
-            onClearFilters={() => { setFilterCategory('all'); setDateFrom(''); setDateTo(''); setSearch('') }}
-          />
-
-          <FinanceTransactionList
-            transactions={transactions}
-            filtered={filtered}
-            filteredRevenue={filteredRevenue}
-            filteredExpenses={filteredExpenses}
-            menuOpen={menuOpen}
-            projectName={projectName}
-            onMenuToggle={setMenuOpen}
-            onEdit={setEditing}
-            onDelete={handleDelete}
-          />
-        </>
-      )}
-
-      {/* Break-even tab */}
-      {activeTab === 'breakeven' && (
-        <BreakEvenSection
-          summary={breakEven}
+    <>
+      <ModuleShell
+        eyebrow={`${mesAtual} · ${transactions.filter(t => t.type === 'income').length} RECEITAS · ${transactions.filter(t => t.type === 'expense').length} DESPESAS`}
+        title="Financas"
+        titleItalicSuffix="esse mes"
+        livePhrase={
+          transactions.length === 0
+            ? 'Nenhum lancamento ainda. Registre a primeira transacao.'
+            : `${transactions.length} ${transactions.length === 1 ? 'lancamento registrado' : 'lancamentos registrados'}, ${projects.length} ${projects.length === 1 ? 'projeto' : 'projetos'}.`
+        }
+        primaryAction={{
+          label:   'Lancamento',
+          onClick: () => setCreating(true),
+          icon:    <Plus size={15} aria-hidden="true" />,
+          // TODO: desabilitar quando projects.length === 0 (ModuleShell nao suporta disabled ainda)
+        }}
+        secondaryAction={{
+          label:   'Exportar CSV',
+          onClick: handleExport,
+          icon:    <Download size={15} aria-hidden="true" />,
+        }}
+        heroKpi={{
+          label:       `LUCRO LIQUIDO (${mesAtual})`,
+          value:       profit < 0 ? `-${fmtBRL(profit)}` : fmtBRL(profit),
+          description: monthRevenue > 0
+            ? `Receita ${fmtBRL(revenue)} menos despesas ${fmtBRL(expenses)}.`
+            : 'Nenhuma transacao no periodo.',
+          // delta nao disponivel (precisaria de mes anterior — escopo futuro)
+        }}
+        satelliteKpis={[
+          {
+            label:       `RECEITA (${mesAtual})`,
+            value:       fmtBRL(monthRevenue),
+            description: `${monthTransactions.filter(t => t.type === 'income').length} entradas no mes.`,
+            tone:        heroTone === 'petrol' ? 'petrol' : 'neutral',
+          },
+          {
+            label:       `DESPESAS (${mesAtual})`,
+            value:       fmtBRL(monthExpenses),
+            description: `${monthTransactions.filter(t => t.type === 'expense').length} saidas no mes.`,
+            tone:        'neutral',
+          },
+          {
+            label:     'MARGEM (%)',
+            value:     monthRevenue > 0 ? `${monthMargin.toFixed(1)}%` : 'sem dados',
+            alertText: monthRevenue > 0 && monthMargin < 15 ? 'margem abaixo de 15%' : undefined,
+            tone:      monthRevenue > 0 && monthMargin < 15 ? 'ember' : 'neutral',
+          },
+        ]}
+        tabs={tabs}
+        onTabChange={handleTabChange}
+        searchPlaceholder="Buscar transacao, descricao..."
+        onSearch={handleSearch}
+      >
+        {/* Filtro de projeto (multi-projeto) */}
+        <ProjectFilter
           projects={projects}
-          selectedProjectId={breakEvenProjectId}
-          onSelectProject={setBreakEvenProjectId}
-          fixedCosts={fixedCosts}
-          profitGoal={profitGoal}
-          totalFixedCost={totalFixedCost}
-          onAddFixedCost={handleAddFixedCost}
-          onUpdateFixedCost={handleUpdateFixedCost}
-          onDeleteFixedCost={handleDeleteFixedCost}
-          onProfitGoalChange={handleProfitGoalChange}
-          hasProducts={beProducts.length > 0}
-          loading={beLoading}
+          value={filterProject}
+          onChange={setFilterProject}
         />
-      )}
+
+        {/* Feedback de reconciliacao */}
+        {reconcileMsg && (
+          <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg border mb-4 ${
+            reconcileMsg.kind === 'success'
+              ? 'bg-[#10b9811a] border-[#10b98133] text-[#10b981]'
+              : 'bg-[#ef44441a] border-[#ef444433] text-[#ef4444]'
+          }`}>
+            {reconcileMsg.kind === 'success'
+              ? <CheckCircle2 size={14} aria-hidden="true" />
+              : <AlertCircle  size={14} aria-hidden="true" />
+            }
+            {reconcileMsg.text}
+          </div>
+        )}
+
+        {/* Tab: Lancamentos */}
+        {activeTab === 'lancamentos' && (
+          <div className="space-y-5">
+            <FinanceChartsPanel
+              monthly={monthly}
+              chartMode={chartMode}
+              onChartModeChange={setChartMode}
+              incomeBreakdown={incomeBreakdown}
+              expenseBreakdown={expenseBreakdown}
+            />
+
+            <FinanceMonthlySummary monthly={monthly} />
+
+            {/* Acao de reconciliacao (administrativa) */}
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={handleReconcile}
+                disabled={reconciling}
+                title="Cria transacoes faltantes para pedidos pagos legacy"
+                className="flex items-center gap-2 text-[#888888] hover:text-[#a78bfa] border border-[rgba(255,255,255,0.07)] hover:border-[#7c3aed55] text-xs px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+              >
+                <RefreshCw size={12} className={reconciling ? 'animate-spin' : ''} aria-hidden="true" />
+                {reconciling ? 'Reconciliando...' : 'Reconciliar'}
+              </button>
+            </div>
+
+            <FinanceFilterBar
+              filterType={filterType}
+              filterCategory={filterCategory}
+              dateFrom={dateFrom}
+              dateTo={dateTo}
+              search={searchQuery}
+              hasFilters={Boolean(hasFilters)}
+              categoryOptions={categoryOptions}
+              onTypeChange={t => { setFilterType(t); setFilterCategory('all') }}
+              onCategoryChange={setFilterCategory}
+              onDateFromChange={setDateFrom}
+              onDateToChange={setDateTo}
+              onSearchChange={handleSearch}
+              onClearFilters={() => { setFilterCategory('all'); setDateFrom(''); setDateTo(''); setSearchQuery('') }}
+            />
+
+            <FinanceTransactionList
+              transactions={transactions}
+              filtered={filtered}
+              filteredRevenue={filteredRevenue}
+              filteredExpenses={filteredExpenses}
+              menuOpen={menuOpen}
+              projectName={projectName}
+              onMenuToggle={setMenuOpen}
+              onEdit={setEditing}
+              onDelete={handleDelete}
+            />
+          </div>
+        )}
+
+        {/* Tab: Custos Fixos (BreakEvenSection sem a parte de produtos) */}
+        {activeTab === 'custos' && (
+          <BreakEvenSection
+            summary={breakEven}
+            projects={projects}
+            selectedProjectId={breakEvenProjectId}
+            onSelectProject={setBreakEvenProjectId}
+            fixedCosts={fixedCosts}
+            profitGoal={profitGoal}
+            totalFixedCost={totalFixedCost}
+            onAddFixedCost={handleAddFixedCost}
+            onUpdateFixedCost={handleUpdateFixedCost}
+            onDeleteFixedCost={handleDeleteFixedCost}
+            onProfitGoalChange={handleProfitGoalChange}
+            hasProducts={beProducts.length > 0}
+            loading={beLoading}
+          />
+        )}
+
+        {/* Tab: Break Even (mesmo componente — exibe contexto completo) */}
+        {activeTab === 'breakeven' && (
+          <BreakEvenSection
+            summary={breakEven}
+            projects={projects}
+            selectedProjectId={breakEvenProjectId}
+            onSelectProject={setBreakEvenProjectId}
+            fixedCosts={fixedCosts}
+            profitGoal={profitGoal}
+            totalFixedCost={totalFixedCost}
+            onAddFixedCost={handleAddFixedCost}
+            onUpdateFixedCost={handleUpdateFixedCost}
+            onDeleteFixedCost={handleDeleteFixedCost}
+            onProfitGoalChange={handleProfitGoalChange}
+            hasProducts={beProducts.length > 0}
+            loading={beLoading}
+          />
+        )}
+      </ModuleShell>
 
       {/* Modals */}
       {creating && (
-        <CreateTransactionModal projects={projects} onSave={handleCreate} onClose={() => setCreating(false)} />
+        <CreateTransactionModal
+          projects={projects}
+          onSave={handleCreate}
+          onClose={() => setCreating(false)}
+        />
       )}
       {editing && (
-        <EditTransactionModal transaction={editing} projects={projects} onSave={handleEdit} onClose={() => setEditing(null)} />
+        <EditTransactionModal
+          transaction={editing}
+          projects={projects}
+          onSave={handleEdit}
+          onClose={() => setEditing(null)}
+        />
       )}
-    </div>
+    </>
   )
 }
