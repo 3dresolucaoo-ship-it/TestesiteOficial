@@ -75,18 +75,28 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 - **Versão**: v0.6 · Fase 1 em curso · soft launch **11/06** · launch público **27/06/2026**
 - **Último audit**: `audits/2026-05-04.md` (próximo: ~04/06/2026)
-- **Última sessão**: 20/05 noite → 21/05 madrugada (~7h, 22 commits push) — ver `sessions/2026-05-21-madrugada-v4-3c-G7-diagnose.md`
+- **Última sessão**: 20/05 tarde-noite (~9h hardwork, ~30 commits, 5 ondas V4 unificado completo + golden path #1) — ver `sessions/2026-05-20-hardwork-v4-completo.md`
 - **Pillars score**: **7.7** (era 7.4, meta 30d: 8.0) · ver `pillars/SCORES.md`
 
-### 🚨 BLOQUEADOR ABERTO (21/05 madrugada) — A.3 vs A.4
+### 🟢 Estado real prod atual (20/05 fim do dia)
 
-CEO escolheu "opção A 3c" (migrar TODOS módulos pro V4 igual /dashboard). 4 módulos foram migrados (/crm /finance /production /orders). MAS classes CSS do ModuleShell (`.kpi-card`, `.filter-bar`, `.page-header`, etc) NUNCA foram extraídas pro `globals-v4.css` — vivem só em `mockups/orders-v4-tom-novo.html` linhas 556-790 + 1195-1213. Resultado: módulos renderizam mas com KPIs em texto cru.
+**hayzer.com.br** com TODOS 14 módulos visual V4 unificado:
+- Sidebar V4 com ícones Lucide coloridos (NÚCLEO petrol, CRESCIMENTO ember, SISTEMA fog)
+- KPIs editoriais Fraunces gigante + count-up animado ao mount
+- Hover petrol nos cards, badges semânticos (.badge-ok/warn/danger/neutral)
+- Watermark "hayzer" reduzido em módulos densos (orders/inventory/finance/etc)
+- /orders rico igual mockup: eyebrow SEM N + subtitle maker BR humanizado + KPI delta + sat ATRASADOS ember + botão Filtros + badge tempo
+- Loading lento RESOLVIDO: SSR 13→2 queries (Bruna 2 Onda Perf 2 lazy store)
+- Skeleton screens visíveis em /orders /crm
+- Golden path #1: lead→pedido manual funcional (migration `20260520_leads_converted_order.sql` APLICADA)
+- 4 empty states críticos implementados (FP-01 projects, FP-02 finance, FP-03 production, FP-04 orders)
 
-3 vozes G7 (read-only diagnose):
-- **Felipe + Diego**: A.4 — fix 45-60min, extrair CSS do mockup. Resultado híbrido (KPIs V4 + sidebar antiga).
-- **Helena**: A.3 — reverter 4 módulos, foca golden path. V4 completo fica pra Onda 2 pós-launch.
+### 🔴 Pendências pré-launch 11/06
 
-**Decisão CEO pendente.** Estado atual em prod (commit `284fa2c`): /dashboard perfeito, outros 4 renderizam feio mas funcionais. Sem decisão, não migramos os 7 módulos restantes.
+1. **QA mobile** — zero feito · checklist em `sessions/2026-05-20-checklist-qa-mobile.md` · CEO testa no celular
+2. **Onboarding wizard implementação** — Carla copy pronta em `brand/onboarding-copy-2026-05-20.md`, Felipe ainda não codou
+3. **Inconsistência tu/voce** — Sofia/Felipe usaram "voce" em empty states, Carla cravou "tu" (search-replace simples)
+4. **Onda Landing** — seção comparativa concorrentes com 43 logos+9 timelapses já jogados em `public/landing/v3/`
 
 ### ⚠️ Status REAL do produto (modo crítico CEO 20/05 23h)
 
