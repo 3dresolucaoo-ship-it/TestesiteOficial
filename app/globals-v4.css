@@ -2216,6 +2216,14 @@
     text-transform: uppercase;
     letter-spacing: 0.18em;
     color: var(--fog-300);
+    transition: color 200ms ease;
+  }
+  /* A.3 — hover bento card: eyebrow vira petrol sólido (Onda A Diego) */
+  .kpi-card:hover .kpi-eyebrow {
+    color: hsl(var(--petrol-300));
+  }
+  .kpi-card.hero-petrol:hover .kpi-eyebrow {
+    color: hsl(var(--petrol-200));
   }
   .kpi-card .kpi-value {
     font-family: 'Fraunces', Georgia, serif;
