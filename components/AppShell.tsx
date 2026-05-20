@@ -136,11 +136,12 @@ export function AppShell({
   // Public pages (login): render without chrome
   if (isPublicPath) return <>{children}</>
 
-  // Auth loading state
+  // Auth loading state — só mostrar LoadingScreen se loading=true. Se loading=false
+  // e user=null (getSession timeout), renderizamos o shell mesmo assim trustando
+  // o middleware (middleware.ts:66 ja validou cookies Supabase server-side). Sem
+  // isso, AppShell retornava null em getSession timeout e a pagina virava tela
+  // preta (bug 2026-05-21 madrugada apos remocao do redirect duplicado).
   if (loading) return <LoadingScreen />
-
-  // Unauthenticated: blank while redirect fires
-  if (!user) return null
 
   return (
     <StoreProvider initialState={initialState}>
