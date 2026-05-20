@@ -90,4 +90,5 @@ ALTER TABLE my_table
 
 - `lib/supabase/schema.sql` — schema base (deve refletir o estado consolidado)
 - `services/*` — código que depende dessas tabelas
+- `services/customersService.ts` — usa `customers` + `orders` (migration `20260510_customers_table.sql`). LTV calculado via `customer_id` FK + agregação JS. Pedidos legados (customer_id NULL) ficam fora do LTV até Wave 1 dedup.
 - `ROADMAP.md` § "🔴 Críticos / Schema do banco"
