@@ -98,6 +98,14 @@ export default function ProductionPage() {
   const [activeTab,     setActiveTab]     = useState<ProductionTab>('active')
   const [searchQuery,   setSearchQuery]   = useState<string>('')
 
+  /**
+   * Mapa de timestamps de inicio por item ID.
+   * Atualizado diretamente no handler changeStatus quando status -> 'printing'.
+   * Abordagem: evento de usuario (click) e o momento semanticamente correto
+   * para registrar o timestamp — evita useEffect + setState (react-hooks/set-state-in-effect).
+   */
+  const [startTimes, setStartTimes] = useState<Record<string, number>>({})
+
   // ---------------------------------------------------------------------------
   // Helpers de lookup
   // ---------------------------------------------------------------------------
@@ -218,6 +226,14 @@ export default function ProductionPage() {
   const changeStatus = useCallback(
     (item: ProductionItem, status: ProductionStatus) => {
       dispatch({ type: 'UPDATE_PRODUCTION', payload: { ...item, status } })
+
+      // Registra timestamp de inicio no evento — semanticamente correto e
+      // evita useEffect + setState (react-hooks/set-state-in-effect).
+      if (status === 'printing' && item.status !== 'printing') {
+        setStartTimes((prev) =>
+          prev[item.id] ? prev : { ...prev, [item.id]: Date.now() },
+        )
+      }
 
       // Side effect duplo: consome filamento + cria despesa ao iniciar impressao.
       if (status === 'printing' && item.status !== 'printing') {
@@ -406,6 +422,7 @@ export default function ProductionPage() {
         <div className="mb-5">
           <PrinterBoard
             production={state.production}
+            startTimes={startTimes}
             onStatusChange={changeStatus}
           />
         </div>

@@ -8,11 +8,13 @@
  * ElapsedTimer e instanciado aqui quando ha impressao ativa.
  *
  * Mobile: grid 1 coluna. Desktop (sm+): grid 2 colunas.
- * O startTimes e mantido no estado local do board — reseta na navegacao,
- * comportamento identico ao original (nao quebre essa caracteristica).
+ *
+ * Nota sobre startTimes:
+ *   O mapa de timestamps e gerenciado pela page.tsx (useState + useEffect) e
+ *   passado via prop. Isso evita acesso a ref durante render e setState em
+ *   effect dentro deste componente, mantendo-o puramente presentacional.
  */
 
-import { useState, useEffect } from 'react'
 import { CheckCircle2, Timer, Activity, Printer } from 'lucide-react'
 import type { ProductionItem, ProductionStatus, PrinterName } from './types'
 import { PRINTER_CONFIG }   from './helpers'
@@ -20,33 +22,12 @@ import { ElapsedTimer }     from './ElapsedTimer'
 
 interface PrinterBoardProps {
   production:     ProductionItem[]
+  /** Mapa de timestamps de inicio por item ID — gerenciado pela page. */
+  startTimes:     Record<string, number>
   onStatusChange: (item: ProductionItem, status: ProductionStatus) => void
 }
 
-export function PrinterBoard({ production, onStatusChange }: PrinterBoardProps) {
-  // startTimes via useState: o Effect registra novos IDs em andamento sem
-  // mutar durante render. Reseta na navegacao — comportamento igual ao original.
-  const [startTimes, setStartTimes] = useState<Record<string, number>>({})
-
-  // Registra timestamps dos itens que passam a "printing".
-  // useEffect = seguro para side effects (Date.now() permitido aqui).
-  useEffect(() => {
-    const printing = production.filter((p) => p.status === 'printing')
-    if (printing.length === 0) return
-
-    setStartTimes((prev) => {
-      const next: Record<string, number> = { ...prev }
-      let changed = false
-      for (const p of printing) {
-        if (!next[p.id]) {
-          next[p.id] = Date.now()
-          changed = true
-        }
-      }
-      return changed ? next : prev
-    })
-  }, [production])
-
+export function PrinterBoard({ production, startTimes, onStatusChange }: PrinterBoardProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
       {(['bambu', 'flashforge'] as PrinterName[]).map((printer) => {
@@ -60,6 +41,7 @@ export function PrinterBoard({ production, onStatusChange }: PrinterBoardProps) 
           (p) => p.printer === printer && p.status !== 'done',
         ).length
         const { label, accent } = PRINTER_CONFIG[printer]
+        const startedAt = running ? (startTimes[running.id] ?? 0) : 0
 
         return (
           <div
@@ -132,9 +114,7 @@ export function PrinterBoard({ production, onStatusChange }: PrinterBoardProps) 
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Activity size={11} style={{ color: accent }} aria-hidden="true" />
-                      <ElapsedTimer
-                        startedAt={startTimes[running.id] ?? 0}
-                      />
+                      <ElapsedTimer startedAt={startedAt} />
                     </div>
                   </div>
                   {running.clientName && (
