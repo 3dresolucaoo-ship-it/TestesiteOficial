@@ -181,9 +181,10 @@
 
 :root[data-theme="dark"] .ambient-glow {
   background:
-    radial-gradient(ellipse 60% 50% at 18% 14%, rgba(31, 118, 105, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 30% at 60% 50%, rgba(31, 118, 105, 0.04) 0%, transparent 50%);
+    radial-gradient(ellipse 60% 50% at 18% 14%, rgba(31, 118, 105, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 92% 88%, rgba(208, 138, 74, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 60% 50%, rgba(31, 118, 105, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 75% 55% at 50% 110%, rgba(31, 118, 105, 0.22) 0%, rgba(31, 118, 105, 0.08) 35%, transparent 65%);
 }
 
 :root[data-theme="light"] .ambient-glow {
