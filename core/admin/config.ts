@@ -59,6 +59,7 @@ export interface ModulesConfig {
   finance:    boolean
   orders:     boolean
   crm:        boolean
+  customers:  boolean
   products:   boolean
   inventory:  boolean
   production: boolean
@@ -94,6 +95,7 @@ export const DEFAULT_ADMIN_CONFIG: AdminConfig = {
     finance:    true,
     orders:     true,
     crm:        true,
+    customers:  true,
     products:   true,
     inventory:  true,
     production: true,
