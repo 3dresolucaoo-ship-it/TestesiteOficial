@@ -1,655 +1,543 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useStore, uid } from '@/lib/store'
-import type { ProductionItem, ProductionStatus, PrinterName, StockMovement, Transaction } from '@/lib/types'
-import {
-  Plus, Pencil, Trash2, MoreHorizontal, GripVertical, Clock,
-  Activity, CheckCircle2, Timer, Printer,
-} from 'lucide-react'
-import { Modal, FormField, Input, Select, SubmitButton } from '@/components/Modal'
+/**
+ * app/production/page.tsx — Modulo Operacao V4
+ *
+ * Migrado para ModuleShell em 2026-05-20 (pattern de /orders e /crm).
+ * Sub-componentes extraidos para app/production/_components/.
+ *
+ * Side effects intactos:
+ *   - changeStatus('printing') consome filamento do inventario e cria transacao financeira.
+ *   - Logica copiada identicamente do monolito original — nao simplificada.
+ *
+ * Estrutura:
+ *   ModuleShell (PageHeader + KpiRow + FilterBar)
+ *     children:
+ *       - PrinterBoard  (board de impressoras sempre visivelh)
+ *       - ProjectFilter (select de projeto)
+ *       - ActiveQueue   (fila ativa — mobile cards + desktop rows)
+ *       - DoneList      (finalizados — compacto)
+ *       - ProductionEmptyState (quando nao ha nada)
+ *   Modal Adicionar
+ *   Modal Editar
+ *
+ * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
+ */
 
-// ─── Config ──────────────────────────────────────────────────────────────────
+import { useState, useMemo, useCallback } from 'react'
+import { useStore, uid }                  from '@/lib/store'
+import type { ProductionItem, StockMovement, Transaction } from '@/lib/types'
+import { Plus, Trash2 }                   from 'lucide-react'
+import { Modal }                          from '@/components/Modal'
+import { ModuleShell }                    from '@/components/dashboard/v4'
 
-const statusConfig: Record<ProductionStatus, { label: string; color: string; dot: string }> = {
-  waiting:  { label: 'Aguardando', color: 'text-[#f59e0b] bg-[#f59e0b1a] border-[#f59e0b33]', dot: 'bg-[#f59e0b]' },
-  printing: { label: 'Imprimindo', color: 'text-[#3b82f6] bg-[#3b82f61a] border-[#3b82f633]', dot: 'bg-[#3b82f6] animate-pulse' },
-  done:     { label: 'Finalizado', color: 'text-[#10b981] bg-[#10b9811a] border-[#10b98133]', dot: 'bg-[#10b981]' },
+import '../globals-v4.css'
+
+import type { ProductionStatus, ProductionFormData }  from './_components/types'
+import { PRINTER_CONFIG }                             from './_components/helpers'
+import { PrinterBoard }                               from './_components/PrinterBoard'
+import { ProductionForm }                             from './_components/ProductionForm'
+import { ProductionEmptyState }                       from './_components/ProductionEmptyState'
+import { StatusBadge }                                from './_components/StatusBadge'
+import { ProductionCardMobile, ProductionCardDesktop } from './_components/ProductionCard'
+
+// ---------------------------------------------------------------------------
+// Tipo de tab
+// ---------------------------------------------------------------------------
+
+type ProductionTab = 'active' | 'done' | 'all'
+
+// ---------------------------------------------------------------------------
+// Sub-componente inline: filtro de projeto
+// ---------------------------------------------------------------------------
+
+interface ProjectFilterProps {
+  projects: { id: string; name: string }[]
+  value:    string
+  onChange: (v: string) => void
 }
 
-const printerConfig: Record<PrinterName, { label: string; color: string; accent: string }> = {
-  bambu:      { label: 'Bambu Lab',  color: 'text-[#10b981]', accent: '#10b981' },
-  flashforge: { label: 'Flashforge', color: 'text-[#3b82f6]', accent: '#3b82f6' },
-}
-
-// ─── Badges ──────────────────────────────────────────────────────────────────
-
-function StatusBadge({ status }: { status: ProductionStatus }) {
-  const { label, color } = statusConfig[status]
+function ProjectFilter({ projects, value, onChange }: ProjectFilterProps) {
+  if (projects.length <= 1) return null
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${color}`}>
-      {label}
-    </span>
-  )
-}
-
-// ─── Live timer (simulated) ───────────────────────────────────────────────────
-// Shows elapsed time for items currently printing.
-// This is a client-side simulation — not stored in the DB.
-function ElapsedTimer({ startedAt }: { startedAt: number }) {
-  const [elapsed, setElapsed] = useState(Math.floor((Date.now() - startedAt) / 1000))
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setElapsed(Math.floor((Date.now() - startedAt) / 1000))
-    }, 1000)
-    return () => clearInterval(id)
-  }, [startedAt])
-
-  const h = Math.floor(elapsed / 3600)
-  const m = Math.floor((elapsed % 3600) / 60)
-  const s = elapsed % 60
-
-  return (
-    <span className="text-[#3b82f6] text-xs font-mono tabular-nums">
-      {h > 0 && `${h}h `}{String(m).padStart(2, '0')}:{String(s).padStart(2, '0')}
-    </span>
-  )
-}
-
-// ─── Printer status board ─────────────────────────────────────────────────────
-// Each card tracks its own "started at" timestamp when a print is active.
-function PrinterBoard({
-  production,
-  onStatusChange,
-}: {
-  production: ProductionItem[]
-  onStatusChange: (item: ProductionItem, status: ProductionStatus) => void
-}) {
-  // Client-side start-time map (resets on navigation — that's fine for simulation)
-  const [startTimes] = useState<Record<string, number>>(() => ({}))
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {(['bambu', 'flashforge'] as PrinterName[]).map(printer => {
-        const running = production.find(p => p.printer === printer && p.status === 'printing')
-        const queued  = production.filter(p => p.printer === printer && p.status === 'waiting').length
-        const total   = production.filter(p => p.printer === printer && p.status !== 'done').length
-        const color   = printerConfig[printer].accent
-
-        // Record start time when printing begins
-        if (running && !startTimes[running.id]) {
-          startTimes[running.id] = Date.now()
-        }
-
-        return (
-          <div
-            key={printer}
-            className="relative overflow-hidden bg-[rgba(255,255,255,0.025)] border rounded-xl p-5 transition-all"
-            style={{
-              borderColor: running ? `${color}44` : 'rgba(255,255,255,0.07)',
-              boxShadow:   running ? `0 0 24px ${color}18` : 'none',
-            }}
-          >
-            {/* Background accent when printing */}
-            {running && (
-              <div
-                className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                style={{ background: `radial-gradient(circle at top left, ${color}, transparent 70%)` }}
-              />
-            )}
-
-            <div className="relative">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`w-2.5 h-2.5 rounded-full transition-all ${
-                      running
-                        ? 'animate-pulse shadow-[0_0_8px_currentColor]'
-                        : queued > 0 ? '' : 'opacity-30'
-                    }`}
-                    style={{
-                      backgroundColor: running ? color : queued > 0 ? '#f59e0b' : '#555566',
-                      boxShadow: running ? `0 0 8px ${color}` : 'none',
-                    }}
-                  />
-                  <span
-                    className="text-sm font-semibold"
-                    style={{ color: running ? color : '#f0f0f5' }}
-                  >
-                    {printerConfig[printer].label}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Printer size={12} className="text-[#555566]" />
-                  <span className="text-[#555566] text-xs">{total} restantes</span>
-                </div>
-              </div>
-
-              {/* Current job */}
-              {running ? (
-                <div className="space-y-2">
-                  <p className="text-[#f0f0f5] text-sm font-medium truncate">{running.item}</p>
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5">
-                      <Timer size={11} className="text-[#555566]" />
-                      <span className="text-[#555566] text-xs">{running.estimatedHours}h estimado</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Activity size={11} style={{ color }} />
-                      <ElapsedTimer startedAt={startTimes[running.id] ?? Date.now()} />
-                    </div>
-                  </div>
-                  {running.clientName && (
-                    <p className="text-[#444455] text-xs">{running.clientName}</p>
-                  )}
-                  <button
-                    onClick={() => onStatusChange(running, 'done')}
-                    className="mt-1 flex items-center gap-1.5 text-[#10b981] text-xs font-medium hover:text-[#34d399] transition-colors"
-                  >
-                    <CheckCircle2 size={12} /> Finalizar
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <p className="text-[#444455] text-sm">Livre</p>
-                  {queued > 0 && (
-                    <p className="text-[#555566] text-xs mt-1">{queued} na fila</p>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )
-      })}
+    <div className="mb-4">
+      <label htmlFor="production-project-filter" className="sr-only">
+        Filtrar por projeto
+      </label>
+      <select
+        id="production-project-filter"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="bg-[#141414] border border-[#2a2a2a] text-[#ebebeb] text-sm rounded-lg px-3 py-2 outline-none focus:border-[hsl(173_58%_35%)] transition-colors"
+        aria-label="Filtrar producao por projeto"
+      >
+        <option value="all">Todos os projetos</option>
+        {projects.map((p) => (
+          <option key={p.id} value={p.id}>
+            {p.name}
+          </option>
+        ))}
+      </select>
     </div>
   )
 }
 
-// ─── Form ─────────────────────────────────────────────────────────────────────
-
-type FormData = {
-  clientName:     string
-  item:           string
-  printer:        PrinterName
-  status:         ProductionStatus
-  estimatedHours: string
-  priority:       string
-  orderId:        string
-}
-
-function ProductionForm({
-  orders,
-  initial,
-  onSave,
-  onClose,
-}: {
-  orders:   { id: string; clientName: string; item: string }[]
-  initial?: FormData
-  onSave:   (d: FormData) => void
-  onClose:  () => void
-}) {
-  const [data, setData] = useState<FormData>(
-    initial ?? {
-      clientName: '', item: '', printer: 'bambu', status: 'waiting',
-      estimatedHours: '4', priority: '1', orderId: '',
-    },
-  )
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!data.item.trim()) return
-    onSave(data)
-    onClose()
-  }
-
-  const set =
-    (k: keyof FormData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-      setData(prev => ({ ...prev, [k]: e.target.value }))
-
-  function handleOrderChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const orderId = e.target.value
-    const order   = orders.find(o => o.id === orderId)
-    setData(prev => ({
-      ...prev,
-      orderId,
-      clientName: order?.clientName ?? prev.clientName,
-      item:       order?.item       ?? prev.item,
-    }))
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {orders.length > 0 && (
-        <FormField label="Vincular a Pedido (opcional)">
-          <Select value={data.orderId} onChange={handleOrderChange}>
-            <option value="">Sem pedido vinculado</option>
-            {orders.map(o => (
-              <option key={o.id} value={o.id}>{o.clientName} — {o.item}</option>
-            ))}
-          </Select>
-        </FormField>
-      )}
-      <FormField label="Cliente">
-        <Input value={data.clientName} onChange={set('clientName')} placeholder="Nome do cliente" />
-      </FormField>
-      <FormField label="Item a imprimir">
-        <Input value={data.item} onChange={set('item')} placeholder="O que será impresso" required />
-      </FormField>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <FormField label="Impressora">
-          <Select value={data.printer} onChange={set('printer')}>
-            <option value="bambu">Bambu Lab</option>
-            <option value="flashforge">Flashforge</option>
-          </Select>
-        </FormField>
-        <FormField label="Status">
-          <Select value={data.status} onChange={set('status')}>
-            <option value="waiting">Aguardando</option>
-            <option value="printing">Imprimindo</option>
-            <option value="done">Finalizado</option>
-          </Select>
-        </FormField>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <FormField label="Tempo estimado (h)">
-          <Input
-            type="number"
-            value={data.estimatedHours}
-            onChange={set('estimatedHours')}
-            min="0.5"
-            step="0.5"
-          />
-        </FormField>
-        <FormField label="Prioridade">
-          <Input type="number" value={data.priority} onChange={set('priority')} min="1" />
-        </FormField>
-      </div>
-      <SubmitButton>{initial ? 'Salvar' : 'Adicionar à Fila'}</SubmitButton>
-    </form>
-  )
-}
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
+// ---------------------------------------------------------------------------
+// Page principal
+// ---------------------------------------------------------------------------
 
 export default function ProductionPage() {
   const { state, dispatch, loading } = useStore()
+
+  // Estado de UI
   const [creating,      setCreating]      = useState(false)
   const [editing,       setEditing]       = useState<ProductionItem | null>(null)
   const [menuOpen,      setMenuOpen]      = useState<string | null>(null)
-  const [filterPrinter, setFilterPrinter] = useState<PrinterName | 'all'>('all')
+  const [filterPrinter, setFilterPrinter] = useState<'bambu' | 'flashforge' | 'all'>('all')
   const [filterProject, setFilterProject] = useState<string>('all')
+  const [activeTab,     setActiveTab]     = useState<ProductionTab>('active')
+  const [searchQuery,   setSearchQuery]   = useState<string>('')
 
-  const orderProjectId = (orderId: string) =>
-    state.orders.find(o => o.id === orderId)?.projectId ?? ''
-  const projectName = (id: string) =>
-    state.projects.find(p => p.id === id)?.name ?? ''
+  // ---------------------------------------------------------------------------
+  // Helpers de lookup
+  // ---------------------------------------------------------------------------
 
-  const byProject = filterProject === 'all'
-    ? state.production
-    : state.production.filter(p => orderProjectId(p.orderId) === filterProject)
+  const orderProjectId = useCallback(
+    (orderId: string) => state.orders.find((o) => o.id === orderId)?.projectId ?? '',
+    [state.orders],
+  )
 
-  const items   = filterPrinter === 'all' ? byProject : byProject.filter(p => p.printer === filterPrinter)
-  const active  = items.filter(p => p.status !== 'done').sort((a, b) => a.priority - b.priority)
-  const done    = items.filter(p => p.status === 'done')
-  const printing = state.production.filter(p => p.status === 'printing').length
-  const waiting  = state.production.filter(p => p.status === 'waiting').length
+  const projectName = useCallback(
+    (id: string) => state.projects.find((p) => p.id === id)?.name ?? '',
+    [state.projects],
+  )
 
-  function handleCreate(data: FormData) {
-    dispatch({
-      type:    'ADD_PRODUCTION',
-      payload: {
-        id:             uid(),
-        ...data,
-        estimatedHours: parseFloat(data.estimatedHours) || 4,
-        priority:       parseInt(data.priority) || 1,
-      },
-    })
-  }
+  // ---------------------------------------------------------------------------
+  // Derivacoes de estado
+  // ---------------------------------------------------------------------------
 
-  function handleEdit(data: FormData) {
-    if (!editing) return
-    dispatch({
-      type:    'UPDATE_PRODUCTION',
-      payload: {
-        ...editing,
-        ...data,
-        estimatedHours: parseFloat(data.estimatedHours) || 4,
-        priority:       parseInt(data.priority) || 1,
-      },
-    })
-    setEditing(null)
-  }
+  /** Items filtrados por projeto. */
+  const byProject = useMemo(() => {
+    if (filterProject === 'all') return state.production
+    return state.production.filter(
+      (p) => orderProjectId(p.orderId) === filterProject,
+    )
+  }, [state.production, filterProject, orderProjectId])
 
-  function handleDelete(id: string) {
-    dispatch({ type: 'DELETE_PRODUCTION', payload: id })
-    setMenuOpen(null)
-  }
+  /** Items filtrados por impressora. */
+  const byPrinter = useMemo(
+    () =>
+      filterPrinter === 'all'
+        ? byProject
+        : byProject.filter((p) => p.printer === filterPrinter),
+    [byProject, filterPrinter],
+  )
 
-  function changeStatus(item: ProductionItem, status: ProductionStatus) {
-    dispatch({ type: 'UPDATE_PRODUCTION', payload: { ...item, status } })
+  /** Items filtrados por busca de texto. */
+  const bySearch = useMemo(() => {
+    if (!searchQuery.trim()) return byPrinter
+    const q = searchQuery.toLowerCase()
+    return byPrinter.filter(
+      (p) =>
+        p.item.toLowerCase().includes(q) ||
+        p.clientName.toLowerCase().includes(q),
+    )
+  }, [byPrinter, searchQuery])
 
-    // Auto-consume filament + create expense when printing starts
-    if (status === 'printing' && item.status !== 'printing') {
-      const order   = state.orders.find(o => o.id === item.orderId)
-      const product = order?.productId
-        ? state.products.find(p => p.id === order.productId)
-        : undefined
-      const baseGrams  = product?.materialGrams ?? 0
-      const filamentId = product?.inventoryItemId
-      const filament   = filamentId ? state.inventory.find(i => i.id === filamentId) : undefined
+  /** Fila ativa (sem finalizados), ordenada por prioridade. */
+  const active = useMemo(
+    () =>
+      [...bySearch.filter((p) => p.status !== 'done')].sort(
+        (a, b) => a.priority - b.priority,
+      ),
+    [bySearch],
+  )
 
-      // Only consume from filament items marked for printing (or ambos, or not set)
-      const uso = filament?.filamentUso
-      const canConsume = !uso || uso === 'impressao' || uso === 'ambos'
+  /** Itens finalizados. */
+  const done = useMemo(
+    () => bySearch.filter((p) => p.status === 'done'),
+    [bySearch],
+  )
 
-      if (product && filament && baseGrams > 0 && filament.category === 'filament' && canConsume) {
-        // Include failure-rate waste
-        const totalGrams = baseGrams * (1 + (product.failureRate ?? 0.1))
-        const delta = filament.unit === 'kg' ? -(totalGrams / 1000) : -totalGrams
+  /** Itens a exibir conforme tab ativa. */
+  const visibleItems = useMemo(() => {
+    if (activeTab === 'active') return active
+    if (activeTab === 'done')   return done
+    return bySearch
+  }, [activeTab, active, done, bySearch])
 
-        const movement: StockMovement = {
-          id:        uid(),
-          projectId: filament.projectId,
-          itemId:    filament.id,
-          type:      'out',
-          quantity:  Math.abs(delta),
-          reason:    'printing',
-          date:      new Date().toISOString().slice(0, 10),
-          notes:     `Impressão iniciada · ${product.name} (${totalGrams.toFixed(0)}g)`,
-        }
-        dispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: filament.id, delta } })
+  // ---------------------------------------------------------------------------
+  // KPIs
+  // ---------------------------------------------------------------------------
 
-        // Create filament expense transaction (Etapa 5.3)
-        const costPerUnit  = filament.costPrice ?? 0
-        const filamentCost = filament.unit === 'kg'
-          ? costPerUnit * (totalGrams / 1000)
-          : costPerUnit * totalGrams
-        if (filamentCost > 0) {
-          const transaction: Transaction = {
-            id:          uid(),
-            projectId:   filament.projectId,
-            type:        'expense',
-            value:       Math.round(filamentCost * 100) / 100,
-            category:    'filament',
-            description: `Filamento: ${product.name} (${totalGrams.toFixed(0)}g)`,
-            date:        new Date().toISOString().slice(0, 10),
-            source:      'Auto-gerado ao iniciar impressão',
+  /** Impressoes ativas (queued + printing) — hero KPI. */
+  const activeCount = state.production.filter((p) => p.status !== 'done').length
+
+  /** Tempo total estimado restante (em andamento). */
+  const totalHoursLeft = useMemo(
+    () => active.reduce((s, p) => s + p.estimatedHours, 0),
+    [active],
+  )
+
+  /** Lucro previsto dos pedidos linkados as impressoes ativas (order.value - productionCost). */
+  const predictedProfit = useMemo(() => {
+    return active.reduce((s, p) => {
+      if (!p.orderId) return s
+      const order = state.orders.find((o) => o.id === p.orderId)
+      if (!order) return s
+      const profit =
+        order.productionCost != null
+          ? order.value - order.productionCost
+          : order.value
+      return s + profit
+    }, 0)
+  }, [active, state.orders])
+
+  // Eyebrow
+  const mesAtual = new Date().toLocaleString('pt-BR', { month: 'long' }).toUpperCase()
+  const printingNow = state.production.filter((p) => p.status === 'printing').length
+
+  // ---------------------------------------------------------------------------
+  // Tabs para ModuleShell
+  // ---------------------------------------------------------------------------
+
+  const tabs = useMemo(
+    () => [
+      { id: 'active', label: 'Em andamento', count: active.length,             active: activeTab === 'active' },
+      { id: 'done',   label: 'Finalizadas',  count: done.length,               active: activeTab === 'done'   },
+      { id: 'all',    label: 'Todas',        count: bySearch.length,           active: activeTab === 'all'    },
+    ],
+    [active.length, done.length, bySearch.length, activeTab],
+  )
+
+  // ---------------------------------------------------------------------------
+  // Handler de status com side effects (filamento + transacao)
+  // RESTRICAO: logica identica ao original — nao simplificar.
+  // ---------------------------------------------------------------------------
+
+  const changeStatus = useCallback(
+    (item: ProductionItem, status: ProductionStatus) => {
+      dispatch({ type: 'UPDATE_PRODUCTION', payload: { ...item, status } })
+
+      // Side effect duplo: consome filamento + cria despesa ao iniciar impressao.
+      if (status === 'printing' && item.status !== 'printing') {
+        const order   = state.orders.find((o) => o.id === item.orderId)
+        const product = order?.productId
+          ? state.products.find((p) => p.id === order.productId)
+          : undefined
+        const baseGrams  = product?.materialGrams ?? 0
+        const filamentId = product?.inventoryItemId
+        const filament   = filamentId
+          ? state.inventory.find((i) => i.id === filamentId)
+          : undefined
+
+        const uso = filament?.filamentUso
+        const canConsume = !uso || uso === 'impressao' || uso === 'ambos'
+
+        if (
+          product &&
+          filament &&
+          baseGrams > 0 &&
+          filament.category === 'filament' &&
+          canConsume
+        ) {
+          const totalGrams = baseGrams * (1 + (product.failureRate ?? 0.1))
+          const delta =
+            filament.unit === 'kg' ? -(totalGrams / 1000) : -totalGrams
+
+          const movement: StockMovement = {
+            id:        uid(),
+            projectId: filament.projectId,
+            itemId:    filament.id,
+            type:      'out',
+            quantity:  Math.abs(delta),
+            reason:    'printing',
+            date:      new Date().toISOString().slice(0, 10),
+            notes:     `Impressao iniciada - ${product.name} (${totalGrams.toFixed(0)}g)`,
           }
-          dispatch({ type: 'ADD_TRANSACTION', payload: transaction })
+          dispatch({
+            type:    'ADJUST_STOCK',
+            payload: { movement, itemId: filament.id, delta },
+          })
+
+          const costPerUnit  = filament.costPrice ?? 0
+          const filamentCost =
+            filament.unit === 'kg'
+              ? costPerUnit * (totalGrams / 1000)
+              : costPerUnit * totalGrams
+
+          if (filamentCost > 0) {
+            const transaction: Transaction = {
+              id:          uid(),
+              projectId:   filament.projectId,
+              type:        'expense',
+              value:       Math.round(filamentCost * 100) / 100,
+              category:    'filament',
+              description: `Filamento: ${product.name} (${totalGrams.toFixed(0)}g)`,
+              date:        new Date().toISOString().slice(0, 10),
+              source:      'Auto-gerado ao iniciar impressao',
+            }
+            dispatch({ type: 'ADD_TRANSACTION', payload: transaction })
+          }
         }
       }
-    }
 
+      setMenuOpen(null)
+    },
+    [dispatch, state.orders, state.products, state.inventory],
+  )
+
+  // ---------------------------------------------------------------------------
+  // CRUD handlers
+  // ---------------------------------------------------------------------------
+
+  const handleCreate = useCallback(
+    (data: ProductionFormData) => {
+      dispatch({
+        type:    'ADD_PRODUCTION',
+        payload: {
+          id:             uid(),
+          ...data,
+          estimatedHours: parseFloat(data.estimatedHours) || 4,
+          priority:       parseInt(data.priority)         || 1,
+        },
+      })
+      setCreating(false)
+    },
+    [dispatch],
+  )
+
+  const handleEdit = useCallback(
+    (data: ProductionFormData) => {
+      if (!editing) return
+      dispatch({
+        type:    'UPDATE_PRODUCTION',
+        payload: {
+          ...editing,
+          ...data,
+          estimatedHours: parseFloat(data.estimatedHours) || 4,
+          priority:       parseInt(data.priority)         || 1,
+        },
+      })
+      setEditing(null)
+    },
+    [editing, dispatch],
+  )
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      dispatch({ type: 'DELETE_PRODUCTION', payload: id })
+      setMenuOpen(null)
+    },
+    [dispatch],
+  )
+
+  const handleMenuToggle = useCallback(
+    (id: string) => setMenuOpen((prev) => (prev === id ? null : id)),
+    [],
+  )
+
+  const handleTabChange = useCallback((id: string) => {
+    setActiveTab(id as ProductionTab)
     setMenuOpen(null)
-  }
+  }, [])
 
-  const totalEstimatedHours = active.reduce((s, p) => s + p.estimatedHours, 0)
+  const handleSearch = useCallback((q: string) => {
+    setSearchQuery(q)
+  }, [])
+
+  // ---------------------------------------------------------------------------
+  // Guard de loading
+  // ---------------------------------------------------------------------------
 
   if (loading) return null
-  // ─────────────────────────────────────────────────────────────────────────
+
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
+
   return (
-    <div className="max-w-4xl mx-auto space-y-5">
-
-      {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-[#f0f0f5] font-semibold text-lg">Operação</h2>
-          <p className="text-[#555566] text-sm">
-            {printing > 0 ? (
-              <span className="text-[#3b82f6]">{printing} imprimindo</span>
-            ) : (
-              <span>0 imprimindo</span>
-            )}
-            {' · '}
-            {waiting} aguardando
-            {totalEstimatedHours > 0 && ` · ${totalEstimatedHours.toFixed(1)}h restantes`}
-          </p>
+    <>
+      <ModuleShell
+        eyebrow={`${mesAtual} · ${printingNow} IMPRIMINDO · ${active.length} NA FILA`}
+        title="Operacao"
+        titleItalicSuffix="ao vivo"
+        livePhrase={
+          activeCount > 0
+            ? `${activeCount} ${activeCount === 1 ? 'impressao ativa' : 'impressoes ativas'}, ${totalHoursLeft.toFixed(1)}h estimadas.`
+            : 'Fila vazia. Adicione um item para comecar.'
+        }
+        primaryAction={{
+          label:   'Adicionar',
+          onClick: () => setCreating(true),
+          icon:    <Plus size={15} aria-hidden="true" />,
+        }}
+        heroKpi={{
+          label:       'IMPRESSOES ATIVAS',
+          value:       String(activeCount),
+          description:
+            activeCount > 0
+              ? `${printingNow} imprimindo agora, ${active.filter((p) => p.status === 'waiting').length} aguardando.`
+              : 'Nenhuma impressao em andamento.',
+        }}
+        satelliteKpis={[
+          {
+            label:       'TEMPO RESTANTE',
+            value:       totalHoursLeft > 0 ? `${totalHoursLeft.toFixed(1)}h` : 'livre',
+            description: 'soma das impressoes ativas.',
+            tone:        totalHoursLeft > 8 ? 'ember' : 'neutral',
+          },
+          {
+            label:       'LUCRO PREVISTO',
+            value:
+              predictedProfit > 0
+                ? `R$ ${Math.round(predictedProfit)}`
+                : 'sem dados',
+            description: 'pedidos linkados em andamento.',
+            tone:        predictedProfit > 0 ? 'petrol' : 'neutral',
+          },
+        ]}
+        tabs={tabs}
+        onTabChange={handleTabChange}
+        searchPlaceholder="Buscar item, cliente..."
+        onSearch={handleSearch}
+      >
+        {/* Board de impressoras — sempre visivel, acima dos filtros */}
+        <div className="mb-5">
+          <PrinterBoard
+            production={state.production}
+            onStatusChange={changeStatus}
+          />
         </div>
-        <button
-          onClick={() => setCreating(true)}
-          className="flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-all shadow-[0_0_16px_rgba(124,58,237,0.3)] hover:shadow-[0_0_24px_rgba(124,58,237,0.4)]"
-        >
-          <Plus size={15} /> Adicionar
-        </button>
-      </div>
 
-      {/* ── Printer status board ─────────────────────────────────────────────── */}
-      <PrinterBoard production={state.production} onStatusChange={changeStatus} />
-
-      {/* ── Filters ─────────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <select
+        {/* Filtros: projeto + impressora */}
+        <ProjectFilter
+          projects={state.projects}
           value={filterProject}
-          onChange={e => setFilterProject(e.target.value)}
-          className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#8888a0] text-xs rounded-lg px-3 py-1.5 outline-none focus:border-[#7c3aed] cursor-pointer"
-        >
-          <option value="all">Todos os projetos</option>
-          {state.projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-        </select>
-        {(['all', 'bambu', 'flashforge'] as const).map(p => (
-          <button
-            key={p}
-            onClick={() => setFilterPrinter(p)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
-              filterPrinter === p
-                ? 'bg-[#7c3aed1a] text-[#a78bfa] border-[#7c3aed33]'
-                : 'text-[#8888a0] border-transparent hover:text-[#f0f0f5]'
-            }`}
-          >
-            {p === 'all' ? 'Todas' : printerConfig[p].label}
-          </button>
-        ))}
-      </div>
+          onChange={setFilterProject}
+        />
 
-      {/* ── Active queue ──────────────────────────────────────────────────────── */}
-      {active.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-[#8888a0] text-xs font-medium uppercase tracking-wide">
-            Fila Ativa ({active.length})
-          </h3>
+        {/* Filtro por impressora (tabs compactos) */}
+        <div className="flex items-center gap-2 flex-wrap mb-4">
+          {(['all', 'bambu', 'flashforge'] as const).map((p) => (
+            <button
+              key={p}
+              type="button"
+              onClick={() => setFilterPrinter(p)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
+                filterPrinter === p
+                  ? 'bg-[#7c3aed1a] text-[#a78bfa] border-[#7c3aed33]'
+                  : 'text-[#8888a0] border-transparent hover:text-[#f0f0f5]'
+              }`}
+              aria-pressed={filterPrinter === p}
+              aria-label={`Filtrar por impressora: ${p === 'all' ? 'Todas' : PRINTER_CONFIG[p].label}`}
+            >
+              {p === 'all' ? 'Todas' : PRINTER_CONFIG[p].label}
+            </button>
+          ))}
+        </div>
 
-          {/* Mobile cards */}
-          <div className="sm:hidden space-y-2">
-            {active.map(item => (
-              <div
-                key={item.id}
-                className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4"
-                style={{
-                  borderColor: item.status === 'printing'
-                    ? `${printerConfig[item.printer].accent}44`
-                    : undefined,
-                }}
-              >
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div>
-                    <p className="text-[#f0f0f5] text-sm font-medium">{item.item}</p>
-                    <p className="text-[#555566] text-xs mt-0.5">{item.clientName}</p>
-                  </div>
-                  <StatusBadge status={item.status} />
-                </div>
-                <div className="flex items-center gap-3 text-xs text-[#555566]">
-                  <span style={{ color: printerConfig[item.printer].accent }}>
-                    {printerConfig[item.printer].label}
-                  </span>
-                  <span>·</span>
-                  <Clock size={10} /><span>{item.estimatedHours}h</span>
-                </div>
-                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[rgba(255,255,255,0.05)]">
-                  {item.status === 'waiting' && (
-                    <button
-                      onClick={() => changeStatus(item, 'printing')}
-                      className="flex-1 py-2 rounded-lg bg-[#3b82f61a] text-[#3b82f6] text-xs font-medium hover:bg-[#3b82f633] transition-colors"
-                    >
-                      Iniciar
-                    </button>
-                  )}
-                  {item.status === 'printing' && (
-                    <button
-                      onClick={() => changeStatus(item, 'done')}
-                      className="flex-1 py-2 rounded-lg bg-[#10b9811a] text-[#10b981] text-xs font-medium hover:bg-[#10b98133] transition-colors"
-                    >
-                      Finalizar
-                    </button>
-                  )}
-                  <button
-                    onClick={() => setEditing(item)}
-                    className="p-2 text-[#555566] hover:text-[#f0f0f5] rounded-lg hover:bg-[rgba(255,255,255,0.06)] transition-colors"
-                  >
-                    <Pencil size={13} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="p-2 text-[#555566] hover:text-[#ef4444] rounded-lg hover:bg-[#ef44441a] transition-colors"
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* Conteudo da tab ativa */}
+        {state.production.length === 0 ? (
+          <ProductionEmptyState onAdd={() => setCreating(true)} />
+        ) : (
+          <>
+            {/* Fila ativa */}
+            {(activeTab === 'active' || activeTab === 'all') && active.length > 0 && (
+              <section className="space-y-2 mb-6" aria-label="Fila ativa de producao">
+                <h3 className="text-[#8888a0] text-xs font-medium uppercase tracking-wide">
+                  Fila Ativa ({active.length})
+                </h3>
 
-          {/* Desktop list */}
-          <div className="hidden sm:block space-y-2">
-            {active.map(item => (
-              <div
-                key={item.id}
-                className="bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.07)] rounded-xl p-4 flex items-center gap-4 group hover:border-[rgba(255,255,255,0.12)] transition-all"
-                style={{
-                  borderColor: item.status === 'printing'
-                    ? `${printerConfig[item.printer].accent}44`
-                    : undefined,
-                }}
-              >
-                <div className="text-[#3a3a4a] hidden sm:block">
-                  <GripVertical size={16} />
+                {/* Mobile */}
+                <div className="sm:hidden space-y-2">
+                  {active.map((item) => (
+                    <ProductionCardMobile
+                      key={item.id}
+                      item={item}
+                      projectLabel={
+                        item.orderId
+                          ? projectName(orderProjectId(item.orderId)) || undefined
+                          : undefined
+                      }
+                      onChangeStatus={changeStatus}
+                      onEdit={setEditing}
+                      onDelete={handleDelete}
+                    />
+                  ))}
                 </div>
-                <div className="w-6 h-6 rounded-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] flex items-center justify-center text-[#555566] text-xs font-bold shrink-0">
-                  {item.priority}
+
+                {/* Desktop */}
+                <div className="hidden sm:block space-y-2">
+                  {active.map((item) => (
+                    <ProductionCardDesktop
+                      key={item.id}
+                      item={item}
+                      projectLabel={
+                        item.orderId
+                          ? projectName(orderProjectId(item.orderId)) || undefined
+                          : undefined
+                      }
+                      menuOpen={menuOpen}
+                      onMenuToggle={handleMenuToggle}
+                      onChangeStatus={changeStatus}
+                      onEdit={setEditing}
+                      onDelete={handleDelete}
+                    />
+                  ))}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[#f0f0f5] text-sm font-medium">{item.item}</p>
-                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                    <span style={{ color: printerConfig[item.printer].accent }} className="text-xs">
-                      {printerConfig[item.printer].label}
-                    </span>
-                    <span className="text-[#3a3a4a]">·</span>
-                    <Clock size={10} className="text-[#555566]" />
-                    <span className="text-[#555566] text-xs">{item.estimatedHours}h</span>
-                    {item.clientName && (
-                      <>
-                        <span className="text-[#3a3a4a]">·</span>
-                        <span className="text-[#555566] text-xs">{item.clientName}</span>
-                      </>
-                    )}
-                    {item.orderId && projectName(orderProjectId(item.orderId)) && (
-                      <>
-                        <span className="text-[#3a3a4a]">·</span>
-                        <span className="text-[#555566] text-xs">
-                          {projectName(orderProjectId(item.orderId))}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <StatusBadge status={item.status} />
-                <div className="relative">
-                  <button
-                    onClick={() => setMenuOpen(menuOpen === item.id ? null : item.id)}
-                    className="p-1.5 text-[#555566] hover:text-[#f0f0f5] transition-colors rounded-lg hover:bg-[rgba(255,255,255,0.06)]"
-                  >
-                    <MoreHorizontal size={15} />
-                  </button>
-                  {menuOpen === item.id && (
-                    <div className="absolute right-0 top-8 bg-[#0d0d12] border border-[rgba(255,255,255,0.1)] rounded-xl shadow-2xl z-10 w-44 overflow-hidden">
-                      {item.status !== 'printing' && (
-                        <button
-                          onClick={() => changeStatus(item, 'printing')}
-                          className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#3b82f6] hover:bg-[#3b82f61a] transition-colors"
-                        >
-                          <Activity size={13} /> Iniciar Impressão
-                        </button>
-                      )}
-                      {item.status !== 'done' && (
-                        <button
-                          onClick={() => changeStatus(item, 'done')}
-                          className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#10b981] hover:bg-[#10b9811a] transition-colors"
-                        >
-                          <CheckCircle2 size={13} /> Finalizado
-                        </button>
-                      )}
-                      <button
-                        onClick={() => { setEditing(item); setMenuOpen(null) }}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#8888a0] hover:text-[#f0f0f5] hover:bg-[rgba(255,255,255,0.06)] transition-colors"
+              </section>
+            )}
+
+            {/* Finalizados */}
+            {(activeTab === 'done' || activeTab === 'all') && done.length > 0 && (
+              <section className="space-y-2" aria-label="Impressoes finalizadas">
+                <h3 className="text-[#8888a0] text-xs font-medium uppercase tracking-wide">
+                  Finalizados ({done.length})
+                </h3>
+                <div className="space-y-1.5">
+                  {visibleItems
+                    .filter((i) => i.status === 'done')
+                    .map((item) => (
+                      <div
+                        key={item.id}
+                        className="bg-[rgba(255,255,255,0.015)] border border-[rgba(255,255,255,0.04)] rounded-xl px-4 py-3 flex items-center gap-4 opacity-50 hover:opacity-70 transition-opacity"
                       >
-                        <Pencil size={13} /> Editar
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#ef4444] hover:bg-[#ef44441a] transition-colors"
-                      >
-                        <Trash2 size={13} /> Remover
-                      </button>
-                    </div>
-                  )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[#8888a0] text-sm">{item.item}</p>
+                          <p className="text-[#444455] text-xs">
+                            {PRINTER_CONFIG[item.printer].label}
+                            {item.clientName && ` - ${item.clientName}`}
+                          </p>
+                        </div>
+                        <StatusBadge status={item.status} />
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(item.id)}
+                          className="p-1.5 text-[#3a3a4a] hover:text-[#ef4444] transition-colors rounded-lg hover:bg-[#ef44441a]"
+                          aria-label={`Remover item finalizado ${item.item}`}
+                        >
+                          <Trash2 size={14} aria-hidden="true" />
+                        </button>
+                      </div>
+                    ))}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              </section>
+            )}
 
-      {/* ── Completed ──────────────────────────────────────────────────────────── */}
-      {done.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-[#8888a0] text-xs font-medium uppercase tracking-wide">
-            Finalizados ({done.length})
-          </h3>
-          <div className="space-y-1.5">
-            {done.map(item => (
-              <div
-                key={item.id}
-                className="bg-[rgba(255,255,255,0.015)] border border-[rgba(255,255,255,0.04)] rounded-xl px-4 py-3 flex items-center gap-4 opacity-50 hover:opacity-70 transition-opacity"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-[#8888a0] text-sm">{item.item}</p>
-                  <p className="text-[#444455] text-xs">
-                    {printerConfig[item.printer].label}
-                    {item.clientName && ` · ${item.clientName}`}
-                  </p>
-                </div>
-                <StatusBadge status={item.status} />
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="p-1.5 text-[#3a3a4a] hover:text-[#ef4444] transition-colors rounded-lg hover:bg-[#ef44441a]"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+            {/* Nenhum resultado para busca/filtro */}
+            {visibleItems.length === 0 && (
+              <p className="text-center text-[#555566] text-sm py-12">
+                Nenhum item encontrado para os filtros atuais.
+              </p>
+            )}
+          </>
+        )}
+      </ModuleShell>
 
-      {/* ── Empty state ────────────────────────────────────────────────────────── */}
-      {state.production.length === 0 && (
-        <div className="py-20 text-center">
-          <Printer size={36} className="text-[#2a2a3a] mx-auto mb-4" />
-          <p className="text-[#555566] text-sm">Fila vazia. Adicione um item de produção.</p>
-          <button
-            onClick={() => setCreating(true)}
-            className="mt-4 flex items-center gap-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium px-4 py-2.5 rounded-xl mx-auto transition-all"
-          >
-            <Plus size={15} /> Adicionar item
-          </button>
-        </div>
-      )}
-
-      {/* ── Modals ─────────────────────────────────────────────────────────────── */}
+      {/* Modal: adicionar */}
       {creating && (
-        <Modal title="Adicionar à Fila" onClose={() => setCreating(false)}>
+        <Modal title="Adicionar a Fila" onClose={() => setCreating(false)}>
           <ProductionForm
             orders={state.orders}
             onSave={handleCreate}
@@ -657,6 +545,8 @@ export default function ProductionPage() {
           />
         </Modal>
       )}
+
+      {/* Modal: editar */}
       {editing && (
         <Modal title="Editar Item" onClose={() => setEditing(null)}>
           <ProductionForm
@@ -675,6 +565,6 @@ export default function ProductionPage() {
           />
         </Modal>
       )}
-    </div>
+    </>
   )
 }
