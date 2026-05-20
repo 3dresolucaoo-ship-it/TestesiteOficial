@@ -59,7 +59,7 @@ const ANNOTATIONS: Annotation[] = [
 
 function hasScreenshot(): boolean {
   try {
-    const p = path.join(process.cwd(), 'public', 'landing', 'orders-preview.png')
+    const p = path.join(process.cwd(), 'public', 'landing', 'orders-preview.webp')
     return existsSync(p)
   } catch {
     return false
@@ -106,10 +106,10 @@ export function ProductPreview() {
           {screenshotExists ? (
             <>
               <Image
-                src="/landing/orders-preview.png"
+                src="/landing/orders-preview.webp"
                 alt="Tela de pedidos do Hayzer mostrando pedido do WhatsApp com filamento calculado, comissão Shopee descontada e margem real"
-                width={1280}
-                height={760}
+                width={1440}
+                height={900}
                 className="w-full object-cover object-top"
                 priority={false}
                 quality={85}

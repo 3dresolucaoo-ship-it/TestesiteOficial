@@ -1,0 +1,52 @@
+# robots.txt — Hayzer
+# https://hayzer.com.br/robots.txt
+# Atualizado 2026-05-20 (resolve Lighthouse SEO audit "robots.txt is not valid")
+
+User-agent: *
+Allow: /
+Allow: /calculadora
+Allow: /privacidade
+Allow: /termos
+
+# Rotas administrativas e técnicas — não indexar
+Disallow: /api/
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /mockups/
+Disallow: /library
+Disallow: /_next/
+Disallow: /_sentry-prepared/
+
+# Rotas de waitlist sucesso — privadas
+Disallow: /waitlist/obrigado
+
+# Catalogos publicos de makers — indexar (gera SEO long-tail)
+Allow: /catalogo/
+Allow: /portfolio/
+
+# IA crawlers — bloquear treino sem consentimento (LGPD-aligned)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+# Sitemap (gerado automaticamente pelo Next.js quando existir app/sitemap.ts)
+Sitemap: https://hayzer.com.br/sitemap.xml
