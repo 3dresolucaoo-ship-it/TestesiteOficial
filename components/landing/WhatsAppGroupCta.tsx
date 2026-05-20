@@ -10,7 +10,7 @@ import { motion } from 'framer-motion'
  * (graceful fallback enquanto o grupo não foi criado).
  *
  * Decisão: WhatsApp ativa o lead na hora (ele já tá no momento alto de atenção),
- * email serve como trilha permanente + canal pra notificação de launch 04/07.
+ * email serve como trilha permanente + canal pra notificação de launch 27/06.
  */
 export function WhatsAppGroupCta() {
   const groupUrl = process.env.NEXT_PUBLIC_WHATSAPP_GROUP_URL

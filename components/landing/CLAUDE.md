@@ -11,6 +11,7 @@
 | `Hero.tsx` | `/` — primeira tela | Client (motion) |
 | `WaitlistForm.tsx` | Dentro do Hero | Client (form + Server Action) |
 | `Features.tsx` | `/` — seção #features | Client (motion + view) |
+| `WhatsAppFlow.tsx` | `/` — seção #whatsapp-flow (NOVA · 2026-05-20) | Server |
 | `WhyDifferent.tsx` | `/` — seção #por-que (compara concorrentes) | Client (motion) |
 | `FinalCTA.tsx` | `/` — fim da landing | Client (motion) |
 | `Footer.tsx` | Toda landing + LGPD | Server |
@@ -19,6 +20,7 @@
 
 ## 🎯 Status
 
+- ✅ **SVGs maker integrados (2026-05-20)**: `Features.tsx` troca ícones genéricos por assets Diego (`filament-spool.svg`, `whatsapp-pix.svg`, `printer-3d.svg`). `WhatsAppFlow.tsx` nova section com `whatsapp-chat-mock.svg`. Assets em `public/landing/v2/`.
 - ✅ Funcionando: todas as seções da landing renderizam, mobile responsivo OK, dark mode paleta v2 aplicada
 - ✅ Forms: etapa 1 valida Zod, redireciona pra /obrigado; etapa 2 opcional
 - ✅ Migration `20260513_waitlist_leads.sql` aplicada em prod 2026-05-13

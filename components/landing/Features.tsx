@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 interface Feature {
@@ -11,10 +12,12 @@ interface Feature {
   icon: React.ReactNode
 }
 
-// Ícones SVG duotone custom (não lucide default 24x24) — anti-IA.
-// .icon-bg pega fill petrol/10%, .icon-stroke pega petrol-300 stroke 1.5.
-// Bodies escritos pra maker 3D (ADR-010): filamento, fila de impressão,
-// comissão de marketplace, recompra de maker.
+// Ícones maker (SVG assets Diego 2026-05-20) aplicados nas features mais relevantes.
+// 01 estoque/filamento → filament-spool.svg (128x128)
+// 02 vendas/pedidos   → whatsapp-pix.svg    (128x80)
+// 03 clientes         → SVG inline custom (sem asset maker equivalente)
+// 04 financeiro/prod  → printer-3d.svg      (128x128)
+// Tamanho render: 64x64 (escala visual do grid de features).
 const features: Feature[] = [
   {
     num: '01 — estoque',
@@ -22,12 +25,13 @@ const features: Feature[] = [
     body: 'Cada rolo de filamento, cada peça impressa, cada peça que falhou na hora, tudo entra no sistema sem você anotar. Acabou descobrir no dia 30 que sumiu meio kg de PLA preto.',
     size: 'lg',
     icon: (
-      <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none">
-        <rect className="icon-bg" x="6" y="14" width="36" height="28" rx="2"/>
-        <path className="icon-stroke" d="M6 14 L24 6 L42 14 L42 42 L24 50 L6 42 Z"/>
-        <path className="icon-stroke" d="M6 14 L24 22 L42 14"/>
-        <line className="icon-stroke" x1="24" y1="22" x2="24" y2="50"/>
-      </svg>
+      <Image
+        src="/landing/v2/filament-spool.svg"
+        alt="Spool de filamento PLA 1KG"
+        width={64}
+        height={64}
+        aria-hidden="true"
+      />
     ),
   },
   {
@@ -36,13 +40,13 @@ const features: Feature[] = [
     body: 'Pedido do WhatsApp vira link de pagamento em dois toques. Cliente paga, o estoque baixa, a peça entra na fila de impressão. Você só confirma o envio.',
     size: 'sm',
     icon: (
-      <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none">
-        <rect className="icon-bg" x="10" y="6" width="28" height="38" rx="2"/>
-        <path className="icon-stroke" d="M10 6 L38 6 L38 44 L34 41 L30 44 L26 41 L22 44 L18 41 L14 44 L10 41 Z"/>
-        <line className="icon-stroke" x1="16" y1="16" x2="32" y2="16"/>
-        <line className="icon-stroke" x1="16" y1="22" x2="32" y2="22"/>
-        <line className="icon-stroke" x1="16" y1="28" x2="26" y2="28"/>
-      </svg>
+      <Image
+        src="/landing/v2/whatsapp-pix.svg"
+        alt="WhatsApp e Pix integrados"
+        width={64}
+        height={40}
+        aria-hidden="true"
+      />
     ),
   },
   {
@@ -51,7 +55,7 @@ const features: Feature[] = [
     body: 'Cliente que pedia personalizado todo mês e parou aparece na sua tela antes de você esquecer dele. Recompra de maker é ouro, e quase ninguém cuida.',
     size: 'sm',
     icon: (
-      <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none">
+      <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none" aria-hidden="true">
         <circle className="icon-bg" cx="18" cy="18" r="8"/>
         <circle className="icon-stroke" cx="18" cy="18" r="8"/>
         <circle className="icon-stroke" cx="34" cy="16" r="6"/>
@@ -61,19 +65,19 @@ const features: Feature[] = [
     ),
   },
   {
-    num: '04 — financeiro',
+    num: '04 — impressão',
     title: 'O dinheiro real do mês.',
     body: 'Tira filamento, luz, comissão do marketplace, taxa de cartão. O que sobra é o que aparece. Sem precisar abrir Excel para descobrir se foi um mês bom.',
     size: 'lg',
     glow: true,
     icon: (
-      <svg width="42" height="42" viewBox="0 0 48 48" className="icon-warm" fill="none">
-        <rect className="icon-bg" x="4" y="14" width="40" height="26" rx="2"/>
-        <polyline className="icon-stroke" points="6 34 16 24 22 30 32 18 42 26"/>
-        <line className="icon-stroke" x1="6" y1="42" x2="42" y2="42"/>
-        <circle className="icon-stroke" cx="16" cy="24" r="1.5" fill="currentColor"/>
-        <circle className="icon-stroke" cx="32" cy="18" r="1.5" fill="currentColor"/>
-      </svg>
+      <Image
+        src="/landing/v2/printer-3d.svg"
+        alt="Impressora 3D estilizada"
+        width={64}
+        height={64}
+        aria-hidden="true"
+      />
     ),
   },
 ]

@@ -6,6 +6,7 @@ import { Header } from '@/components/landing/Header'
 import { Hero } from '@/components/landing/Hero'
 import { ProductPreview } from '@/components/landing/ProductPreview'
 import { Features } from '@/components/landing/Features'
+import { WhatsAppFlow } from '@/components/landing/WhatsAppFlow'
 import { WhyDifferent } from '@/components/landing/WhyDifferent'
 import { FinalCTA } from '@/components/landing/FinalCTA'
 import { Footer } from '@/components/landing/Footer'
@@ -41,6 +42,7 @@ export default async function HomePage() {
       <ProductPreview />
 
       <Features />
+      <WhatsAppFlow />
       <WhyDifferent />
       <FinalCTA />
       <Footer />

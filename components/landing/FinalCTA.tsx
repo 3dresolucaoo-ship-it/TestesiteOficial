@@ -68,7 +68,7 @@ export function FinalCTA() {
             className="mt-14 flex items-center gap-3 text-[12px]"
             style={{ color: 'hsl(var(--fog-400))' }}
           >
-            <span style={{ fontFamily: 'ui-monospace, "Geist Mono", monospace' }}>04.07.2026</span>
+            <span style={{ fontFamily: 'ui-monospace, "Geist Mono", monospace' }}>27.06.2026</span>
             <span className="h-px w-8" style={{ background: 'hsl(var(--fog-400) / 0.3)' }} />
             <span>lançamento público</span>
           </motion.div>
