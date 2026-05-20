@@ -39,8 +39,6 @@
 - ✅ `app/orders/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
 - ✅ `app/dashboard/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
 - ✅ `app/crm/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
-- ✅ `app/customers/page.tsx` — modulo Clientes V4 (feature/customers-v4 2026-05-20). ModuleShell + KpiRow hero LTV + satellites (ticket medio + sumidos/VIPs) + tabs (todos/vip/recorrente/sumido) + tabela desktop + cards mobile + modal perfil cliente + frase viva humanizada. Zero any, TSC 0 erros. Clientes derivados de state.orders (sem tabela propria).
-- ✅ `app/customers/loading.tsx` — skeleton screen V4 (feature/customers-v4 2026-05-20)
 - ✅ `app/finance/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
 - ⏳ Falta `loading.tsx` e `error.tsx` nas rotas restantes (/inventory, /products, /production, /decisions, /content, /settings)
 - ⏳ `app/projects/[projectId]/{...}` páginas duplicam módulos globais — decidir se ficam
