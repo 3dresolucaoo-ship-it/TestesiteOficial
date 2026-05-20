@@ -1,10 +1,27 @@
 'use client'
 
-/** Wrapper lottie-react com interface tipada. Carrega JSON de public/assets/lottie/. */
+/**
+ * LottiePlayer — wrapper lottie-react com lazy loading do bundle.
+ *
+ * lottie-react (~150KB minified) e carregado via next/dynamic para
+ * evitar que o bundle apareca no chunk inicial. Como LottiePlayer e
+ * usado apenas em /library (admin) e em animacoes opcionais, o custo
+ * de carregamento deve ser zero para usuarios comuns na rota principal.
+ *
+ * Carregue o JSON via import estatico:
+ *   import anim from '@/public/assets/lottie/loader.json'
+ *   <LottiePlayer animationData={anim} />
+ */
 
-import { useRef } from 'react'
-import Lottie, { type LottieRefCurrentProps } from 'lottie-react'
+import dynamic from 'next/dynamic'
 import { cn } from '@/lib/utils'
+
+// Lottie carregado lazy — split de bundle separado do chunk principal.
+// ssr: false porque lottie-react usa APIs de browser (canvas, requestAnimationFrame).
+const LottieImpl = dynamic(
+  () => import('lottie-react').then((mod) => mod.default),
+  { ssr: false, loading: () => null }
+)
 
 interface LottiePlayerProps {
   /** Dados JSON da animacao Lottie (import direto ou fetch) */
@@ -21,11 +38,6 @@ interface LottiePlayerProps {
   'aria-label'?: string
 }
 
-/**
- * LottiePlayer — wrapper sobre lottie-react com props tipadas e aria-label.
- * Carregue o JSON via import estatico: import anim from '@/public/assets/lottie/loader.json'.
- * Nao use fetch dinamico aqui — deixe o Server Component pai decidir o carregamento.
- */
 export function LottiePlayer({
   animationData,
   loop = true,
@@ -34,16 +46,13 @@ export function LottiePlayer({
   onComplete,
   'aria-label': ariaLabel,
 }: LottiePlayerProps) {
-  const lottieRef = useRef<LottieRefCurrentProps>(null)
-
   return (
     <div
       role="img"
       aria-label={ariaLabel ?? 'animacao'}
       className={cn('inline-block', className)}
     >
-      <Lottie
-        lottieRef={lottieRef}
+      <LottieImpl
         animationData={animationData}
         loop={loop}
         autoplay={autoplay}

@@ -36,12 +36,20 @@
 - ✅ `app/crm/page.tsx` — migrado para ModuleShell V4 (2026-05-20). KpiRow hero (leads ativos) + 3 satellites + tabs Pipeline/Clientes.
 - ✅ `app/finance/page.tsx` — migrado para ModuleShell V4 (2026-05-20). KpiRow hero (lucro liquido mes) + 3 satellites (receita/despesas/margem com alerta amber <15%) + tabs Lancamentos/Custos Fixos/Break Even. globals-v4.css importado na page. Validacao visual em prod pendente (CEO).
 - ❌ `app/showcase/page.tsx` — provavelmente legado, avaliar
-- ⏳ Falta `loading.tsx` e `error.tsx` em todas rotas
+- ✅ `app/orders/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
+- ✅ `app/dashboard/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
+- ✅ `app/crm/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
+- ✅ `app/finance/loading.tsx` — skeleton screen V4 (Onda Perf 2026-05-20)
+- ⏳ Falta `loading.tsx` e `error.tsx` nas rotas restantes (/inventory, /products, /production, /decisions, /content, /settings)
 - ⏳ `app/projects/[projectId]/{...}` páginas duplicam módulos globais — decidir se ficam
 
 ## Performance
 
-- ⚠️ `loadInitialState` chamado em layout.tsx + várias pages = 26 queries por navegação. Otimizar com `cache()` do React.
+- ✅ `loadInitialState` refatorado (Onda Perf 2026-05-20): 13 queries → 2 queries (projects + config). React `cache()` ativo. Outros dados carregados lazy via `lib/serverDataLoaderLazy.ts` ou store cliente `loadFromSupabase()`.
+- ✅ Skeleton screens implementados em 4 rotas pesadas (orders/dashboard/crm/finance).
+- ✅ `lottie-react` lazy via `next/dynamic` — elimina ~150KB do chunk inicial.
+- ⚠️ TODO CEO: validar em Network tab prod que Fraunces weight 600 tem `Highest` priority. Next.js 16 + `preload: true` deve gerar automaticamente, mas confirmar.
+- ⚠️ Queries do store cliente (`loadFromSupabase`) ainda fazem 13 queries no mount client-side. Próximo passo: lazy por modulo no store.
 
 ## Related
 

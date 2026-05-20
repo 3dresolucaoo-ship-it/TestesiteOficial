@@ -24,11 +24,19 @@ import { useRouter, useSearchParams }     from 'next/navigation'
 import { useStore, uid }                  from '@/lib/store'
 import { isSupabaseConfigured }           from '@/lib/supabaseClient'
 import type { Order, OrderStatus }        from '@/lib/types'
-import { Plus, Pencil, Trash2, MoreHorizontal, Cpu, ShoppingCart, Download } from 'lucide-react'
+import { Plus, Pencil, Trash2, MoreHorizontal, Cpu, ShoppingCart, Download, Filter } from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
 import { calcUnitCost }                   from '@/core/analytics/productionEngine'
 import { ModuleShell, V4ThemeProvider }   from '@/components/dashboard/v4'
 import { UnderlineMarker }                from '@/components/visual-library'
+import {
+  isoWeekNumber,
+  totalEntreguesNoMes,
+  calcSubtitleData,
+  calcHeroKpiData,
+  calcAtrasadosData,
+  diasAtraso,
+} from '@/services/ordersMetrics'
 
 // CSS V4 do ModuleShell (mesmo pattern do /dashboard — scoped por rota).
 // Sem isso, page-header / kpi-card / filter-bar viram texto plano.
@@ -416,6 +424,12 @@ export default function OrdersPage() {
   const [activeTab,   setActiveTab]   = useState<TabId>(ALL)
   const [searchQuery, setSearchQuery] = useState<string>('')
 
+  // B.5 — Filtros avancados
+  const [filtrosOpen,         setFiltrosOpen]         = useState(false)
+  const [filtroProjetoAdv,    setFiltroProjetoAdv]    = useState<string>('all')
+  const [filtroPeriodo,       setFiltroPeriodo]       = useState<'mes-atual' | 'mes-passado' | 'todos'>('todos')
+  const [filtroValorMin,      setFiltroValorMin]      = useState<string>('')
+
   // Limpa o param ?quote= da URL após o mount, sem re-render de estado.
   useEffect(() => {
     if (!paramProductId) return
@@ -430,13 +444,36 @@ export default function OrdersPage() {
   // Derivacoes de estado
   // ---------------------------------------------------------------------------
 
-  const byProject = useMemo(
-    () =>
-      filterProject === 'all'
-        ? state.orders
-        : state.orders.filter((o) => o.projectId === filterProject),
-    [state.orders, filterProject],
-  )
+  const byProject = useMemo(() => {
+    // Filtro de projeto (ProjectFilter basico)
+    const projetoFiltro = filtroProjetoAdv !== 'all' ? filtroProjetoAdv : filterProject
+    let base = projetoFiltro === 'all'
+      ? state.orders
+      : state.orders.filter((o) => o.projectId === projetoFiltro)
+
+    // B.5 — Filtros avancados: periodo
+    if (filtroPeriodo !== 'todos') {
+      const agora    = new Date()
+      const mesAtivo = filtroPeriodo === 'mes-atual'
+        ? agora.getMonth()
+        : agora.getMonth() - 1 < 0 ? 11 : agora.getMonth() - 1
+      const anoAtivo = filtroPeriodo === 'mes-atual'
+        ? agora.getFullYear()
+        : agora.getMonth() === 0 ? agora.getFullYear() - 1 : agora.getFullYear()
+      base = base.filter((o) => {
+        const d = new Date(o.date)
+        return d.getMonth() === mesAtivo && d.getFullYear() === anoAtivo
+      })
+    }
+
+    // B.5 — Filtro valor minimo
+    const valorMin = parseFloat(filtroValorMin)
+    if (!isNaN(valorMin) && valorMin > 0) {
+      base = base.filter((o) => o.value >= valorMin)
+    }
+
+    return base
+  }, [state.orders, filterProject, filtroProjetoAdv, filtroPeriodo, filtroValorMin])
 
   const filtered = useMemo(() => {
     let base = activeTab === ALL ? byProject : byProject.filter((o) => o.status === activeTab)
@@ -490,8 +527,29 @@ export default function OrdersPage() {
 
   const totalEntregues = byProject.filter((o) => o.status === 'delivered').length
 
+  // ---------------------------------------------------------------------------
+  // Metricas derivadas (Onda B) — calculadas com helpers de services/ordersMetrics
+  // ---------------------------------------------------------------------------
+
+  // B.1 — Semana ISO + total entregues no mes
+  const today          = useMemo(() => new Date(), [])
+  const semanaISO      = useMemo(() => isoWeekNumber(today), [today])
+  const entreguesNoMes = useMemo(() => totalEntreguesNoMes(byProject, today), [byProject, today])
+
   // Mes corrente para eyebrow
-  const mesAtual = new Date().toLocaleString('pt-BR', { month: 'long' }).toUpperCase()
+  const mesAtual = useMemo(
+    () => today.toLocaleString('pt-BR', { month: 'long' }).toUpperCase(),
+    [today],
+  )
+
+  // B.2 — Dados para subtitle humanizado
+  const subtitleData = useMemo(() => calcSubtitleData(byProject, today), [byProject, today])
+
+  // B.3 — Hero KPI com delta
+  const heroKpiData = useMemo(() => calcHeroKpiData(byProject, today), [byProject, today])
+
+  // B.4 — Satellite ATRASADOS
+  const atrasadosData = useMemo(() => calcAtrasadosData(byProject, today), [byProject, today])
 
   // ---------------------------------------------------------------------------
   // Helpers de lookup (estavel por ref)
@@ -620,6 +678,13 @@ export default function OrdersPage() {
 
   const handleNewOrder = useCallback(() => setCreating(true), [])
 
+  // B.5 — Limpa filtros avancados
+  const handleLimparFiltros = useCallback(() => {
+    setFiltroProjetoAdv('all')
+    setFiltroPeriodo('todos')
+    setFiltroValorMin('')
+  }, [])
+
   // Exporta a lista atual (respeita filtro de projeto + tab + busca quando aplicaveis)
   const handleExportCsv = useCallback(() => {
     const escapeCell = (v: unknown): string => {
@@ -695,29 +760,72 @@ export default function OrdersPage() {
   )
 
   // ---------------------------------------------------------------------------
-  // Frase viva do header
+  // Frase viva do header (B.2 — subtitle maker BR humanizado)
   // ---------------------------------------------------------------------------
 
   const livePhrase = useMemo(() => {
-    const quote = statusCounts['quote_sent'] ?? 0
-    if (quote > 0) {
+    const { entregaNaSemana, diaLimite, atrasados, saidosEssaSemana, estado } = subtitleData
+
+    // Sem pedidos no projeto/filtro
+    if (estado === 'vazio') {
       return (
         <>
-          <UnderlineMarker tone="ember">
-            {quote} {quote === 1 ? 'orcamento aguardando' : 'orcamentos aguardando'}
-          </UnderlineMarker>
-          {', '}
-          {totalEntregues} {totalEntregues === 1 ? 'entregue' : 'entregues'} no periodo.
+          Nenhum pedido ainda.{' '}
+          <UnderlineMarker tone="petrol">Sua primeira venda esta esperando</UnderlineMarker>.
         </>
       )
     }
+
+    // Frase principal
+    const fraseEntrega = entregaNaSemana > 0
+      ? (
+          <>
+            <UnderlineMarker tone="ember">
+              {entregaNaSemana} pra entregar ate {diaLimite}
+            </UnderlineMarker>
+            {atrasados > 0
+              ? `, ${atrasados} ${atrasados === 1 ? 'atrasou' : 'atrasaram'}`
+              : ''}
+            {saidosEssaSemana > 0
+              ? `, ${saidosEssaSemana} ${saidosEssaSemana === 1 ? 'ja saiu' : 'ja sairam'} do galpao`
+              : ''}
+            .{' '}
+          </>
+        )
+      : atrasados > 0
+      ? (
+          <>
+            <UnderlineMarker tone="ember">
+              {atrasados} {atrasados === 1 ? 'pedido atrasado' : 'pedidos atrasados'}
+            </UnderlineMarker>
+            {saidosEssaSemana > 0
+              ? `, ${saidosEssaSemana} ${saidosEssaSemana === 1 ? 'entregue' : 'entregues'} essa semana`
+              : ''}
+            .{' '}
+          </>
+        )
+      : null
+
+    // Estado final
+    const fraseEstado = estado === 'atencao'
+      ? <UnderlineMarker tone="ember" markerStyle="solid">precisando atencao</UnderlineMarker>
+      : <UnderlineMarker tone="petrol" markerStyle="wavy">no ritmo certo</UnderlineMarker>
+
     return (
       <>
-        {byProject.length} {byProject.length === 1 ? 'pedido registrado' : 'pedidos registrados'},{' '}
-        {totalEntregues} {totalEntregues === 1 ? 'entregue' : 'entregues'} no periodo.
+        {fraseEntrega}
+        {fraseEntrega === null
+          ? (
+              <>
+                {byProject.length} {byProject.length === 1 ? 'pedido' : 'pedidos'},{' '}
+              </>
+            )
+          : <>Resto ta {fraseEstado}.</>
+        }
+        {fraseEntrega === null && <>resto ta {fraseEstado}.</>}
       </>
     )
-  }, [statusCounts, totalEntregues, byProject.length])
+  }, [subtitleData, byProject.length])
 
   // ---------------------------------------------------------------------------
   // Guard de loading
@@ -733,7 +841,7 @@ export default function OrdersPage() {
     <>
       <V4ThemeProvider />
       <ModuleShell
-        eyebrow={`${mesAtual} · ${totalAbertos} ABERTOS · ${totalEntregues} ENTREGUES`}
+        eyebrow={`${mesAtual} · SEM ${String(semanaISO).padStart(2, '0')} · ${totalAbertos} ABERTOS · ${entreguesNoMes} ENTREGUES NO MES`}
         title="Pedidos"
         titleItalicSuffix="essa semana"
         livePhrase={livePhrase}
@@ -749,8 +857,11 @@ export default function OrdersPage() {
         }}
         heroKpi={{
           label:       'FATURADO (PAGO + ENTREGUE)',
-          value:       fmtBRL(faturado),
-          description: `${byProject.filter((o) => o.status === 'paid' || o.status === 'delivered').length} pedidos fechados.`,
+          value:       fmtBRL(heroKpiData.totalPago),
+          description: heroKpiData.count > 0
+            ? `${heroKpiData.count} pedidos fechados, ticket medio R$ ${Math.round(heroKpiData.ticketMedio)}`
+            : 'nenhum pedido fechado ainda.',
+          delta: heroKpiData.delta ?? undefined,
         }}
         satelliteKpis={[
           {
@@ -759,12 +870,23 @@ export default function OrdersPage() {
             description: 'pedidos pagos e entregues.',
             tone:        'neutral',
           },
-          {
-            label:     'ORCAMENTOS ABERTOS',
-            value:     String(statusCounts['quote_sent'] ?? 0),
-            alertText: (statusCounts['quote_sent'] ?? 0) > 0 ? 'aguardando retorno' : undefined,
-            tone:      (statusCounts['quote_sent'] ?? 0) > 0 ? 'ember' : 'neutral',
-          },
+          // B.4 — ATRASADOS com fallback para ORCAMENTOS ABERTOS quando count==0
+          atrasadosData.count > 0
+            ? {
+                label:       'ATRASADOS',
+                value:       `${atrasadosData.count} ${atrasadosData.count === 1 ? 'pedido' : 'pedidos'}`,
+                description: atrasadosData.clientNames.length > 0
+                  ? `${atrasadosData.clientNames.join(', ')} esperando.`
+                  : undefined,
+                alertText:   atrasadosData.urgenciaLabel,
+                tone:        'ember' as const,
+              }
+            : {
+                label:     'ORCAMENTOS ABERTOS',
+                value:     String(statusCounts['quote_sent'] ?? 0),
+                alertText: (statusCounts['quote_sent'] ?? 0) > 0 ? 'aguardando retorno' : undefined,
+                tone:      ((statusCounts['quote_sent'] ?? 0) > 0 ? 'ember' : 'neutral') as 'ember' | 'neutral',
+              },
         ]}
         tabs={tabs}
         onTabChange={handleTabChange}
