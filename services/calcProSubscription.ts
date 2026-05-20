@@ -244,11 +244,12 @@ export async function upsertSubscription(
 
   if (error) serviceError('calcProSubscriptionService.upsertSubscription', error)
 
-  // Em ambientes onde a RPC retorna jsonb, normalizamos pra { id: string }.
+  // RPC retorna jsonb. supabase-js entrega data como unknown — normalizamos.
   const result = data as { status?: string; id?: string } | null
-  if (!result?.id) {
+  if (!result || typeof result.id !== 'string') {
+    const detail = JSON.stringify(result ?? null)
     throw new Error(
-      '[calcProSubscriptionService.upsertSubscription] RPC retornou sem id — investigar logs Supabase',
+      `[calcProSubscriptionService.upsertSubscription] RPC retornou payload invalido: ${detail}. Verificar funcao upsert_calc_pro_subscription no Supabase.`,
     )
   }
 
