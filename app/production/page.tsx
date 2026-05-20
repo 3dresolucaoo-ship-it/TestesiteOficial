@@ -29,7 +29,7 @@ import { useStore, uid }                  from '@/lib/store'
 import type { ProductionItem, StockMovement, Transaction } from '@/lib/types'
 import { Plus, Trash2 }                   from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
-import { ModuleShell }                    from '@/components/dashboard/v4'
+import { ModuleShell, V4ThemeProvider }   from '@/components/dashboard/v4'
 
 import '../globals-v4.css'
 
@@ -381,6 +381,7 @@ export default function ProductionPage() {
 
   return (
     <>
+      <V4ThemeProvider />
       <ModuleShell
         eyebrow={`${mesAtual} · ${printingNow} IMPRIMINDO · ${active.length} NA FILA`}
         title="Operacao"

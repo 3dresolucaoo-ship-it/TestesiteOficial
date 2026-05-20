@@ -26,7 +26,7 @@ import type { Lead, LeadStatus, Order }   from '@/lib/types'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
 import { Plus, Pencil, Trash2 }           from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
-import { ModuleShell }                    from '@/components/dashboard/v4'
+import { ModuleShell, V4ThemeProvider }   from '@/components/dashboard/v4'
 
 import '../globals-v4.css'
 
@@ -369,6 +369,7 @@ export default function GlobalCrmPage() {
 
   return (
     <>
+      <V4ThemeProvider />
       <ModuleShell
         eyebrow={`${mesAtual} · ${activeLeads.length} NO PIPELINE · ${clients.length} CLIENTES`}
         title="CRM"

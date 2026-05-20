@@ -8,6 +8,7 @@
  */
 
 // Componentes
+export { V4ThemeProvider }  from './V4ThemeProvider'
 export { ModuleShell }      from './ModuleShell'
 export { DashboardLayout }  from './DashboardLayout'
 export { Greeting }         from './Greeting'

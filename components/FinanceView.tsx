@@ -31,7 +31,7 @@ import {
 } from '@/core/finance/engine'
 import { calcBreakEvenSummary } from '@/core/finance/breakEvenEngine'
 import { Plus, Download, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react'
-import { ModuleShell } from '@/components/dashboard/v4'
+import { ModuleShell, V4ThemeProvider } from '@/components/dashboard/v4'
 
 import {
   type FormData,
@@ -333,6 +333,7 @@ export function FinanceView({
   // ── Render ───────────────────────────────────────────────────────────────────
   return (
     <>
+      <V4ThemeProvider />
       <ModuleShell
         eyebrow={`${mesAtual} · ${transactions.filter(t => t.type === 'income').length} RECEITAS · ${transactions.filter(t => t.type === 'expense').length} DESPESAS`}
         title="Financas"

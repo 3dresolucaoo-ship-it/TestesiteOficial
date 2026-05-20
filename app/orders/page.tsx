@@ -27,7 +27,7 @@ import type { Order, OrderStatus }        from '@/lib/types'
 import { Plus, Pencil, Trash2, MoreHorizontal, Cpu, ShoppingCart, Download } from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
 import { calcUnitCost }                   from '@/core/analytics/productionEngine'
-import { ModuleShell }                    from '@/components/dashboard/v4'
+import { ModuleShell, V4ThemeProvider }   from '@/components/dashboard/v4'
 import { UnderlineMarker }                from '@/components/visual-library'
 
 // CSS V4 do ModuleShell (mesmo pattern do /dashboard — scoped por rota).
@@ -731,6 +731,7 @@ export default function OrdersPage() {
 
   return (
     <>
+      <V4ThemeProvider />
       <ModuleShell
         eyebrow={`${mesAtual} · ${totalAbertos} ABERTOS · ${totalEntregues} ENTREGUES`}
         title="Pedidos"
