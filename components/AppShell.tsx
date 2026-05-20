@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, type ReactNode } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { StoreProvider, useStore } from '@/lib/store'
 import { Sidebar, BottomNav } from '@/components/Sidebar'
@@ -115,8 +115,7 @@ export function AppShell({
   initialState?: AppState | null
 }) {
   const { user, loading } = useAuth()
-  const pathname                = usePathname()
-  const router                  = useRouter()
+  const pathname         = usePathname()
 
   const isPublicPath =
     pathname === '/login'                     ||
@@ -126,14 +125,13 @@ export function AppShell({
     pathname.startsWith('/portfolio/')        ||
     pathname.startsWith('/checkout')
 
-  // Redirect unauthenticated users to /login.
-  // Guard runs regardless of isSupabaseConfigured — if env vars are missing in
-  // production the app must NOT be accessible without credentials.
-  useEffect(() => {
-    if (!loading && !user && !isPublicPath) {
-      router.replace('/login')
-    }
-  }, [user, loading, isPublicPath, router])
+  // Redirect client-side removido intencionalmente.
+  // middleware.ts:66 já valida a sessão via cookies Supabase antes da rota
+  // carregar — se o usuário chegou aqui, o middleware aprovou.
+  // O useEffect de redirect duplicava essa checagem no cliente e causava loop:
+  // quando AuthProvider.getSession() dava timeout (~5s), loading virava false
+  // com user=null, o router.replace('/login') disparava e o middleware
+  // redirecionava de volta para a rota original — loop infinito.
 
   // Public pages (login): render without chrome
   if (isPublicPath) return <>{children}</>
