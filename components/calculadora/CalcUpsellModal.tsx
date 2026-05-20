@@ -159,9 +159,9 @@ export function CalcUpsellModal({ open, onClose, attemptN }: CalcUpsellModalProp
                   type="button"
                   onClick={onClose}
                   className="rounded-xl py-2.5 text-center text-[13px] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--petrol-300))]"
-                  aria-label="Fechar e voltar amanha"
+                  aria-label="Fechar e voltar amanhã"
                 >
-                  Volto amanha
+                  Volto amanhã
                 </button>
               </div>
             </div>
