@@ -17,7 +17,7 @@
 |---|---|---|
 | SettingsView.tsx | **220** | ✅ refatorado — tabs em `settings/` (8 sub-componentes) |
 | DashboardView.tsx | **483** | ✅ refatorado — shared em `dashboard/shared.tsx` |
-| Sidebar.tsx | 601 | 🟧 grande, mas ok por enquanto |
+| Sidebar.tsx | 36 | ✅ refatorado — sub-componentes em `sidebar/` (7 arquivos) |
 | FinanceView.tsx | 595 | 🟧 grande |
 | FinanceCharts.tsx | 465 | ✅ |
 | PortfoliosView.tsx | 445 | ✅ |
@@ -43,6 +43,22 @@ Biblioteca de assets decorativos e utilitarios da identidade Hayzer.
 Barrel export via `index.ts`. Doc completa em `components/visual-library/README.md`.
 Showcase vivo em `/library` (admin only).
 Dep nova instalada: `lottie-react`.
+
+## sidebar/ (novo · 2026-05-19)
+
+Sidebar decomposto em 7 arquivos focados dentro de `components/sidebar/`.
+Exports publicos mantidos identicos: `Sidebar`, `MobileNav`, `BottomNav` via `components/Sidebar.tsx`.
+
+| Arquivo | Responsabilidade |
+|---|---|
+| `types.ts` | `NavItem`, `ModuleNavItem` |
+| `useSidebarState.ts` | `useProjectContext()`, `useSidebarCollapsed()` |
+| `SidebarNavLink.tsx` | Link individual com estado ativo/hover |
+| `SidebarLogo.tsx` | Logo com fallback Hayzer |
+| `SidebarFooter.tsx` | Status Supabase + versao |
+| `SidebarGlobalNav.tsx` | Nav global (expanded + collapsed) + dados de nav |
+| `SidebarProjectNav.tsx` | Nav de projeto especifico |
+| `SidebarMobileNav.tsx` | `MobileNav` (drawer) + `BottomNav` (barra inferior) |
 
 ## Issues conhecidos
 

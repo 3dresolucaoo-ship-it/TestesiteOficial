@@ -1,357 +1,66 @@
 'use client'
 
+/**
+ * Página de Inventário — orquestrador.
+ *
+ * Refatorado em 2026-05-19 (Felipe): 1001 linhas → ~250 linhas.
+ * Sub-componentes em app/inventory/_components/:
+ *   types.ts                  — ItemFormData, MovementFormData
+ *   helpers.ts                — fmt, fmtShort, itemProfit, parseDate, CAT_COLORS
+ *   CatBadge.tsx              — badge de categoria
+ *   ImageUploader.tsx         — upload de imagem
+ *   ItemCard.tsx              — card grid de item
+ *   ItemRow.tsx               — linha de lista de item
+ *   ItemForm.tsx              — form criação/edição de item
+ *   MovementForm.tsx          — form entrada/saída de estoque
+ *   InventoryKpiRow.tsx       — 4 cards KPI
+ *   InventoryCatBreakdown.tsx — gráfico barras por categoria
+ *   InventoryTopProfit.tsx    — top 5 itens por lucro potencial
+ *   InventoryLowStockBanner.tsx — banner de alerta de estoque baixo
+ *   InventoryFilters.tsx      — filtros, toggle de visualização, busca
+ *   InventoryEmptyState.tsx   — estados vazios (vazio vs. sem resultados)
+ *   InventoryMovementLog.tsx  — histórico collapsível de movimentações
+ */
+
 import { useState, useMemo } from 'react'
 import { useStore, uid } from '@/lib/store'
-import type { InventoryItem, InventoryCategory, StockMovement, MovementReason } from '@/lib/types'
-import type { FilamentUso } from '@/core/inventory/types'
-import {
-  INVENTORY_CATEGORY_LABELS,
-  MOVEMENT_REASON_LABELS,
-  MOVEMENT_REASONS_BY_TYPE,
-  FILAMENT_USO_LABELS,
-} from '@/lib/types'
-import {
-  Plus, AlertTriangle,
-  Package, TrendingUp, ArrowDownLeft, ArrowUpRight,
-  DollarSign, Layers, Search, ChevronDown, ArrowUpDown,
-  Sparkles, LayoutGrid, List,
-} from 'lucide-react'
-import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
-import { ImageUploader } from './_components/ImageUploader'
-import { ItemRow } from './_components/ItemRow'
-import { ItemCard } from './_components/ItemCard'
-import { CatBadge } from './_components/CatBadge'
-import { fmt, fmtShort, parseDate, itemProfit, CAT_COLORS } from './_components/helpers'
+import type { InventoryItem, InventoryCategory, StockMovement } from '@/lib/types'
+import { INVENTORY_CATEGORY_LABELS } from '@/lib/types'
+import { Plus, ArrowDownLeft, ArrowUpRight, Package } from 'lucide-react'
+import { Modal } from '@/components/Modal'
 
-// ─── Helpers + Sub-componentes (refactor 2026-05-16) ─────────────────────────
-// Extraídos pra app/inventory/_components/ — antes este arquivo tinha 1472 linhas.
-// fmt/fmtShort/itemProfit/parseDate/CAT_COLORS → helpers.ts
-// CatBadge → CatBadge.tsx
-// ItemRow → ItemRow.tsx
-// ItemCard → ItemCard.tsx
-// ImageUploader → ImageUploader.tsx
+import type { ItemFormData, MovementFormData } from './_components/types'
+import { itemProfit } from './_components/helpers'
+import { ItemForm }               from './_components/ItemForm'
+import { MovementForm }           from './_components/MovementForm'
+import { ItemCard }               from './_components/ItemCard'
+import { ItemRow }                from './_components/ItemRow'
+import { InventoryKpiRow }        from './_components/InventoryKpiRow'
+import { InventoryCatBreakdown }  from './_components/InventoryCatBreakdown'
+import { InventoryTopProfit }     from './_components/InventoryTopProfit'
+import { InventoryLowStockBanner } from './_components/InventoryLowStockBanner'
+import { InventoryFilters }       from './_components/InventoryFilters'
+import { InventoryEmptyState }    from './_components/InventoryEmptyState'
+import { InventoryMovementLog }   from './_components/InventoryMovementLog'
 
-// ─── Item form ────────────────────────────────────────────────────────────────
-type ItemFormData = {
-  projectId:   string
-  category:    InventoryCategory
-  name:        string
-  sku:         string
-  quantity:    string
-  unit:        string
-  costPrice:   string
-  salePrice:   string
-  notes:       string
-  minStock:    string
-  imageUrl:    string
-  filamentUso: FilamentUso | ''
-}
-
-function ItemForm({
-  projects,
-  initial,
-  onSave,
-  onClose,
-}: {
-  projects: { id: string; name: string }[]
-  initial?: ItemFormData
-  onSave: (d: ItemFormData) => void
-  onClose: () => void
-}) {
-  const [data, setData] = useState<ItemFormData>(
-    initial ?? {
-      projectId:   projects[0]?.id ?? '',
-      category:    'product',
-      name:        '',
-      sku:         '',
-      quantity:    '1',
-      unit:        'un',
-      costPrice:   '',
-      salePrice:   '',
-      notes:       '',
-      minStock:    '2',
-      imageUrl:    '',
-      filamentUso: '',
-    },
-  )
-
-  const set =
-    (k: keyof ItemFormData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-      setData(p => ({ ...p, [k]: e.target.value }))
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!data.name.trim() || !data.projectId) return
-    onSave(data)
-    onClose()
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <FormField label="Projeto">
-        <Select value={data.projectId} onChange={set('projectId')}>
-          {projects.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
-        </Select>
-      </FormField>
-
-      <div className="grid grid-cols-2 gap-3">
-        <FormField label="Categoria">
-          <Select value={data.category} onChange={set('category')}>
-            {Object.entries(INVENTORY_CATEGORY_LABELS).map(([k, v]) => (
-              <option key={k} value={k}>{v}</option>
-            ))}
-          </Select>
-        </FormField>
-        <FormField label="Unidade">
-          <Select value={data.unit} onChange={set('unit')}>
-            <option value="un">un</option>
-            <option value="kg">kg</option>
-            <option value="g">g</option>
-            <option value="m">m</option>
-            <option value="l">l</option>
-          </Select>
-        </FormField>
-      </div>
-
-      {/* Filament use — only shown when category is filament */}
-      {data.category === 'filament' && (
-        <FormField label="Uso do filamento">
-          <Select
-            value={data.filamentUso}
-            onChange={e => setData(p => ({ ...p, filamentUso: e.target.value as FilamentUso | '' }))}
-          >
-            <option value="">Não especificado</option>
-            {Object.entries(FILAMENT_USO_LABELS).map(([k, v]) => (
-              <option key={k} value={k}>{v}</option>
-            ))}
-          </Select>
-        </FormField>
-      )}
-
-      <FormField label="Nome do Item">
-        <Input
-          value={data.name}
-          onChange={set('name')}
-          placeholder="Ex: Filamento PLA Branco 1kg"
-          required
-        />
-      </FormField>
-
-      <FormField label="SKU (opcional)">
-        <Input value={data.sku} onChange={set('sku')} placeholder="Ex: FIL-PLA-BRK-001" />
-      </FormField>
-
-      <div className="grid grid-cols-3 gap-3">
-        <FormField label="Quantidade">
-          <Input
-            type="number"
-            value={data.quantity}
-            onChange={set('quantity')}
-            min="0"
-            step="0.01"
-          />
-        </FormField>
-        <FormField label="Custo (R$)">
-          <Input
-            type="number"
-            value={data.costPrice}
-            onChange={set('costPrice')}
-            min="0"
-            step="0.01"
-            placeholder="0,00"
-          />
-        </FormField>
-        <FormField label="Venda (R$)">
-          <Input
-            type="number"
-            value={data.salePrice}
-            onChange={set('salePrice')}
-            min="0"
-            step="0.01"
-            placeholder="0,00"
-          />
-        </FormField>
-      </div>
-
-      <FormField label="Alerta Mínimo (qtd)">
-        <Input
-          type="number"
-          value={data.minStock}
-          onChange={set('minStock')}
-          min="0"
-          step="1"
-        />
-      </FormField>
-
-      <FormField label="Observações (opcional)">
-        <Textarea value={data.notes} onChange={set('notes')} placeholder="Notas opcionais..." />
-      </FormField>
-
-      <FormField label="Foto (opcional)">
-        <ImageUploader
-          value={data.imageUrl}
-          onChange={url => setData(p => ({ ...p, imageUrl: url }))}
-        />
-      </FormField>
-
-      <SubmitButton>{initial ? 'Salvar Alterações' : 'Adicionar Item'}</SubmitButton>
-    </form>
-  )
-}
-
-// ─── Movement form ─────────────────────────────────────────────────────────────
-type MovementFormData = {
-  itemId: string
-  type: 'in' | 'out'
-  quantity: string
-  reason: MovementReason
-  date: string
-  notes: string
-}
-
-function MovementForm({
-  items,
-  defaultItemId,
-  defaultType,
-  onSave,
-  onClose,
-}: {
-  items: InventoryItem[]
-  defaultItemId?: string
-  defaultType?: 'in' | 'out'
-  onSave: (d: MovementFormData) => void
-  onClose: () => void
-}) {
-  const [data, setData] = useState<MovementFormData>({
-    itemId:   defaultItemId ?? items[0]?.id ?? '',
-    type:     defaultType ?? 'in',
-    quantity: '1',
-    reason:   defaultType === 'out' ? 'sale' : 'purchase',
-    date:     new Date().toISOString().slice(0, 10),
-    notes:    '',
-  })
-
-  const set =
-    (k: keyof MovementFormData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-      setData(p => ({ ...p, [k]: e.target.value }))
-
-  function handleTypeChange(t: 'in' | 'out') {
-    setData(p => ({ ...p, type: t, reason: MOVEMENT_REASONS_BY_TYPE[t][0] }))
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const qty = parseFloat(data.quantity) || 0
-    if (qty <= 0 || !data.itemId) return
-    onSave(data)
-    onClose()
-  }
-
-  const selectedItem = items.find(i => i.id === data.itemId)
-  const reasonOptions = MOVEMENT_REASONS_BY_TYPE[data.type]
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Direction toggle */}
-      <div className="grid grid-cols-2 gap-2">
-        {(['in', 'out'] as const).map(t => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => handleTypeChange(t)}
-            className={`py-2 rounded-lg text-sm font-medium transition-colors border flex items-center justify-center gap-2 ${
-              data.type === t
-                ? t === 'in'
-                  ? 'bg-[#10b9811a] text-[#10b981] border-[#10b98133]'
-                  : 'bg-[#ef44441a] text-[#ef4444] border-[#ef444433]'
-                : 'bg-transparent text-[#888888] border-[#2a2a2a]'
-            }`}
-          >
-            {t === 'in' ? <ArrowDownLeft size={14} /> : <ArrowUpRight size={14} />}
-            {t === 'in' ? 'Entrada' : 'Saída'}
-          </button>
-        ))}
-      </div>
-
-      {/* Item selector — hidden when opened from a specific item card */}
-      {!defaultItemId ? (
-        <FormField label="Item">
-          <Select value={data.itemId} onChange={set('itemId')}>
-            {items.map(i => (
-              <option key={i.id} value={i.id}>{i.name}</option>
-            ))}
-          </Select>
-        </FormField>
-      ) : selectedItem ? (
-        <div className="bg-[#1c1c1c] border border-[#2a2a2a] rounded-lg px-3 py-2">
-          <p className="text-[#555555] text-xs">Item</p>
-          <p className="text-[#ebebeb] text-sm font-medium">{selectedItem.name}</p>
-          <p className="text-[#555555] text-xs">
-            Estoque atual: {selectedItem.quantity} {selectedItem.unit}
-          </p>
-        </div>
-      ) : null}
-
-      <div className="grid grid-cols-2 gap-3">
-        <FormField label="Quantidade">
-          <Input
-            type="number"
-            value={data.quantity}
-            onChange={set('quantity')}
-            min="0.01"
-            step="0.01"
-            required
-          />
-        </FormField>
-        <FormField label="Motivo">
-          <Select value={data.reason} onChange={set('reason')}>
-            {reasonOptions.map(r => (
-              <option key={r} value={r}>{MOVEMENT_REASON_LABELS[r]}</option>
-            ))}
-          </Select>
-        </FormField>
-      </div>
-
-      <FormField label="Data">
-        <Input type="date" value={data.date} onChange={set('date')} />
-      </FormField>
-
-      <FormField label="Observações (opcional)">
-        <Input value={data.notes} onChange={set('notes')} placeholder="Opcional..." />
-      </FormField>
-
-      <SubmitButton>
-        {data.type === 'in' ? 'Registrar Entrada' : 'Registrar Saída'}
-      </SubmitButton>
-    </form>
-  )
-}
-
-// ItemRow + ItemCard extraidos em 2026-05-16 -> app/inventory/_components/
-
-
-// ─── Page ──────────────────────────────────────────────────────────────────────
 export default function InventoryPage() {
   const { state, dispatch, loading } = useStore()
 
+  // ── Estado local de modais ────────────────────────────────────────────────
   const [creating, setCreating]       = useState(false)
   const [editing, setEditing]         = useState<InventoryItem | null>(null)
   const [movementCtx, setMovementCtx] = useState<{ item?: InventoryItem; type: 'in' | 'out' } | null>(null)
 
+  // ── Estado local de filtros ───────────────────────────────────────────────
   const [filterProject, setFilterProject] = useState('all')
   const [filterCat,     setFilterCat]     = useState<InventoryCategory | 'all'>('all')
   const [search,        setSearch]        = useState('')
-  const [showLog,       setShowLog]       = useState(false)
   const [sortBy,        setSortBy]        = useState<'name' | 'profit' | 'stock' | 'value'>('name')
   const [viewMode,      setViewMode]      = useState<'grid' | 'list'>('grid')
 
   const { inventory: allItems, movements: allMovements, projects } = state
 
-  // ── Filtered item list ───────────────────────────────────────────────────────
+  // ── Lista filtrada + ordenada ─────────────────────────────────────────────
   const filtered = useMemo(() => {
     let list = allItems
     if (filterProject !== 'all') list = list.filter(i => i.projectId === filterProject)
@@ -368,21 +77,21 @@ export default function InventoryPage() {
     })
   }, [allItems, filterProject, filterCat, search, sortBy])
 
-  // ── KPIs (scoped to current filter, full totals when no filter) ──────────────
-  const scopedItems       = filterProject === 'all' ? allItems : allItems.filter(i => i.projectId === filterProject)
-  const lowStockList      = scopedItems.filter(i => i.quantity <= (i.minStock ?? 2))
-  const stockValue        = scopedItems.reduce((s, i) => s + i.costPrice * i.quantity, 0)
+  // ── KPIs (escopo do filtro de projeto) ────────────────────────────────────
+  const scopedItems          = filterProject === 'all' ? allItems : allItems.filter(i => i.projectId === filterProject)
+  const lowStockList         = scopedItems.filter(i => i.quantity <= (i.minStock ?? 2))
+  const stockValue           = scopedItems.reduce((s, i) => s + i.costPrice * i.quantity, 0)
   const profitPotentialTotal = scopedItems
     .filter(i => i.salePrice > 0 && i.costPrice > 0)
     .reduce((s, i) => s + itemProfit(i), 0)
 
-  // Top 5 items by profit potential (items with both prices set)
+  // Top 5 itens por lucro potencial
   const topProfitItems = [...scopedItems]
     .filter(i => i.salePrice > 0 && i.costPrice > 0 && i.quantity > 0)
     .sort((a, b) => itemProfit(b) - itemProfit(a))
     .slice(0, 5)
 
-  // Category breakdown for the value bar chart
+  // Breakdown por categoria para o gráfico
   const catValues = (Object.keys(INVENTORY_CATEGORY_LABELS) as InventoryCategory[])
     .map(cat => ({
       cat,
@@ -390,20 +99,19 @@ export default function InventoryPage() {
       count: scopedItems.filter(i => i.category === cat).length,
     }))
     .filter(c => c.count > 0)
-  const maxCatValue = Math.max(...catValues.map(c => c.value), 1)
 
-  // Movement log — limited to current project scope, newest first
+  // Movimentações filtradas por projeto, mais recentes primeiro
   const movements = useMemo(() => {
     let list = allMovements
     if (filterProject !== 'all') list = list.filter(m => m.projectId === filterProject)
     return [...list].sort((a, b) => b.date.localeCompare(a.date))
   }, [allMovements, filterProject])
 
-  // ── Helpers ──────────────────────────────────────────────────────────────────
+  // ── Helpers de lookup ─────────────────────────────────────────────────────
   const projectName = (id: string) => projects.find(p => p.id === id)?.name ?? '—'
   const itemName    = (id: string) => allItems.find(i => i.id === id)?.name ?? id
 
-  // ── Handlers ─────────────────────────────────────────────────────────────────
+  // ── Handlers de escrita ───────────────────────────────────────────────────
   function handleCreate(data: ItemFormData) {
     dispatch({
       type: 'ADD_INVENTORY',
@@ -484,8 +192,9 @@ export default function InventoryPage() {
     dispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: item.id, delta } })
   }
 
-  // ── Empty state ───────────────────────────────────────────────────────────────
+  // ── Guard: loading / sem projetos ─────────────────────────────────────────
   if (loading) return null
+
   if (projects.length === 0) {
     return (
       <div className="max-w-4xl mx-auto">
@@ -502,7 +211,7 @@ export default function InventoryPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-5">
 
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      {/* Cabeçalho */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-[#ebebeb] font-semibold text-lg">Estoque Global</h2>
@@ -533,280 +242,45 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* ── KPI cards ──────────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          {
-            label: 'Total de Itens',
-            value: `${scopedItems.length}`,
-            icon:  Package,
-            color: 'text-[#a78bfa]',
-            bg:    'bg-[#7c3aed1a]',
-          },
-          {
-            label: 'Valor em Custo',
-            value: fmt(stockValue),
-            icon:  DollarSign,
-            color: 'text-[#3b82f6]',
-            bg:    'bg-[#3b82f61a]',
-          },
-          {
-            label: 'Lucro Potencial',
-            value: profitPotentialTotal > 0 ? fmtShort(profitPotentialTotal) : '—',
-            icon:  TrendingUp,
-            color: profitPotentialTotal > 0 ? 'text-[#10b981]' : 'text-[#555555]',
-            bg:    profitPotentialTotal > 0 ? 'bg-[#10b9811a]' : 'bg-[#1c1c1c]',
-          },
-          {
-            label: 'Em Alerta',
-            value: `${lowStockList.length}`,
-            icon:  AlertTriangle,
-            color: lowStockList.length > 0 ? 'text-[#f59e0b]' : 'text-[#555555]',
-            bg:    lowStockList.length > 0 ? 'bg-[#f59e0b1a]' : 'bg-[#1c1c1c]',
-          },
-        ].map(({ label, value, icon: Icon, color, bg }) => (
-          <div key={label} className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className={`p-1.5 rounded-lg ${bg}`}>
-                <Icon size={13} className={color} />
-              </div>
-              <span className="text-[#555555] text-xs font-medium uppercase tracking-wide">{label}</span>
-            </div>
-            <p className={`text-xl font-bold ${color}`}>{value}</p>
-          </div>
-        ))}
-      </div>
+      {/* KPIs */}
+      <InventoryKpiRow
+        totalItems={scopedItems.length}
+        stockValue={stockValue}
+        profitPotential={profitPotentialTotal}
+        lowStockCount={lowStockList.length}
+      />
 
-      {/* ── Category breakdown ──────────────────────────────────────────────── */}
-      {catValues.length > 0 && (
-        <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Layers size={14} className="text-[#555555]" />
-            <p className="text-[#ebebeb] text-sm font-medium">Valor por Categoria</p>
-          </div>
-          <div className="space-y-3">
-            {catValues.map(({ cat, value, count }) => (
-              <div key={cat}>
-                <div className="flex justify-between items-baseline mb-1.5">
-                  <span className="flex items-center gap-2">
-                    <CatBadge cat={cat} />
-                    <span className="text-[#555555] text-xs">
-                      {count} {count === 1 ? 'item' : 'itens'}
-                    </span>
-                  </span>
-                  <span className="text-[#ebebeb] text-xs font-semibold">{fmt(value)}</span>
-                </div>
-                <div className="h-1.5 bg-[#1c1c1c] rounded-full overflow-hidden">
-                  <div
-                    style={{ width: `${(value / maxCatValue) * 100}%` }}
-                    className={`h-full rounded-full transition-all ${CAT_COLORS[cat].bar}`}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Breakdown por categoria */}
+      <InventoryCatBreakdown catValues={catValues} />
 
-      {/* ── Top items by profit potential ───────────────────────────────────── */}
-      {topProfitItems.length > 0 && (
-        <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles size={14} className="text-[#a78bfa]" />
-            <p className="text-[#ebebeb] text-sm font-medium">Top Itens por Lucro Potencial</p>
-            <span className="ml-auto text-[#3a3a3a] text-xs">estoque × margem</span>
-          </div>
-          <div className="space-y-3">
-            {topProfitItems.map((item, idx) => {
-              const profit = itemProfit(item)
-              const maxProfit = itemProfit(topProfitItems[0])
-              const margin = ((item.salePrice - item.costPrice) / item.salePrice) * 100
-              return (
-                <div key={item.id}>
-                  <div className="flex justify-between items-baseline mb-1">
-                    <span className="flex items-center gap-2 min-w-0">
-                      <span className="text-[#3a3a3a] text-[10px] font-bold tabular-nums w-4 shrink-0">
-                        #{idx + 1}
-                      </span>
-                      <span className="text-[#888888] text-xs truncate">{item.name}</span>
-                      <span className={`text-[10px] font-medium shrink-0 ${
-                        margin >= 40 ? 'text-[#10b981]' : margin >= 20 ? 'text-[#a78bfa]' : 'text-[#f59e0b]'
-                      }`}>
-                        {margin.toFixed(0)}%
-                      </span>
-                    </span>
-                    <span className="text-[#f0f0f5] text-xs font-semibold whitespace-nowrap ml-2">
-                      {fmtShort(profit)}
-                    </span>
-                  </div>
-                  <div className="h-1.5 bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden">
-                    <div
-                      style={{ width: `${(profit / maxProfit) * 100}%` }}
-                      className="h-full rounded-full bg-gradient-to-r from-[#7c3aed] to-[#10b981] transition-all duration-500"
-                    />
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          {profitPotentialTotal > 0 && (
-            <div className="mt-4 pt-3 border-t border-[rgba(255,255,255,0.04)] flex justify-between items-baseline">
-              <span className="text-[#555555] text-xs">Total em estoque</span>
-              <span className="text-[#10b981] text-sm font-bold">{fmtShort(profitPotentialTotal)}</span>
-            </div>
-          )}
-        </div>
-      )}
+      {/* Top itens por lucro potencial */}
+      <InventoryTopProfit items={topProfitItems} profitPotentialTotal={profitPotentialTotal} />
 
-      {/* ── Low stock banner ────────────────────────────────────────────────── */}
-      {lowStockList.length > 0 && (
-        <div className="flex items-start gap-3 bg-[#f59e0b0d] border border-[#f59e0b22] rounded-xl px-4 py-3">
-          <AlertTriangle size={15} className="text-[#f59e0b] mt-0.5 shrink-0" />
-          <div className="min-w-0">
-            <p className="text-[#f59e0b] text-sm font-medium">
-              Estoque Baixo — {lowStockList.length}{' '}
-              {lowStockList.length === 1 ? 'item' : 'itens'}
-            </p>
-            <p className="text-[#f59e0b] text-xs opacity-70 mt-0.5 truncate">
-              {lowStockList
-                .map(i => `${i.name} (${i.quantity}${i.unit !== 'un' ? i.unit : ''})`)
-                .join(' · ')}
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Banner de estoque baixo */}
+      <InventoryLowStockBanner items={lowStockList} />
 
-      {/* ── Filters ─────────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-2 flex-wrap">
-        {/* Project filter */}
-        <select
-          value={filterProject}
-          onChange={e => setFilterProject(e.target.value)}
-          className="bg-[#141414] border border-[#2a2a2a] text-[#888888] text-xs rounded-lg px-3 py-1.5 outline-none focus:border-[#7c3aed] cursor-pointer"
-        >
-          <option value="all">Todos os projetos</option>
-          {projects.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
-          ))}
-        </select>
+      {/* Barra de filtros */}
+      <InventoryFilters
+        projects={projects}
+        scopedItems={scopedItems}
+        filterProject={filterProject}
+        filterCat={filterCat}
+        search={search}
+        sortBy={sortBy}
+        viewMode={viewMode}
+        onFilterProject={setFilterProject}
+        onFilterCat={setFilterCat}
+        onSearch={setSearch}
+        onSortBy={setSortBy}
+        onViewMode={setViewMode}
+      />
 
-        {/* Category filter buttons */}
-        <button
-          onClick={() => setFilterCat('all')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
-            filterCat === 'all'
-              ? 'bg-[#7c3aed1a] text-[#a78bfa] border-[#7c3aed33]'
-              : 'text-[#888888] border-transparent hover:text-[#ebebeb]'
-          }`}
-        >
-          Todos
-        </button>
-        {(Object.keys(INVENTORY_CATEGORY_LABELS) as InventoryCategory[]).map(c => {
-          const count = scopedItems.filter(i => i.category === c).length
-          if (count === 0) return null
-          return (
-            <button
-              key={c}
-              onClick={() => setFilterCat(c)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
-                filterCat === c
-                  ? 'bg-[#7c3aed1a] text-[#a78bfa] border-[#7c3aed33]'
-                  : 'text-[#888888] border-transparent hover:text-[#ebebeb]'
-              }`}
-            >
-              {INVENTORY_CATEGORY_LABELS[c]} ({count})
-            </button>
-          )
-        })}
-
-        {/* View toggle */}
-        <div className="flex items-center gap-0 ml-auto border border-[#2a2a2a] rounded-lg overflow-hidden">
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`px-2 py-1.5 flex items-center gap-1 text-xs transition-colors ${
-              viewMode === 'grid' ? 'bg-[#7c3aed1a] text-[#a78bfa]' : 'text-[#888888] hover:text-[#ebebeb]'
-            }`}
-            title="Grade"
-          >
-            <LayoutGrid size={12} />
-          </button>
-          <button
-            onClick={() => setViewMode('list')}
-            className={`px-2 py-1.5 flex items-center gap-1 text-xs transition-colors ${
-              viewMode === 'list' ? 'bg-[#7c3aed1a] text-[#a78bfa]' : 'text-[#888888] hover:text-[#ebebeb]'
-            }`}
-            title="Lista"
-          >
-            <List size={12} />
-          </button>
-        </div>
-
-        {/* Sort */}
-        <div className="flex items-center gap-1.5">
-          <ArrowUpDown size={11} className="text-[#555555]" />
-          <select
-            value={sortBy}
-            onChange={e => setSortBy(e.target.value as typeof sortBy)}
-            className="bg-[#141414] border border-[#2a2a2a] text-[#888888] text-xs rounded-lg px-2 py-1.5 outline-none focus:border-[#7c3aed] cursor-pointer"
-          >
-            <option value="name">Nome</option>
-            <option value="profit">Lucro</option>
-            <option value="stock">Qtd</option>
-            <option value="value">Valor</option>
-          </select>
-        </div>
-
-        {/* Search */}
-        <div className="relative">
-          <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555555] pointer-events-none" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Buscar item..."
-            className="bg-[#141414] border border-[#2a2a2a] text-[#888888] text-xs rounded-lg pl-8 pr-3 py-1.5 outline-none focus:border-[#7c3aed] placeholder:text-[#3a3a3a] w-40"
-          />
-        </div>
-      </div>
-
-      {/* ── Item list ────────────────────────────────────────────────────────── */}
+      {/* Lista de itens */}
       {filtered.length === 0 ? (
-        allItems.length === 0 ? (
-          /* Sofia (CS) 2026-05-16: empty state customizado pro maker 3D —
-           * explica que filamento é o início, mostra benefício direto (cálculo de custo). */
-          <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto px-6">
-            <div
-              className="w-16 h-16 mb-5 rounded-2xl flex items-center justify-center"
-              style={{
-                background: 'hsl(173 58% 28% / 0.12)',
-                border: '1px solid hsl(173 58% 28% / 0.25)',
-              }}
-            >
-              <Package size={28} className="text-[hsl(173_30%_57%)]" />
-            </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-              Seu estoque está vazio
-            </h3>
-            <p className="text-sm text-foreground/70 leading-relaxed mb-6">
-              Comece adicionando o filamento que você usa agora. Com ele registrado, o Hayzer calcula automaticamente o custo de cada peça que você imprime.
-            </p>
-            <button
-              onClick={() => setCreating(true)}
-              className="flex items-center gap-2 bg-[hsl(173_58%_28%)] hover:bg-[hsl(173_58%_32%)] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
-            >
-              <Plus size={15} /> Adicionar primeiro filamento
-            </button>
-            <p className="text-xs text-foreground/50 mt-5 leading-relaxed">
-              Pode cadastrar filamentos, equipamentos e qualquer material que entra no custo da peça.
-            </p>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <Package size={36} className="text-[#2a2a2a] mb-3" />
-            <p className="text-[#555555] text-sm">
-              Nenhum item corresponde aos filtros.
-            </p>
-          </div>
-        )
+        <InventoryEmptyState
+          mode={allItems.length === 0 ? 'empty' : 'no-results'}
+          onCreateClick={() => setCreating(true)}
+        />
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {filtered.map(item => (
@@ -837,116 +311,14 @@ export default function InventoryPage() {
         </div>
       )}
 
-      {/* ── Movement log ─────────────────────────────────────────────────────── */}
-      {movements.length > 0 && (
-        <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl overflow-hidden">
-          <button
-            onClick={() => setShowLog(o => !o)}
-            className="w-full flex items-center justify-between px-5 py-3 border-b border-[#2a2a2a] hover:bg-[#1a1a1a] transition-colors"
-          >
-            <p className="text-[#ebebeb] text-sm font-medium">
-              Histórico de Movimentações{' '}
-              <span className="text-[#555555] font-normal">({movements.length})</span>
-            </p>
-            <ChevronDown
-              size={15}
-              className={`text-[#555555] transition-transform ${showLog ? 'rotate-180' : ''}`}
-            />
-          </button>
+      {/* Histórico de movimentações */}
+      <InventoryMovementLog
+        movements={movements}
+        itemName={itemName}
+        projectName={projectName}
+      />
 
-          {showLog && (
-            <>
-              {/* Mobile movement cards */}
-              <div className="sm:hidden divide-y divide-[#1c1c1c]">
-                {movements.slice(0, 30).map(m => (
-                  <div key={m.id} className="px-4 py-3">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="text-[#ebebeb] text-sm truncate">{itemName(m.itemId)}</p>
-                        <p className="text-[#555555] text-xs mt-0.5">
-                          {parseDate(m.date).toLocaleDateString('pt-BR')} ·{' '}
-                          {MOVEMENT_REASON_LABELS[m.reason]}
-                        </p>
-                        {m.notes && <p className="text-[#3a3a3a] text-xs mt-0.5">{m.notes}</p>}
-                      </div>
-                      <span
-                        className={`text-sm font-bold tabular-nums shrink-0 ${
-                          m.type === 'in' ? 'text-[#10b981]' : 'text-[#ef4444]'
-                        }`}
-                      >
-                        {m.type === 'in' ? '+' : '−'}{m.quantity}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Desktop movement table */}
-              <div className="hidden sm:block overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-[#2a2a2a]">
-                      {['Data', 'Item', 'Motivo', 'Projeto', 'Qtd', 'Notas'].map(h => (
-                        <th
-                          key={h}
-                          className="text-left px-4 py-2.5 text-[#555555] text-xs font-medium uppercase tracking-wide first:pl-5 last:pr-5"
-                        >
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {movements.slice(0, 50).map(m => (
-                      <tr
-                        key={m.id}
-                        className="border-b border-[#1c1c1c] last:border-0 hover:bg-[#1a1a1a] transition-colors"
-                      >
-                        <td className="px-5 py-3 text-[#888888] text-xs whitespace-nowrap">
-                          {parseDate(m.date).toLocaleDateString('pt-BR')}
-                        </td>
-                        <td className="px-4 py-3 text-[#ebebeb] text-sm max-w-[160px] truncate">
-                          {itemName(m.itemId)}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className="text-[#555555] text-xs">
-                            {MOVEMENT_REASON_LABELS[m.reason]}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-[#555555] text-xs">
-                          {projectName(m.projectId)}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`text-sm font-semibold tabular-nums ${
-                              m.type === 'in' ? 'text-[#10b981]' : 'text-[#ef4444]'
-                            }`}
-                          >
-                            {m.type === 'in' ? '+' : '−'}{m.quantity}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 pr-5 text-[#555555] text-xs max-w-[200px] truncate">
-                          {m.notes || '—'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {movements.length > 50 && (
-                <div className="px-5 py-3 border-t border-[#1c1c1c]">
-                  <p className="text-[#555555] text-xs">
-                    {movements.length - 50} movimentações anteriores não exibidas.
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
-
-      {/* ── Modals ───────────────────────────────────────────────────────────── */}
+      {/* Modais */}
       {creating && (
         <Modal title="Novo Item de Estoque" onClose={() => setCreating(false)}>
           <ItemForm
