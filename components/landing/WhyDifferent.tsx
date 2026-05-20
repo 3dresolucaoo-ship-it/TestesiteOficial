@@ -153,7 +153,7 @@ export function WhyDifferent() {
             Quatro sistemas, nenhum conversa.
             <br />
             <span className="italic-soft">Aqui é um, e fala </span>
-            <span className="marker">português</span>.
+            <span className="marker">português</span>
           </p>
         </motion.div>
       </div>

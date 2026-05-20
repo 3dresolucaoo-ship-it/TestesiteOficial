@@ -87,7 +87,7 @@ export function ProductPreview() {
             style={{ fontSize: 'clamp(2rem, 4vw, 3.25rem)', lineHeight: 1.2 }}
           >
             Não precisa imaginar.{' '}
-            <span className="italic-soft">Olha como fica.</span>
+            <span className="italic-soft">Olha como fica</span>
           </h2>
           <p className="mt-5 max-w-[520px] text-[16px] leading-[1.55] text-muted-foreground">
             Pedido do WhatsApp, filamento contado, comissão descontada.

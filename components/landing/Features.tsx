@@ -95,7 +95,7 @@ export function Features() {
         <div className="mb-14 max-w-[680px] md:mb-16">
           <div className="tag mb-3">o que ele faz</div>
           <h2 className="display-h2 text-[2.5rem] text-foreground md:text-[3.5rem]">
-            Quatro coisas. <br />Bem feitas.
+            Quatro coisas. <br />Bem feitas
           </h2>
           <p className="mt-5 max-w-[520px] text-[16px] leading-[1.55] text-muted-foreground">
             Você toca impressão 3D, não departamento de TI. Aqui é só o que muda
