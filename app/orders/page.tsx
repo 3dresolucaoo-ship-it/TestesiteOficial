@@ -19,7 +19,8 @@
  * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
  */
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useRouter, useSearchParams }     from 'next/navigation'
 import { useStore, uid }                  from '@/lib/store'
 import { isSupabaseConfigured }           from '@/lib/supabaseClient'
 import type { Order, OrderStatus }        from '@/lib/types'
@@ -388,16 +389,43 @@ function DesktopTable({ orders, projectName, menuOpen, onMenuToggle, onEdit, onD
 
 export default function OrdersPage() {
   const { state, dispatch, loading } = useStore()
+  const router       = useRouter()
+  const searchParams = useSearchParams()
 
   // Estado de UI
-  const [creating,       setCreating]       = useState(false)
-  const [editing,        setEditing]        = useState<Order | null>(null)
-  const [menuOpen,       setMenuOpen]       = useState<string | null>(null)
-  const [filterProject,  setFilterProject]  = useState<string>('all')
+  const [creating,         setCreating]         = useState(false)
+  const [quoteProductId,   setQuoteProductId]   = useState<string>('')
+  const [editing,          setEditing]          = useState<Order | null>(null)
+  const [menuOpen,         setMenuOpen]         = useState<string | null>(null)
+  const [filterProject,    setFilterProject]    = useState<string>('all')
 
   // Tab e busca controlados pelo ModuleShell via callbacks
   const [activeTab,  setActiveTab]  = useState<TabId>(ALL)
   const [searchQuery, setSearchQuery] = useState<string>('')
+
+  // ---------------------------------------------------------------------------
+  // Leitura de ?quote=<productId> — abre modal de novo pedido com produto
+  // pré-selecionado quando o maker chega via /products "Gerar orçamento".
+  // Roda apenas no mount (uma vez), depois limpa o param da URL.
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    const paramProductId = searchParams.get('quote')
+    if (!paramProductId) return
+
+    // Valida que o produto existe no store antes de abrir
+    const productExists = state.products.some((p) => p.id === paramProductId)
+    if (productExists) {
+      setQuoteProductId(paramProductId)
+      setCreating(true)
+    }
+
+    // Remove o param da URL sem recarregar a página
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete('quote')
+    const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname
+    router.replace(newUrl)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // mount-only: intencionalmente sem deps para não reabrir em re-renders
 
   // ---------------------------------------------------------------------------
   // Derivacoes de estado
@@ -520,6 +548,7 @@ export default function OrdersPage() {
             payload: {
               id:             uid(),
               orderId:        newOrderId,
+              projectId:      data.projectId,
               clientName:     data.clientName,
               item:           product.name,
               printer:        'bambu',
@@ -775,15 +804,27 @@ export default function OrdersPage() {
         </div>
       </ModuleShell>
 
-      {/* Modal: novo pedido */}
+      {/* Modal: novo pedido (suporta pré-seleção de produto via ?quote=) */}
       {creating && (
-        <Modal title="Novo Pedido" onClose={() => setCreating(false)}>
+        <Modal title="Novo Pedido" onClose={() => { setCreating(false); setQuoteProductId('') }}>
           <OrderForm
             projects={state.projects}
             inventory={state.inventory}
             products={state.products}
+            initial={quoteProductId ? {
+              projectId:       state.projects[0]?.id ?? '',
+              clientName:      '',
+              origin:          'whatsapp',
+              item:            state.products.find((p) => p.id === quoteProductId)?.name ?? '',
+              value:           String(state.products.find((p) => p.id === quoteProductId)?.salePrice ?? ''),
+              status:          'quote_sent',
+              date:            new Date().toISOString().slice(0, 10),
+              inventoryItemId: '',
+              qtyUsed:         '1',
+              productId:       quoteProductId,
+            } : undefined}
             onSave={handleCreate}
-            onClose={() => setCreating(false)}
+            onClose={() => { setCreating(false); setQuoteProductId('') }}
           />
         </Modal>
       )}

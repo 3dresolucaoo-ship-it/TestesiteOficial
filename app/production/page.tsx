@@ -309,18 +309,25 @@ export default function ProductionPage() {
 
   const handleCreate = useCallback(
     (data: ProductionFormData) => {
+      // Deriva projectId: via orderId vinculado > filtro ativo > primeiro projeto
+      const derivedProjectId =
+        (data.orderId ? orderProjectId(data.orderId) : '') ||
+        (filterProject !== 'all' ? filterProject : '') ||
+        (state.projects[0]?.id ?? '')
+
       dispatch({
         type:    'ADD_PRODUCTION',
         payload: {
           id:             uid(),
           ...data,
+          projectId:      derivedProjectId,
           estimatedHours: parseFloat(data.estimatedHours) || 4,
           priority:       parseInt(data.priority)         || 1,
         },
       })
       setCreating(false)
     },
-    [dispatch],
+    [dispatch, orderProjectId, filterProject, state.projects],
   )
 
   const handleEdit = useCallback(

@@ -107,7 +107,7 @@ export default function ProjectOperationsPage() {
   function handleCreate(data: FormData) {
     dispatch({
       type: 'ADD_PRODUCTION',
-      payload: { id: uid(), ...data, estimatedHours: parseFloat(data.estimatedHours) || 4, priority: parseInt(data.priority) || 1 },
+      payload: { id: uid(), ...data, projectId, estimatedHours: parseFloat(data.estimatedHours) || 4, priority: parseInt(data.priority) || 1 },
     })
   }
 

@@ -83,6 +83,7 @@ export type ProductionStatus = 'waiting' | 'printing' | 'done'
 export interface ProductionItem {
   id: string
   orderId: string
+  projectId: string
   clientName: string
   item: string
   printer: PrinterName

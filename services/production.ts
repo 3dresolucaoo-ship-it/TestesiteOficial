@@ -8,6 +8,7 @@ function fromDB(r: any): ProductionItem {
   return {
     id:             r.id,
     orderId:        r.order_id ?? '',
+    projectId:      r.project_id ?? '',
     clientName:     r.client_name,
     item:           r.item,
     printer:        r.printer,
@@ -21,6 +22,7 @@ function toDB(p: ProductionItem, userId: string) {
   return {
     id:              p.id,
     order_id:        p.orderId || null,
+    project_id:      p.projectId || null,
     client_name:     p.clientName,
     item:            p.item,
     printer:         p.printer,

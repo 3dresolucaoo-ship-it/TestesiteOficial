@@ -114,6 +114,7 @@ export async function processNewOrder(order: Order): Promise<ProcessOrderResult>
       const productionTask: ProductionItem = {
         id:             uid(),
         orderId:        order.id,
+        projectId:      order.projectId,
         clientName:     order.clientName,
         item:           product.name,
         printer:        'bambu',
