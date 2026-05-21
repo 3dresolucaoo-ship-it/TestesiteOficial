@@ -1,0 +1,89 @@
+{
+  "data": "2026-05-21",
+  "rotina": "concorrencia-diaria",
+  "status": "com_movimentos",
+  "alertas": [
+    {
+      "id": "alerta-01",
+      "nivel": "alto",
+      "titulo": "Bling reajuste abusivo abril/2026 — makers migrando",
+      "descricao": "Bling alterou planos em abril/2026 causando aumento de ate 236% para pequenos lojistas (ex: R$55 → R$185+). Reclamacoes abertas no Reclame Aqui com titulo 'Aumento abusivo no plano do Bling inviabiliza o uso para pequenos lojistas'. Usuarios reportam que foram migrados automaticamente para planos mais caros quando ultrapassaram volume de pedidos. Varias reclamacoes com tema 'nao indico mais' e busca por alternativas.",
+      "fonte": "Reclame Aqui — Bling",
+      "oportunidade_hayzer": "Makers de impressao 3D usam Bling para gestao de pedidos/estoque. Com o aumento, estao ativamente buscando alternativas mais baratas e especializadas para o nicho."
+    },
+    {
+      "id": "alerta-02",
+      "nivel": "medio",
+      "titulo": "EXPO3DBR encerrou atividades — vacuo na comunidade maker BR",
+      "descricao": "3DGeekShow (127K seguidores) publicou em 13/05/2026 video 'A EXPO3DBR ACABOU!' relatando decisao que 'mudou tudo'. Nao ha detalhes publicos ainda (conteudo foi ao vivo). A EXPO3DBR era um dos principais eventos de impressao 3D do Brasil.",
+      "fonte": "3dgeekshow.com.br — post 13/05/2026",
+      "oportunidade_hayzer": "Fim de evento de referencia cria vacuo de comunidade. Hayzer pode se posicionar como hub de conexao para makers BR pos-EXPO3DBR. Monitorar repercussao nos proximos dias."
+    },
+    {
+      "id": "alerta-03",
+      "nivel": "medio",
+      "titulo": "AppCustos3D — preco e posicionamento detalhado mapeado",
+      "descricao": "Site appcustos3d.com.br confirmado ativo com planos: Basic R$29,90/mes (R$17,90 semestral) e Pro R$69,90/mes (R$36,00 semestral). Posicionamento: 'Feita por makers para makers. Codigo na mao, nao gerador de IA.' Funcionalidades: calculo de custo por peca, gestao de estoque com alertas, controle de pedidos, integracao Shopee, leitura automatica de .gcode (Smart Production).",
+      "fonte": "appcustos3d.com.br — site oficial",
+      "oportunidade_hayzer": "Hayzer tem funcionalidades mais amplas (CRM, financeiro, producao, catalogo) ao preco similar ou sem cap por volume. A integracao .gcode deles e diferencial tecnico que vale monitorar."
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "@3dgeekshow",
+      "data_estimada": "2026-05-16",
+      "tipo": "artigo/blog",
+      "titulo": "Cuidado! Sua Peca 3D Pode Estar CRIANDO Fungo!",
+      "resumo": "Post sobre como pecas impressas em 3D podem acumular fungos e bacterias nas camadas, mesmo com PLA aprovado pela FDA. Tema de qualidade do produto final.",
+      "engajamento_estimado": "alto (127K seguidores, temas de alerta sempre performam)",
+      "relevancia_hayzer": "Rafael tem esse problema real. Conteudo educacional sobre qualidade do produto = oportunidade de associar Hayzer a rastreabilidade de producao e qualidade."
+    },
+    {
+      "conta": "@3dgeekshow",
+      "data_estimada": "2026-05-09",
+      "tipo": "artigo/blog",
+      "titulo": "1/3 do Seu Filamento VAI PRO LIXO (Sem Voce Saber)",
+      "resumo": "Pesquisa mostrando que ate 1/3 do filamento vira descarte por impressoes falhas e suportes. Tema direto de custo e desperdicio.",
+      "engajamento_estimado": "muito alto (titulo de medo + dado numerico concreto)",
+      "relevancia_hayzer": "Tema central da persona Rafael — controle de custo real. Hayzer pode usar esse angulo para mostrar como o calculo automatico de custo por peca captura esse desperdicio."
+    },
+    {
+      "conta": "@3dprintacademy",
+      "data_estimada": "2026-05 (recente)",
+      "tipo": "reels",
+      "titulo": "Como EUUUUUUU precifico minhas pecas de impressao",
+      "resumo": "Reel sobre metodo pessoal de precificacao de pecas impressas. Formato de autoridade pessoal. 50K seguidores.",
+      "engajamento_estimado": "medio-alto",
+      "relevancia_hayzer": "Precificacao ainda e manual/planilha para a maioria dos makers. Hayzer automatiza isso. Post confirma que o tema ainda esta aquecido na audiencia."
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling",
+      "tema": "Aumento abusivo de mensalidade para pequenos negócios",
+      "detalhe": "Usuarios com plano de R$55/mes foram migrados automaticamente para planos de R$185+ em janeiro/2026 sem notificacao clara. Em abril/2026 novo reajuste. Reclamacoes com frases como 'nao indico mais', 'inviabiliza o uso para pequenos lojistas', 'muito lento e so aumenta o preco'.",
+      "recorrencia": "alta — multiplas reclamacoes no mesmo periodo",
+      "oportunidade": "Maker de impressao 3D que usa Bling para gestao esta insatisfeito com preco e burocracia. Hayzer especializado + preco justo + sem surpresa de cobranca = argumento direto de migracao.",
+      "fonte_url": "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/"
+    },
+    {
+      "empresa": "Bling",
+      "tema": "Falha na integracao com marketplaces (Shopee, Magalu, WooCommerce)",
+      "detalhe": "Pedidos nao sincronizando, etiquetas com problema, centenas de pedidos sem fatura em lojas de marketplace. Suporte demora e nao resolve.",
+      "recorrencia": "media",
+      "oportunidade": "Makers que vendem no Shopee/ML precisam de integracao confiavel. AppCustos3D ja integra Shopee. Hayzer pode priorizar esse canal.",
+      "fonte_url": "https://www.reclameaqui.com.br/bling/falha-na-integracao-bling-com-shopee-pedidos-etiquetas-e-logistica-problematicos_34K9Qi3EOFEJx5TI/"
+    }
+  ],
+  "acao_recomendada": {
+    "prioridade": "alta",
+    "para": "Marcos + Helena",
+    "acao": "Criar conteudo/post imediato explorando o reajuste do Bling como gancho. Angulo: 'Bling subiu 236% pro pequeno maker. Hayzer foi feito pra voce, nao pra loja de marketplace com 10 mil pedidos/mes.' Pode ser post Instagram, stories ou card no grupo WhatsApp Beta. Janela de atencao ainda esta aberta (reclamacoes ativas). Paralelo: monitorar nos proximos 3 dias a repercussao do fim da EXPO3DBR — pode abrir espaco para Hayzer se posicionar como comunidade de referencia para makers BR.",
+    "urgencia": "fazer hoje ou amanha",
+    "contexto_extra": "AppCustos3D esta ativo e bem posicionado (R$29,90/mes Basic). Hayzer precisa comunicar o que faz alem da calculadora — CRM, financeiro, producao, catalogo publico — para justificar preco e diferenciar."
+  },
+  "sem_novidades": [],
+  "contas_sem_dados_24h": ["@3dlab_brasil", "@appcustos3d"],
+  "nota_metodologica": "Instagram nao permite acesso publico sem login via fetch direto. Dados obtidos via busca web indexada (Google/Instagram preview). Precisao de 24h nao garantida — window de 48-72h mais realista para este metodo. Reclame Aqui bloqueou fetch direto (403). Dados via busca indexada do Google com titulos e URLs de reclamacoes reais.",
+  "proxima_execucao": "2026-05-22"
+}
