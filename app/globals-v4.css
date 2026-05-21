@@ -902,7 +902,8 @@
 .kpi-mini-card {
   position: relative;
   background: var(--v4-surface-1);
-  border: 1px solid var(--v4-border-soft);
+  /* CEO 21/05: borda satélite sobe soft→md (somia no print) */
+  border: 1px solid var(--v4-border-md);
   padding: 14px 16px;
   border-radius: 12px;
   display: grid;
@@ -919,18 +920,35 @@
 }
 .kpi-mini-card.highlight {
   background: linear-gradient(135deg, var(--v4-surface-2) 0%, var(--v4-surface-1) 100%);
-  border-color: rgba(31, 118, 105, 0.42);
+  /* CEO 21/05: card-destaque ganha acento EMBER (borda âmbar + hairline lateral) p/ saltar */
+  border-color: rgba(208, 138, 74, 0.46);
   border-radius: 14px;
   box-shadow:
-    0 0 24px -8px rgba(31, 118, 105, 0.28),
+    0 0 24px -8px rgba(208, 138, 74, 0.30),
     0 4px 12px -6px rgba(7, 9, 10, 0.4),
-    inset 0 1px 0 rgba(111, 181, 168, 0.08);
+    inset 0 1px 0 rgba(224, 162, 105, 0.10);
 }
+.kpi-mini-card.highlight::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, hsl(var(--ember-400)) 0%, hsl(var(--ember-600)) 100%);
+  border-radius: 14px 0 0 14px;
+  z-index: 2;
+}
+/* connector pulse do highlight vira âmbar */
+.kpi-mini-card.highlight::after {
+  background: linear-gradient(180deg, hsl(var(--ember-400)) 0%, transparent 100%);
+}
+/* label do card-destaque ganha tom âmbar (reforça "este é o que importa") */
+.kpi-mini-card.highlight .kpi-mini-label { color: hsl(var(--ember-400)); }
 :root[data-theme="light"] .kpi-mini-card.highlight {
+  border-color: rgba(168, 103, 48, 0.40);
   box-shadow:
-    0 0 22px -6px rgba(21, 90, 80, 0.16),
+    0 0 22px -6px rgba(168, 103, 48, 0.18),
     0 4px 10px -6px rgba(58, 53, 45, 0.15),
-    inset 0 1px 0 rgba(31, 118, 105, 0.05);
+    inset 0 1px 0 rgba(168, 103, 48, 0.06);
 }
 .kpi-mini-card::after {
   content: "";
@@ -1065,7 +1083,8 @@
 .bento-card {
   position: relative;
   background: var(--v4-surface-1);
-  border: 1px solid var(--v4-border-soft);
+  /* CEO 21/05: borda bento sobe soft→md + hairline highlight no topo (peso/elevação) */
+  border: 1px solid var(--v4-border-md);
   padding: 24px 26px 22px 26px;
   border-radius: 16px;
   display: flex;
@@ -1106,6 +1125,36 @@
 .bento-card.span-2 { grid-column: span 2; }
 .bento-card.span-3 { grid-column: span 3; }
 .bento-card.span-4 { grid-column: span 4; }
+
+/* CEO 21/05: bento de destaque com acento EMBER — hairline lateral + borda âmbar.
+   Uso pontual (1 card por tela, ex: receita/lucro). NÃO virar padrão. */
+.bento-card.accent-ember {
+  border-color: rgba(208, 138, 74, 0.40);
+  box-shadow:
+    0 0 30px -10px rgba(208, 138, 74, 0.26),
+    var(--v4-shadow-card),
+    inset 0 1px 0 rgba(224, 162, 105, 0.10);
+}
+.bento-card.accent-ember::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, hsl(var(--ember-400)) 0%, hsl(var(--ember-600)) 100%);
+  border-radius: 16px 0 0 16px;
+  z-index: 2;
+}
+.bento-card.accent-ember:hover {
+  border-color: rgba(224, 162, 105, 0.58);
+  box-shadow:
+    0 0 44px -8px rgba(208, 138, 74, 0.38),
+    var(--v4-shadow-card),
+    inset 0 1px 0 rgba(224, 162, 105, 0.14);
+}
+/* connector pulse do accent-ember vira âmbar (em vez de petrol) */
+.bento-card.accent-ember::after {
+  background: linear-gradient(180deg, hsl(var(--ember-400)) 0%, transparent 100%);
+}
 
 .bento-card::after {
   content: "";
@@ -2207,16 +2256,34 @@
     position: relative;
     padding: 26px 24px 22px 24px;
     background: var(--surface-1);
-    border: 1px solid var(--border-md);
+    /* CEO 21/05: borda com peso — sobe de border-md p/ border-strong (cards somiam no print) */
+    border: 1px solid var(--border-strong);
     border-radius: 16px;
     overflow: hidden;
     transition: transform var(--t-med), border-color var(--t-med), box-shadow var(--t-med);
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(242, 239, 234, 0.05);
   }
   .kpi-card:hover {
     transform: translateY(-2px);
     border-color: var(--petrol-400);
     box-shadow: var(--shadow-card), 0 0 32px -10px rgba(31, 118, 105, 0.35);
+  }
+  /* CEO 21/05: card de destaque (não-petrol) ganha acento EMBER — hairline lateral + borda âmbar */
+  .kpi-card.accent-ember {
+    border-color: rgba(208, 138, 74, 0.42);
+    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(224, 162, 105, 0.10);
+  }
+  .kpi-card.accent-ember::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, hsl(var(--ember-400)) 0%, hsl(var(--ember-600)) 100%);
+    border-radius: 16px 0 0 16px;
+  }
+  .kpi-card.accent-ember:hover {
+    border-color: rgba(224, 162, 105, 0.60);
+    box-shadow: var(--shadow-card), 0 0 32px -10px rgba(208, 138, 74, 0.40);
   }
   .kpi-card .kpi-eyebrow {
     font-family: 'Geist Mono', monospace;
@@ -2270,14 +2337,26 @@
   .kpi-card .kpi-delta {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     font-family: 'Geist Mono', monospace;
     font-size: 12px;
+    font-weight: 500;
     margin-top: 8px;
+    padding: 3px 9px;
+    border-radius: 999px;
     letter-spacing: 0.04em;
   }
-  .kpi-card .kpi-delta.up   { color: var(--petrol-300); }
-  .kpi-card .kpi-delta.down { color: var(--signal-red); }
+  /* CEO 21/05: delta positivo vira pill EMBER (somia em petrol/verde no print) */
+  .kpi-card .kpi-delta.up {
+    color: hsl(var(--ember-300));
+    background: hsl(var(--ember-500) / 0.14);
+    border: 1px solid hsl(var(--ember-500) / 0.34);
+  }
+  .kpi-card .kpi-delta.down {
+    color: var(--signal-red);
+    background: rgba(224, 122, 95, 0.12);
+    border: 1px solid rgba(224, 122, 95, 0.30);
+  }
 
   /* CARD especial petrol sólido (igual hero V1 dataviz) */
   .kpi-card.hero-petrol {
@@ -2300,7 +2379,14 @@
   .kpi-card.hero-petrol .kpi-value .currency,
   .kpi-card.hero-petrol .kpi-value .decimal { color: rgba(242, 239, 234, 0.75); }
   .kpi-card.hero-petrol .kpi-sub     { color: rgba(242, 239, 234, 0.88); position: relative; z-index: 1; }
-  .kpi-card.hero-petrol .kpi-delta.up { color: var(--ember-300); }
+  /* CEO 21/05: delta no card petrol = pill ember claro p/ saltar sobre o verde */
+  .kpi-card.hero-petrol .kpi-delta.up {
+    color: hsl(var(--ember-300));
+    background: rgba(236, 193, 150, 0.16);
+    border-color: rgba(236, 193, 150, 0.38);
+    position: relative;
+    z-index: 1;
+  }
   /* raízes decorativas no canto do hero (SVG inline) */
   .kpi-card.hero-petrol .hero-roots {
     position: absolute;
