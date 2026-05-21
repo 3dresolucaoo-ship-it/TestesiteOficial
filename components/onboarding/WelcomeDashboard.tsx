@@ -23,7 +23,7 @@ const STEPS = [
     n: 2,
     icon: Disc,
     title: 'Adicione um filamento ao estoque',
-    description: 'Com o filamento registrado, o Hayzer calcula automaticamente o custo de cada peça que você imprime.',
+    description: 'Com o filamento registrado, o Hayzer calcula sozinho o custo de cada peça que tu imprime.',
   },
   {
     n: 3,

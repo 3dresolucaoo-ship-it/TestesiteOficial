@@ -162,7 +162,7 @@ function MobileCards({ orders, allOrdersCount, projectName, productName, onEdit,
           Sem pedido por enquanto
         </h3>
         <p className="text-xs text-foreground/65 leading-relaxed max-w-xs mb-4">
-          Pedido novo aparece aqui assim que voce registrar. WhatsApp, Insta, balcao, da onde vier.
+          Pedido novo aparece aqui assim que tu registra. WhatsApp, Insta, balcao, da onde vier.
         </p>
         <button
           type="button"
@@ -302,7 +302,7 @@ function DesktopTable({ orders, allOrdersCount, projectName, menuOpen, onMenuTog
           Sem pedido por enquanto
         </h3>
         <p className="text-sm text-foreground/65 leading-relaxed mb-5">
-          Pedido novo aparece aqui assim que voce registrar. WhatsApp, Insta, balcao, da onde vier.
+          Pedido novo aparece aqui assim que tu registra. WhatsApp, Insta, balcao, da onde vier.
         </p>
         <button
           type="button"

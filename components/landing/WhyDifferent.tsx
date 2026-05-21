@@ -48,7 +48,7 @@ export function WhyDifferent() {
           <div className="lg:col-span-7 lg:pt-4">
             <p className="text-[17px] leading-[1.55] text-muted-foreground">
               Bling, Conta Azul, Nuvemshop e duas planilhas. R$ 407 todo mês, nenhum
-              software fala com o outro, e você termina colando tudo no susto entre
+              software fala com o outro, e tu termina colando tudo no susto entre
               uma fornada de peça e outra.
             </p>
           </div>

@@ -1,12 +1,12 @@
 'use client'
 
 /**
- * InventoryEmptyState — estados vazios do módulo de inventário.
+ * InventoryEmptyState: estados vazios do módulo de inventário.
  * Dois estados: estoque totalmente vazio vs. filtro sem resultados.
  * Extraído de app/inventory/page.tsx em 2026-05-19 (refactor Felipe).
  *
- * Sofia (CS) 2026-05-16: empty state customizado pro maker 3D —
- * explica que filamento é o início, mostra benefício direto (cálculo de custo).
+ * Sofia (CS) 2026-05-16: empty state customizado pro maker 3D.
+ * Explica que filamento é o início, mostra benefício direto (cálculo de custo).
  */
 
 import { Plus, Package } from 'lucide-react'
@@ -32,10 +32,10 @@ export function InventoryEmptyState({ mode, onCreateClick }: InventoryEmptyState
           <Package size={28} className="text-[hsl(173_30%_57%)]" />
         </div>
         <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-          Seu estoque está vazio
+          Teu estoque tá vazio
         </h3>
         <p className="text-sm text-foreground/70 leading-relaxed mb-6">
-          Comece adicionando o filamento que você usa agora. Com ele registrado, o Hayzer calcula automaticamente o custo de cada peça que você imprime.
+          Começa cadastrando o filamento que tu usa agora. Com ele registrado, o Hayzer calcula sozinho o custo de cada peça que tu imprime.
         </p>
         <button
           onClick={onCreateClick}
@@ -44,7 +44,7 @@ export function InventoryEmptyState({ mode, onCreateClick }: InventoryEmptyState
           <Plus size={15} /> Adicionar primeiro filamento
         </button>
         <p className="text-xs text-foreground/50 mt-5 leading-relaxed">
-          Pode cadastrar filamentos, equipamentos e qualquer material que entra no custo da peça.
+          Cadastra filamento, equipamento e qualquer material que entra no custo da peça.
         </p>
       </div>
     )

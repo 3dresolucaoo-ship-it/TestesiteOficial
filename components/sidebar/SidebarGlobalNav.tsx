@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import {
   LayoutDashboard, ShoppingCart, Printer, Video,
   Lightbulb, TrendingUp, Package, Boxes, Users, BarChart3,
-  Store, Layers, Settings, FolderKanban,
+  Store, Layers, Settings, FolderKanban, Contact,
   PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import { useStore } from '@/lib/store'
@@ -24,6 +24,7 @@ const GLOBAL_MODULES: ModuleNavItem[] = [
   { href: '/finance',    label: 'Financas',       icon: TrendingUp,   key: 'finance' },
   { href: '/orders',     label: 'Vendas',         icon: ShoppingCart, key: 'orders' },
   { href: '/crm',        label: 'CRM',            icon: Users,        key: 'crm' },
+  { href: '/customers',  label: 'Clientes',       icon: Contact,      key: 'customers' },
   { href: '/products',   label: 'Produtos',       icon: Boxes,        key: 'products' },
   { href: '/inventory',  label: 'Estoque',        icon: Package,      key: 'inventory' },
   { href: '/production', label: 'Producao',       icon: Printer,      key: 'production' },

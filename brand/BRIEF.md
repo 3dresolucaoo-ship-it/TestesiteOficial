@@ -212,9 +212,9 @@ moderno · confiável · brasileiro · sexy · surpreendente · dinâmico · did
 
 3 palavras que definem a essência:
 
-1. **CLAREZA** — você sabe o que importa, sem garimpar
-2. **CONTROLE** — você decide com dado, não no chute
-3. **CRESCIMENTO** — vira ferramenta que escala com você
+1. **CLAREZA**: tu sabe o que importa, sem garimpar
+2. **CONTROLE**: tu decide com dado, não no chute
+3. **CRESCIMENTO**: vira ferramenta que escala contigo
 
 ---
 

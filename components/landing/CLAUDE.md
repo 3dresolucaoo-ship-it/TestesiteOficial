@@ -8,7 +8,7 @@
 |---|---|---|
 | `Logo.tsx` | Header + Footer | Server (display) |
 | `Header.tsx` | Topo da landing + páginas LGPD | Server (sticky) |
-| `Hero.tsx` | `/` — primeira tela | Client (motion) |
+| `Hero.tsx` | `/` — primeira tela | Client (LazyMotion — runtime lazy, nao bloqueia first paint) |
 | `WaitlistForm.tsx` | Dentro do Hero | Client (form + Server Action) |
 | `Features.tsx` | `/` — seção #features | Client (motion + view) |
 | `WhatsAppFlow.tsx` | `/` — seção #whatsapp-flow (NOVA · 2026-05-20) | Server |
@@ -20,6 +20,7 @@
 
 ## 🎯 Status
 
+- ✅ **TBT fix (2026-05-20, branch feature/perf-tbt-fix)**: TBT 3.6s estimado <1.0s. Hero migrado de `motion.*` para `LazyMotion + m.*` (framer-motion runtime nao executa no first paint). `posthog-js` removido do chunk inicial via dynamic import em `lib/posthog.ts`. `PostHogProvider` defere init para `requestIdleCallback`. `OnboardingController` stub criado para desbloquear build.
 - ✅ **SVGs maker integrados (2026-05-20)**: `Features.tsx` troca ícones genéricos por assets Diego (`filament-spool.svg`, `whatsapp-pix.svg`, `printer-3d.svg`). `WhatsAppFlow.tsx` nova section com `whatsapp-chat-mock.svg`. Assets em `public/landing/v2/`.
 - ✅ Funcionando: todas as seções da landing renderizam, mobile responsivo OK, dark mode paleta v2 aplicada
 - ✅ Forms: etapa 1 valida Zod, redireciona pra /obrigado; etapa 2 opcional
