@@ -1153,3 +1153,53 @@ html.dark select option:checked {
   color: hsl(var(--foreground));
 }
 
+/* ─── Reveal on scroll — landing v2 PNGs reais ─────────────────────────────── */
+
+/* Classe base: imagem entra com zoom-in + fade quando IO dispara .is-visible */
+.reveal-zoom-fade {
+  opacity: 0;
+  transform: scale(0.95);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.reveal-zoom-fade.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Garantia: imagens reveladas por scroll nunca desaparecem */
+.reveal-img {
+  transition: opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Ember dots pulse — ProductPreview anotacoes */
+@keyframes ember-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px hsl(var(--ember-400) / 0.25); }
+  50%       { box-shadow: 0 0 0 6px hsl(var(--ember-400) / 0.10); }
+}
+.ember-dot {
+  animation: ember-pulse 2.2s ease-in-out infinite;
+}
+.ember-dot-delay-1 { animation-delay: 0ms; }
+.ember-dot-delay-2 { animation-delay: 700ms; }
+.ember-dot-delay-3 { animation-delay: 1400ms; }
+
+/* ─── prefers-reduced-motion — a11y global ──────────────────────────────────── */
+/* Desativa todas as animacoes/transicoes. Imagens continuam visiveis (nao dependem
+   de animacao pra aparecer — .reveal-img garante opacity:1). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Imagens reveladas por scroll ficam visiveis instantaneamente */
+  .reveal-img,
+  .reveal-zoom-fade { opacity: 1 !important; transform: none !important; }
+}
+

@@ -10,6 +10,10 @@
  *
  * Stub criado em 2026-05-20 pra desbloquear build (módulo importado
  * em AppShell.tsx mas não existia). Sem comportamento até implementação real.
+ *
+ * Nota: o wizard completo vive na branch feature/onboarding-wizard
+ * (migration user_settings já aplicada no Supabase 21/05). Quando essa
+ * branch for mergeada, este stub é substituído pela implementação real.
  */
 
 export function OnboardingController() {

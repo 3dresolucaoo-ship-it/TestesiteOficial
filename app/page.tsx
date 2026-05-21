@@ -5,9 +5,12 @@ import { getWaitlistCount } from '@/services/waitlist'
 import { Header } from '@/components/landing/Header'
 import { Hero } from '@/components/landing/Hero'
 import { PrinterShowcase } from '@/components/landing/PrinterShowcase'
+import { MakerBeforeAfter } from '@/components/landing/MakerBeforeAfter'
+import { WalletTransform } from '@/components/landing/WalletTransform'
 import { ProductPreview } from '@/components/landing/ProductPreview'
 import { Features } from '@/components/landing/Features'
 import { WhatsAppFlow } from '@/components/landing/WhatsAppFlow'
+import { CustomerProof } from '@/components/landing/CustomerProof'
 import { WhyDifferent } from '@/components/landing/WhyDifferent'
 import { FinalCTA } from '@/components/landing/FinalCTA'
 import { Footer } from '@/components/landing/Footer'
@@ -27,26 +30,39 @@ export default async function HomePage() {
     // Sem auth ainda — segue na landing
   }
 
-  // #5 — Conta makers na fila (fail-safe: null se der erro)
+  // Conta makers na fila (fail-safe: null se der erro)
   const waitlistCount = await getWaitlistCount().catch(() => null)
 
   return (
     <div className="bg-background text-foreground">
       <Header />
-      {/* Suspense necessário porque WaitlistForm usa useSearchParams */}
+
+      {/* Suspense necessario porque WaitlistForm usa useSearchParams */}
       <Suspense fallback={null}>
-        {/* #4 e #5 injetados via prop (count lido server-side, sem fetch client) */}
+        {/* count lido server-side, sem fetch client */}
         <Hero waitlistCount={waitlistCount} />
       </Suspense>
 
-      {/* Prova de autenticidade · foto real Bambu A1 do CEO (anti-IA) */}
+      {/* Prova de autenticidade — timelapse real Bambu A1 neon noturno */}
       <PrinterShowcase />
 
-      {/* #1 — Prova visual do produto (Server Component, sem JS cliente) */}
+      {/* Antes/Depois maker — PNG split A/B, zoom reveal */}
+      <MakerBeforeAfter />
+
+      {/* Carteira rasgada → organizada — reveal sequencial */}
+      <WalletTransform />
+
+      {/* Prova visual do produto — laptop + iPhone dashboard */}
       <ProductPreview />
 
       <Features />
+
+      {/* Fluxo WhatsApp → pedido — PNG real maker exausto */}
       <WhatsAppFlow />
+
+      {/* Prova social visual — mulheres makers entregando */}
+      <CustomerProof />
+
       <WhyDifferent />
       <FinalCTA />
       <Footer />
