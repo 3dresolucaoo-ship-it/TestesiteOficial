@@ -87,6 +87,21 @@
 
 ---
 
+### `optimized/` — WebPs responsivos prontos pra consumo (gerado automaticamente)
+
+**Gerado por**: `node scripts/optimize-landing-assets.mjs` em 2026-05-21 (branch `feature/landing-assets-webp`)
+**Fonte**: `animation-carteira/` (12 PNGs de 1.8-3.4MB cada)
+**Saida**: 36 WebPs (3 variantes por asset: 1920w/1080w/480w)
+**Total**: ~2.8MB somados (vs 23.3MB originais, reducao -96%)
+**Audit completo**: `audits/landing-assets-otimizacao-2026-05-21.md`
+
+Nomenclatura: `{nome-kebab}-{largura}w.webp`
+Exemplos: `carteira-rasgada-1920w.webp`, `produto-laptop-480w.webp`
+
+Assets disponíveis: `carteira-rasgada`, `carteira-organizada`, `whats-bagunca`, `maker-antes-depois`, `timelapse-impressora`, `cliente-mulher-mestre`, `cliente-mulher-clean`, `produto-laptop`, `produto-laptop-pedidos`, `carteira-rasgada-dark`, `whats-bagunca-alt`, `whats-bagunca-alt2`
+
+---
+
 ## 🚦 Como eu uso depois
 
 Quando você jogar arquivos aqui, eu:
