@@ -1,7 +1,7 @@
 /**
- * PrinterShowcase — section entre Hero e ProductPreview.
+ * PrinterShowcase — section entre Hero e MakerBeforeAfter.
  *
- * Anti-IA: foto real de Bambu A1 imprimindo 28 peças amarelas (do CEO).
+ * Anti-IA: timelapse real Bambu A1 (neon noturno + caneca HAYZER + iPhone gravando).
  * Ancora nicho em 0.3s, prova social visual. Persona Rafael ve "isso e
  * uma Bambu de verdade, esse cara conhece" antes da copy entrar na cabeca.
  *
@@ -9,15 +9,11 @@
  * - lg+ : foto coluna esquerda 5/12, copy coluna direita 7/12
  * - mobile: stack natural (foto em cima)
  *
- * Tratamento da imagem:
- * - Borda 1px petrol/ember sutil
- * - Vinheta interna (radial-gradient na propria image via box-shadow inset)
- * - Grain herda do parent (.grain class)
+ * v2 (2026-05-21): troca printer-hero.jpg por timelapse-impressora WebP (Bruna otimizou).
+ * PNG ja vem tratado — removido filtro saturate/contrast/brightness.
  *
- * Server Component: sem state, sem motion (animacoes pesadas ja no Hero e ProductPreview).
+ * Server Component: sem state, sem motion.
  */
-
-import Image from 'next/image'
 
 export function PrinterShowcase() {
   return (
@@ -32,31 +28,40 @@ export function PrinterShowcase() {
           {/* Foto — coluna esquerda (5/12 em desktop, full em mobile) */}
           <div className="lg:col-span-5">
             {/*
-              * Bug fix 2026-05-19: ratio 9/16 portrait em mobile 375px gerava imagem
+              * Bug fix 2026-05-19 mantido: ratio 9/16 portrait em mobile 375px gerava imagem
               * ~667px de altura, enterrando a copy abaixo do fold imediatamente.
-              * Solução: aspect-[4/3] mobile → aspect-[9/16] lg+ via classes Tailwind.
+              * Solucao: aspect-[4/3] mobile → aspect-[9/16] lg+ via classes Tailwind.
               */}
             <div
               className="relative mx-auto aspect-[4/3] max-w-[420px] overflow-hidden rounded-[14px] lg:aspect-[9/16] lg:max-w-none"
               style={{
-                borderColor: 'hsl(var(--petrol-600) / 0.30)',
                 boxShadow:
                   '0 0 0 1px hsl(var(--petrol-500) / 0.25), 0 32px 80px hsl(var(--night-950) / 0.7), inset 0 0 120px hsl(var(--night-950) / 0.4)',
               }}
             >
-              <Image
-                src="/landing/v2/printer-hero.jpg"
-                alt="Bambu Lab A1 imprimindo 28 peças cônicas em PLA amarelo com listras verdes, build plate 256 por 256 milímetros"
-                fill
-                priority
-                sizes="(max-width: 1024px) 90vw, 420px"
-                className="object-cover"
-                style={{
-                  // Leve dessaturação + warmth shift pra harmonizar com paleta night/ember
-                  filter: 'saturate(0.92) contrast(1.04) brightness(0.96)',
-                }}
-                quality={88}
-              />
+              {/* picture responsivo — timelapse neon noturno Bambu A1 */}
+              <picture className="absolute inset-0 h-full w-full">
+                <source
+                  media="(min-width: 1024px)"
+                  srcSet="/landing/v3/optimized/timelapse-impressora-1080w.webp 1x, /landing/v3/optimized/timelapse-impressora-1920w.webp 2x"
+                  type="image/webp"
+                />
+                <source
+                  media="(max-width: 1023px)"
+                  srcSet="/landing/v3/optimized/timelapse-impressora-480w.webp 1x, /landing/v3/optimized/timelapse-impressora-1080w.webp 2x"
+                  type="image/webp"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/landing/v3/optimized/timelapse-impressora-1080w.webp"
+                  alt="Bambu A1 imprimindo torre branca espiral, iPhone em tripé gravando timelapse, caneca HAYZER no canto, neon âmbar ao fundo, estúdio noturno"
+                  loading="lazy"
+                  decoding="async"
+                  width={1080}
+                  height={720}
+                  className="h-full w-full object-cover object-center"
+                />
+              </picture>
 
               {/* Overlay vinheta nas bordas */}
               <div
@@ -78,7 +83,7 @@ export function PrinterShowcase() {
                 letterSpacing: '0.05em',
               }}
             >
-              Bambu Lab A1 · 28 peças · PLA amarelo + verde · build plate 256×256
+              estúdio maker · gravação real · timelapse Bambu A1
             </p>
           </div>
 
