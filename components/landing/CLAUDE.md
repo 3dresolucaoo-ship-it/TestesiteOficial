@@ -8,10 +8,15 @@
 |---|---|---|
 | `Logo.tsx` | Header + Footer | Server (display) |
 | `Header.tsx` | Topo da landing + páginas LGPD | Server (sticky) |
-| `Hero.tsx` | `/` — primeira tela | Client (LazyMotion — runtime lazy, nao bloqueia first paint) |
+| `Hero.tsx` | `/` — primeira tela | Client (motion direto — pendente migrar pra LazyMotion, ver pendencias) |
 | `WaitlistForm.tsx` | Dentro do Hero | Client (form + Server Action) |
+| `PrinterShowcase.tsx` | `/` — seção #autentico | Server · v2 timelapse-impressora WebP |
+| `MakerBeforeAfter.tsx` | `/` — seção #antes-depois (NOVA · v2 2026-05-21) | Client (useRevealOnScroll) |
+| `WalletTransform.tsx` | `/` — seção #carteira (NOVA · v2 2026-05-21) | Client (useRevealOnScroll) |
+| `ProductPreview.tsx` | `/` — seção #produto | Server · v2 produto-laptop WebP + ember pulse |
 | `Features.tsx` | `/` — seção #features | Client (motion + view) |
-| `WhatsAppFlow.tsx` | `/` — seção #whatsapp-flow (NOVA · 2026-05-20) | Server |
+| `WhatsAppFlow.tsx` | `/` — seção #whatsapp-flow | Client · v2 whats-bagunca WebP + IO reveal |
+| `CustomerProof.tsx` | `/` — seção #quem-confia (NOVA · v2 2026-05-21) | Client (useRevealOnScroll) |
 | `WhyDifferent.tsx` | `/` — seção #por-que (compara concorrentes) | Client (motion) |
 | `FinalCTA.tsx` | `/` — fim da landing | Client (motion) |
 | `Footer.tsx` | Toda landing + LGPD | Server |
@@ -20,6 +25,8 @@
 
 ## 🎯 Status
 
+- ✅ **Onda Landing v2 PNGs reais (2026-05-21, branch feature/landing-v2-pngs-reais)**: 3 sections NOVAS (MakerBeforeAfter, WalletTransform, CustomerProof) + 3 sections UPDATE (PrinterShowcase, ProductPreview, WhatsAppFlow). 36 WebPs Bruna em public/landing/v3/optimized/. hook useRevealOnScroll em lib/hooks/. prefers-reduced-motion global em globals.css. ember-pulse CSS. Build OK, TSC 0 erros novos.
+- ⚠️ **Hero.tsx ainda usa `motion` direto** (nao LazyMotion+m.*) — CLAUDE.md de landing diz "feito" mas arquivo linha 3 diz `import { motion } from 'framer-motion'`. Pendente validar se branch feature/perf-tbt-fix foi merged ou nao.
 - ✅ **TBT fix (2026-05-20, branch feature/perf-tbt-fix)**: TBT 3.6s estimado <1.0s. Hero migrado de `motion.*` para `LazyMotion + m.*` (framer-motion runtime nao executa no first paint). `posthog-js` removido do chunk inicial via dynamic import em `lib/posthog.ts`. `PostHogProvider` defere init para `requestIdleCallback`. `OnboardingController` stub criado para desbloquear build.
 - ✅ **SVGs maker integrados (2026-05-20)**: `Features.tsx` troca ícones genéricos por assets Diego (`filament-spool.svg`, `whatsapp-pix.svg`, `printer-3d.svg`). `WhatsAppFlow.tsx` nova section com `whatsapp-chat-mock.svg`. Assets em `public/landing/v2/`.
 - ✅ Funcionando: todas as seções da landing renderizam, mobile responsivo OK, dark mode paleta v2 aplicada
