@@ -5,15 +5,19 @@ _Atualizado automaticamente todo dia_
 
 ## 2026-05-21
 
-**STATUS: EXECUCAO BLOQUEADA -- sem acesso ao DB neste contexto**
+**STATUS: SEM ACESSO AO DB -- queries prontas para execucao manual**
 
-Subagente `ana-analytics` nao tem credenciais Supabase disponíveis como env vars do shell neste contexto de execucao. As credenciais vivem no Vercel e no MCP Supabase configurado no Claude Code principal.
+O agente ana-analytics nao tem acesso ao Supabase neste contexto de execucao (MCP opera no processo principal do Claude Code, nao em subagentes). Queries validadas contra o schema real da tabela `waitlist_leads` (migration `20260513_waitlist_leads.sql`).
 
-### Queries adaptadas para o schema real
+### Adaptacoes de schema
 
-A tabela `waitlist_leads` NAO tem coluna `step` nem `step2_at`. Etapa 2 e identificada por campos de qualificacao preenchidos.
+A tabela `waitlist_leads` NAO tem coluna `step` nem `step2_at`.
+Etapa 2 e identificada por campos de qualificacao preenchidos: `segment`, `size`, `revenue_band`, `business_name`, `pain`.
+Proxy de tempo step1->step2: `updated_at - created_at` (quando segment preenchido e updated_at > created_at).
 
-**Q1 -- Leads 24h por UTM (adaptada):**
+### Queries para executar no Supabase Dashboard > SQL Editor
+
+**Q1 -- Leads 24h por UTM source:**
 ```sql
 SELECT 
   utm_source,
@@ -33,7 +37,7 @@ ORDER BY total DESC;
 SELECT COUNT(*) as total_all_time FROM waitlist_leads;
 ```
 
-**Q3 -- Crescimento 7 dias:**
+**Q3 -- Crescimento 7 dias por dia:**
 ```sql
 SELECT 
   DATE(created_at) as day,
@@ -48,7 +52,7 @@ GROUP BY DATE(created_at)
 ORDER BY day DESC;
 ```
 
-**Q4 -- Tempo medio step1 -> step2 (proxy via updated_at):**
+**Q4 -- Tempo medio step1 -> step2 nas ultimas 24h (proxy via updated_at):**
 ```sql
 SELECT 
   AVG(EXTRACT(EPOCH FROM (updated_at - created_at))/60) 
@@ -58,7 +62,7 @@ FROM waitlist_leads
 WHERE created_at > NOW() - INTERVAL '24 hours';
 ```
 
-**Q5 -- Top UTMs acumulado:**
+**Q5 -- Top 5 UTMs acumulado:**
 ```sql
 SELECT utm_source, COUNT(*) as total
 FROM waitlist_leads 
@@ -67,19 +71,18 @@ ORDER BY total DESC
 LIMIT 5;
 ```
 
-**Q6 -- Media diaria 7d:**
+**Q6 -- Media diaria ultimos 7 dias:**
 ```sql
 SELECT ROUND(COUNT(*) / 7.0, 1) as avg_daily_7d
 FROM waitlist_leads 
 WHERE created_at > NOW() - INTERVAL '7 days';
 ```
 
-### Como executar
+### Como habilitar o digest automatico
 
-1. Abrir Supabase Dashboard > SQL Editor
-2. Colar cada query acima
-3. Executar com permissao service_role
+Para que o digest rode sem intervencao manual, uma das opcoes abaixo:
 
-OU rodar este digest via Claude Code principal (com MCP Supabase ativo no contexto correto).
+1. **Executar via Claude Code principal** (com MCP Supabase ativo) chamando ana-analytics diretamente no processo principal, nao como subagente isolado.
+2. **Adicionar .env.local** em `/home/user/TestesiteOficial/.env.local` com `NEXT_PUBLIC_SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` -- nao commitar, ja esta no .gitignore.
 
 ---

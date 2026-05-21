@@ -1,15 +1,15 @@
 {
   "date": "2026-05-21",
-  "generated_at": "2026-05-21T08:00:00-03:00",
+  "generated_at": "2026-05-21T11:04:58-03:00",
   "execution_status": "BLOCKED_NO_DB_ACCESS",
-  "execution_notes": "Subagente ana-analytics nao tem acesso direto ao Supabase neste contexto (credenciais ficam no Vercel + MCP server do Claude Code principal, nao disponiveis como env vars do shell nem no filesystem). Queries SQL preparadas e validadas contra schema real da tabela waitlist_leads (migration 20260513). Para executar: rodar as queries abaixo no Supabase Dashboard > SQL Editor com service_role, ou via Claude Code principal com MCP Supabase ativo.",
+  "execution_notes": "MCP Supabase opera no processo principal do Claude Code, nao em subagentes isolados. Credenciais nao estao disponiveis como env vars de shell (.env.local ausente no filesystem). Queries 100% validadas contra schema real (migration 20260513_waitlist_leads.sql). Para executar: (1) Supabase Dashboard > SQL Editor com service_role, (2) Claude Code principal com MCP Supabase ativo, ou (3) adicionar .env.local com NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY.",
   "schema_notes": {
     "table_found": "waitlist_leads",
     "step_column_exists": false,
-    "step_logic": "Etapa 2 identificada por presenca de campos de qualificacao: segment, size, revenue_band, business_name ou pain IS NOT NULL. Nao ha coluna 'step' nem 'step2_at' no schema real.",
     "step2_at_exists": false,
+    "step_logic": "Etapa 2 = campos de qualificacao preenchidos: segment, size, revenue_band, business_name ou pain IS NOT NULL. Sem coluna 'step' nem 'step2_at' no schema real.",
     "proxy_for_step2_completion": "segment IS NOT NULL OR size IS NOT NULL OR revenue_band IS NOT NULL OR business_name IS NOT NULL",
-    "proxy_for_step2_time": "updated_at - created_at (quando updated_at > created_at e campos step2 preenchidos)"
+    "proxy_for_step2_time": "updated_at - created_at FILTER WHERE segment IS NOT NULL AND updated_at > created_at"
   },
   "queries_adapted": {
     "q1_leads_24h_by_utm": "SELECT utm_source, COUNT(*) as total, COUNT(*) FILTER (WHERE segment IS NOT NULL OR size IS NOT NULL OR revenue_band IS NOT NULL OR business_name IS NOT NULL) as completed_step_2 FROM waitlist_leads WHERE created_at > NOW() - INTERVAL '24 hours' GROUP BY utm_source ORDER BY total DESC;",
@@ -36,5 +36,5 @@
     "growth_pct": null,
     "by_day": []
   },
-  "digest_text": "BLOQUEADO -- ver execution_status. Queries adaptadas para schema real disponíveis em queries_adapted."
+  "digest_text": "DIGEST BLOQUEADO -- acesso DB indisponivel neste contexto de execucao. Queries validadas contra schema real disponíveis em queries_adapted. Executar manualmente no Supabase Dashboard ou via Claude Code principal."
 }
