@@ -38,7 +38,7 @@ export function CustomerProof() {
             className="display-h2 text-foreground"
             style={{ fontSize: 'clamp(2.4rem, 4.5vw, 3.5rem)', lineHeight: 1.18 }}
           >
-            Quem usa, entrega melhor.
+            Quem usa, entrega melhor
           </h2>
         </div>
 

@@ -20,8 +20,8 @@ import Image from 'next/image'
 
 const features = [
   {
-    num: '01 — estoque',
-    title: 'Estoque que conta certo.',
+    num: '01 · estoque',
+    title: 'Estoque que conta certo',
     body: 'Cada rolo de filamento, cada peça impressa, cada peça que falhou na hora, tudo entra no sistema sem tu anotar. Acabou descobrir no dia 30 que sumiu meio kg de PLA preto.',
     size: 'lg' as const,
     glow: false,
@@ -36,8 +36,8 @@ const features = [
     ),
   },
   {
-    num: '02 — vendas',
-    title: 'Venda no mesmo lugar.',
+    num: '02 · vendas',
+    title: 'Venda no mesmo lugar',
     body: 'Pedido do WhatsApp vira link de pagamento em dois toques. Cliente paga, o estoque baixa, a peça entra na fila de impressão. Tu só confirma o envio.',
     size: 'sm' as const,
     glow: false,
@@ -52,8 +52,8 @@ const features = [
     ),
   },
   {
-    num: '03 — clientes',
-    title: 'Sabe quem sumiu.',
+    num: '03 · clientes',
+    title: 'Sabe quem sumiu',
     body: 'Cliente que pedia personalizado todo mês e parou aparece na tua tela antes de tu esquecer dele. Recompra de maker é ouro, e quase ninguém cuida.',
     size: 'sm' as const,
     glow: false,
@@ -68,8 +68,8 @@ const features = [
     ),
   },
   {
-    num: '04 — impressão',
-    title: 'O dinheiro real do mês.',
+    num: '04 · impressão',
+    title: 'O dinheiro real do mês',
     body: 'Tira filamento, luz, comissão do marketplace, taxa de cartão. O que sobra é o que aparece. Sem precisar abrir Excel para descobrir se foi um mês bom.',
     size: 'lg' as const,
     glow: true,

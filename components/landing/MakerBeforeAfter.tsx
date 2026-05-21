@@ -39,7 +39,7 @@ export function MakerBeforeAfter() {
             style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.18 }}
           >
             Mesma rotina.{' '}
-            <span className="italic-soft">Cabeca diferente.</span>
+            <span className="italic-soft">Cabeca diferente</span>
           </h2>
           <p
             className="mt-5 text-[16px] leading-[1.55] text-muted-foreground md:text-[17px]"
