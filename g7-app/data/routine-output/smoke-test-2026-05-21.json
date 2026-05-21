@@ -1,0 +1,88 @@
+{
+  "smoke_test": {
+    "date": "2026-05-21",
+    "time_brt": "06:04 BRT",
+    "time_utc": "2026-05-21T09:04:15Z",
+    "status": "ALERTA AMARELO",
+    "severity": 2
+  },
+  "routes": {
+    "summary": "2/4 respondendo 200 — 2 com 404",
+    "results": [
+      {
+        "url": "https://hayzer.com.br",
+        "status": 200,
+        "ok": true,
+        "title": "Hayzer — A raiz do seu negócio",
+        "notes": "Landing carregada corretamente"
+      },
+      {
+        "url": "https://hayzer.com.br/calculadora",
+        "status": 200,
+        "ok": true,
+        "title": "Calculadora de custo de impressão 3D · Hayzer",
+        "notes": "Calculadora carregada corretamente"
+      },
+      {
+        "url": "https://hayzer.com.br/waitlist",
+        "status": 404,
+        "ok": false,
+        "title": null,
+        "notes": "BUG: app/waitlist/page.tsx inexistente. Diretório existe (actions.ts + obrigado/page.tsx) mas sem page raiz. Middleware PUBLIC_PATHS inclui /waitlist mas rota nunca foi criada."
+      },
+      {
+        "url": "https://hayzer.com.br/calculadora/pro",
+        "status": 404,
+        "ok": false,
+        "title": null,
+        "notes": "ESPERADO: Calc Pro revogada em 21/05 (decisions/024-calc-gratis-magnet-eterno.md). Rota nunca existiu. Remover desta checklist ou retornar redirect 301 para /calculadora."
+      }
+    ]
+  },
+  "deployment": {
+    "status": "NAO_VERIFICADO",
+    "reason": "Vercel MCP requer aprovacao manual no painel. Aprovar em configuracoes Claude Code para habilitar verificacao automatica.",
+    "current_hash": null,
+    "age_hours": null
+  },
+  "supabase": {
+    "health": "NAO_VERIFICADO",
+    "reason": "Supabase MCP requer aprovacao manual no painel. Aprovar em configuracoes Claude Code para habilitar verificacao automatica.",
+    "leads_count": null,
+    "tables_ok": null
+  },
+  "performance": {
+    "status": "NAO_VERIFICADO",
+    "reason": "Vercel Analytics MCP requer aprovacao manual no painel.",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "alerts": [
+    {
+      "type": "AMARELO",
+      "severity": 2,
+      "route": "/waitlist",
+      "message": "Rota /waitlist retorna 404. Pagina de waitlist nao existe (falta app/waitlist/page.tsx). Captacao de leads via URL direta quebrada.",
+      "fix": "Criar app/waitlist/page.tsx com formulario de inscricao ou redirect 302 para /#waitlist (secao da landing)."
+    },
+    {
+      "type": "INFO",
+      "severity": 1,
+      "route": "/calculadora/pro",
+      "message": "Rota /calculadora/pro retorna 404 — comportamento esperado pos-revogacao Calc Pro (21/05). Considerar redirect 301 para /calculadora para evitar links quebrados em SEO/compartilhamentos antigos.",
+      "fix": "Adicionar redirect em next.config.ts: /calculadora/pro -> /calculadora (301)."
+    },
+    {
+      "type": "INFO",
+      "severity": 1,
+      "route": "MCPs",
+      "message": "Vercel e Supabase MCPs nao aprovados — verificacoes de deployment e banco nao puderam ser executadas. Smoke test incompleto.",
+      "fix": "Aprovar ferramentas mcp__Vercel__ e mcp__Supabase__ nas configuracoes de permissao do Claude Code."
+    }
+  ],
+  "git": {
+    "last_commit": "409e672",
+    "message": "fix(landing): tira pontos finais de headlines + em-dash + voce->tu"
+  }
+}
