@@ -1,0 +1,75 @@
+{
+  "smoke_test": {
+    "date": "2026-05-22",
+    "time_brt": "06:00",
+    "status": "ALERTA_AMARELO",
+    "severity": 2
+  },
+  "routes": {
+    "total": 4,
+    "ok": 2,
+    "results": [
+      { "url": "https://hayzer.com.br", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/calculadora", "status": 200, "ok": true },
+      {
+        "url": "https://hayzer.com.br/waitlist",
+        "status": 404,
+        "ok": false,
+        "note": "BUG ATIVO: app/waitlist/page.tsx nao existe. Mesmo problema detectado em 21/05."
+      },
+      {
+        "url": "https://hayzer.com.br/calculadora/pro",
+        "status": 404,
+        "ok": false,
+        "note": "ESPERADO: Calc Pro revogada em 21/05 — ver decisions/024-calc-gratis-magnet-eterno.md"
+      }
+    ]
+  },
+  "vercel": {
+    "production_deployment": {
+      "id": "dpl_9Tgxou7sh4ELV6MJZywEYhmEUMJR",
+      "sha": "11629c03a38fc7eaa695bbecc5bb5c123555ccf7",
+      "sha_short": "11629c0",
+      "commit_message": "monitoring: error-scan 2026-05-22",
+      "branch": "main",
+      "state": "READY",
+      "created_at_utc": "2026-05-22T01:07:59Z",
+      "created_at_brt": "2026-05-21T22:07:59",
+      "age_hours": 7.87,
+      "is_rollback_candidate": true
+    },
+    "rollback_candidate": {
+      "id": "dpl_BDNPc7XY3tUxRgDG25P7CCNEp8kw",
+      "commit_message": "fix(landing): tira pontos finais de headlines + em-dash + voce->tu",
+      "rollback_command": "vercel rollback dpl_BDNPc7XY3tUxRgDG25P7CCNEp8kw --team team_JPZ2UXx1CVIIr20I4V1u9uID"
+    },
+    "runtime_errors_24h": 0,
+    "deployments_with_errors_24h": []
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "region": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads_count": 2,
+    "tables": {
+      "notifications": true,
+      "search_index": true
+    }
+  },
+  "performance": {
+    "available": false,
+    "note": "Core Web Vitals nao disponivel via MCP Vercel nesta integracao. Monitorar manualmente via Vercel Analytics Dashboard."
+  },
+  "alerts": [
+    {
+      "type": "AMARELO",
+      "severity": 2,
+      "route": "/waitlist",
+      "message": "Rota retorna 404. app/waitlist/page.tsx nao existe. Detectado tambem em 21/05.",
+      "action": "Felipe criar app/waitlist/page.tsx antes do soft launch 11/06.",
+      "blocker_for_launch": true
+    }
+  ],
+  "summary": "2/4 rotas ok. /waitlist 404 (bug ativo). /calculadora/pro 404 (esperado). Supabase ACTIVE_HEALTHY. Zero erros runtime 24h. Deployment READY ~8h."
+}
