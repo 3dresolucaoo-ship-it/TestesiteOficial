@@ -1,0 +1,38 @@
+{
+  "date": "2026-05-22",
+  "generated_at": "2026-05-22T09:00:00-03:00",
+  "notes": "2 leads no total: 1 real (Gabriel, 15/05) + 1 teste QA (Auditor QA, 20/05). Filtrar @hayzer-test.local nas proximas queries.",
+  "last_24h": {
+    "total_new": 0,
+    "completed_step2_whatsapp": 0,
+    "completion_rate_pct": 0,
+    "email_confirmed": 0,
+    "avg_minutes_step1_to_step2": null,
+    "by_utm": {}
+  },
+  "accumulated": {
+    "total_raw": 2,
+    "total_real_excl_qa": 1,
+    "total_with_whatsapp": 2,
+    "total_email_confirmed": 0,
+    "email_confirm_rate_pct": 0,
+    "last_7d": 2,
+    "prev_7d": 0,
+    "growth_pct_7d": null,
+    "avg_daily_7d": 0.3,
+    "top_utms": [
+      { "source": "direct", "total": 2, "pct": 100.0 }
+    ]
+  },
+  "trend": "insuficiente",
+  "alerts": [
+    "UTM ausente em 100% dos leads -- formulario nao esta gravando utm_source no Supabase",
+    "email_confirmed = false em 100% dos leads -- fluxo de email confirmation pode estar quebrado",
+    "Lead de teste QA no banco (email @hayzer-test.local) -- adicionar filtro nas queries do digest"
+  ],
+  "recommended_actions": [
+    "Prioridade 1: verificar se o form da landing esta enviando utm_source/utm_medium para o Supabase -- zero UTM capturado e um sinal grave pre-launch",
+    "Prioridade 2: verificar fluxo de email confirmation (Resend ou SMTP) -- nenhum lead confirmou email",
+    "Prioridade 3: filtrar emails @hayzer-test.local nas queries de metricas para nao poluir os numeros reais"
+  ]
+}
