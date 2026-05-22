@@ -1,0 +1,166 @@
+{
+  "data": "2026-05-22",
+  "instagram": {
+    "3dlab_brasil": {
+      "status": "parcial",
+      "posts": [
+        {
+          "descricao": "Clube de Vantagens - compra de impressora inclui ate R$1.630 em beneficios adicionais",
+          "data_estimada": "jul/2025 (post antigo ainda indexado)",
+          "engajamento_visivel": "98 curtidas, 25 comentarios",
+          "observacao": "Perfil ativo, 82k seguidores. Conteudo de maio/2026 nao indexado via web - acesso direto bloqueado"
+        }
+      ],
+      "engajamento_estimado": "alto (82k seguidores, conta de loja, nao de maker individual)",
+      "observacao_estrategica": "3D Lab e loja/distribuidora, nao concorrente direto de gestao. Mas tem audiencia maker e pode amplificar concorrentes"
+    },
+    "artbox3d": {
+      "status": "parcial",
+      "posts": [
+        {
+          "descricao": "Lancamento do seminovos.artbox3d.com.br - marketplace de impressoras 3D usadas, zero comissao, contato direto entre vendedor e comprador via WhatsApp",
+          "data_estimada": "maio/2026 (post recente indexado)",
+          "engajamento_visivel": "nao mensuravel via web",
+          "observacao": "Movimento relevante - ARTBOX3D expandiu para marketplace P2P de hardware. Nao e gestao/software, mas mostra expansao do ecossistema"
+        }
+      ],
+      "engajamento_estimado": "medio-alto (82k seguidores, loja consolidada SP)",
+      "observacao_estrategica": "Movimento de plataforma: ARTBOX3D esta criando proprio ecossistema (loja + marketplace + impressao sob demanda + app). Nao e SaaS de gestao, mas acumula touchpoints com o maker"
+    },
+    "3dprintacademy": {
+      "status": "bloqueado",
+      "posts": [],
+      "engajamento_estimado": "medio (50k seguidores, foco em curso/educacao)",
+      "observacao_estrategica": "Referencia em educacao maker 10 anos, certificacao MEC+Cogna. Nao e concorrente de gestao. Pode ser canal de distribuicao/parceria futura"
+    },
+    "3dgeekshow": {
+      "status": "parcial",
+      "posts": [
+        {
+          "titulo": "Virei meus PERSONAGENS favoritos em colecao chibi",
+          "data": "21/05/2026",
+          "tema": "impressao de colecionaveis, pintura manual"
+        },
+        {
+          "titulo": "Cuidado! Sua Peca 3D Pode Estar CRIANDO Fungo!",
+          "data": "16/05/2026",
+          "tema": "manutencao e preservacao de pecas impressas"
+        },
+        {
+          "titulo": "A EXPO3DBR ACABOU!",
+          "data": "13/05/2026",
+          "tema": "cobertura do evento presencial de impressao 3D em Sorocaba"
+        },
+        {
+          "titulo": "1/3 do Seu Filamento VAI PRO LIXO (Sem Voce Saber)",
+          "data": "09/05/2026",
+          "tema": "desperdicio de material, custo oculto"
+        }
+      ],
+      "engajamento_estimado": "alto (127k seguidores, maior influenciador 3D BR individual)",
+      "observacao_estrategica": "Post de 09/05 sobre filamento desperdicado e custo oculto e exatamente o angulo de dor que o Hayzer usa. Murilo Laffranchi pode ser alvo de abordagem para parceria ou mencionado em post de posicionamento"
+    },
+    "appcustos3d": {
+      "status": "bloqueado",
+      "posts": [],
+      "engajamento_estimado": null,
+      "observacao_estrategica": "Sem reclamacoes no Reclame Aqui. Site atualizado jan/2026. Produto vivo e em operacao com plano Basic R$29,90 e Pro R$69,90."
+    }
+  },
+  "reclame_aqui": {
+    "bling": {
+      "reclamacoes_novas": [
+        {
+          "titulo": "O Bling destruiu nossa produtividade. Instabilidade cronica e mudancas arbitrarias de usabilidade",
+          "data": "recente (indexada em maio/2026)",
+          "tema": "instabilidade cronica + UX piorada por mudancas sem aviso"
+        },
+        {
+          "titulo": "Bling cada vez pior! Suporte horrivel e sistema instavel!",
+          "data": "recente",
+          "tema": "suporte lento + quedas frequentes"
+        },
+        {
+          "titulo": "BLING ERP CAINDO E LENTO. Toda a Semana e a mesma Historia",
+          "data": "recente",
+          "tema": "instabilidade recorrente toda semana"
+        },
+        {
+          "titulo": "Sistema Bling com instabilidade e suporte ineficiente",
+          "data": "02/05/2026",
+          "tema": "instabilidade em emissao de NF + lancamento de estoque com falha em replicacao de banco"
+        },
+        {
+          "titulo": "Impossibilidade de downgrade do plano ERP Bling e cobranca indevida",
+          "data": "recente",
+          "tema": "lock-in de plano + cobranca apos pedido de cancelamento"
+        }
+      ],
+      "tema_recorrente": "Instabilidade cronica (queda semanal), suporte com 9 dias de resposta media, cobranca indevida ao tentar fazer downgrade ou cancelar, mudancas de UX sem comunicacao previa. Pico: 02/05/2026, falha em replicacao de banco impactando NF e estoque."
+    },
+    "makerflow": {
+      "reclamacoes_novas": [],
+      "tema_recorrente": "Empresa nao encontrada no Reclame Aqui. Pode nao existir como produto ativo ou operar sob outro nome."
+    },
+    "outros": [
+      {
+        "empresa": "AppCustos3D",
+        "status": "sem reclamacoes encontradas",
+        "observacao": "Produto ativo. Sem volume de reclamacoes publica. Base pequena ainda ou satisfacao alta."
+      }
+    ]
+  },
+  "sinais_mercado": [
+    {
+      "sinal": "ARTBOX3D lanca marketplace P2P de impressoras usadas (seminovos.artbox3d.com.br)",
+      "descricao": "Zero comissao, contato direto via WhatsApp, 100+ usuarios ativos no lancamento. Foco em Bambu Lab, Creality, Prusa usadas.",
+      "implicacao": "ARTBOX3D construindo ecossistema fechado: loja + servico + marketplace. Se adicionar gestao de pedidos para vendedores, vira concorrente direto com 82k de base qualificada."
+    },
+    {
+      "sinal": "EXPO3DBR aconteceu em Sorocaba - cobertura 3D Geek Show em 13/05/2026",
+      "descricao": "Maior evento maker 3D BR do ano. Hayzer estava ausente.",
+      "implicacao": "Proxima edicao e janela estrategica para presenca com stand ou co-patrocinio."
+    },
+    {
+      "sinal": "3D Geek Show posta sobre desperdicio de filamento e custo oculto (09/05/2026)",
+      "descricao": "127k seguidores expostos a narrativa de custo oculto de material - angulo exato do Hayzer.",
+      "implicacao": "Janela de 7 dias para ativacao de conteudo complementar possivelmente expirada. Monitorar proximo angulo de dor para ativacao rapida."
+    },
+    {
+      "sinal": "AppCustos3D Pro R$69,90/mes - features maduras",
+      "descricao": "Leitura de .gcode, importacao Shopee/ML, simulador PDF, rastreio publico de pedido via link, suporte WhatsApp. Trial 3 dias sem cartao.",
+      "implicacao": "Hayzer precisa articular diferencial alem de calculo de custo: gestao de cliente, fluxo WhatsApp, financeiro integrado."
+    }
+  ],
+  "alertas": [
+    "ALERTA ALTO: AppCustos3D Pro ja entrega rastreio de pedido via link publico, importacao Shopee/ML e leitura .gcode. Diferencial do Hayzer precisa ser articulado claramente antes do launch.",
+    "ALERTA MEDIO: 3D Geek Show publicou sobre custo oculto de filamento em 09/05. Janela de 7 dias possivelmente expirada - monitorar proximo angulo de dor para ativacao rapida.",
+    "ALERTA BAIXO: ARTBOX3D construindo ecossistema fechado. Se adicionar camada de gestao de pedidos para vendedores do marketplace, entra no mercado SaaS maker com 82k de base."
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "3dgeekshow",
+      "titulo": "1/3 do Seu Filamento VAI PRO LIXO (Sem Voce Saber)",
+      "data": "09/05/2026",
+      "angulo": "custo oculto de material",
+      "oportunidade": "Criar conteudo respondendo esse dado com perspectiva de gestao financeira - exatamente o que o Hayzer resolve. CTA para calculadora gratuita."
+    },
+    {
+      "conta": "artbox3d",
+      "titulo": "Lancamento seminovos.artbox3d.com.br",
+      "data": "maio/2026",
+      "angulo": "marketplace zero comissao",
+      "oportunidade": "Monitorar se ARTBOX3D vai adicionar gestao de pedidos para vendedores do marketplace"
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "titulo": "Instabilidade cronica e mudancas arbitrarias de usabilidade",
+      "tema": "Sistema cai toda semana. Suporte leva 9 dias pra responder. Downgrade de plano bloqueado. Cobranca continua apos pedido de cancelamento.",
+      "angulo_hayzer": "Bling foi feito para e-commerce generalista, nao para maker. Makers que adaptaram o Bling sao publico insatisfeito e alcancavel. Copy direta: 'No Hayzer voce nao assina pra ter suporte de uma semana.'"
+    }
+  ],
+  "acao_recomendada": "Ativar post LinkedIn do CEO sobre custo oculto de material esta semana, ancorando no dado do 3D Geek Show (1/3 do filamento no lixo). Complementar com diferencial Hayzer vs AppCustos3D: gestao de relacionamento com cliente + financeiro integrado, nao so calculo de custo. Paralelamente, documentar internamente as features do AppCustos3D Pro para alinhar roadmap e evitar lançar sem resposta clara para comparacao direta.",
+  "resumo_textual": "Sem movimentos de lancamento ou pivo significativo de concorrente direto nas ultimas 48h. AppCustos3D mais maduro do que esperado no plano Pro. Bling acumula reclamacoes sobre instabilidade e lock-in - porta de entrada para conversa com makers insatisfeitos. 3D Geek Show ativou narrativa de custo oculto com 127k de audiencia. ARTBOX3D em movimento de ecossistema, nao de SaaS ainda."
+}
