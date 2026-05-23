@@ -1,0 +1,39 @@
+{
+  "date": "2026-05-23",
+  "generated_at": "2026-05-23T09:00:00-03:00",
+  "window_24h": {
+    "total_new": 1,
+    "email_confirmed": 0,
+    "profile_completed": 1,
+    "pct_email_confirmed": 0.0,
+    "pct_profile_completed": 100.0,
+    "by_utm_source": {
+      "direct": 1,
+      "linkedin": 0,
+      "whatsapp": 0,
+      "organic": 0
+    }
+  },
+  "acumulado": {
+    "total": 3,
+    "email_confirmed": 0,
+    "profile_completed": 3
+  },
+  "trend_7d": {
+    "current_7d": 2,
+    "previous_7d": 1,
+    "growth_pct": 100.0,
+    "direction": "alta"
+  },
+  "utm_acumulado": {
+    "direct": 3,
+    "linkedin": 0,
+    "whatsapp": 0,
+    "organic": 0
+  },
+  "flags": {
+    "utm_tracking_working": false,
+    "email_confirmation_working": false,
+    "note": "Todos 3 leads com utm_source=null (capturado como direct). Nenhum lead com email_confirmed=true. Validar fluxo de UTM e trigger de email."
+  }
+}
