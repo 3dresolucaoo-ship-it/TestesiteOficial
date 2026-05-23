@@ -1,0 +1,45 @@
+{
+  "date": "2026-05-23",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "routes": {
+    "hayzer_com_br": { "status": 200, "ok": true },
+    "hayzer_com_br_calculadora": { "status": 200, "ok": true },
+    "hayzer_com_br_waitlist": { "status": 404, "ok": false, "note": "BUG ATIVO dia 3 — app/waitlist/page.tsx inexistente. BLOCKER soft launch 11/06." },
+    "hayzer_com_br_calculadora_pro": { "status": 404, "ok": false, "note": "ESPERADO — decisions/024, Calc Pro revogada 21/05." }
+  },
+  "routes_ok": 2,
+  "routes_total": 4,
+  "deployment": {
+    "id": "dpl_9zP77YYvfFycJCfdwiEZ2QgoKxnJ",
+    "commit_sha": "1e67f8e60e4eb3b6c791c0dc64b4886482069f5f",
+    "commit_short": "1e67f8e",
+    "state": "READY",
+    "age_hours": 8,
+    "branch": "claude/ecstatic-johnson-hVuwz",
+    "errors_24h": 0,
+    "total_deployments_24h": 7
+  },
+  "supabase": {
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads": 3,
+    "table_name_correction": "waitlist_leads (nao waitlist_entries)",
+    "notifications_exists": true,
+    "search_index_exists": true
+  },
+  "performance": {
+    "available": false,
+    "note": "Vercel Analytics nao disponivel via MCP — checar manualmente no painel Vercel."
+  },
+  "alerts": [
+    {
+      "severity": 2,
+      "type": "BLOCKER_SOFT_LAUNCH",
+      "route": "/waitlist",
+      "message": "/waitlist retorna 404 pelo 3o dia consecutivo (ativo desde 21/05). app/waitlist/page.tsx nao existe. Fix: criar pagina ou restaurar do git. Bloqueia soft launch 11/06.",
+      "action": "git log --all --full-history -- app/waitlist/page.tsx para localizar ultimo commit da pagina."
+    }
+  ],
+  "fix_table_name": "Corrigir smoke test futuro: tabela correta e waitlist_leads, nao waitlist_entries."
+}
