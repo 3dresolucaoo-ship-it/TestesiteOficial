@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "data": "2026-05-23",
+    "rotina": "concorrencia-diaria",
+    "versao": "1.0",
+    "fontes_bloqueadas": ["instagram.com (login required)", "reclameaqui.com.br (403)"],
+    "fontes_acessadas": ["makerflow3d.com.br", "appcustos3d.com.br", "3dcontrol.com.br", "precifi3d.com", "gl3de.com", "3dmakershub.com", "seminovos.artbox3d.com.br", "3dgeekshow.com.br", "negociocomia.3dgeekshow.com.br", "google_index_instagram"]
+  },
+  "alertas": [
+    {
+      "prioridade": 1,
+      "titulo": "Hayzer invisivel no Google",
+      "descricao": "Zero menções ao Hayzer nas buscas 'software gestão maker 3D brasil', 'app impressão 3D gestão custo' e variações. Um maker que busca a ferramenta hoje não chega ao Hayzer. Concorrentes (MakerFlow, AppCustos3D, 3D Control) aparecem no lugar.",
+      "acao_imediata": true,
+      "squad": "Marcos + Helena"
+    },
+    {
+      "prioridade": 2,
+      "titulo": "MakerFlow adicionou IA como feature PRO",
+      "descricao": "MakerFlow lançou 'Analise de Mercado com IA' com sistema de creditos (5 no gratis, 50 no mensal, 200 no trimestral). Plano trimestral R$23,30/mês. Estao se posicionando como ferramenta inteligente, nao apenas calculadora. Movimento relevante pois IA e argumento de venda crescente no segmento.",
+      "acao_imediata": false,
+      "squad": "Helena + Felipe"
+    },
+    {
+      "prioridade": 3,
+      "titulo": "ARTBOX3D lançou marketplace de impressoras seminovas",
+      "descricao": "seminovos.artbox3d.com.br ativo com ~100 usuarios. Marketplace de compra/venda de impressoras usadas com 0% de comissao. Post de lancamento com prefixo DS (abril-maio/2026). Nao e concorrencia direta ao Hayzer (foco em hardware), mas expande o ecossistema ARTBOX3D para alem de servicos.",
+      "acao_imediata": false,
+      "squad": "Helena"
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "perfil": "@3dgeekshow",
+      "seguidores": "127K",
+      "tipo": "blog_post",
+      "titulo": "A EXPO3DBR ACABOU!",
+      "data_estimada": "2026-05-13",
+      "relevancia_hayzer": "3D Geek Show participou da maior feira de impressao 3D da America Latina em Sorocaba. Hayzer nao teve presenca. Evento de alta concentracao da persona Rafael. Oportunidade perdida para Onda 1; mapear para 2027.",
+      "url_referencia": "3dgeekshow.com.br"
+    },
+    {
+      "perfil": "@3dgeekshow",
+      "seguidores": "127K",
+      "tipo": "curso_online",
+      "titulo": "Seu Negocio de Impressao 3D com IA",
+      "data_estimada": "2026 (ativo agora)",
+      "relevancia_hayzer": "Murilo Laffranchi (127K) esta educando makers sobre IA nos negocios. Audiencia identica a persona Rafael. Possivel parceiro para beta ou influenciador pre-launch 27/06.",
+      "url_referencia": "negociocomia.3dgeekshow.com.br"
+    },
+    {
+      "perfil": "@artbox3d",
+      "seguidores": "82K",
+      "tipo": "post_foto",
+      "titulo": "Lancamento seminovos.artbox3d.com.br",
+      "data_estimada": "2026-04 a 2026-05",
+      "relevancia_hayzer": "Mostra que players do ecossistema 3D estao lancando produtos adjacentes. ARTBOX3D expande para hardware usado enquanto o SaaS de gestao segue vazio de players fortes.",
+      "url_referencia": "seminovos.artbox3d.com.br"
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "tema_recorrente": "Instabilidade cronica + suporte lento",
+      "exemplos": [
+        "BLING ERP CAINDO E LENTO. Toda a Semana e a mesma Historia.",
+        "Sistema Bling com instabilidade e suporte ineficiente",
+        "Instabilidade constante do sistema Bling prejudica operacoes e justifica cancelamento",
+        "sistema instavel, suporte ineficiente e reajustes abusivos sem aviso previo"
+      ],
+      "preco_minimo": "R$ 55/mês (plano Cobalto)",
+      "oportunidade_hayzer": "Maker que usa Bling paga R$55/mes e sofre com queda semanal + suporte ruim. Hayzer especifico para maker 3D pode ser posicionado como alternativa focada: menos features genericas, mais inteligencia de custo de impressao. Angulo de comunicacao: 'feito pra quem imprime, nao pra quem vende qualquer coisa'.",
+      "nota": "Reclame Aqui bloqueou acesso direto (403). Dados extraidos via Google index de snippets."
+    },
+    {
+      "empresa": "MakerFlow / AppCustos3D / 3D Control",
+      "tema_recorrente": "Sem reclamacoes publicas identificadas",
+      "oportunidade_hayzer": "Nenhum desses players tem presenca no Reclame Aqui. Significa que sao pequenos (base de usuarios pequena) ou resolvem bem os problemas. Validacao de mercado ainda em aberto.",
+      "nota": "Pode ser ausencia por tamanho de base, nao necessariamente por qualidade."
+    }
+  ],
+  "mapa_players": {
+    "calculadoras_simples": ["GL3DE (freemium)", "Precifi3D (starter gratis)", "3D Makers Hub (calculadora gratis)"],
+    "gestao_completa_paga": ["MakerFlow (R$29,90/mes)", "AppCustos3D (R$29,90-69,90/mes)", "3D Control (R$39,99/mes plano unico)"],
+    "gratuito_reivindicado": ["PrintWorks3D"],
+    "erp_generico": ["Bling ERP (R$55-200/mes)"],
+    "em_desenvolvimento": ["3D Makers Hub (marketplace + IA em breve)", "Solution Maker"]
+  },
+  "acao_recomendada": {
+    "titulo": "Abordar Murilo Laffranchi (3dgeekshow) antes do launch 27/06",
+    "descricao": "Murilo tem 127K seguidores, acaba de fazer curso de IA para negocios 3D, participou da Expo3DBR, e tem audiencia identica a persona Rafael. Um DM simples oferecendo acesso beta exclusivo + possivelmente uma parceria de conteudo pode render visibilidade organica pre-launch sem custo. Janela ideal: semana de 26/05, com ~30 dias de antecedencia do launch.",
+    "squad_responsavel": "Marcos (estrategia) + CEO (contato direto)",
+    "prazo": "ate 30/05/2026",
+    "risco": "baixo",
+    "potencial": "alto"
+  },
+  "status_instagram": "BLOQUEADO - Instagram exige login para qualquer perfil. Dados coletados via Google index (snippets de posts indexados). Posts recentes de 2025/2026 nao foram indexados publicamente, limitando visibilidade das ultimas 24h.",
+  "status_reclame_aqui": "BLOQUEADO - Reclame Aqui retorna 403 para crawlers. Dados coletados via Google snippets dos titulos de reclamacoes indexadas. Sem data precisa das reclamacoes recentes.",
+  "proxima_verificacao": "2026-05-24"
+}
