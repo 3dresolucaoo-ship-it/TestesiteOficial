@@ -1,9 +1,10 @@
 {
   "date": "2026-05-24",
-  "generated_at": "2026-05-24T11:12:56Z",
+  "generated_at": "2026-05-24T11:19:20Z",
   "status": "ERRO_ACESSO_DB",
-  "error_detail": "Supabase MCP nao esta configurado no .mcp.json do projeto. Credenciais SUPABASE_SERVICE_ROLE_KEY e NEXT_PUBLIC_SUPABASE_URL nao disponiveis no ambiente de execucao do agente. Adicionar Supabase MCP ao .mcp.json e restartar Claude Code para habilitar queries automaticas.",
-  "schema_note": "Tabela waitlist_leads identificada e schema inspecionado. Coluna step nao existe - proxy para step2 completado = score >= 50 (servico updateLeadStep2 seta score=50). Queries adaptadas e prontas para execucao quando acesso DB for restaurado.",
+  "schema_confirmado": true,
+  "schema_nota": "Coluna 'step' nao existe na tabela. Proxy correto para 'completou etapa 2' = score >= 50 (services/waitlist.ts:updateLeadStep2 seta score=50 ao salvar segment+size+revenue_band+pain). Queries abaixo ja usam esse proxy.",
+  "causa_raiz_bloqueio": "Ambiente sandbox isolado: .env.local nao e commitado (correto por seguranca). Credenciais NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY nao estao disponiveis no container de execucao do agente. O Supabase MCP nas sessoes anteriores era provido por configuracao externa ao .mcp.json do projeto (token OAuth Anthropic com acesso ao projeto Supabase). Nao e um bug no .mcp.json.",
   "leads_24h": {
     "total": "N/D",
     "completed_step2": "N/D",
@@ -17,17 +18,14 @@
   "top_utms_all_time": [],
   "avg_minutes_step1_to_step2": "N/D",
   "tendencia": "N/D",
-  "acao_recomendada": "Configurar Supabase MCP no .mcp.json para habilitar digest automatico diario. Ver instrucoes abaixo no campo fix_required.",
-  "fix_required": {
-    "problema": "Supabase MCP ausente do .mcp.json",
-    "solucao": "Adicionar entrada supabase no .mcp.json com SUPABASE_ACCESS_TOKEN e SUPABASE_PROJECT_ID. Reiniciar Claude Code. Re-executar este digest.",
-    "queries_prontas": {
-      "q1_leads_24h_por_utm": "SELECT utm_source, COUNT(*) AS total, COUNT(*) FILTER (WHERE score >= 50) AS completed_step_2 FROM waitlist_leads WHERE created_at > NOW() - INTERVAL '24 hours' GROUP BY utm_source ORDER BY total DESC;",
-      "q2_total_acumulado": "SELECT COUNT(*) AS total_all_time FROM waitlist_leads;",
-      "q3_ultimos_7d": "SELECT DATE(created_at) AS dia, COUNT(*) AS leads_dia, COUNT(*) FILTER (WHERE score >= 50) AS completaram_step2 FROM waitlist_leads WHERE created_at > NOW() - INTERVAL '7 days' GROUP BY DATE(created_at) ORDER BY dia DESC;",
-      "q4_tempo_medio_step1_step2": "SELECT AVG(EXTRACT(EPOCH FROM (updated_at - created_at))/60)::INT AS avg_minutes_step1_to_step2 FROM waitlist_leads WHERE score >= 50 AND created_at > NOW() - INTERVAL '24 hours';",
-      "q5_top3_utms": "SELECT utm_source, COUNT(*) AS total FROM waitlist_leads WHERE utm_source IS NOT NULL GROUP BY utm_source ORDER BY total DESC LIMIT 3;",
-      "q6_crescimento_7d": "SELECT COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '7 days') AS leads_ultimos_7d, COUNT(*) FILTER (WHERE created_at BETWEEN NOW() - INTERVAL '14 days' AND NOW() - INTERVAL '7 days') AS leads_7d_anteriores FROM waitlist_leads;"
-    }
+  "acao_recomendada": "CEO executar queries abaixo manualmente no Supabase Dashboard > SQL Editor para obter os dados. Ou: re-habilitar Supabase MCP via SUPABASE_ACCESS_TOKEN na configuracao do agente.",
+  "queries_para_execucao_manual": {
+    "instrucao": "Rodar no Supabase Dashboard -> SQL Editor do projeto hayzer.com.br",
+    "q1_leads_24h_por_utm": "SELECT utm_source, COUNT(*) AS total, COUNT(*) FILTER (WHERE score >= 50) AS completed_step_2 FROM waitlist_leads WHERE created_at > NOW() - INTERVAL '24 hours' GROUP BY utm_source ORDER BY total DESC;",
+    "q2_total_acumulado": "SELECT COUNT(*) AS total_all_time FROM waitlist_leads;",
+    "q3_ultimos_7d": "SELECT DATE(created_at) AS dia, COUNT(*) AS leads_dia, COUNT(*) FILTER (WHERE score >= 50) AS completaram_step2 FROM waitlist_leads WHERE created_at > NOW() - INTERVAL '7 days' GROUP BY DATE(created_at) ORDER BY dia DESC;",
+    "q4_tempo_medio_step1_step2": "SELECT AVG(EXTRACT(EPOCH FROM (updated_at - created_at))/60)::INT AS avg_minutes FROM waitlist_leads WHERE score >= 50 AND created_at > NOW() - INTERVAL '24 hours';",
+    "q5_top3_utms": "SELECT utm_source, COUNT(*) AS total FROM waitlist_leads WHERE utm_source IS NOT NULL GROUP BY utm_source ORDER BY total DESC LIMIT 3;",
+    "q6_crescimento_7d": "SELECT COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '7 days') AS leads_ultimos_7d, COUNT(*) FILTER (WHERE created_at BETWEEN NOW() - INTERVAL '14 days' AND NOW() - INTERVAL '7 days') AS leads_7d_anteriores FROM waitlist_leads;"
   }
 }
