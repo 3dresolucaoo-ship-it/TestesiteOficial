@@ -1,0 +1,140 @@
+{
+  "data": "2026-05-24",
+  "instagram": [
+    {
+      "conta": "@3dlab_brasil",
+      "posts_novos": [
+        {
+          "tipo": "reels",
+          "texto_resumo": "Perfil ativo com 82K seguidores e 828 posts. Conteudo gira em torno de impressoras, filamentos, cursos e suporte tecnico. Nao foi possivel extrair post especifico das ultimas 48h pois Instagram bloqueia acesso sem login.",
+          "engajamento_estimado": "alto",
+          "url": "https://www.instagram.com/3dlab_brasil/"
+        }
+      ],
+      "status": "bloqueado"
+    },
+    {
+      "conta": "@artbox3d",
+      "posts_novos": [
+        {
+          "tipo": "foto",
+          "texto_resumo": "Artbox3D lancou plataforma SEMINOVOS (seminovos.artbox3d.com.br) para compra e venda de impressoras 3D usadas sem comissao. Post recente no Instagram confirma o lancamento: 'O Seminovos.ARTBOX3D.com.br e um espaco criado para...' Perfil tem 82K seguidores e 715 posts.",
+          "engajamento_estimado": "alto",
+          "url": "https://www.instagram.com/p/DSc2v0TEZT7/"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "conta": "@3dprintacademy",
+      "posts_novos": [
+        {
+          "tipo": "foto",
+          "texto_resumo": "Perfil ativo com 50K seguidores e 234 posts. Posicionamento como referencia em ensino de impressao 3D ha 10 anos, com certificacao MEC e Cogna. Nao foi possivel extrair post especifico das ultimas 48h.",
+          "engajamento_estimado": "medio",
+          "url": "https://www.instagram.com/3dprintacademy/"
+        }
+      ],
+      "status": "bloqueado"
+    },
+    {
+      "conta": "@3dgeekshow",
+      "posts_novos": [],
+      "status": "sem_dados"
+    },
+    {
+      "conta": "@appcustos3d",
+      "posts_novos": [],
+      "status": "bloqueado"
+    }
+  ],
+  "reclameaqui": [
+    {
+      "empresa": "Bling",
+      "reclamacoes_novas": [
+        {
+          "queixa": "Aumento abusivo de mensalidade: em janeiro 2026 o sistema fez upgrade automatico de plano quando usuario ultrapassou limite contratado, gerando cobranca maior sem aviso previo.",
+          "recorrente": true,
+          "tema": "precificacao abusiva / upgrade automatico"
+        },
+        {
+          "queixa": "Instabilidade cronica no sistema: falhas repetitivas viram rotina. Usuario relata que 'o Bling destruiu nossa produtividade' com mudancas arbitrarias de usabilidade apos aquisicao pela Locaweb.",
+          "recorrente": true,
+          "tema": "instabilidade tecnica / degradacao pos-aquisicao"
+        },
+        {
+          "queixa": "Bling nao funciona no celular: falhas diarias e impossibilidade de acesso aos menus pelo smartphone.",
+          "recorrente": true,
+          "tema": "mobile quebrado"
+        },
+        {
+          "queixa": "Sistema bloqueado por falta de espaco em disco, impedindo emissao de nota fiscal e gerando risco de multa tributaria.",
+          "recorrente": false,
+          "tema": "bloqueio operacional / nota fiscal"
+        },
+        {
+          "queixa": "Suporte inacessivel por mais de uma semana mesmo com multiplas tentativas de contato.",
+          "recorrente": true,
+          "tema": "suporte ruim"
+        }
+      ],
+      "status": "ok"
+    },
+    {
+      "empresa": "MakerFlow 3D",
+      "reclamacoes_novas": [],
+      "status": "sem_dados"
+    },
+    {
+      "empresa": "AppCustos3D",
+      "reclamacoes_novas": [],
+      "status": "sem_dados"
+    },
+    {
+      "empresa": "3D Control",
+      "reclamacoes_novas": [],
+      "status": "sem_dados"
+    },
+    {
+      "empresa": "PrintWorks3D",
+      "reclamacoes_novas": [],
+      "status": "sem_dados"
+    }
+  ],
+  "alertas": [
+    "ARTBOX3D lancou plataforma SEMINOVOS de impressoras usadas sem comissao: novo vetor de trafego e comunidade que pode ampliar base de usuarios maker. Potencial parceria ou integracao futura para Hayzer.",
+    "MakerFlow 3D tem integracao OAuth real com Mercado Livre e Shopee (nao via planilha). Preco R$ 29,90/mes. Diferencial claro de integracao nativa que Hayzer ainda nao tem.",
+    "AppCustos3D lancou leitor de G-code para extrair dados automaticamente de arquivos de impressao. Preco R$ 29,90/mes (basic) e R$ 69,90/mes (pro). Proposta 'feito por makers para makers' com WhatsApp automation no Pro.",
+    "3D Control cobra R$ 39,99/mes com CRM integrado e suporte a Elo7 alem de ML e Shopee. Unico player com CRM explicito na proposta.",
+    "Bling (concorrente indireto) acumula reclamacoes criticas em 2026: mobile quebrado, upgrade automatico de plano, instabilidade cronica. Janela de oportunidade para capturar makers que usam Bling como gestao geral.",
+    "Tendencia de profissionalizacao de farms de impressao 3D: automacao e multi-material viram padrao em 2026. Makers precisarao de gestao mais sofisticada de fila de producao e custos por material.",
+    "Mercado de produtos impressos em 3D no Brasil em expansao com margens acima de 200% em varios nichos. Mais makers entrando = mais demanda por ferramentas de gestao."
+  ],
+  "posts_relevantes": [
+    "ARTBOX3D Instagram: lancamento do SEMINOVOS.artbox3d.com.br, marketplace de impressoras usadas sem comissao. URL do post: https://www.instagram.com/p/DSc2v0TEZT7/",
+    "3D Fila blog: '35 lancamentos e rumores que podem redefinir a impressao 3D em 2026' -- tendencia de profissionalizacao de farms com automacao, multi-material e seguranca virando padrao. https://blog.3dfila.com.br/35-lancamentos-e-rumores-que-podem-redefinir-a-impressao-3d-em-2026/",
+    "Clube 3D Brasil: '10 produtos lucrativos para imprimir em 3D e vender em 2026 com margem acima de 200%'. Indica mercado aquecido e entrada de novos makers. https://clube3dbrasil.com/10-produtos-lucrativos-para-imprimir-em-3d-e-vender/"
+  ],
+  "reclamacoes_interessantes": [
+    "Bling: mobile completamente quebrado com falhas diarias -- makers que dependem de gestao pelo celular estao sem solucao no Bling.",
+    "Bling: upgrade automatico de plano em janeiro 2026 sem aviso previo. Usuarios se sentem lesados pela Locaweb pos-aquisicao.",
+    "Bling: suporte sumiu. Usuarios sem resposta por mais de uma semana. Churn provavel elevado.",
+    "Nenhuma reclamacao encontrada para MakerFlow, AppCustos3D ou 3D Control no Reclame Aqui -- pode indicar base pequena de usuarios ou boa gestao de suporte."
+  ],
+  "acao_recomendada": "Prioridade 1: Hayzer deve documentar explicitamente que NAO faz upgrade automatico de plano e que o mobile funciona -- esses sao pain points ativos do Bling que podem virar copy de conversao. Prioridade 2: mapear integracao OAuth real com ML e Shopee como item de roadmap urgente, pois MakerFlow ja entrega isso e e diferencial concreto. Prioridade 3: considerar parceria ou mencao ao SEMINOVOS.artbox3d.com.br como canal de aquisicao de makers novos que acabam de comprar impressora usada.",
+  "resumo_texto": "Em 24/05/2026 o cenario competitivo maker 3D Brasil tem tres players especializados ativos com precos entre R$ 29,90 e R$ 39,99/mes: MakerFlow 3D (OAuth real ML+Shopee, R$ 29,90), AppCustos3D (leitor G-code, planos R$ 29,90 e R$ 69,90) e 3D Control (CRM integrado, Elo7, R$ 39,99). Nenhum dos tres aparece com reclamacoes no Reclame Aqui, o que indica base de usuarios ainda pequena. O Bling, concorrente indireto para makers que usam gestao geral, acumula reclamacoes criticas em 2026: mobile quebrado, upgrade automatico de plano apos aquisicao pela Locaweb e suporte sumido. Isso abre janela de captacao ativa. O maior movimento de mercado da semana e o lancamento do SEMINOVOS pela ARTBOX3D: marketplace de impressoras usadas sem comissao, que cria novo fluxo de makers iniciantes chegando ao ecossistema e potencial canal de aquisicao para o Hayzer. O mercado continua em expansao com produtos lucrativos acima de 200% de margem e tendencia de profissionalizacao de farms com automacao multi-material. A entrada de mais makers no mercado aumenta a demanda por ferramentas de gestao no horizonte de 6 a 12 meses.",
+  "fontes": [
+    "https://appcustos3d.com.br/",
+    "https://www.makerflow3d.com.br/",
+    "https://3dcontrol.com.br/",
+    "https://www.printworks3d.com.br/",
+    "https://www.instagram.com/p/DSc2v0TEZT7/",
+    "https://seminovos.artbox3d.com.br/",
+    "https://www.instagram.com/3dlab_brasil/",
+    "https://www.instagram.com/artbox3d/",
+    "https://www.instagram.com/3dprintacademy/",
+    "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/",
+    "https://blog.3dfila.com.br/35-lancamentos-e-rumores-que-podem-redefinir-a-impressao-3d-em-2026/",
+    "https://clube3dbrasil.com/10-produtos-lucrativos-para-imprimir-em-3d-e-vender/"
+  ]
+}
