@@ -16,7 +16,7 @@
 | 2 | **Anti-IA (autenticidade)** | 9.0 ⬆️ | 9.5 | 9.5 | Carla + Diego | 27/05 |
 | 3 | **Segurança (OWASP 2025)** | 9.2 ⬆️ | 9.5 | 9.7 | Otávio | 24/06 |
 | 4 | **Performance (Web Vitals)** | 7.0 ⬆️ | 8.0 | 8.5 | Felipe + Ricardo | 27/05 |
-| 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Felipe (Júlia ⌀) | 24/05 |
+| 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Felipe (Júlia ⌀) | 01/06 |
 | 6 | **Mobile (320-768px)** | 7.5 ⬆️ | 8.5 | 9.0 | Diego + Felipe | 27/05 |
 | 7 | **Conversão (funil)** | 6.5 ⬆️ | 7.5 | 8.5 | Marcos + Sofia + Ana | 07/06 |
 | 8 | **Retenção (habit-forming)** | 5.0 | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
@@ -213,4 +213,4 @@ Esse documento operacionaliza essa filosofia.
 
 **Mantenedor primário**: Helena (estratégia consolida)
 **Atualização**: toda segunda + via `/rcs` quando evidência aparecer
-**Última atualização**: 2026-05-17 (Segurança 8.5 → 9.0 · API_RATE_LIMIT_SALT em prod · média 7.3 → 7.4)
+**Última atualização**: 2026-05-20 (sessão maratona: Design/Anti-IA/Performance/Mobile/Conversão/Docs/Backend/Estratégia → média 7.4 → 7.7) | revisão semanal 2026-05-25 (validação + metadata fix)
