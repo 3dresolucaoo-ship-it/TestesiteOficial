@@ -1,0 +1,64 @@
+{
+  "date": "2026-05-25",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "routes": {
+    "total": 4,
+    "ok": 2,
+    "results": {
+      "/": { "status": 200, "ok": true },
+      "/calculadora": { "status": 200, "ok": true },
+      "/waitlist": { "status": 404, "ok": false, "note": "5o dia consecutivo -- app/waitlist/page.tsx inexistente -- BLOCKER launch 11/06" },
+      "/calculadora/pro": { "status": 404, "ok": false, "note": "esperado -- decisions/024 revogou Calc Pro" }
+    }
+  },
+  "vercel": {
+    "project": "bvaz-hub",
+    "prod_deployment": {
+      "id": "dpl_DJMUhNu8Kw2iQ36cVhF6jCccKJqp",
+      "sha": "4de06413464d3919f4bd03a56ede21a259fa2669",
+      "sha_short": "4de064",
+      "state": "READY",
+      "target": "production",
+      "created_ts": 1779585041946,
+      "age_hours": 32,
+      "rollback_candidate": true
+    },
+    "deployments_24h": 0,
+    "errors_detected": false,
+    "building_stuck": false,
+    "note": "Nenhum deploy nas ultimas 24h. Prod estavel em 4de064 ha ~32h."
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads_total": 3,
+    "tables": {
+      "notifications": true,
+      "search_index": false
+    },
+    "note": "search_index view ausente -- inconsistencia com report anterior"
+  },
+  "performance": {
+    "source": "indisponivel",
+    "note": "Vercel Analytics nao acessivel via MCP. Referencia: TBT 3.6s conhecido (hero motion + WaitlistForm Zod).",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "alerts": [
+    {
+      "severity": 3,
+      "type": "ROUTE_404",
+      "message": "/waitlist retorna 404 pelo 5o dia consecutivo. app/waitlist/page.tsx nao existe. BLOCKER pre-launch 11/06.",
+      "action": "Criar app/waitlist/page.tsx com urgencia -- 17 dias ate soft launch"
+    },
+    {
+      "severity": 1,
+      "type": "VIEW_MISSING",
+      "message": "View search_index ausente no Supabase. Impacto: funcionalidade de busca inoperante.",
+      "action": "Verificar se migration da view foi aplicada em prod"
+    }
+  ]
+}
