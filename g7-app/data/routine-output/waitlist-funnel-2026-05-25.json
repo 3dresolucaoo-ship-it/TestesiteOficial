@@ -1,0 +1,41 @@
+{
+  "date": "2026-05-25",
+  "generated_at": "2026-05-25T09:00:00-03:00",
+  "periodo": "ultimas_24h",
+  "ultimas_24h": {
+    "total_novos": 0,
+    "step2_completo": 0,
+    "pct_step2": null,
+    "email_confirmado": 0,
+    "avg_score": null,
+    "por_utm_source": {}
+  },
+  "acumulado": {
+    "total_all_time": 3,
+    "total_step2": 3,
+    "pct_step2_all_time": 100.0,
+    "total_email_confirmado": 0,
+    "pct_email_confirmado": 0.0,
+    "total_convertidos": 0,
+    "avg_score": 0.0,
+    "last_7d": 2,
+    "prev_7d": 1,
+    "crescimento_7d_pct": 100.0,
+    "media_diaria_7d": 0.3
+  },
+  "utm_acumulado": {
+    "direct": {
+      "total": 3,
+      "pct": 100.0,
+      "step2": 3,
+      "avg_min_step1_to_step2": 0.0
+    }
+  },
+  "tendencia": "alta_base_pequena",
+  "alertas": [
+    "UTM nao capturado: 100% dos leads sem utm_source (todos direct)",
+    "Score zerado em 100% dos leads: logica de scoring nao populando",
+    "Email confirmation: 0% confirmaram email (verificar envio)",
+    "0 leads nas ultimas 24h: sem trafego ativo ou produto em modo stealth"
+  ]
+}
