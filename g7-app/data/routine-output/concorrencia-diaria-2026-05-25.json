@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "data": "2026-05-25",
+    "rotina": "concorrencia-diaria",
+    "versao": "1.0",
+    "fontes": ["instagram_websearch", "reclameaqui_websearch", "webfetch_direto"],
+    "cobertura_instagram": ["3dlab_brasil", "artbox3d", "3dprintacademy", "3dgeekshow"],
+    "cobertura_reclameaqui": ["Bling", "3D Lab", "Imprimire 3D", "Impressao 3D Facil"],
+    "nota": "MakerFlow, PrintWorks3D, ZoomCalc3D, AppCustos3D nao encontrados no RA nem com presenca significativa"
+  },
+
+  "alertas": [
+    {
+      "prioridade": "alta",
+      "titulo": "Precifi3D identificado: SaaS de precificacao com planos pagos",
+      "descricao": "precifi3d.com e um SaaS com plano Starter gratis, Pro e Enterprise. Features: calculadora de custos (filamento/energia/margem), historico de projetos, orcamentos em PDF, marketplace de fornecedores. NAO tem: CRM, gestao de pedidos, estoque, financeiro. Posiciona-se como 'ferramenta definitiva para makers BR'. Nao estava no radar da pesquisa de concorrencia anterior.",
+      "impacto_hayzer": "Captura maker no topo do funil (precificacao). Hayzer resolve tudo pos-calculadora. Oportunidade de upsell claro.",
+      "url": "https://precifi3d.com",
+      "acao_recomendada": "Marcos: criar conteudo/ads para quem ja usa calculadora e quer 'dar o proximo passo' (pedido, cliente, producao, financeiro)"
+    },
+    {
+      "prioridade": "media",
+      "titulo": "3D Geek Show viajando para a China (24/05)",
+      "descricao": "Maior influencer maker BR (127K seguidores) postou 'Vamos pra china!!!' em 24/05. Pode ser: visita a fabricantes (Bambu Lab, Creality, Anycubic), parceria paga, sourcing de conteudo ou evento do setor.",
+      "impacto_hayzer": "Se fechar parceria com fabricante pode ganhar visibilidade massiva no segmento. Watch proximo conteudo pos-viagem.",
+      "acao_recomendada": "Helena: monitorar posts pos-viagem do 3dgeekshow na proxima semana"
+    },
+    {
+      "prioridade": "media",
+      "titulo": "Bling instabilidade cronica confirmada em 2026",
+      "descricao": "Reclamacoes ativas no Reclame Aqui: sistema cai todas as segundas-feiras, controle de estoque nao importa pedidos automaticamente de e-commerce, suporte nao atende. Padrão documentado de Out/2025 a Mar/2026 e continua.",
+      "impacto_hayzer": "Makers que usam Bling como ERP estao insatisfeitos. Janela de conquista especialmente para makers com volume de pedidos e e-commerce.",
+      "acao_recomendada": "Marcos: ad direto 'cansou do Bling caindo?' para segmento maker impressao 3D"
+    }
+  ],
+
+  "posts_relevantes": [
+    {
+      "perfil": "@3dgeekshow",
+      "seguidores": "127K",
+      "data_estimada": "2026-05-23",
+      "tipo": "post/reel",
+      "titulo": "Nova Patente da Creality MUDA a Impressao 3D Multicolor",
+      "tema": "Inovacao de hardware - patente Creality para impressao multicolor",
+      "relevancia_hayzer": "Mudanca no parque de maquinas dos makers BR afeta custos de operacao e complexidade dos pedidos. Makers vao querer gerenciar projetos multicolor. Feature de gestao de materias-primas fica mais relevante.",
+      "engajamento_estimado": "Alto (127K base, conteudo de hardware sempre performa bem)"
+    },
+    {
+      "perfil": "@3dgeekshow",
+      "seguidores": "127K",
+      "data_estimada": "2026-05-24",
+      "tipo": "post",
+      "titulo": "Vamos pra china!!!",
+      "tema": "Visita a fabricantes/fornecedores na China",
+      "relevancia_hayzer": "Movimento estrategico do maior influencer BR do segmento. Potencial parceria com fabricante = visibilidade enorme. Acompanhar de perto.",
+      "engajamento_estimado": "Alto (conteudo de bastidores/viagem performa bem)"
+    },
+    {
+      "perfil": "@3dlab_brasil",
+      "seguidores": "82K",
+      "data_estimada": "2026-05 (recente)",
+      "tipo": "reel",
+      "titulo": "Novidade para a area de filamentos 3D",
+      "tema": "Lancamento de filamento/material novo",
+      "relevancia_hayzer": "Retail de insumos. Nao compete com Hayzer (gestao). Baixa relevancia direta.",
+      "engajamento_estimado": "Medio"
+    }
+  ],
+
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "fonte": "Reclame Aqui",
+      "tema_principal": "Sistema instavel - cai toda segunda-feira, controle de estoque sem auto-import",
+      "queixa_especifica": "Usuarios relatam: (1) sistema para ou fica extremamente lento toda segunda-feira, impossibilitando emitir NF a tempo; (2) integracao com e-commerce nao importa pedidos automaticamente - controle de estoque so funciona com importacao manual; (3) suporte nao atende via chat nem telefone. Financeiros e operadores perdendo vendas e riscos de sancao fiscal.",
+      "recorrencia": "Documentado Out/2025 a Mar/2026 - padrao crônico",
+      "oportunidade_hayzer": "Maker que ja sente dor no ERP generico e quer algo especializado para impressao 3D. Especialmente forte para quem vende em marketplace (ML, Shopee) e perde pedidos por falta de auto-sync de estoque."
+    },
+    {
+      "empresa": "3D Lab (hardware/impressoras)",
+      "fonte": "Reclame Aqui",
+      "tema_principal": "Atraso na entrega de impressoras 3D",
+      "queixa_especifica": "Compras de impressoras 3D com atraso significativo vs prazo prometido. Uma reclamação especifica: 'IMPRESSORA NAO CHEGOU'. Indica problemas de logistica e estoque fisico da empresa.",
+      "recorrencia": "Recorrente 2026",
+      "oportunidade_hayzer": "Maker que acabou de comprar/receber impressora nova vai precisar gerenciar operacao. Momento de ativacao ideal para Hayzer."
+    }
+  ],
+
+  "ausencias_notaveis": [
+    "MakerFlow: sem presenca no Reclame Aqui nem Instagram publico identificado",
+    "AppCustos3D (@appcustos3d): perfil Instagram nao encontrado publicamente",
+    "PrintWorks3D: sem presenca identificada",
+    "ZoomCalc3D: sem presenca identificada",
+    "3D Control: sem presenca identificada",
+    "Conclusao: mercado de SaaS maker BR ainda muito fragmentado. Precifi3D e o unico com posicionamento SaaS claro alem do Hayzer."
+  ],
+
+  "acao_recomendada": {
+    "urgencia": "media",
+    "para": ["Marcos", "Helena"],
+    "acao": "Mapear Precifi3D como concorrente oficial e criar estrategia de 'proximo passo'. Precifi3D resolve precificacao (topo de funil) - Hayzer resolve tudo depois (operacao completa). Conteudo sugerido: 'Voce ja calcula o preco certo. E agora, quem gerencia os seus pedidos?' Testar como ad Instagram (segmentacao: makers BR + impressao 3D + pequenas empresas).",
+    "prazo_sugerido": "Apresentar na reuniao de segunda 26/05 ou na proxima sessao Helena/Marcos"
+  }
+}
