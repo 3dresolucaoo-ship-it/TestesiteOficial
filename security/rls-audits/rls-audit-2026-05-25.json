@@ -1,0 +1,119 @@
+{
+  "audit_date": "2026-05-25",
+  "project_id": "sqyrkisnllrgylnxwudu",
+  "schema": "public",
+  "summary": {
+    "total_tables": 25,
+    "rls_enabled": 25,
+    "rls_enabled_pct": 100,
+    "tables_zero_policies": 2,
+    "total_policies": 44,
+    "security_definer_functions": 7,
+    "anon_grants_tables": 22
+  },
+  "gaps_criticos": [
+    {
+      "id": "GAP-01",
+      "severidade": 4,
+      "tabela": "inventory",
+      "policy": "inventory_public_read",
+      "cmd": "SELECT",
+      "qual": "true",
+      "descricao": "Policy SELECT sem filtro algum. Qualquer usuario anonimo pode ler TODO o estoque de TODOS os tenants via GET /inventory. Vazamento multi-tenant critico.",
+      "fix_sql": "DROP POLICY IF EXISTS inventory_public_read ON public.inventory;"
+    },
+    {
+      "id": "GAP-02",
+      "severidade": 4,
+      "tabela": "products",
+      "policy": "products_public_read",
+      "cmd": "SELECT",
+      "qual": "true",
+      "descricao": "Policy SELECT sem filtro algum. Qualquer usuario anonimo pode ler TODOS os produtos de TODOS os tenants. Dados de precificacao, custos e margens expostos.",
+      "fix_sql": "DROP POLICY IF EXISTS products_public_read ON public.products;\nCREATE POLICY products_public_read ON public.products FOR SELECT\n  USING (\n    EXISTS (\n      SELECT 1 FROM public.catalogs c\n      WHERE c.user_id = products.user_id\n        AND c.is_public = true\n    )\n  );"
+    },
+    {
+      "id": "GAP-03",
+      "severidade": 3,
+      "tabela": "N/A",
+      "funcao": "set_active_payment_config",
+      "descricao": "SECURITY DEFINER function aceita p_user_id como parametro em vez de usar auth.uid() internamente. Um atacante autenticado que adivinhe/enumere um config_id alheio pode atribuir o config ao proprio user_id. IDOR potencial em dados de pagamento.",
+      "fix_sql": "CREATE OR REPLACE FUNCTION public.set_active_payment_config(p_config_id uuid)\nRETURNS void\nLANGUAGE plpgsql\nSECURITY DEFINER\nSET search_path TO 'public'\nAS $$\nDECLARE\n  v_owner UUID;\nBEGIN\n  SELECT user_id INTO v_owner FROM payment_configs WHERE id = p_config_id;\n  IF v_owner IS NULL THEN\n    RAISE EXCEPTION 'Payment config % not found', p_config_id;\n  END IF;\n  IF v_owner <> auth.uid() THEN\n    RAISE EXCEPTION 'Unauthorized: config does not belong to caller';\n  END IF;\n  UPDATE payment_configs SET is_active = false\n    WHERE user_id = auth.uid() AND is_active = true AND id <> p_config_id;\n  UPDATE payment_configs SET is_active = true WHERE id = p_config_id;\nEND;\n$$;"
+    }
+  ],
+  "alertas_amarelos": [
+    {
+      "id": "WARN-01",
+      "severidade": 2,
+      "tabela": "api_rate_limits",
+      "descricao": "RLS habilitada mas ZERO policies. Acesso negado para todos (deny-all implicito). Se a aplicacao tenta ler/escrever diretamente, vai falhar silenciosamente. Confirmar se acesso e apenas via service_role ou SECURITY DEFINER."
+    },
+    {
+      "id": "WARN-02",
+      "severidade": 2,
+      "tabela": "webhook_events",
+      "descricao": "RLS habilitada mas ZERO policies (deny-all implicito). Acesso ocorre apenas via process_webhook_atomic (SECURITY DEFINER). Correto, mas deve ser documentado explicitamente."
+    },
+    {
+      "id": "WARN-03",
+      "severidade": 2,
+      "tabela": "payment_configs",
+      "descricao": "8 policies com 4 pares duplicados (delete/insert/select/update cada com versao _own e sem sufixo). Policies PERMISSIVE se somam, causando comportamento inesperado. Limpar duplicatas reduz superficie de manutencao e risco de bug futuro."
+    },
+    {
+      "id": "WARN-04",
+      "severidade": 2,
+      "tabela": "config",
+      "policy": "config_own",
+      "descricao": "Policy contem clausula (user_id IS NULL) AND (id = 1) que expoe uma linha de config global para qualquer role incluindo anon. Se essa linha contem dados sensiveis (ex: flags globais, chaves), e um risco."
+    },
+    {
+      "id": "WARN-05",
+      "severidade": 1,
+      "tabela": "portfolio_items",
+      "descricao": "Duas policies identicas (portfolio_items_own + portfolio_items_owner_all) com qual igual. Redundancia sem impacto de seguranca mas confunde auditoria."
+    },
+    {
+      "id": "WARN-06",
+      "severidade": 1,
+      "tabela": "portfolios",
+      "descricao": "Duas policies identicas (portfolios_own + portfolios_owner_all) com qual igual. Mesma situacao de portfolio_items."
+    },
+    {
+      "id": "WARN-07",
+      "severidade": 2,
+      "tabela": "notifications",
+      "policy": "notifications_insert_svc",
+      "descricao": "with_check = false bloqueia 100% dos INSERTs diretos. Se intencional (so via SECURITY DEFINER), adicionar comentario no migration. Se nao intencional, notificacoes nao estao sendo criadas."
+    },
+    {
+      "id": "WARN-08",
+      "severidade": 2,
+      "tabela": "multiplas",
+      "descricao": "Role anon tem grants totais (SELECT/INSERT/UPDATE/DELETE/TRUNCATE/TRIGGER/REFERENCES) em 22 tabelas publicas incluindo payment_configs, transactions, orders, customers, profiles. Mitigado por RLS mas superficie de ataque desnecessariamente larga. Revogar ou restringir grants anon em tabelas que nunca sao acessadas por usuarios nao autenticados."
+    }
+  ],
+  "security_definer_functions": [
+    {"nome": "rls_auto_enable", "risco": "baixo", "obs": "Event trigger protetora. Habilita RLS em novas tabelas automaticamente."},
+    {"nome": "set_active_payment_config", "risco": "ALTO", "obs": "Ver GAP-03. Aceita p_user_id como parametro."},
+    {"nome": "handle_new_user", "risco": "baixo", "obs": "Trigger em auth.users. Cria profile. Seguro."},
+    {"nome": "create_catalog_lead", "risco": "medio", "obs": "Cria lead em catalogo publico. Sem rate limiting no DB. Verifice se API route tem throttle."},
+    {"nome": "process_webhook_atomic", "risco": "medio", "obs": "Aceita p_merchant_id como parametro. Deve ser chamada APENAS de server-side (route de webhook). Nao expor ao cliente."},
+    {"nome": "refresh_search_index", "risco": "baixo", "obs": "Atualiza materialized view. Utilitario admin."},
+    {"nome": "update_user_settings_updated_at", "risco": "baixo", "obs": "Trigger de timestamp. Seguro."}
+  ],
+  "diff_semana_anterior": {
+    "baseline": "primeira auditoria registrada",
+    "policies_removidas": "N/A",
+    "policies_adicionadas": "N/A",
+    "obs": "Proxima auditoria em 2026-06-01 tera baseline para diff."
+  },
+  "acoes_recomendadas": [
+    {"prioridade": 1, "acao": "DROP policy inventory_public_read (GAP-01)", "prazo": "antes do soft launch 11/06"},
+    {"prioridade": 2, "acao": "Recriar products_public_read com filtro por catalog publico (GAP-02)", "prazo": "antes do soft launch 11/06"},
+    {"prioridade": 3, "acao": "Recriar set_active_payment_config usando auth.uid() interno (GAP-03)", "prazo": "antes do soft launch 11/06"},
+    {"prioridade": 4, "acao": "Limpar 4 pares duplicados em payment_configs policies (WARN-03)", "prazo": "antes do launch publico 27/06"},
+    {"prioridade": 5, "acao": "Revogar grants anon em tabelas sensiveis nao-publicas (WARN-08)", "prazo": "antes do launch publico 27/06"},
+    {"prioridade": 6, "acao": "Confirmar intencionalidade de notifications_insert_svc with_check=false (WARN-07)", "prazo": "sprint atual"}
+  ]
+}
