@@ -1,0 +1,107 @@
+{
+  "data": "2026-05-26",
+  "alertas": [
+    {
+      "titulo": "Cordeiro Flow com plano FREE permanente — concorrente direto na mesma faixa de preço do Hayzer",
+      "descricao": "Cordeiro Flow (cordeiroflow.com) oferece plano gratuito eterno com calculadora básica + até 3 pedidos + orçamentos + vitrine pública. Plano pago custa apenas US$ 4,99/mês (aprox. R$ 28-30). Posicionamento explícito: 'Organize seus pedidos e aumente seus lucros'. Interface bem estruturada com trilhas de conhecimento em vídeo e alertas WhatsApp de prazo. Concorre diretamente com o Hayzer no segmento Rafael.",
+      "fonte": "WebFetch direto em cordeiroflow.com",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "AppCustos3D com promoção agressiva de 6 meses — plano PRO saindo por R$ 36/mês",
+      "descricao": "AppCustos3D (appcustos3d.com.br / @app_custos3d) pratica desconto de 48% no plano semestral: PRO fica R$ 36/mês (normal R$ 69,90). Basic fica R$ 17/mês (normal R$ 29,90). Diferencial: leitor de G-code para análise técnica de arquivo, importação de pedidos Shopee e gerador de proposta via WhatsApp. Trial de 3 dias sem cartão. Feature de G-code é única no mercado local — Hayzer não tem.",
+      "fonte": "WebFetch direto em appcustos3d.com.br",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "MakerFlow 3D com integração Mercado Livre + Shopee em tempo real — precificação mais baixa do mercado",
+      "descricao": "MakerFlow 3D (makerflow3d.com.br) cobra R$ 29,90/mês ou R$ 69,90/trimestre (mais popular). Destaque: integração oficial com ML e Shopee sincronizando estoque físico com anúncios em tempo real. Reclama ter 99,8% de precisão nos custos. Trial de 7 dias completo sem cartão. Modelo similar ao Hayzer mas com foco mais estreito (sem CRM/módulo de clientes robusto).",
+      "fonte": "WebFetch direto em makerflow3d.com.br",
+      "urgencia": "media"
+    },
+    {
+      "titulo": "3D Control com R$ 39,99 flat 'Tudo Incluído' — CRM integrado é diferencial vs concorrência",
+      "descricao": "3D Control (3dcontrol.com.br) cobra R$ 39,99/mês com plano único que inclui CRM com ranking de clientes, histórico de pedidos, segmentação B2B/B2C + dashboard financeiro + múltiplas plataformas de venda (Shopee, ML, Elo7, Instagram). Alega '300%+ de aumento de lucro' e '5h/semana economizadas'. Posicionamento de preço médio com feature set próximo ao Hayzer.",
+      "fonte": "WebFetch direto em 3dcontrol.com.br + WebSearch",
+      "urgencia": "media"
+    },
+    {
+      "titulo": "PrintWorks3D com posicionamento de 'gratuito e completo' — risco de commoditizar o segmento",
+      "descricao": "PrintWorks3D (printworks3d.com.br) se posiciona como 'o melhor gerenciador de impressão 3D GRATUITO' com controle de filamentos, impressoras, custos, vendas e finanças. Se realmente for gratuito sem limitação, cria pressão de preço no mercado e pode dificultar conversão de Rafael para SaaS pago. Dados do site não carregaram completamente; posicionamento confirmado por WebSearch.",
+      "fonte": "WebSearch — site com conteúdo limitado no WebFetch",
+      "urgencia": "media"
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "perfil": "@3dlab_brasil",
+      "tipo": "desconhecido",
+      "texto": "Perfil verificado: 3D LAB — BH e SP. Foco em impressoras, filamentos, cursos e suporte técnico. Canal de conteúdo 3D com presença em Instagram + Twitter/X + YouTube. Sem acesso ao conteúdo dos posts das últimas 24h — Instagram bloqueou WebFetch com redirecionamento para login.",
+      "engajamento_estimado": "indisponível — 82K seguidores conforme WebSearch",
+      "relevancia_hayzer": "baixa — concorre no hardware/filamento, não em SaaS de gestão"
+    },
+    {
+      "perfil": "@3dgeekshow",
+      "tipo": "desconhecido",
+      "texto": "Canal educacional maker 3D com 128K seguidores, 1.694 posts, tag 'Impressão 3D sem enrolação'. Conteúdo recente: Formnext 2025 novidades para 2026, impressão 3D industrial. Audiência massiva de makers — potencial canal de awareness para o Hayzer via parceria ou menção.",
+      "engajamento_estimado": "indisponível — 128K seguidores conforme WebSearch",
+      "relevancia_hayzer": "alta — audiência exata do Rafael; possível parceria/co-marketing"
+    },
+    {
+      "perfil": "@artbox3d",
+      "tipo": "desconhecido",
+      "texto": "Empresa maker 3D em São Paulo, 82K seguidores, 715 posts. Foco em impressão sob demanda e em escala, modelagem, prototipagem. Possui app próprio (app.artbox3d.com.br). Não são concorrentes de software mas de serviço de impressão.",
+      "engajamento_estimado": "indisponível — 82K seguidores conforme WebSearch",
+      "relevancia_hayzer": "baixa — serviço de impressão, não gestão SaaS"
+    },
+    {
+      "perfil": "@app_custos3d",
+      "tipo": "desconhecido",
+      "texto": "Instagram do AppCustos3D confirmado no rodapé do site. Sem acesso direto ao conteúdo dos posts — Instagram bloqueou com redirecionamento para login.",
+      "engajamento_estimado": "indisponível",
+      "relevancia_hayzer": "alta — concorrente direto com gerador de proposta WhatsApp e leitor G-code"
+    },
+    {
+      "perfil": "@3dprintacademy",
+      "tipo": "desconhecido",
+      "texto": "Sem dados acessíveis — Instagram bloqueou com HTTP 429 (too many requests) na segunda tentativa de acesso.",
+      "engajamento_estimado": "indisponível",
+      "relevancia_hayzer": "desconhecida — nome sugere educação 3D, não gestão"
+    }
+  ],
+  "reclamacoes": [
+    {
+      "empresa": "Bling ERP",
+      "queixa": "Falha na integração com Shopee (pedidos, etiquetas e logística problemáticos); indisponibilidade de armazenamento impedindo emissão de NF e geração de pedidos; tempo médio de resposta de 9 dias e 17 horas (dados out/2025–mar/2026)",
+      "recorrente": true,
+      "oportunidade_hayzer": "Makers 3D que usam Bling para gestão de pedidos sofrem com complexidade e suporte lento. Hayzer pode se posicionar como alternativa vertical especializada: 'feito por maker, para maker' sem a complexidade genérica do ERP. Foco em Shopee + ML com integração sem fricção."
+    },
+    {
+      "empresa": "MakerFlow 3D",
+      "queixa": "Nenhuma reclamação encontrada no Reclame Aqui — produto pode ser novo demais ou ter base de usuários pequena ainda",
+      "recorrente": false,
+      "oportunidade_hayzer": "Ausência de reclamações pode indicar base pequena. Hayzer pode atacar com prova social (depoimentos reais) antes que MakerFlow escale."
+    },
+    {
+      "empresa": "3D Control",
+      "queixa": "Nenhuma reclamação encontrada no Reclame Aqui — produto pode ser novo ou ter base reduzida",
+      "recorrente": false,
+      "oportunidade_hayzer": "Mesma lógica: janela de diferenciação por reputação e suporte humanizado antes que concorrentes se consolidem."
+    },
+    {
+      "empresa": "AppCustos3D (Custos3D)",
+      "queixa": "Nenhuma reclamação encontrada no Reclame Aqui. Reclame Aqui bloqueou acesso direto (403 Forbidden).",
+      "recorrente": false,
+      "oportunidade_hayzer": "Sem histórico público de problemas. Diferencial do Hayzer deve ser módulos integrados (CRM + produção + financeiro) vs calculadora avançada isolada do concorrente."
+    },
+    {
+      "empresa": "3D Fila / 3D Lab (hardware/filamento)",
+      "queixa": "Reclamações sobre produtos com cores divergentes do anunciado e filamentos com defeito (nó, variação de espessura). Não relacionadas a software de gestão.",
+      "recorrente": true,
+      "oportunidade_hayzer": "Tangencial — makers frustrados com fornecedores de insumo estão mais propensos a buscar controle via software. Storytelling: 'controla até o custo real do filamento com defeito'."
+    }
+  ],
+  "acao_recomendada": "URGENTE (esta semana): Mapear feature de G-code do AppCustos3D como diferencial que o Hayzer não tem — decidir se entra no roadmap Wave 2 ou é descartada conscientemente. Cordeiro Flow com plano free eterno pode estar convertendo o topo do funil que o Hayzer quer capturar com a Calculadora gratuita; monitorar crescimento deles. CURTO PRAZO (pré-launch 27/06): Contatar @3dgeekshow (128K seguidores, audiência exata do Rafael) para parceria de conteúdo ou review do Hayzer — canal com maior ROI de awareness identificado. POSICIONAMENTO: Nenhum concorrente direto tem CRM + produção + financeiro + pedidos integrados num único shell visual (V4). Esse é o moat do Hayzer. Comunicar isso explicitamente na landing: 'o único que conecta lead para pedido para produção para financeiro'.",
+  "sem_dados": false,
+  "notas_acesso": "Instagram: todos os 5 perfis bloqueados com redirecionamento para página de login — nenhum HTML de perfil público disponível. Reclame Aqui: bloqueou WebFetch com HTTP 403 em todas as URLs (empresa e buscas). Dados de Instagram obtidos via WebSearch (metadados do Google: follower count, bio resumida, URL). Dados de concorrentes SaaS obtidos via WebFetch direto nos sites (makerflow3d.com.br, appcustos3d.com.br, 3dcontrol.com.br, cordeiroflow.com) — todos acessíveis e com dados concretos de pricing e features. Concorrentes identificados que não estavam na lista original da missão: Cordeiro Flow e Precifi3D. ZoomCalc3D sem presença online identificada (possivelmente nome errado ou produto descontinuado). PrintWorks3D com conteúdo de página inacessível além do título. Dados de reclamação são inferidos da ausência de resultados no Reclame Aqui — nenhuma reclamação encontrada NÃO significa zero reclamações."
+}
