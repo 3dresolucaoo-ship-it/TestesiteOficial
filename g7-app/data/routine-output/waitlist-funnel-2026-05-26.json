@@ -1,0 +1,75 @@
+{
+  "date": "2026-05-26",
+  "generated_at": "2026-05-26T09:00:00-03:00",
+  "periodo_24h": {
+    "total_novos": 0,
+    "step2_completados": 0,
+    "pct_step2": null,
+    "por_utm": {}
+  },
+  "acumulado": {
+    "total": 3,
+    "step2_completos": 3,
+    "pct_step2": 100.0,
+    "top_utms": [
+      { "source": "direct", "total": 3, "pct": 100.0 }
+    ]
+  },
+  "ultimos_7_dias": {
+    "total": 2,
+    "semana_anterior": 1,
+    "crescimento_pct": 100.0,
+    "media_diaria": 1.0
+  },
+  "qualidade": {
+    "pct_email_confirmado": 0.0,
+    "pct_qualificados_segment": 0.0,
+    "tempo_medio_s1_s2_min": null,
+    "obs": "Todos os leads tem whatsapp preenchido (step2=ok), mas nenhum tem segment/size/pain/business_name - campos de qualificacao nao estao sendo capturados ou exibidos no form"
+  },
+  "tendencia_vs_media_7d": "baixa",
+  "leads_detalhe": [
+    {
+      "nome": "Gabriel",
+      "data": "2026-05-22 (BRT)",
+      "device": "mobile",
+      "utm": "direct",
+      "step2": true,
+      "qualificado": false,
+      "email_confirmado": false,
+      "obs": "Possivel CEO"
+    },
+    {
+      "nome": "Auditor QA",
+      "data": "2026-05-19 (BRT)",
+      "device": "desktop",
+      "utm": "direct",
+      "step2": true,
+      "qualificado": false,
+      "email_confirmado": false,
+      "obs": "Teste interno - sessao hardwork 20/05"
+    },
+    {
+      "nome": "Gabriel",
+      "data": "2026-05-15 (BRT)",
+      "device": "desktop",
+      "utm": "direct",
+      "step2": true,
+      "qualificado": false,
+      "email_confirmado": false,
+      "obs": "Possivel CEO ou teste"
+    }
+  ],
+  "alertas": [
+    "UTM tracking nao capturou nenhuma source - verificar implementacao no form e na landing",
+    "0 de 3 leads confirmaram email - fluxo de confirmacao precisa ser testado",
+    "Campos de qualificacao (segment, size, pain) nulos em 100% dos leads",
+    "Base atual parece ser 100% testes internos - nenhum lead externo real ainda"
+  ],
+  "acoes_recomendadas": [
+    "Verificar por que parametros UTM nao estao sendo gravados no form (todos aparecem como direct)",
+    "Testar fluxo de email de confirmacao de ponta a ponta",
+    "Revisar se step 2 do form esta exibindo e salvando fields: segment, size, revenue_band, pain",
+    "Proxima semana: ativar conteudo/trafego real para comecar a gerar leads externos"
+  ]
+}
