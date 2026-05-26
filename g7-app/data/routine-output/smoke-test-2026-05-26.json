@@ -1,0 +1,86 @@
+{
+  "date": "2026-05-26",
+  "hora": "06:00 BRT",
+  "status": "ALERTA AMARELO",
+  "summary": "2/4 rotas respondendo 200. /waitlist 404 pelo 6o dia consecutivo (causa raiz confirmada: app/waitlist/page.tsx ausente). /calculadora/pro 404 esperado (decision-024). Supabase saudavel. Performance indisponivel (issue #23 ativa).",
+
+  "rotas": {
+    "hayzer_com_br": { "status": 200, "ok": true },
+    "hayzer_com_br_calculadora": { "status": 200, "ok": true },
+    "hayzer_com_br_waitlist": {
+      "status": 404,
+      "ok": false,
+      "causa_raiz": "app/waitlist/page.tsx nao existe no repositorio. Next.js App Router exige page.tsx para a rota existir. Diretorio app/waitlist/ contem apenas actions.ts e obrigado/.",
+      "consecutivos": 6,
+      "severity": 3,
+      "blocker_launch": true,
+      "prazo": "soft launch 11/06 (16 dias)"
+    },
+    "hayzer_com_br_calculadora_pro": {
+      "status": 404,
+      "ok": false,
+      "esperado": true,
+      "motivo": "Rota nunca criada. Calc Pro revogada (decision-024). 404 esperado e correto."
+    }
+  },
+
+  "vercel": {
+    "projeto": "bvaz-hub",
+    "projeto_id": "prj_KHkxLpnoblctCyW3LVJWd8KX1nzX",
+    "producao_branch": "main",
+    "producao_commit": "4de0641",
+    "producao_mensagem": "monitoring: error-scan 2026-05-24",
+    "producao_idade_horas": 57,
+    "latest_preview_deployment": "dpl_9k85pxVY6M4rTJmHR6tkLEnfjkC1",
+    "status_deployments": "TODOS READY - nenhum ERROR ou BUILDING travado",
+    "erros_nas_ultimas_24h": 0,
+    "alertas": ["VERCEL_API_TOKEN ausente (issue #23, 6o dia) - impede leitura de Core Web Vitals"]
+  },
+
+  "supabase": {
+    "projeto_id": "sqyrkisnllrgylnxwudu",
+    "regiao": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK (SELECT 1 = 1)",
+    "postgres": "17.6.1.104",
+    "waitlist_leads_total": 3,
+    "tabelas": {
+      "notifications": "EXISTE",
+      "waitlist_leads": "EXISTE",
+      "search_index_view": "AUSENTE"
+    },
+    "alertas": ["View search_index nao existe no schema public. Verificar se e esperado ou migration pendente."]
+  },
+
+  "performance": {
+    "disponivel": false,
+    "motivo": "VERCEL_API_TOKEN ausente (issue #23). Core Web Vitals indisponiveis via MCP.",
+    "lcp_ultimo_conhecido": "3.6s (TBT estimado prod, sessao 20/05)",
+    "alerta": "Lighthouse so rodou em /. Rotas internas nao medidas."
+  },
+
+  "acoes_recomendadas": [
+    {
+      "prioridade": 1,
+      "acao": "Criar app/waitlist/page.tsx",
+      "motivo": "/waitlist 404 por 6 dias. BLOCKER soft launch 11/06. Diretorio existe, page handler nao.",
+      "urgencia": "HOJE"
+    },
+    {
+      "prioridade": 2,
+      "acao": "Configurar VERCEL_API_TOKEN nas env vars do container Claude",
+      "motivo": "5o dia consecutivo sem acesso a Core Web Vitals e Runtime Logs via MCP",
+      "issue": "#23",
+      "urgencia": "ESTA SEMANA"
+    },
+    {
+      "prioridade": 3,
+      "acao": "Verificar se view search_index e necessaria e criar migration se sim",
+      "motivo": "View ausente no schema - pode quebrar funcionalidade de busca",
+      "urgencia": "VERIFICAR"
+    }
+  ],
+
+  "gerado_por": "smoke-test rotina",
+  "session": "claude/beautiful-dijkstra-AW3IT"
+}
