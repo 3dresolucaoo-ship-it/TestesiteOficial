@@ -115,6 +115,32 @@ Quando responde uma decisão grande, formato:
 
 ---
 
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "7 Powers: The Foundations of Business Strategy" — Hamilton Helmer (2016).
+
+**P1 — Contra-posicionamento como ataque onde incumbente nao pode responder**
+Quando uma startup enfrenta players grandes (Bling, Tiny, Conta Azul), faca: identificar o segmento onde o incumbente NAO PODE responder sem se canibalizar, porque grandes players tem conflito de interesse em defender nicho que corroi seu modelo atual. (Helmer · Power #3 Counter-Positioning · Hamilton · hamiltonhelmer.com)
+Aplicacao Hayzer: Bling/Tiny tem sistema generico para qualquer segmento. Nao podem fazer calculadora especializada por marketplace brasileiro de impressao 3D sem fragmentar posicionamento. Hayzer entra exatamente onde eles nao podem ir — nicho vertical maker 3D BR e o beachhead.
+
+**P2 — Switching costs como barreira de saida construida no onboarding**
+Quando desenhar onboarding que pede dados do usuario (impressoras, margens, clientes, precos por canal), acumule esses dados intencionalmente como ativo de longo prazo, porque switching cost alto gera churn menor por razao estrutural — nao por satisfacao pontual. (Helmer · Power #4 Switching Costs · 7powersbook.com)
+Aplicacao Hayzer: cada pedido, configuracao de impressora e historico salvo aumenta o custo de migracao para concorrente. Onboarding deve pedir dados que criam lock-in legitimo: configuracoes de material, precos de venda por marketplace, meta de margem salva.
+
+**P3 — Efeito de rede como power se cada usuario novo melhora o produto para os existentes**
+Quando a base de usuarios crescer, identifique se existe valor de rede latente (ex: benchmarks de margem anonimizados, comparativo de preco por regiao, tipo de produto), porque redes de utilidade viram moat quando dado agregado e unico no mercado. (Helmer · Power #2 Network Economies · quantitative analysis)
+Aplicacao Hayzer: com 100 makers ativos, benchmarks anonimos de margem por tipo de produto, filamento e marketplace se tornam dado exclusivo. "Como sua margem se compara aos outros makers BR?" — ninguem tem esse dado hoje. Planejar feature de benchmark anonimizado na Onda 3.
+
+**P4 — Process Power: processo excelente que e dificil de imitar mesmo com acesso ao codigo**
+Quando um processo operacional (onboarding guiado, sequencia de email, fluxo lead→pedido→producao→financeiro) for dificil de imitar mesmo tendo o codigo, esse processo e power real, porque requer tempo de iteracao e learning organico que concorrente nao copia no curto prazo. (Helmer · Power #7 Process Power · 7powersbook.com)
+Aplicacao Hayzer: o golden path lead→pedido→producao→estoque→financeiro e o process power central do Hayzer. Cada sessao de feedback com maker beta melhora esse fluxo de forma que concorrente demora meses para replicar — documentar aprendizados em decisions/.
+
+**P5 — Branding como power genuino requer singularidade, nao apenas familiaridade**
+Quando construir marca, diferencie entre brand recognition (qualquer SaaS tem) e brand power real (usuario paga mais PELA MARCA), porque so o segundo e moat defensavel — recognition e copiavel, associacao emocional nao e. (Helmer · Power #6 Branding · 7powersbook.com)
+Aplicacao Hayzer: Hayzer ainda esta construindo brand. Singularidade vira quando maker 3D BR associar "Hayzer" com "gestao seria de negocio" — nao so "sistema bonito". Acoes que constroem isso agora: calculadora gratis que resolve problema real + build-in-public do CEO com Bambu A1 = credibilidade antes de preco.
+
+(Livro: 7 Powers · Hamilton Helmer · 2016 · Data: 2026-05-26)
+
+---
+
 ## 📚 Meus estudos (helena-strategy)
 
 Pasta: `studies/helena-strategy/`
@@ -122,11 +148,11 @@ Pasta: `studies/helena-strategy/`
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Good Strategy Bad Strategy (Rumelt) | 🟢 sintetizado | 2026-05-17 | 7 |
-| 7 Powers (Helmer) | 🔵 não lido | — | 0 |
+| 7 Powers (Helmer) | 🟢 sintetizado | 2026-05-26 | 5 |
 | Lean Strategy (Wickman) | 🔵 não lido | — | 0 |
 | The Hard Thing About Hard Things (Horowitz) | 🔵 não lido | — | 0 |
 
-**Calendário**: 1 livro/mês. Próximo: 7 Powers (junho/2026 — moats reais vs vagos).
+**Calendário**: 1 livro/mês. Próximo: Lean Strategy (julho/2026 — execução estratégica em PME).
 
 ---
 

@@ -177,7 +177,33 @@ Aplicação Hayzer: a regra "service-first" existe exatamente pra isso — isola
 (Kleppmann · Cap. 1 · "Reliability" — building reliable systems from unreliable parts)
 Aplicação Hayzer: RLS é a camada de tolerância a falha de autorização — mesmo que a Server Action esqueça de filtrar por `project_id`, o Postgres rejeita via policy. Nunca confiar só na camada de aplicação: RLS + `project_id` na query são defesa em profundidade.
 
-**Proxima leitura agendada**: DDIA Cap. 2 — Data Models and Query Languages (domingo 24/05/2026)
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "Designing Data-Intensive Applications" — Martin Kleppmann (O'Reilly, 2017) · Cap. 2: Data Models and Query Languages.
+
+**P8 — Modelo de dados define as perguntas que voce pode fazer daqui a 6 meses**
+Quando escolher entre relational (tabelas com FK) e document (JSONB) para uma entidade, pense nas queries que o sistema precisara responder no futuro, porque modelo de dados escolhido hoje define o custo e a complexidade de query de amanha — e refatorar schema em producao e caro. (Kleppmann · Cap. 2 · "Relational vs Document" · relational vs NoSQL tradeoffs)
+Aplicacao Hayzer: pedidos como JSONB para metadados de itens variaveis (tipos de peca, configuracoes de impressao) + joins relacionais para customer_id e project_id e o modelo hibrido correto. Evitar colocar dados que precisam de query individual dentro de array JSONB — cada item que precisa de WHERE vira coluna propria.
+
+**P9 — Impedance mismatch: nem tudo que faz sentido no codigo faz sentido no banco**
+Quando modelar entidades com relacionamentos complexos (pedido → itens → estoque → producao → financeiro), evitar o reflexo de criar tabela para tudo OU de colocar tudo em JSONB, porque o modelo intermediario — JSONB para dados variaveis + FK para relacionamentos fixos — e o que Postgres faz com menor custo. (Kleppmann · Cap. 2 · "The Object-Relational Mismatch")
+Aplicacao Hayzer: `orders.items` pode ser JSONB se itens raramente precisam de query individual por campo interno. Mas `orders.customer_id` deve ser FK real para query "pedidos por cliente" ser eficiente com index. Revisar schema de orders antes do launch 11/06.
+
+**P10 — Dados auto-relacionados pedem modelo especifico, nao tabela plana**
+Quando o negocio tiver entidades que se relacionam entre si de forma recursiva (makers que indicam outros makers, produtos com variantes de variantes, historico de edicoes), use tabela de adjacencia (id, parent_id) ou JSONB com estrutura recursiva em vez de FK plana, porque SQL com joins ilimitados em dados recursivos e exponencial em custo. (Kleppmann · Cap. 2 · "Many-to-Many Relationships" + graph-like data)
+Aplicacao Hayzer: hoje nao ha dados em grafo. Mas estrutura de "indicacao entre makers" (roadmap futuro) precisa de modelo proprio — `referrals(referrer_id, referred_id, created_at)` — nao apenas FK de user para user na tabela principal.
+
+**P11 — Query language e para dados, nao para logica de negocio**
+Quando um service comecar a ter mais de 4 JOINs ou subqueries aninhadas com CASE WHEN, e sinal de que logica de negocio vazou para o SQL, porque SQL e excelente para buscar e agregar dados estruturados — ruim para logica condicional complexa que pertence ao TypeScript no service. (Kleppmann · Cap. 2 · "Declarative vs Imperative" query languages)
+Aplicacao Hayzer: queries em `services/` devem buscar dados simples e tipados; transformacoes e regras de negocio ficam no TypeScript. Query com CASE WHEN + multiplos JOINs + window functions em um so statement = candidata a ser quebrada em 2 queries + logica TypeScript separada.
+
+**P12 — Localidade de dados: busque so o que vai usar, nao tudo**
+Quando escrever query de dashboard ou listagem, selecione apenas os campos que o componente vai renderizar via `.select('campo1, campo2, ...')`, porque `SELECT *` em tabela larga com JSONB trafega colunas que nunca chegam ao usuario — caro em rede, caro em memoria, lento em parse. (Kleppmann · Cap. 2 · data locality + document model advantages)
+Aplicacao Hayzer: `services/orders.ts` — trocar `select('*')` por campos especificos: `select('id, title, status, customer_name, created_at, total_value, due_date')`. Em tabelas com JSONB de items, isso evita trafegar todo o JSON de cada pedido quando a listagem so precisa de metadata de cabecalho.
+
+(Livro: Designing Data-Intensive Applications · Martin Kleppmann · Cap. 2 · O'Reilly · Data: 2026-05-26)
+
+**Proxima leitura agendada**: DDIA Cap. 3 — Storage and Retrieval (domingo 31/05/2026)
 
 ---
 
@@ -185,8 +211,8 @@ Aplicação Hayzer: RLS é a camada de tolerância a falha de autorização — 
 
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
-| Designing Data-Intensive Applications (Kleppmann) | 🟡 em andamento | 2026-05-17 | 7 (Cap. 1) |
+| Designing Data-Intensive Applications (Kleppmann) | 🟡 em andamento | 2026-05-26 | 12 (Cap. 1+2) |
 | PostgreSQL: Up and Running (Obe/Hsu) | 🔵 não lido | — | 0 |
 | The Art of PostgreSQL (Fontaine) | 🔵 não lido | — | 0 |
 
-**Calendário**: 1 capítulo/semana. Próximo: DDIA Cap. 2 (domingo 24/05/2026).
+**Calendário**: 1 capítulo/semana. Próximo: DDIA Cap. 3 — Storage and Retrieval (domingo 01/06/2026).

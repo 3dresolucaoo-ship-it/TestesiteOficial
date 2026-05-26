@@ -222,7 +222,33 @@ YYYY-MM-DD · <quem atualizou>
 
 ---
 
-**Proxima leitura agendada**: `studies/lia-docs/` — "A Plain English Handbook" (SEC, gratuito) + Daniele Procida "Diátaxis" (diátaxis.fr). Junho/2026.
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "Every Page Is Page One: Topic-Based Writing for Technical Communication and the Web" — Mark Baker (XML Press, 2013). Conceito central: topic-based writing, self-contained pages, information foraging, reader arrives from search.
+
+**P8 — Toda pagina deve ser compreensivel sem contexto anterior: leitor chegou pelo grep**
+Quando escrever CLAUDE.md de pasta ou ADR, escreva como se o leitor acabou de chegar naquele arquivo diretamente via grep ou busca — sem ter lido nenhum outro arquivo antes, porque docs que assumem que o leitor leu tudo antes sao inuteis quando a busca comeca no meio (que e sempre). (Baker · cap 3 · "Every Page Is Page One" · concept: reader arrives from search, not from beginning)
+Aplicacao Hayzer: cada CLAUDE.md de pasta deve ter no topo em 3 linhas: o que e essa pasta, por que existe, o que tem aqui. ADR deve ter secao "Contexto" que explica a situacao completa sem referenciar "a discussao de 17/05" ou "como combinamos antes" — que o leitor em 2027 nao vai lembrar.
+
+**P9 — Topico tem um assunto, uma tarefa, um conceito — nunca dois**
+Quando criar documentacao nova, resista ao impulso de colocar multiplos assuntos no mesmo arquivo (ADR de pagamento + ADR de RLS juntos, CLAUDE.md de services misturado com CLAUDE.md de migrations), porque topico misto obriga o leitor a filtrar mentalmente o que e relevante — custo cognitivo que ninguem paga voluntariamente em momento de urgencia. (Baker · cap 5 · "The Information Typing Manifesto" · concept: topic coherence)
+Aplicacao Hayzer: ADRs separados para cada decisao, mesmo tomadas na mesma sessao. `services/CLAUDE.md` fala so de services. `supabase/migrations/CLAUDE.md` fala so de migrations. Nunca misturar no mesmo arquivo.
+
+**P10 — Linking e mais valioso que repetir: DRY aplicado a documentacao**
+Quando uma informacao ja existe em outro arquivo, referencie via link com contexto em vez de duplicar o conteudo, porque doc duplicada envelhece de forma inconsistente — em 6 meses, uma diz uma coisa e outra diz outra, e ninguem sabe qual acreditar. (Baker · cap 9 · "Links and Navigation" · concept: linking as navigation structure)
+Aplicacao Hayzer: `app/api/CLAUDE.md` deve ter link para `supabase/migrations/CLAUDE.md` ao inves de explicar schema de novo. `services/CLAUDE.md` deve linkar para `types/database.ts` ao inves de listar tipos de novo. Cada duplicata e uma divida futura de inconsistencia.
+
+**P11 — Information foraging: usuario caca doc como animal caca comida, segue rastro**
+Quando estruturar indices de docs (studies/_index.md, ROADMAP.md, auditoria rolling), organize por "scent" — o que o leitor esta procurando agora, nao por logica interna do projeto, porque usuario abandona a busca quando os primeiros sinais de rastro estao fracos ou ausentes. (Baker · cap 7 · "Information Foraging" · apud Pirolli + Card, Xerox PARC research)
+Aplicacao Hayzer: ROADMAP.md deve abrir com "Proxima acao imediata" antes de historico de fases. `studies/_index.md` deve mostrar status atual em destaque (sintetizado/em leitura/nao lido) — o leitor quer saber o proximo passo, nao a curadoria completa. Auditar estrutura de ambos.
+
+**P12 — Relacoes entre topicos sao explicitas, nao implicitas: link + razao, nao so link**
+Quando um CLAUDE.md referencia outro arquivo, inclua o link E a razao de estar referenciando (o que o leitor vai encontrar la e por que importa agora), porque "veja tambem decisions/014.md" e menos util que "se voce vai mudar o fluxo de pagamento, leia decisions/014-webhook-signature.md primeiro — cache de OAuth e fragil". (Baker · cap 8 · "Explicit Relationships" · topic relationships beyond linking)
+Aplicacao Hayzer: secao "Nao mexer sem avisar" no CLAUDE.md raiz e o padrao correto. Expandir: todo link em CLAUDE.md de pasta deve ter frase de contexto de 1 linha — por que esse arquivo importa para quem esta lendo agora.
+
+(Livro: Every Page Is Page One · Mark Baker · XML Press · 2013 · Data: 2026-05-26)
+
+**Proxima leitura agendada**: `studies/lia-docs/` — Diataxis (Procida · diataxis.fr, gratuito online) (julho/2026)
 
 ---
 
@@ -232,11 +258,12 @@ Pasta: `studies/lia-docs/` (a criar)
 
 | Livro / Fonte | Status | Ultima leitura | Principios extraidos |
 |---|---|---|---|
-| Docs for Developers (Bhatti et al.) | Concluido | 2026-05-17 | 7 |
-| Diataxis (Procida — diataxis.fr) | Nao lido | — | 0 |
-| A Plain English Handbook (SEC) | Nao lido | — | 0 |
+| Docs for Developers (Bhatti et al.) | 🟢 sintetizado | 2026-05-17 | 7 |
+| Every Page Is Page One (Baker) | 🟢 sintetizado | 2026-05-26 | 5 |
+| Diataxis (Procida — diataxis.fr) | 🔵 nao lido | — | 0 |
+| A Plain English Handbook (SEC) | 🔵 nao lido | — | 0 |
 
-**Calendario**: 1 fonte/mes. Proxima: Diataxis (junho/2026).
+**Calendario**: 1 fonte/mes. Proxima: Diataxis (julho/2026 — diataxis.fr gratuito).
 
 ---
 

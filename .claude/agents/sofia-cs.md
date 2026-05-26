@@ -188,3 +188,29 @@ Porque Z: múltiplas opções de contato aumentam o esforço percebido na decis�
 Dixon · cap. 3 · conceito: channel navigation e guided channel choice.
 
 Aplicação Hayzer: a tela de suporte do Hayzer não lista "chat / email / WhatsApp / telefone". Começa com uma pergunta ("Qual é o seu problema?") e direciona para o canal com maior taxa de resolução para aquele tipo de dúvida.
+
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "Customer Success: How Innovative Companies Are Reducing Churn and Growing Recurring Revenue" — Nick Mehta, Dan Steinman, Lincoln Murphy (Gainsight, 2016).
+
+**P1 — CS nao e suporte: e garantia de valor pos-venda**
+Quando configurar CS para o Hayzer, separe suporte reativo (resolver problema que apareceu) de CS proativo (garantir que maker alcanca o resultado prometido — gestao do negocio), porque SaaS que so tem suporte perde cliente que nunca reclamou — simplesmente foi embora sem feedback. (Mehta · cap 2 · conceito: outcomes-focused customer success)
+Aplicacao Hayzer: Rafael pode nunca abrir ticket e ainda assim churnar se nao usar o modulo financeiro para fechar o mes. CS Hayzer = verificar se ele esta usando dashboard financeiro e criando pedidos regularmente — nao so se mandou email com duvida.
+
+**P2 — Health Score como sistema de alerta precoce de churn**
+Quando definir metricas de retencao, crie um score de saude composto (frequencia de login + acoes-chave + dados inseridos) por conta, porque churn nao e surpresa — e sinal ignorado de 2 a 6 semanas antes que um score teria capturado. (Mehta · cap 5 · Customer Health Score framework)
+Aplicacao Hayzer: health score minimo viavel = (login nos ultimos 7 dias) × (pedido criado no mes) × (modulo financeiro visualizado). Score baixo por 14 dias = trigger de email proativo antes de churn. PostHog ja esta ativo para capturar esses eventos.
+
+**P3 — Onboarding define o teto de retencao: primeira semana e decisiva**
+Quando pensar em retencao, entenda que o teto e definido na primeira semana: usuario que nao ativa em 7 dias raramente ativa depois, porque janela de motivacao e estreita — depois o cotidiano supera a intencao inicial de mudar o jeito de trabalhar. (Mehta · cap 6 · conceito: time-to-value critico)
+Aplicacao Hayzer: wizard de onboarding (pendente 20/05, copy Carla pronta) nao e feature opcional. E a infraestrutura de retencao. Cada dia sem ele e potencial usuario Beta que ativa, nao ve valor na primeira semana, e vai embora sem reclamar.
+
+**P4 — Segmentacao de clientes: nao trate todos igual com recurso limitado**
+Quando pensar em CS solo (CEO + G7 sem time de CS dedicado), segmente por potencial de expansao e risco de churn, porque atenção e recurso finito — alocar onde o impacto e maximo e a estrategia de quem nao tem equipe de 10 pessoas. (Mehta · cap 7 · customer segmentation by tier)
+Aplicacao Hayzer: makers com mais de 5 pedidos/mes = alto valor, contato proativo mensal do CEO. Makers que acessam so calculadora = leads, nao clientes ativos. Foco de CS nos primeiros 90 dias: ativar 20 makers com health score alto antes de conquistar novos.
+
+**P5 — Dado de uso e mais honesto que pesquisa de satisfacao**
+Quando quiser saber se maker esta tendo sucesso, olhe o comportamento no produto antes de pedir feedback, porque cliente diz que "esta otimo" e churna 30 dias depois — o dado de uso nao mente. (Mehta · cap 8 · product usage as leading indicator vs lagging NPS)
+Aplicacao Hayzer: PostHog ja ativo. Criar eventos especificos: pedido_criado, financeiro_visualizado, calculadora_usada, relatorio_exportado. Se evento de criacao de pedido nao acontece em 14 dias pos-onboarding = intervencao proativa, nao esperar o maker sumir.
+
+(Livro: Customer Success · Nick Mehta et al. · Gainsight/Wiley · 2016 · Data: 2026-05-26)

@@ -124,7 +124,33 @@ Quando implementa, mostra:
 - **[Static + Streaming] Quando** uma página tem partes estáticas (hero, nav, footer) e partes dinâmicas (dados do usuário, métricas), **use** Suspense boundaries para isolar o streaming das partes dinâmicas — a página carrega instantaneamente e as partes dinâmicas chegam progressivamente. **Porque** elimina o "tudo ou nada" do SSR bloqueante e melhora LCP/INP. (Patterns.dev · RSC/Streaming · https://www.patterns.dev/react/react-server-components)
   - **Aplicação Hayzer**: `app/dashboard/page.tsx` pode ter `<Suspense fallback={<DashboardSkeleton />}><DashboardMetrics /></Suspense>` para métricas Supabase sem bloquear o shell da página.
 
-**Proxima leitura agendada**: `studies/felipe-frontend/` (criar pasta) — "Web Performance in Action" ou documentação oficial Next.js App Router (domingo 24/05/2026)
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "Vercel Changelog mensal" — vercel.com/changelog (Maio/2026). Features: Fluid Compute, Rolling Releases, Skew Protection, Partial Prerendering (PPR), Edge Config, Build Cache incremental.
+
+**P1 — Partial Prerendering (PPR) como ponte entre estatico e dinamico sem trade-off**
+Quando uma pagina tem partes estaticas (sidebar, nav, header, footer) e partes dinamicas (KPIs do usuario, metricas de pedidos), use PPR do Next.js 16 para servir o shell estatico instantaneamente enquanto Suspense boundaries fazem streaming do conteudo dinamico, porque elimina o trade-off entre TTFB rapido e dados frescos — voce tem os dois. (Vercel Changelog · PPR stable · nextjs.org/docs/app/api-reference/config/next-config-js/ppr)
+Aplicacao Hayzer: `/dashboard/page.tsx` — shell (sidebar V4, header, nav) pode ser PPR estatico; KPIs e metricas ficam em `<Suspense fallback={<KPISkeleton />}><DashboardMetrics /></Suspense>`. Ajuda no TBT atual de 3.6s sem refatorar toda a arquitetura.
+
+**P2 — Skew Protection: evitar deploy inconsistente para usuarios com sessao ativa**
+Quando fizer deploy de nova versao com usuarios ativos em sessao, ative Skew Protection da Vercel para garantir que requests do cliente antigo sejam servidos pela versao anterior, porque sem skew protection usuario em sessao ativa ve erro JS de chunk inconsistente sem motivo aparente — confunde e assusta. (Vercel Changelog · Skew Protection · vercel.com/docs/deployments/skew-protection)
+Aplicacao Hayzer: na semana do launch 11/06, habilitar Skew Protection no Vercel Dashboard > Settings > Deployment Protection. Makers beta em sessao ativa nao veem erros ao deployar hotfix durante o dia.
+
+**P3 — Rolling Releases para features de risco sem feature flag em codigo**
+Quando precisar liberar feature com risco (onboarding wizard, novo fluxo de pagamento) sem adicionar feature flag no codigo, use Rolling Releases da Vercel para liberar trafego gradualmente (10% → 50% → 100%), porque rollback de codigo e mais lento que rollback de trafego — 1 clique vs git revert + build + deploy. (Vercel Changelog · Rolling Releases GA · vercel.com/docs/deployments/rolling-releases)
+Aplicacao Hayzer: quando onboarding wizard for para prod, iniciar com 20% do trafego. Se error rate subir no Sentry ou PostHog, rollback no Dashboard em 30 segundos sem reverter codigo. Configurar via Vercel Dashboard > Settings > Rolling Releases.
+
+**P4 — Edge Config para feature flags sem rebuild**
+Quando precisar ligar ou desligar feature em prod sem fazer deploy completo, use Vercel Edge Config (leitura menor que 1ms no edge), porque mudar env var exige rebuild completo de 3-5 minutos; Edge Config muda em menos de 1 segundo sem rebuild — ideal para launch. (Vercel Changelog · Edge Config · vercel.com/docs/storage/edge-config)
+Aplicacao Hayzer: criar chave `ONBOARDING_WIZARD_ENABLED` no Edge Config. Permite ativar ou desativar wizard para usuarios Beta sem deploy. Util tambem para ligar ou desligar features no soft launch 11/06 sem pressao de pipeline. Instalar `@vercel/edge-config` e criar helper `getFeatureFlag(key)`.
+
+**P5 — Build Cache incremental: nao reconstrua o que nao mudou**
+Quando projeto cresce com 14+ modulos e build time aumentar, verifique se build cache incremental da Vercel esta ativo e se Turbopack esta habilitado em dev, porque build completo a cada commit e desperdicio — componentes sem mudanca nao precisam de rebuild, e isso multiplica o lead time. (Vercel Changelog · Turbopack stable · vercel.com/changelog)
+Aplicacao Hayzer: verificar se `experimental: { turbopack: true }` esta no `next.config.ts` para dev local. Em prod, Vercel já usa build cache por default — mas garantir que nao ha `cache: false` customizado. Mudanca em /orders nao deve reconstruir /inventory.
+
+(Livro: Vercel Changelog mensal · vercel.com/changelog · Maio/2026 · Data: 2026-05-26)
+
+**Proxima leitura agendada**: `studies/felipe-frontend/` — Next.js App Router docs (junho/2026)
 
 ---
 
@@ -134,8 +160,9 @@ Pasta: `studies/felipe-frontend/` (a criar)
 
 | Fonte | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
-| Patterns.dev (Hallie + Osmani) | 🟢 lido parcial | 2026-05-17 | 7 |
+| Patterns.dev (Hallie + Osmani) | 🟢 sintetizado | 2026-05-17 | 7 |
+| Vercel Changelog mensal | 🟢 sintetizado | 2026-05-26 | 5 |
 | Next.js App Router docs (official) | 🔵 não lido | — | 0 |
 | React 19 changelog (react.dev) | 🔵 não lido | — | 0 |
 
-**Calendário**: 1 fonte/mês. Próxima: Next.js App Router docs (junho/2026).
+**Calendário**: 1 fonte/mês. Próxima: Next.js App Router docs (julho/2026).

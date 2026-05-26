@@ -183,7 +183,33 @@ Aplicacao Hayzer: 3 routines = ~9 runs/mes = ~2% quota Max. Threshold de alerta:
 Quando escrever prompts para routines automatizadas (sem humano presente), faca: incluir restricoes explicitas ("nao altere X", "nao faca auto-merge", "se nao houver commits, crie relatorio indicando semana sem commits"). Porque: sem restricoes, LLM otimista pode fazer alteracoes nao intencionais — routines rodam as 6h sem ninguem olhando (Observacao direta · 2026-05-17).
 Aplicacao Hayzer: cada prompt em `automation/routines-specs.md` tem secao "## Restricoes" explicita com o que NAO fazer.
 
-**Proxima leitura agendada**: `studies/ricardo-devops/phoenix-project-notes.md` (domingo 01/06/2026)
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "The DevOps Handbook: How to Create World-Class Agility, Reliability, and Security in Technology Organizations" — Kim, Humble, Debois, Willis (IT Revolution, 2016). Tres Ways: Flow, Feedback, Continual Learning.
+
+**P10 — Primeira Way: maximize o fluxo de trabalho do dev para producao**
+Quando identificar que algum passo do pipeline de deploy demora mais que outros (typecheck lento, build gordo, migration manual), remova esse bloqueio antes de adicionar qualquer automacao nova, porque automacao de fluxo lento apenas automatiza a lentidao — nao resolve o constraint. (Kim · DevOps Handbook · Part II · "The First Way: The Principles of Flow" · concept: value stream)
+Aplicacao Hayzer: se typecheck no Vercel build demora 2+ minutos, investigar transpileOnly ou incremental TypeScript no tsconfig antes de adicionar mais CI steps. Constraint do pipeline identificado = proxima acao imediata, nao wishlist de melhoria.
+
+**P11 — Shift left: mova testes e seguranca para o inicio do pipeline**
+Quando definir pipeline de CI, coloque lint e typecheck ANTES do build no Vercel, e adicione pre-commit hooks locais, porque erro de tipo que so aparece no build final custa 5 minutos de feedback; erro que aparece no pre-commit custa 5 segundos — e ja contexto ativo. (Kim · DevOps Handbook · Part III · "Shift Left" — testing early in the pipeline)
+Aplicacao Hayzer: adicionar `tsc --noEmit` e `eslint` em pre-commit hook local via Husky para Felipe e Bruna. Vercel ja roda no build — mas feedback local e 10-20x mais rapido. Cada dev deve ter ambiente configurado para type check antes de push.
+
+**P12 — Trunk-based development: branches acumuladas sao divida tecnica visivel**
+Quando branches ficam mais de 2 dias sem merge, sinalize que o tamanho das mudancas esta grande demais ou o processo de review esta entupido, porque merges pequenos e frequentes eliminam conflito de integracao — o maior time-sink do dev solo com multiplos agentes. (Kim · DevOps Handbook · Part II · trunk-based development vs feature branches · DORA research)
+Aplicacao Hayzer: 7 branches `claude/*` pendentes no GitHub (listadas 20/05) devem ser limpas ou mergeadas. PR com 50+ arquivos mudados = risco de conflito e revisao inviavel. Meta: nenhuma branch com mais de 48h sem review ou decisao de fechar.
+
+**P13 — Visibilidade de metricas de deploy como dado de gestao, nao tecnico**
+Quando o CEO nao souber de cabeca qual foi o ultimo deploy e qual foi o lead time medio da semana, significa que o processo nao tem visibilidade suficiente para tomada de decisao, porque decisoes de velocidade e risco de deploy precisam de dado — nao de sentimento ou memoria. (Kim · DevOps Handbook · Part II · "Making Work Visible" · DORA 4 key metrics)
+Aplicacao Hayzer: relatorio semanal automatico de 5 linhas: ultimo deploy em prod (data + hora), lead time medio (commit→prod), numero de rollbacks no periodo, branches abertas ha mais de 48h. CEO le em 30 segundos — nao precisa abrir Vercel Dashboard.
+
+**P14 — Chaos Engineering: teste premissas de resiliencia antes que producao teste**
+Quando o sistema estiver "estaveel" por mais de 2 semanas em staging sem falha, introduza falhas deliberadas controladas (DB lento, API externa offline, edge caso de rate limit atingido) para verificar se as defesas reais funcionam como esperado, porque sistema que nunca falhou de forma controlada vai falhar de forma descontrolada em producao. (Kim · DevOps Handbook · Part IV · "Learning from Production" · chaos engineering principios · Netflix Chaos Monkey origem)
+Aplicacao Hayzer: antes do launch 11/06, Ricardo + Julia simulam: Stripe fora (o que o usuario ve? timeout elegante ou erro generico?), Supabase lento com timeout de 5s (skeleton screens aparecem corretamente?), rate limit atingido (usuario bloqueado com mensagem adequada ou erro 429 cru?).
+
+(Livro: The DevOps Handbook · Kim, Humble, Debois, Willis · IT Revolution · 2016 · Data: 2026-05-26)
+
+**Proxima leitura agendada**: `studies/ricardo-devops/` — Site Reliability Engineering (Google/O'Reilly gratuito) (julho/2026)
 
 ---
 
@@ -191,9 +217,9 @@ Aplicacao Hayzer: cada prompt em `automation/routines-specs.md` tem secao "## Re
 
 | Livro | Status | Ultima leitura | Principios extraidos |
 |---|---|---|---|
-| The Phoenix Project (Kim/Behr/Spafford) | Lido (resumo) | 2026-05-17 | 7 |
-| Accelerate (Forsgren/Humble/Kim) | Lido (resumo) | 2026-05-17 | 7 (compartilhados acima) |
-| The DevOps Handbook (Kim et al.) | Nao lido | — | 0 |
-| Site Reliability Engineering (Google) | Nao lido | — | 0 |
+| The Phoenix Project (Kim/Behr/Spafford) | 🟢 sintetizado | 2026-05-17 | 7 |
+| Accelerate (Forsgren/Humble/Kim) | 🟢 sintetizado | 2026-05-17 | 7 (compartilhados acima) |
+| The DevOps Handbook (Kim et al.) | 🟢 sintetizado | 2026-05-26 | 5 |
+| Site Reliability Engineering (Google) | 🔵 nao lido | — | 0 |
 
-**Calendario**: 1 livro/mes. Proximo: The DevOps Handbook (julho/2026).
+**Calendario**: 1 livro/mes. Proximo: Site Reliability Engineering (Google, julio/2026).

@@ -28,70 +28,73 @@ Sistema aprende a separar sinal de ruído. Princípios com 3+ ⚠️ saem da mem
 ## Curadoria por agente
 
 ### Helena (Estratégia)
-- 🔵 **Good Strategy Bad Strategy** — Richard Rumelt — diagnose+guiding policy+coherent action
-- 🔵 **7 Powers** — Hamilton Helmer — moats reais vs vagos
+- 🟢 **Good Strategy Bad Strategy** — Richard Rumelt — sintetizado 17/05/2026 · 7 princípios
+- 🟢 **7 Powers** — Hamilton Helmer — sintetizado 26/05/2026 · 5 princípios
 - 🔵 **Lean Strategy** — Wickman — execução estratégica em PME
 - 🔵 **The Hard Thing About Hard Things** — Ben Horowitz — decisão sob incerteza
 
 ### Carla (Copy)
-- 🔵 **Ogilvy on Advertising** — David Ogilvy — fundamentos imortais
-- 🔵 **Made to Stick** — Heath Brothers — SUCCESs framework (sticky ideas)
+- 🟢 **Ogilvy on Advertising** — David Ogilvy — sintetizado 17/05/2026 · 7 princípios
+- 🟢 **Made to Stick** — Heath Brothers — sintetizado 26/05/2026 · 5 princípios
 - 🔵 **The Boron Letters** — Gary Halbert — copywriting direto (vendas reais)
 - 🔵 **Copy Hackers vol 1-4** — Joanna Wiebe — copy moderno SaaS
 
 ### Marcos (Marketing)
-- 🔵 **Hooked** — Nir Eyal — habit-forming products (já citado várias vezes)
-- 🔵 **Influence** — Robert Cialdini — 6 princípios de persuasão
+- 🟢 **Hooked** — Nir Eyal — sintetizado 17/05/2026 · 6 princípios (ver agent file)
+- 🟢 **Influence** — Robert Cialdini — sintetizado 26/05/2026 · 5 princípios
 - 🔵 **Traction** — Gabriel Weinberg + DuckDuckGo — 19 canais de aquisição
 - 🔵 **Hacking Growth** — Sean Ellis — growth experiments framework
 
 ### Sofia (CS)
-- 🔵 **The Effortless Experience** — Matt Dixon — reduzir esforço > deliciar
-- 🔵 **Customer Success** — Nick Mehta (Gainsight) — playbook B2B
+- 🟢 **The Effortless Experience** — Matt Dixon — sintetizado 17/05/2026 · 7 princípios
+- 🟢 **Customer Success** — Nick Mehta (Gainsight) — sintetizado 26/05/2026 · 5 princípios
 - 🔵 **Never Split the Difference** — Chris Voss — negociação tática
 
 ### Diego (Design)
-- 🔵 **The Design of Everyday Things** — Don Norman — affordances + signifiers
-- 🔵 **Refactoring UI** — Adam Wathan + Steve Schoger — visual hierarchy prática
+- 🟢 **Refactoring UI** — Adam Wathan + Steve Schoger — sintetizado 17/05/2026 · 6 princípios
+- 🟢 **The Design of Everyday Things** — Don Norman — sintetizado 26/05/2026 · 5 princípios
+- 🔵 **Don't Make Me Think** — Steve Krug — próxima leitura
 - 🔵 **Atomic Design** — Brad Frost — sistema escalável
-- 🔵 **Hooked** (compartilhado com Marcos)
 
 ### Felipe (Frontend)
-- 🔵 **Patterns.dev** — Lydia Hallie + Addy Osmani — patterns modernos JS
-- 🔵 **Vercel Changelog mensal** — vercel.com/changelog — novidades plataforma
+- 🟢 **Patterns.dev** — Lydia Hallie + Addy Osmani — sintetizado 17/05/2026 · 7 princípios
+- 🟢 **Vercel Changelog mensal** — vercel.com/changelog — sintetizado 26/05/2026 · 5 princípios
 - 🔵 **React docs oficiais** — react.dev — releitura trimestral
 - 🔵 **Next.js docs App Router** — nextjs.org/docs — atualização semestral
 
 ### Bruna (Backend)
-- 🔵 **Designing Data-Intensive Applications** — Martin Kleppmann — capítulo/mês
+- 🟡 **Designing Data-Intensive Applications** — Martin Kleppmann — em andamento · Cap 1 🟢 + Cap 2 🟢 (26/05) · 12 princípios
 - 🔵 **Supabase docs** — supabase.com/docs — releitura trimestral
 - 🔵 **PostgreSQL docs** — postgresql.org/docs — extensions, performance
 
 ### Otávio (Security)
-- 🔵 **OWASP Top 10 anual** — owasp.org/Top10 — releitura todo Janeiro
-- 🔵 **The Web Application Hacker's Handbook** — Dafydd Stuttard — capítulo/mês
+- 🟢 **OWASP Top 10 anual** — owasp.org/Top10 — sintetizado 17/05/2026 · 10 categorias
+- 🟢 **The Web Application Hacker's Handbook** — Dafydd Stuttard — sintetizado 26/05/2026 · 5 princípios
 - 🔵 **The Tangled Web** — Michal Zalewski — browser security profundo
+- 🔵 **OWASP Cheat Sheets (Auth + Session)** — próxima leitura
 
 ### Paulo (Financial)
-- 🔵 **Stripe Press** — press.stripe.com — livros gratuitos (Get Together, etc)
-- 🔵 **PCI DSS oficial** — pcisecuritystandards.org — releitura anual
-- 🔵 **MP Brazil Marketplace docs** — atualização trimestral
+- 🟢 **Stripe Press** — press.stripe.com — sintetizado 17/05/2026 · 7 princípios
+- 🟢 **PCI DSS oficial** — pcisecuritystandards.org — sintetizado 26/05/2026 · 5 princípios
+- 🟡 **MP Brazil Marketplace docs** — em leitura
 - 🔵 **Webhook patterns** — diversos blogs Stripe + MP
 
 ### Ricardo (DevOps)
-- 🔵 **Vercel docs mensal** — vercel.com/docs — atualização constante
-- 🔵 **The Phoenix Project** — Gene Kim — DevOps narrative
-- 🔵 **Accelerate** — Nicole Forsgren — 4 keys metrics
+- 🟢 **The Phoenix Project** — Gene Kim — sintetizado 17/05/2026 · incluído em Accelerate
+- 🟢 **Accelerate** — Nicole Forsgren — sintetizado 17/05/2026 · 9 princípios (P1-P9)
+- 🟢 **The DevOps Handbook** — Gene Kim et al. — sintetizado 26/05/2026 · 5 princípios (P10-P14)
+- 🔵 **Site Reliability Engineering** — Google — próxima leitura
 
 ### Lia (Docs)
-- 🔵 **Docs for Developers** — Jared Bhatti — write the docs framework
-- 🔵 **Every Page Is Page One** — Mark Baker — topic-based
-- 🔵 **Style guide Microsoft + Google** — atualização semestral
+- 🟢 **Docs for Developers** — Jared Bhatti — sintetizado 17/05/2026 · 7 princípios
+- 🟢 **Every Page Is Page One** — Mark Baker — sintetizado 26/05/2026 · 5 princípios
+- 🔵 **Diátaxis** — Daniele Procida — diataxis.fr · próxima leitura
 - 🔵 **Anthropic Changelog mensal** — anthropic.com/news · claude.ai/changelog — 1a segunda do mes · `studies/anthropic-changelog.md`
 
 ### Júlia (QA)
-- 🔵 **Lessons Learned in Software Testing** — Kaner, Bach, Pettichord
-- 🔵 **Agile Testing** — Lisa Crispin + Janet Gregory
+- 🟢 **Lessons Learned in Software Testing** — Kaner, Bach, Pettichord — sintetizado 17/05/2026 · 7 heurísticas
+- 🟢 **Agile Testing** — Lisa Crispin + Janet Gregory — sintetizado 26/05/2026 · 5 heurísticas
+- 🔵 **Explore It!** — Elisabeth Hendrickson — próxima leitura
 - 🔵 **Testing Web Apps with Playwright** — docs oficiais
 
 ---
@@ -107,3 +110,4 @@ Sistema aprende a separar sinal de ruído. Princípios com 3+ ⚠️ saem da mem
 
 - 2026-05-16: criado por Claude após CEO Gabriel pedir sistema de aprendizado contínuo
 - 2026-05-17: Lia adicionou "Anthropic Changelog mensal" na curadoria + calendário de rastreio. Calendário 2026 — 1a segunda do mes: 01/06, 06/07, 03/08, 07/09, 05/10, 02/11, 07/12.
+- 2026-05-26: Rodada semanal G7 completa — 12 agentes · 12 livros sintetizados · 60 novos princípios adicionados. Status de todos os livros já lidos atualizado para 🟢. Branch: study/g7-weekly-2026-05-26.

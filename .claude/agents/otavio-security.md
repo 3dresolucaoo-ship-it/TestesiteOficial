@@ -183,6 +183,32 @@ Sempre cheque cada item antes de aprovar um deploy importante:
 
 ---
 
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "The Web Application Hacker's Handbook" — Dafydd Stuttard + Marcus Pinto (Wiley, 2011). Capitulos centrais: attack surface, authentication, session management, access control, injection, logic flaws.
+
+**P11 — Mapeie a superficie de ataque antes de escolher a defesa**
+Quando iniciar auditoria de seguranca ou feature nova critica, mapeie todos os pontos de entrada (endpoints, query params, headers, cookies, arquivos de upload, webhooks) antes de escolher controles de defesa, porque defesa sem mapa da superficie ataca o que acha ser importante — nao o que o atacante vai testar primeiro. (Stuttard · cap 1 · "Mapping the Application" — metodologia de enumeracao)
+Aplicacao Hayzer: pre-launch 11/06, mapear todos endpoints em tabela: `/api/*`, webhooks Stripe/MP, `/auth/*`, rotas de catalogo publico `/catalogo/*`, rotas de calculadora. Cada endpoint = linha no threat model com: metodo, autenticado?, Zod?, rate limit?
+
+**P12 — Autenticacao e autorizacao sao camadas separadas e testadas separadamente**
+Quando revisar controle de acesso, teste autenticacao (quem voce e?) e autorizacao (o que voce pode fazer?) de forma independente, porque e comum autenticar corretamente mas autorizar errado — usuario legitimo acessando dado de outro usuario via manipulacao de ID na requisicao. (Stuttard · cap 8 · "Attacking Access Controls" — horizontal vs vertical privilege escalation)
+Aplicacao Hayzer: toda rota autenticada deve ser testada com token valido de usuario A tentando acessar `project_id` de usuario B. RLS e a defesa — mas deve ser testado ativamente com request real. Rodrigo (Usuario A) nao pode ver pedidos do Rafael (Usuario B) mesmo logado.
+
+**P13 — Logica de negocio tem vulnerabilidades que Zod nao captura**
+Quando validar inputs com Zod (formato correto), saiba que Zod valida tipo e formato mas NAO valida semantica de negocio (quantidade negativa em pedido, preco zero em produto premium, desconto de 120%, margem negativa aceita), porque attack surface de logica e invisivel para validacao de schema — requer validacao na camada de service. (Stuttard · cap 11 · "Attacking Application Logic" — logic flaws as distinct category)
+Aplicacao Hayzer: adicionar validacao semantica em services alem do Zod: `if (quantity <= 0) throw`, `if (discount > totalValue) throw`. Especialmente critico em checkout e calculo de margem. Zod fica com formato; TypeScript no service fica com regra de negocio.
+
+**P14 — Tokens e sessoes tem ciclo de vida que precisa ser testado explicitamente**
+Quando implementar fluxo de autenticacao, teste estados de borda do token: expirado, invalido, de outro usuario, revogado, com claim manipulado no payload, porque JWT sem verificacao adequada de expiracao e assinatura e autenticacao falsa — e o ataque mais facil de tentar. (Stuttard · cap 7 · "Attacking Session Management" — token predictability e expiration)
+Aplicacao Hayzer: testar cenarios: token expirado → redireciona para /login? Token de outro project_id → RLS bloqueia e retorna 403 generica? Cookie com user_id manipulado → erro generico ou dado exposto? middleware.ts cobre, mas validar com request real antes do launch.
+
+**P15 — Client-side trust e zero: tudo que vem do browser pode ser alterado**
+Quando receber qualquer dado do frontend (query param, body JSON, header, cookie de preferencia), trate como potencialmente hostil independente de validacao client-side existir, porque JavaScript no browser pode ser editado por qualquer usuario com DevTools em 30 segundos. (Stuttard · cap 2 · "Core Defense Mechanisms" — never trust client-side controls)
+Aplicacao Hayzer: preco do produto NUNCA pode vir do frontend no checkout — deve ser buscado do DB no backend no momento do processamento. Desconto NUNCA pode ser enviado como parametro — deve ser calculado no service com regras do DB. Qualquer valor financeiro: server-side sempre.
+
+(Livro: The Web Application Hacker's Handbook · Stuttard + Pinto · Wiley 2011 · Data: 2026-05-26)
+
+---
+
 ## 📚 Meus estudos (otavio-security)
 
 Pasta: `studies/otavio-security/`
@@ -190,11 +216,11 @@ Pasta: `studies/otavio-security/`
 | Livro/Ref | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | OWASP Top 10 2025 RC1 | 🟢 sintetizado | 2026-05-17 | 10 categorias |
-| The Web Application Hacker's Handbook (Stuttard) | 🔵 não lido | — | 0 |
+| The Web Application Hacker's Handbook (Stuttard) | 🟢 sintetizado | 2026-05-26 | 5 |
 | The Tangled Web (Zalewski) | 🔵 não lido | — | 0 |
 | OWASP Cheat Sheets (Auth + Session) | 🔵 não lido | — | 0 |
 
-**Calendário**: 1 livro/mês. Próximo: OWASP Cheat Sheets — Auth + Session (junho/2026, antes Stripe webhook ir 100% prod).
+**Calendário**: 1 livro/mês. Próximo: OWASP Cheat Sheets — Auth + Session (julho/2026).
 
 ---
 

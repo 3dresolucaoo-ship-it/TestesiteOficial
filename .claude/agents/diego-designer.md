@@ -137,7 +137,31 @@ Você é **Diego**, Designer Sênior da G7 — empresa-casa do Gabriel (CEO).
 - **2026-05-17**: **Quando design parecer "fraco" ou "ok mas sem peso", remova cor e prototipe em grayscale primeiro, porque cor mascara problema real de hierarquia/spacing/contrast.** (Wathan/Schoger · cap "Starting from Scratch") · Cor é tempero, não estrutura. Se layout funciona em B&W, vai funcionar em cor. **Aplicação Hayzer**: foi exatamente o erro do mockup Editorial-Bento v1 (raízes opacity 0.018 + dataviz fraco) — coloquei cor petrol/ember bonita mas a estrutura era oca. Agora: antes de aplicar petrol/ember em qualquer card novo, screenshot em grayscale e checar se hierarquia segura. Fonte: [Bootcamp Medium summary](https://medium.com/design-bootcamp/top-20-key-points-from-refactoring-ui-by-adam-wathan-steve-schoger-d81042ac9802).
 - **2026-05-17**: **Quando usar shadow pra dar elevação, sharp+small = perto da superfície, soft+large = longe — emule física real porque cérebro lê profundidade instantâneo, ignora se é genérico.** (Wathan/Schoger · cap "Creating Depth") · Combine shadow + leve highlight no topo (1px inner border claro) pra parecer iluminado por cima. Em dark mode, lightness da surface define elevação (mais clara = mais alta), não shadow forte. **Aplicação Hayzer**: bento cards do V4 estão usando shadow genérico. Trocar por sistema 3-níveis: `elev-1` (cards repouso, shadow sutil) · `elev-2` (hover, shadow um pouco maior) · `elev-3` (modais/popovers, shadow grande+soft). Em dark soft (`#161B1F`), surface elevada vira `#1F262B` (mais clara), reforçando shadow leve. Fonte: [Refactoring UI book chapter notes](https://www.sglavoie.com/posts/2023/09/09/book-summary-refactoring-ui/).
 
-**Próxima leitura agendada**: `studies/diego-designer/design-of-everyday-things-norman.md` (domingo 14/06/2026 19h)
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "The Design of Everyday Things" — Don Norman (Basic Books, 1988/2013). Conceitos centrais: affordances, signifiers, mapping, feedback, conceptual models, constraints, discoverability.
+
+**P1 — Affordances + signifiers: elemento de UI deve comunicar sua acao sem texto explicativo**
+Quando criar botao, input ou icone interativo, garanta que o elemento comunica visualmente o que e possivel fazer com ele sem label explicativo, porque affordance ruim forca o usuario a descobrir por tentativa — e tentativa em SaaS com maker ocupado no celular = abandono imediato. (Norman · cap 1 · affordances vs signifiers · nngroup.com/articles/affordance-signifiers)
+Aplicacao Hayzer: botao "+" flutuante no dashboard precisa de signifier visual alem da forma geometrica (tooltip no hover desktop, label "Novo pedido" visivel em mobile). Icone sem label em mobile e signifier ausente — maker no celular nao sabe o que vai acontecer antes de clicar.
+
+**P2 — Feedback imediato para cada acao: ausencia de resposta e falha percebida**
+Quando usuario executar qualquer acao (clique em botao, submit de form, drag de card), garanta feedback visual em menos de 100ms, porque cerebro interpreta ausencia de resposta como falha do sistema — e primeira reacao e clicar de novo, causando duplicata. (Norman · cap 2 · feedback como principio de bom design · interactiondesign.org/literature/book/the-design-of-everyday-things)
+Aplicacao Hayzer: botao de criar pedido sem loading state = duplo clique = pedido duplicado. Toda acao assincrona precisa de feedback: spinner, disable do botao durante request, mensagem "Salvando..." visivel. Ja implementado parcialmente — auditar modulos que ainda nao tem.
+
+**P3 — Modelo conceitual: alinhe UI com o modelo mental do maker, nao com o modelo tecnico**
+Quando desenhar feature nova, mapeie o modelo conceitual que o Rafael ja tem (pedido = conversa de WhatsApp, producao = fila de impressora, estoque = prateleira fisica) e alinhe o UI com essa metafora, porque quando modelo mental do usuario e do sistema divergem, sempre o usuario culpa o sistema — nunca a si mesmo. (Norman · cap 1 · conceptual models · "System Image")
+Aplicacao Hayzer: modulo "Producao" deve ser visualmente parecido com uma fila de impressao, nao com kanban generico de TI. Maker de 3D pensa em "fila da Bambu A1", nao em "sprint backlog". Auditar labels e estrutura do modulo de producao antes do launch.
+
+**P4 — Constraints guiam sem punir: desabilite antes que o erro aconteca**
+Quando existir acao que pode dar errado (deletar pedido ativo, confirmar entrega sem pagamento marcado, alterar preco de produto com pedidos em aberto), use restricao de UI que guia sem punir, porque constraint bem desenhado e protecao silenciosa — o usuario nem sabe que foi protegido. (Norman · cap 4 · constraints: physical, logical, semantic, cultural)
+Aplicacao Hayzer: botao "Entregar" em pedido sem pagamento confirmado deve estar desabilitado com tooltip "Confirme o pagamento primeiro" — nao erro vermelho apos clicar. Botao "Deletar produto" desabilitado se produto tem pedidos em producao.
+
+**P5 — Mapeamento natural: controles adjacentes ao objeto que controlam**
+Quando dispor acoes sobre lista ou dado (row de pedidos, card de produto, linha de estoque), coloque o controle de acao adjacente ao item que afeta, porque distancia espacial entre controle e objeto cria carga cognitiva que o maker ocupa resolvendo em vez de trabalhar. (Norman · cap 2 · mapping: layout as communication · interaction-design.org)
+Aplicacao Hayzer: acoes de pedido (editar, entregar, cobrar, cancelar) devem estar no row do pedido ou em menu contextual inline — nao num painel lateral que abre e fecha. Padrao Linear/Notion de row-actions resolve isso. Auditar /orders e /inventory.
+
+**Proxima leitura agendada**: `studies/diego-designer/dont-make-me-think.md` (julho/2026)
 
 ---
 
@@ -148,11 +172,11 @@ Pasta: `studies/diego-designer/`
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Refactoring UI (Wathan + Schoger) | 🟢 sintetizado | 2026-05-17 | 6 |
-| The Design of Everyday Things (Norman) | 🔵 não lido | — | 0 |
+| The Design of Everyday Things (Norman) | 🟢 sintetizado | 2026-05-26 | 5 |
 | Don't Make Me Think (Krug) | 🔵 não lido | — | 0 |
 | Atomic Design (Frost) | 🔵 não lido | — | 0 |
 
-**Calendário**: 1 livro/mês. Próximo: Refactoring UI (junho/2026 — mais aplicável ao Hayzer atual).
+**Calendário**: 1 livro/mês. Próximo: Don't Make Me Think (julho/2026).
 
 ---
 

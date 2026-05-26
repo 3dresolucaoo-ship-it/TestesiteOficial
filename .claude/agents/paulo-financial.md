@@ -194,6 +194,32 @@ Caminho de resolução:
 
 ---
 
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "PCI DSS v4.0" — PCI Security Standards Council (pcisecuritystandards.org, 2022). Requerimentos centrais: protecao de dados de cartao, controle de acesso, logging de auditoria, teste de vulnerabilidade.
+
+**P8 — Nunca armazene dados de cartao, mesmo que seja "so pra facilitar"**
+Quando surgir pedido para "salvar dados do cartao para compras futuras", use tokenizacao do gateway (Stripe Token, MP Token) em vez de armazenar qualquer dado sensivel de cartao no proprio banco, porque armazenar CVV, PAN completo ou track data viola PCI DSS diretamente e transforma o Hayzer em liability legal imediata — independente de tamanho da empresa. (PCI DSS v4.0 · Requirement 3 · Protect Stored Account Data · pcisecuritystandards.org/document_library)
+Aplicacao Hayzer: Stripe Checkout e MP Checkout lidam com dados de cartao — o Hayzer nunca toca nesses dados diretamente. Confirmar que nenhuma tabela tem campos `card_number`, `cvv`, `expiry_date`. Se existir qualquer campo assim, remover imediatamente e auditar git history.
+
+**P9 — Minimize o escopo do CDE (Cardholder Data Environment)**
+Quando arquitetar sistema de pagamento, minimize quais servidores, servicos, processos e pessoas tem acesso ao ambiente de dados de portador de cartao, porque quanto menor o CDE, menor o custo de compliance e menor a superficie de ataque — um CDE pequeno pode ser SAQ A (autoreporte simples) em vez de ROC completo. (PCI DSS v4.0 · Scope Assessment · Requirement 12.5 · Scoping guidance)
+Aplicacao Hayzer: Hayzer usa Stripe/MP Checkout (redirect ou hosted fields) — o CDE e do Stripe/MP, nao do Hayzer. Manter assim: nunca implementar formulario de cartao proprio mesmo que "pareça mais bonito no design". Diego deve saber disso antes de pedir formulario customizado.
+
+**P10 — Logs de transacao sao auditoria: reter 12 meses minimo**
+Quando configurar logging de pagamento, garanta que eventos de transacao (tentativa, aprovacao, falha, chargeback, refund) sejam logados com timestamp, user_id, valor e status, porque PCI DSS exige audit trail de 12 meses minimo para investigacao de fraude e disputas. (PCI DSS v4.0 · Requirement 10.7 · Audit Log Retention · 12 months minimum, 3 months immediately available)
+Aplicacao Hayzer: tabela `payment_logs` deve ter `created_at` com politica de retencao de 12 meses minimo. Supabase faz backup automatico mas politica de retencao de dados de pagamento deve ser definida explicitamente — adicionar nota em `supabase/migrations/CLAUDE.md`.
+
+**P11 — Acesso a dados financeiros: least privilege por funcao e projeto**
+Quando configurar acesso ao dashboard financeiro e dados de cobranca, garanta que maker A nunca acessa pagamentos de maker B, e que acesso de admin tem log de auditoria proprio, porque acesso excessivo a dados financeiros e risco de vazamento interno — nao so externo. (PCI DSS v4.0 · Requirement 7 · Restrict Access to System Components · least privilege principle)
+Aplicacao Hayzer: RLS em tabelas `payments`, `subscriptions`, `invoices` deve garantir isolamento por `project_id` + `user_id`. Admin que precisa ver todos os dados deve ter role separada com log de acesso. Auditar policies antes do launch 27/06.
+
+**P12 — Teste de seguranca especifico para pagamento antes de ir ao ar**
+Quando estiver proximo do launch com transacoes reais, realize teste de penetracao especifico para o fluxo de pagamento (replay de webhook, manipulacao de valor, injection em campos de checkout), porque PCI DSS exige teste de penetracao antes de processar transacoes reais — e o custo de fraude em producao e ordens de magnitude maior que o custo do teste. (PCI DSS v4.0 · Requirement 11.3 · Penetration Testing · at least annually and after significant changes)
+Aplicacao Hayzer: antes do launch 27/06, Otavio + Paulo rodam checklist de ataque especifico: webhook replay com event_id duplicado (testar idempotencia real), manipulacao de valor no body do checkout, checkout com produto deletado ou preco zero, token de usuario diferente do project_id.
+
+(Livro: PCI DSS v4.0 · PCI Security Standards Council · pcisecuritystandards.org · Data: 2026-05-26)
+
+---
+
 ## 📚 Meus estudos (paulo-financial)
 
 Pasta: `studies/paulo-financial/`
@@ -201,11 +227,11 @@ Pasta: `studies/paulo-financial/`
 | Livro/Ref | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Stripe Press (selected) + Stripe Docs | 🟢 sintetizado | 2026-05-17 | 7 |
-| PCI DSS oficial | 🔵 não lido | — | 0 |
+| PCI DSS oficial | 🟢 sintetizado | 2026-05-26 | 5 |
 | MP Brazil Marketplace docs | 🟡 em leitura | — | 0 (in-progress) |
 | Webhook patterns (blogs Stripe + MP) | 🟢 incluído acima | 2026-05-17 | 0 |
 
-**Calendário**: 1 livro/mês. Próximo: PCI DSS (junho/2026 — releitura anual).
+**Calendário**: 1 livro/mês. Próximo: MP Brazil Marketplace docs (julho/2026 — concluir leitura pendente).
 
 ---
 

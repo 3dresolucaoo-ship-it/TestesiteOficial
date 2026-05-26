@@ -196,7 +196,33 @@ Quando nao houver tempo para testar tudo (sempre), priorizar os fluxos onde o us
 
 Aplicacao Hayzer: Ordem de prioridade fixa para qualquer release: (1) checkout/pagamento, (2) waitlist/lead capture, (3) calculadora 3D, (4) dashboard/dados, (5) visual/tipografia. Se so tiver 30min antes de um deploy: testar 1 e 2 apenas. Nunca liberar 1 ou 2 sem sessao exploratoria completa.
 
-**Proxima leitura agendada**: studies/julia-qa/ (domingo 01/06/2026)
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "Agile Testing: A Practical Guide for Testers and Agile Teams" — Lisa Crispin + Janet Gregory (Addison-Wesley, 2009). Conceitos centrais: Agile Testing Quadrants, whole-team quality, shift-left testing, continuous testing.
+
+**H8 — Whole-team quality: qualidade e responsabilidade de todos, nao so de QA no final**
+Quando uma feature for entregue para Júlia testar como ultima etapa do sprint, sinalize o problema ao squad: QA no final e filtro, nao qualidade — bugs encontrados no fim custam 10x mais para corrigir que bugs encontrados no design ou no inicio do codigo. (Crispin · cap 1 · "Everyone Is Responsible for Quality" · whole-team approach)
+Aplicacao Hayzer: Julia deve estar presente no inicio da feature (entendendo o que sera construido e quais sao os edge cases previstos), nao so no final (testando o que foi entregue). Checklist de teste deve ser acordado ANTES de Felipe/Bruna codificarem, nao depois.
+
+**H9 — Quadrante de Teste: cada tipo tem proposito diferente, nao misture**
+Quando planejar sessao de testes pre-launch, separe: Q1 (unit/integracao automatizados — suporte ao dev), Q2 (funcional/acceptance automatizados — validacao de business), Q3 (exploratorio/usabilidade — critica o produto), Q4 (performance/security — avalia risco), porque misturar tipos leva a gastar tempo no tipo errado para o problema certo — e desperdicar a sessao. (Crispin · cap 9 · "Agile Testing Quadrants" · Crispin+Gregory framework)
+Aplicacao Hayzer: pre-launch 11/06, foco em Q3 (exploratorio manual — Julia) e Q4 (performance/security — Julia + Otavio). Q1 e Q2 automatizados ficam para Fase 2 do Roadmap. Nao investir em Playwright suite completa agora — fase atual e Q3/Q4 manual primeiro.
+
+**H10 — Definition of Done inclui testes, nao e separado deles**
+Quando Felipe marcar "feature pronta para review", o DoD deve incluir: checklist de Julia executado + bugs criticos corrigidos, porque "pronto para QA" nao e pronto — feature so esta pronta quando Julia assinou e bugs P0/P1 foram corrigidos. (Crispin · cap 4 · "Done" means tested · Definition of Done in agile teams)
+Aplicacao Hayzer: criar DoD explicito e visivel para cada feature do pre-launch: code ✓ + typecheck ✓ + Julia checklist ✓ + preview deploy testado ✓ = PRONTO. Sem isso, launch tera features "prontas" com bugs nao vistos que so aparecem com maker real.
+
+**H11 — Automacao onde o esforco manual e repetitivo e custoso para o time**
+Quando um teste precisa ser executado a cada mudanca (ex: fluxo completo de cadastro, criacao de pedido, calculo de margem), avalie automacao de baixo custo (Playwright happy path simples, nao suite completa), porque teste manual repetitivo cansa, fica inconsistente e consume tempo que Julia poderia usar em teste exploratorio de alto valor. (Crispin · cap 14 · "Automating Testing" · automate the repetitive, explore the novel)
+Aplicacao Hayzer: golden path "lead → calculadora → pedido" executado manualmente toda semana consome 30-45 minutos. 1 script Playwright que cobre apenas o happy path economiza esse tempo para sessoes exploratorias de maior valor. Candidato para inicio de Fase 2.
+
+**H12 — Feedback loop curto: testar no mesmo dia, nao na semana de QA antes do launch**
+Quando uma feature leva mais de 3 dias entre codigo e teste, o feedback esta lento demais e o contexto se perde, porque bug encontrado 1 semana depois e bug com contexto perdido — dev precisa re-entender o que fez para corrigir, e a pressao de launch amplifica a resistencia a corrigir. (Crispin · cap 7 · "Frequent Feedback" · continuous testing vs big-bang testing phase)
+Aplicacao Hayzer: Julia deve testar a feature no mesmo dia em que Felipe/Bruna terminam usando o preview deploy da Vercel. Vercel gera URL de preview automaticamente a cada push — Julia recebe o link e testa sem esperar merge em main. Nunca acumular features para "semana de QA" antes do launch.
+
+(Livro: Agile Testing · Lisa Crispin + Janet Gregory · Addison-Wesley · 2009 · Data: 2026-05-26)
+
+**Proxima leitura agendada**: studies/julia-qa/ — Explore It! (Elisabeth Hendrickson) (julho/2026)
 
 ---
 
@@ -204,7 +230,8 @@ Aplicacao Hayzer: Ordem de prioridade fixa para qualquer release: (1) checkout/p
 
 | Livro | Status | Ultima leitura | Principios extraidos |
 |---|---|---|---|
-| Lessons Learned in Software Testing (Kaner/Bach/Pettichord) | Parcial (web sources) | 2026-05-17 | 7 |
-| Explore It! (Hendrickson) | nao lido | -- | 0 |
-| Perfect Software (Weinberg) | nao lido | -- | 0 |
-| How Google Tests Software (Whittaker) | nao lido | -- | 0 |
+| Lessons Learned in Software Testing (Kaner/Bach/Pettichord) | 🟢 sintetizado | 2026-05-17 | 7 |
+| Agile Testing (Crispin + Gregory) | 🟢 sintetizado | 2026-05-26 | 5 |
+| Explore It! (Hendrickson) | 🔵 nao lido | -- | 0 |
+| Perfect Software (Weinberg) | 🔵 nao lido | -- | 0 |
+| How Google Tests Software (Whittaker) | 🔵 nao lido | -- | 0 |

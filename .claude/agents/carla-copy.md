@@ -146,7 +146,33 @@ V<X> porque <razão concreta>
 - **2026-05-17 · Ogilvy (cap 3)**: **Quando descrever benefício, conte em forma de história — "o Zippo que funcionou depois de sair da barriga do peixe" — porque história gruda, lista de feature evapora.** (Ogilvy · cap 3 · classicads). **Aplicação Hayzer**: substituir "controle de pedidos" por mini-narrativa do Rafael ("Era sexta 23h. Rafael abriu a Hayzer e viu: pedido do Carlos, fila 3, prazo terça. Dormiu."). Aplicar em case studies, posts LinkedIn do Marcos, página /sobre.
 - **2026-05-17 · Ogilvy (cap 1)**: **Antes de escrever, pesquise como o cliente fala do produto — que palavra ele usa, que atributo importa, que promessa o faria comprar — porque copy boa é traduzida da fala dele, não inventada na sua mesa.** (Ogilvy · cap 1 · shortform/bookey). **Aplicação Hayzer**: ouvir áudios de WhatsApp do CEO com makers, ler comentários do Instagram @3dlab_brasil, pegar vocabulário cru ("filamento", "fila", "comissão da ML", "recompra") — já está acontecendo, formalizar como check antes de cada copy nova.
 
-**Próxima leitura agendada**: `studies/carla-copy/made-to-stick.md` (junho/2026)
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "Made to Stick: Why Some Ideas Survive and Others Die" — Chip Heath + Dan Heath (2007). Framework SUCCESs: Simple, Unexpected, Concrete, Credible, Emotional, Story.
+
+**P1 — Simples: extraia o nucleo irredutivel antes de qualquer adjetivo**
+Quando escrever hero ou headline de produto, responda primeiro: qual e a UNICA coisa que o Rafael precisa entender? Depois escreva so isso, porque comunicacao que tenta dizer tudo nao diz nada — mensagem nucleo (core message) e o que gruda. (Heath · cap 1 Simple · Amazon summary + MindTools)
+Aplicacao Hayzer: "Seu negocio, sem caos" ja aplica isso. Filtro para copy nova: "consigo dizer em 6 palavras ou menos?" Se nao, ainda nao achei o nucleo. Aplicar em tooltips, empty states e assunto de email.
+
+**P2 — Inesperado: viole expectativa antes de entregar o beneficio**
+Quando quiser que mensagem seja lembrada em post LinkedIn ou email marketing, abra com algo que quebra o script esperado do maker, porque cerebro presta atencao quando expectativa e violada — e so aprende quando presta atencao. (Heath · cap 2 Unexpected · "gap theory" Loewenstein)
+Aplicacao Hayzer: post que comeca "Voce cobra errado. So nao sabe disso ainda" e mais memoravel que "Conheca nossa calculadora". Email "Voce perdeu R$ 380 esse mes sem saber" e mais eficaz que "Veja como melhorar sua margem". Testar angulo Inesperado em 1 post por semana.
+
+**P3 — Concreto: substitua abstrato por sensorial e especifico**
+Quando descrever beneficio de feature, substitua abstrato ("economize tempo", "melhore resultados") por concreto e verificavel ("12 pedidos resolvidos em 8 minutos", "R$ 1.240 que estavam escondidos em comissao Shopee"), porque cerebro processa imagens concretas — abstracoes evaporam na leitura. (Heath · cap 3 Concrete · highexistence.com/made-to-stick-summary)
+Aplicacao Hayzer: landing deve ter numeros reais do uso. Revisar hero e bullets: trocar "gestao completa" por "4 sistemas que nao conversam viram 1 tela". Trocar "controle financeiro" por "veja quanto sobrou de verdade no fim do mes".
+
+**P4 — Credivel: o detalhe hiperspecifico substitui o expert generico**
+Quando precisar de credibilidade sem ter marca estabelecida, use detalhe especifico verificavel ("47 makers na fila beta", "filamento PETG 1kg a R$ 89,90 na calculadora") em vez de claim generico ("milhares confiam"), porque especificidade sinaliza que alguem sabe de verdade — vagueza sinaliza que inventou. (Heath · cap 4 Credible · concept: "human scale statistics")
+Aplicacao Hayzer: "47 makers esperando" e mais convincente que "centenas de makers". Calculadora com campo de wattagem da impressora especifica e mais crivel que "configure seus insumos". Cada numero real que aparece no produto e um sinal de credibilidade.
+
+**P5 — Emocao especifica move, emocao generica paralisa**
+Quando quiser que copy motive acao, encontre a emocao especifica (nao "quer crescer") que o Rafael quer resolver — ansiedade de domingo a noite sem saber quantos pedidos abertos tem, medo de ter entregado produto com prejuizo sem saber, porque emocao especifica e reconhecivel; emocao generica e ignorada. (Heath · cap 5 Emotional · concept: "what's in it for ME" + Maslow self-interest)
+Aplicacao Hayzer: email de onboarding: "E domingo a noite. Voce sabe quantos pedidos abertos tem agora?" e mais eficaz que "Gerencie seu negocio melhor". Copy de empty state de financeiro: "Voce sabe quanto sobrou esse mes?" — antes de mostrar o grafico vazio.
+
+(Livro: Made to Stick · Chip Heath + Dan Heath · 2007 · Data: 2026-05-26)
+
+**Proxima leitura agendada**: `studies/carla-copy/the-boron-letters.md` (julho/2026)
 
 ---
 
@@ -157,11 +183,11 @@ Pasta: `studies/carla-copy/`
 | Livro | Status | Última leitura | Princípios extraídos |
 |---|---|---|---|
 | Ogilvy on Advertising | 🟢 sintetizado | 2026-05-17 | 7 |
-| Made to Stick (Heath) | 🔵 não lido | — | 0 |
+| Made to Stick (Heath) | 🟢 sintetizado | 2026-05-26 | 5 |
 | The Boron Letters (Halbert) | 🔵 não lido | — | 0 |
 | Copy Hackers vol 1-4 (Wiebe) | 🔵 não lido | — | 0 |
 
-**Calendário**: 1 livro/mês. Ogilvy lido 17/05/2026 (adiantado pelo CEO). Próximo: Made to Stick (junho/2026).
+**Calendário**: 1 livro/mês. Próximo: The Boron Letters (julho/2026).
 
 ---
 

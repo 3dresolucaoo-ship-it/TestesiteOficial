@@ -172,3 +172,29 @@ Aplicacao Hayzer: nas primeiras 4 semanas pos-ativacao, o email semanal deve che
 (Eyal, cap. 5 — Investment sequencing · fonte: https://insight7.io/4-product-lessons-on-the-hook-model-from-hooked-by-nir-eyal/)
 
 Aplicacao Hayzer: fluxo correto = (1) mostra resultado da calculadora sem login, (2) "salva esse calculo?" pede email, (3) "personaliza com sua impressora?" pede mais dados. Nunca o inverso.
+
+---
+
+> Sintetizados em 26/05/2026 (estudo G7 semanal) a partir de "Influence: The Psychology of Persuasion" — Robert Cialdini (1984/2021). 6 principios: Reciprocidade, Compromisso/Consistencia, Prova Social, Autoridade, Simpatia, Escassez.
+
+**P1 — Reciprocidade como abertura de funil: entregue antes de pedir**
+Quando nao ha relacionamento com lead frio, entregue valor real primeiro (calculadora gratuita, conteudo util, benchmark) antes de pedir qualquer coisa (email, cadastro, atencao), porque reciprocidade e automatica — quem recebe sente impulso de retribuir mesmo sem ser pedido. (Cialdini · cap 2 Reciprocation · fonte: cialdini.com + influence-at-work.com)
+Aplicacao Hayzer: calculadora 3D gratis sem cadastro e o mecanismo de reciprocidade central. Maker que rodou o calculo e viu quanto estava perdendo ja "deve" algo ao Hayzer antes de ver preco. Nunca pedir email antes de mostrar o resultado da calculadora.
+
+**P2 — Prova social calibrada pelo segmento, nao pelo volume**
+Quando mostrar social proof, prefira depoimento especifico do segmento-alvo (maker 3D BR que usa impressora Bambu) ao numero grande generico, porque "o Rafael de SP que faz custom funko e achou R$ 380 que cobrava errado" convence mais que "500 empresarios aprovaram". (Cialdini · cap 4 Social Proof · fonte: shortform.com/guide/influence)
+Aplicacao Hayzer: 1 screenshot de maker real do grupo Beta WhatsApp dizendo resultado especifico vale mais que contador de usuarios. Prioridade: capturar depoimento de 3 makers Beta antes do launch 11/06 com numero real (valor descoberto, tempo economizado).
+
+**P3 — Compromisso progressivo: micro-sim antes de macro-sim**
+Quando quiser que usuario assuma identidade de cliente antes de comprar, peca micro-compromissos em sequencia (responder 1 pergunta, salvar 1 calculo, dar nome a impressora), porque quem disse "sim" pequeno tem pressao interna para dizer "sim" grande depois — consistencia e automatica. (Cialdini · cap 3 Commitment and Consistency · fonte: masterclass.com/influence-book-summary)
+Aplicacao Hayzer: onboarding que comeca com "Voce e maker de impressao 3D?" cria identidade antes do plano pago. Salvar calculo na calculadora e o primeiro micro-compromisso. Cada acao salva aumenta probabilidade de conversao em plano pago.
+
+**P4 — Autoridade demonstrada por conteudo tecnico especifico do nicho**
+Quando construir autoridade de marca em nicho sem historico, produza conteudo que so quem entende o nicho consegue produzir ("como calcular gross-up correto pra Shopee de impressao 3D"), porque autoridade real nao e declarada ("somos especialistas") — e demonstrada pelo conteudo. (Cialdini · cap 5 Authority · fonte: cialdini.com/authority)
+Aplicacao Hayzer: post LinkedIn "3 erros no calculo de margem que todo maker 3D comete" demonstra autoridade antes de mencionar produto. CEO como maker de verdade (foto Bambu A1, historia real) e autoridade por experiencia — reforcar no build-in-public.
+
+**P5 — Escassez legitima sem falsa urgencia em publico tecnico**
+Quando criar urgencia, use apenas escassez real ou limitacao genuina (vagas de beta com limite real, acesso antecipado com beneficio concreto para os primeiros), nunca falsa urgencia ("oferta expira em 3h" sem justificativa), porque maker/dev percebe manipulacao — e a credibilidade perdida nao se recupera. (Cialdini · cap 6 Scarcity · "limited edition" vs manipulacao)
+Aplicacao Hayzer: grupo Beta com limite genuino de vagas funciona. "Primeiros 50 makers tem onboarding individual com o CEO" e escassez real + beneficio claro. Nunca countdown timer sem logica real — publico maker usa GitHub e Discord, identifica padrao de manipulacao.
+
+(Livro: Influence · Robert Cialdini · 1984/2021 · Data: 2026-05-26)
