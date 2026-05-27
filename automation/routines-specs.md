@@ -70,7 +70,7 @@ Os principios devem ser praticos, especificos para a area do agente, e conectado
 ## Passo 4 — Atualizar memorias ativas
 
 Para cada agente:
-1. Leia `.claude/agents/<agente>.md`
+1. Leia `~/.claude/agents/<agente>.md`
 2. Encontre a secao `## Memoria ativa` → `### Principios da area`
 3. Adicione os 5 novos principios ao final da secao (nao substitua os existentes)
 4. Se a secao nao existir, crie-a seguindo o padrao:
@@ -88,7 +88,7 @@ Para cada agente:
 ## Passo 5 — Criar branch e PR
 
 1. Crie uma branch chamada `study/g7-weekly-[YYYY-MM-DD]` (data de hoje)
-2. Commite todas as alteracoes em `.claude/agents/*.md` e `studies/_index.md`
+2. Commite todas as alteracoes em `~/.claude/agents/*.md` e `studies/_index.md`
 3. Abra Pull Request com:
    - **Title**: `study: G7 semanal [YYYY-MM-DD] — 12 agentes atualizados`
    - **Body**:
@@ -136,7 +136,7 @@ Para cada agente:
 
 - Branch `study/g7-weekly-YYYY-MM-DD` criada no repo
 - PR aberto com titulo `study: G7 semanal YYYY-MM-DD — 12 agentes atualizados`
-- 12 arquivos `.claude/agents/*.md` atualizados (secao `Principios da area`)
+- 12 arquivos `~/.claude/agents/*.md` atualizados (secao `Principios da area`)
 - `studies/_index.md` com status de livros atualizados (🔵 → 🟡 ou 🟢)
 - Nenhum auto-merge — CEO revisa e aprova
 
@@ -363,7 +363,7 @@ Leia tambem:
 - `services/` (quantos services)
 - `components/` (quantos componentes)
 - `supabase/migrations/` (quantas migrations)
-- `.claude/agents/` (quantos agentes ativos)
+- `~/.claude/agents/` (quantos agentes ativos)
 
 ## Passo 3 — Detectar bugs novos
 

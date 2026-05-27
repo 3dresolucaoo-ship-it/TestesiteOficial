@@ -225,7 +225,7 @@ Skills = **métodos** (como agir). CLAUDE.md = **estado** (o que existe). Não m
 
 ---
 
-## 👥 TIME G7 (subagents em `.claude/agents/`)
+## 👥 TIME G7 (subagents em `~/.claude/agents/`, casa única nível-usuário compartilhada por todos os projetos desde 26/05/2026)
 
 17 agentes especializados. Chama por nome ou via `/team:*`.
 
