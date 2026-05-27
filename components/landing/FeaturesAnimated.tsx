@@ -22,7 +22,7 @@ const features = [
   {
     num: '01 · estoque',
     title: 'Estoque que conta certo',
-    body: 'Cada rolo de filamento, cada peça impressa, cada peça que falhou na hora, tudo entra no sistema sem tu anotar. Acabou descobrir no dia 30 que sumiu meio kg de PLA preto.',
+    body: 'Cada rolo de filamento, cada peça impressa, cada peça que falhou na hora, tudo entra no sistema sem você anotar. Acabou descobrir no dia 30 que sumiu meio kg de PLA preto.',
     size: 'lg' as const,
     glow: false,
     icon: (
@@ -38,7 +38,7 @@ const features = [
   {
     num: '02 · vendas',
     title: 'Venda no mesmo lugar',
-    body: 'Pedido do WhatsApp vira link de pagamento em dois toques. Cliente paga, o estoque baixa, a peça entra na fila de impressão. Tu só confirma o envio.',
+    body: 'Pedido do WhatsApp vira link de pagamento em dois toques. Cliente paga, o estoque baixa, a peça entra na fila de impressão. Você só confirma o envio.',
     size: 'sm' as const,
     glow: false,
     icon: (
@@ -54,7 +54,7 @@ const features = [
   {
     num: '03 · clientes',
     title: 'Sabe quem sumiu',
-    body: 'Cliente que pedia personalizado todo mês e parou aparece na tua tela antes de tu esquecer dele. Recompra de maker é ouro, e quase ninguém cuida.',
+    body: 'Cliente que pedia personalizado todo mês e parou aparece na sua tela antes de você esquecer dele. Recompra de maker é ouro, e quase ninguém cuida.',
     size: 'sm' as const,
     glow: false,
     icon: (

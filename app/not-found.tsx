@@ -18,7 +18,7 @@ import Link from 'next/link'
 
 export const metadata = {
   title: '404',
-  description: 'A pagina que tu procurou nao existe ou foi movida.',
+  description: 'A pagina que você procurou nao existe ou foi movida.',
   robots: { index: false, follow: false },
 }
 
@@ -77,7 +77,7 @@ export default function NotFound() {
           style={{ color: 'hsl(var(--fog-400))', fontSize: '15px' }}
         >
           Pode ser um link antigo, um typo na URL ou alguma coisa que ja saiu
-          do ar. Volta pro inicio e a gente te leva pra onde tu queria ir.
+          do ar. Volta pro inicio e a gente te leva pra onde você queria ir.
         </p>
 
         {/* Acoes */}

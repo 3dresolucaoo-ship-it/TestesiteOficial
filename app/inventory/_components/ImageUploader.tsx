@@ -53,7 +53,7 @@ export function ImageUploader({ value, onChange }: ImageUploaderProps) {
       onChange(publicUrl)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err)
-      setError(`Não deu pra enviar agora. Tenta de novo ou pula, tu adiciona depois. (${msg})`)
+      setError(`Não deu pra enviar agora. Tenta de novo ou pula, você adiciona depois. (${msg})`)
     } finally {
       setUploading(false)
     }

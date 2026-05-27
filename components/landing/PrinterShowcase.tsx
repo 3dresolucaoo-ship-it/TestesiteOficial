@@ -108,7 +108,7 @@ export function PrinterShowcase() {
               Bambu, Ender, Creality. PLA, PETG, ABS. Filamento amarelo,
               encomenda de 28 peças, prazo na sexta. Tudo isso entra
               na conta. Sem stock photo, sem render bonitinho.
-              É o teu galpão, é a tua peça.
+              É o seu galpão, é a sua peça.
             </p>
 
             {/* 3 micro-bullets editoriais */}

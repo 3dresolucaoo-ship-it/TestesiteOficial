@@ -154,7 +154,7 @@ export default async function MockupsPage() {
           </div>
           <h1 className="font-serif text-3xl font-medium mb-3">Mockups são internos</h1>
           <p className="text-sm text-fog-50/70 mb-6">
-            Esta área é restrita à equipe Hayzer. Se tu acha que deveria ter acesso, fala com o Gabriel.
+            Esta área é restrita à equipe Hayzer. Se você acha que deveria ter acesso, fala com o Gabriel.
           </p>
           <Link
             href="/dashboard"

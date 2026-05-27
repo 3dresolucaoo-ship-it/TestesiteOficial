@@ -39,11 +39,11 @@ export function CatalogsEmptyState({ onCreateClick }: CatalogsEmptyStateProps) {
       </div>
 
       <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-        Teu catalogo publico fica aqui.
+        Seu catalogo publico fica aqui.
       </h3>
 
       <p className="text-sm text-foreground/65 leading-relaxed mb-6 max-w-xs">
-        Cria um catalogo, adiciona os produtos que tu vende e compartilha o link com o
+        Cria um catalogo, adiciona os produtos que você vende e compartilha o link com o
         cliente. Ele ve preco, foto e ja manda mensagem direto.
       </p>
 

@@ -54,7 +54,7 @@ export function BreakEvenSection({
         <div className="text-xs text-[#888888] leading-relaxed">
           <p className="text-[#f0f0f5] font-medium mb-1">O que e Ponto de Equilibrio?</p>
           <p>
-            E quanto tu precisa{' '}
+            E quanto você precisa{' '}
             <strong className="text-[#a78bfa]">vender por mes</strong> pra{' '}
             <strong>nao ter prejuizo</strong>.
             Calculado a partir dos seus{' '}
@@ -128,7 +128,7 @@ export function BreakEvenSection({
               className="w-full bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.07)] text-[#f0f0f5] text-lg font-semibold rounded-lg px-3 py-2 outline-none focus:border-[#7c3aed] tabular-nums"
             />
             <p className="text-[#444455] text-[11px] mt-2">
-              Quanto tu quer levar pra casa por mes depois de pagar tudo. Salva sozinho.
+              Quanto você quer levar pra casa por mes depois de pagar tudo. Salva sozinho.
             </p>
           </div>
 
@@ -145,7 +145,7 @@ export function BreakEvenSection({
             <div className="bg-[#f59e0b1a] border border-[#f59e0b33] rounded-xl p-4 flex gap-3">
               <AlertCircle size={16} className="text-[#f59e0b] shrink-0 mt-0.5" aria-hidden="true" />
               <p className="text-xs text-[#f59e0b]">
-                Tu precisa cadastrar{' '}
+                Você precisa cadastrar{' '}
                 <strong>produtos</strong> com preco de venda em{' '}
                 <Link href="/products" className="underline">
                   /products
@@ -222,7 +222,7 @@ export function BreakEvenSection({
                 </div>
                 <div className="text-[#888888] text-xs max-w-md">
                   Ponderada pelo preco dos seus {summary.products.length} produto(s). Quanto maior,
-                  menos unidades tu precisa vender pra cobrir o custo fixo.
+                  menos unidades você precisa vender pra cobrir o custo fixo.
                 </div>
               </div>
 

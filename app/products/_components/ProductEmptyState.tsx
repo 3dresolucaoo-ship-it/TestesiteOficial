@@ -54,11 +54,11 @@ function EmptyVariant({ onCreateClick }: { onCreateClick?: () => void }) {
       </div>
 
       <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-        Teu catalogo ta vazio ainda.
+        Seu catalogo ta vazio ainda.
       </h3>
 
       <p className="text-sm text-foreground/65 leading-relaxed mb-6">
-        Cadastra o primeiro produto que tu vende ou imprime. Com filamento vinculado,
+        Cadastra o primeiro produto que você vende ou imprime. Com filamento vinculado,
         o Hayzer calcula custo e margem de cada pedido sozinho.
       </p>
 
@@ -161,7 +161,7 @@ function NoProjectVariant() {
       </h3>
 
       <p className="text-sm text-foreground/65 leading-relaxed mb-6">
-        Produto fica dentro de um projeto. Cria o teu e volta aqui.
+        Produto fica dentro de um projeto. Cria o seu e volta aqui.
       </p>
 
       <Link

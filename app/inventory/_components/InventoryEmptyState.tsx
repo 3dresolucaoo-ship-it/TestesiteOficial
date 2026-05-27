@@ -32,10 +32,10 @@ export function InventoryEmptyState({ mode, onCreateClick }: InventoryEmptyState
           <Package size={28} className="text-[hsl(173_30%_57%)]" />
         </div>
         <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-          Teu estoque tá vazio
+          Seu estoque tá vazio
         </h3>
         <p className="text-sm text-foreground/70 leading-relaxed mb-6">
-          Começa cadastrando o filamento que tu usa agora. Com ele registrado, o Hayzer calcula sozinho o custo de cada peça que tu imprime.
+          Começa cadastrando o filamento que você usa agora. Com ele registrado, o Hayzer calcula sozinho o custo de cada peça que você imprime.
         </p>
         <button
           onClick={onCreateClick}

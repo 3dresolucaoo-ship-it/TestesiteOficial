@@ -73,7 +73,7 @@ export function GeneralTab({ draft, setDraft, projectsCount, ordersCount, transa
       </SectionCard>
 
       <SectionCard title="Módulos Ativos">
-        <p className="text-[#555555] text-xs -mt-2">Desativa módulos que tu não usa, eles somem da barra lateral.</p>
+        <p className="text-[#555555] text-xs -mt-2">Desativa módulos que você não usa, eles somem da barra lateral.</p>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {([
             ['finance',    'Finanças'],

@@ -11,7 +11,7 @@
  * Step-cards usam .stagger-children existente (0/50/100ms delay).
  *
  * Headline original mantida ("Pedido do WhatsApp vira pedido no sistema").
- * Tag mono extra acima da imagem: "e assim que o teu zap parece HOJE".
+ * Tag mono extra acima da imagem: "e assim que o seu zap parece HOJE".
  *
  * Client Component: necessario pelo useRevealOnScroll (IO).
  */
@@ -66,7 +66,7 @@ export function WhatsAppFlow() {
                 fontFamily: 'ui-monospace, "Geist Mono", monospace',
               }}
             >
-              e assim que o teu zap parece HOJE
+              e assim que o seu zap parece HOJE
             </p>
 
             {/* Imagem com reveal on scroll */}

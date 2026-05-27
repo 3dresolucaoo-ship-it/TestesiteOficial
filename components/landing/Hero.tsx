@@ -80,7 +80,7 @@ export function Hero({ waitlistCount }: HeroProps) {
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 0.61, 0.36, 1] }}
               className="mt-7 max-w-[540px] text-[17px] leading-[1.55] text-muted-foreground md:text-[18px]"
             >
-              Tu imprime, posta, vende, envia, cobra, anota. E ainda perde peça,
+              Você imprime, posta, vende, envia, cobra, anota. E ainda perde peça,
               esquece cliente, não sabe o que sobrou. Hayzer junta tudo num lugar só.
             </motion.p>
 
@@ -127,7 +127,7 @@ export function Hero({ waitlistCount }: HeroProps) {
                 Testa a calculadora grátis
               </Link>
               <p className="mt-2 text-[12px] leading-snug text-muted-foreground">
-                Calcula o custo da tua próxima impressão. De graça. Sem cadastro.
+                Calcula o custo da sua próxima impressão. De graça. Sem cadastro.
               </p>
             </motion.div>
           </div>

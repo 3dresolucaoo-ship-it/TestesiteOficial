@@ -66,7 +66,7 @@ export function WalletTransform() {
             className="display-h2 text-foreground"
             style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.18 }}
           >
-            Tua carteira hoje.{' '}
+            Sua carteira hoje.{' '}
             <span className="italic-soft">Depois do Hayzer</span>
           </h2>
         </div>
@@ -137,7 +137,7 @@ export function WalletTransform() {
                 className="display-h2 text-foreground"
                 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', lineHeight: 1.2 }}
               >
-                Tua carteira hoje
+                Sua carteira hoje
               </h3>
               <p className="mt-4 text-[15px] leading-[1.6] text-muted-foreground">
                 Papel, divida, esquecimento. Nao e organizacao, e sobrevivencia.
@@ -173,7 +173,7 @@ export function WalletTransform() {
                 className="display-h2 text-foreground"
                 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', lineHeight: 1.2 }}
               >
-                Tua carteira com Hayzer
+                Sua carteira com Hayzer
               </h3>
               <p className="mt-4 text-[15px] leading-[1.6] text-muted-foreground">
                 R$ 18.730 visiveis. Controle, foco, liberdade no bolso.

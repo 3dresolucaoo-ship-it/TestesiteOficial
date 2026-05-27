@@ -39,7 +39,7 @@ export function ProductionEmptyState({ onAdd }: ProductionEmptyStateProps) {
       </h3>
 
       <p className="text-sm text-foreground/65 leading-relaxed mb-6">
-        Tua fila aparece aqui automatico quando tu cria pedido com produto vinculado. Ou adiciona na mao, se preferir.
+        Sua fila aparece aqui automatico quando você cria pedido com produto vinculado. Ou adiciona na mao, se preferir.
       </p>
 
       <div className="flex flex-col sm:flex-row items-center gap-2">

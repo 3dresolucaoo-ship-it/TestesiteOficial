@@ -130,7 +130,7 @@ function MobileCards({
           Ainda sem cliente
         </h3>
         <p className="text-xs text-foreground/65 leading-relaxed max-w-xs mb-4">
-          Teu primeiro pedido cria o cliente automatico aqui. Registra um pedido pra comecar.
+          Seu primeiro pedido cria o cliente automatico aqui. Registra um pedido pra comecar.
         </p>
         <button
           type="button"
@@ -255,7 +255,7 @@ function DesktopTable({
           Ainda sem cliente
         </h3>
         <p className="text-sm text-foreground/65 leading-relaxed mb-5">
-          Teu primeiro pedido cria o cliente automatico aqui. Cada venda nova aparece nessa lista.
+          Seu primeiro pedido cria o cliente automatico aqui. Cada venda nova aparece nessa lista.
         </p>
         <button
           type="button"
@@ -657,7 +657,7 @@ export default function CustomersPage() {
       return (
         <>
           Nenhum cliente ainda.{' '}
-          <UnderlineMarker tone="petrol">Teu primeiro pedido cria automatico</UnderlineMarker>.
+          <UnderlineMarker tone="petrol">Seu primeiro pedido cria automatico</UnderlineMarker>.
         </>
       )
     }
@@ -687,7 +687,7 @@ export default function CustomersPage() {
             {kpi.vips} {kpi.vips === 1 ? 'cliente VIP' : 'clientes VIP'}
           </UnderlineMarker>
           {' '}na base. {kpi.recorrentes > 0 && (
-            <>{kpi.recorrentes} recorrentes comprando de tu.</>
+            <>{kpi.recorrentes} recorrentes comprando de você.</>
           )}
         </>
       )

@@ -320,7 +320,7 @@ export function CalculadoraForm() {
                     </div>
                   </div>
                   <p className="mt-2 text-[11.5px] leading-[1.4] text-muted-foreground">
-                    50% é o mínimo. Abaixo, tu paga pra trabalhar. Acima de 80%, é premium.
+                    50% é o mínimo. Abaixo, você paga pra trabalhar. Acima de 80%, é premium.
                   </p>
                 </div>
               </div>
@@ -428,7 +428,7 @@ export function CalculadoraForm() {
                     {formatBRL(custoTotal)}
                   </div>
                   <p className="mt-2 text-[12px] leading-[1.45] text-muted-foreground">
-                    Mínimo que tu gasta. Cobrar abaixo é dar prejuízo.
+                    Mínimo que você gasta. Cobrar abaixo é dar prejuízo.
                   </p>
                   <div className="mt-3 space-y-1 border-t border-[hsl(var(--fog-50)/0.08)] pt-3 text-[11.5px] text-muted-foreground">
                     <div className="flex justify-between">
@@ -458,7 +458,7 @@ export function CalculadoraForm() {
                     {formatBRL(lucro)}
                   </div>
                   <p className="mt-2 text-[12px] leading-[1.45] text-muted-foreground">
-                    O que entra no bolso depois de material e luz. Não inclui teu tempo.
+                    O que entra no bolso depois de material e luz. Não inclui seu tempo.
                   </p>
                 </div>
               </div>
@@ -483,13 +483,13 @@ export function CalculadoraForm() {
           <div className="surface-strong rounded-2xl p-6 md:p-8">
             <div className="mb-5">
               <div className="mb-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground">
-                Por onde tu vende
+                Por onde você vende
               </div>
               <h3 className="display-h2 text-[20px] text-foreground md:text-[22px]">
                 Cada marketplace come uma fatia.
               </h3>
               <p className="mt-2 text-[13px] leading-[1.5] text-muted-foreground">
-                A tabela ajusta o preço pra tu sair com o lucro de cima,
+                A tabela ajusta o preço pra você sair com o lucro de cima,
                 líquido, não importa onde a peça vender.
               </p>
             </div>
@@ -562,7 +562,7 @@ export function CalculadoraForm() {
 
             {/* Frase de conexão (Marcos red flag #7) — fecha o aha-moment com argumento de compra */}
             <p className="mt-4 text-[13px] leading-[1.55] text-foreground/90">
-              Essa conta tu fez agora na mão. <span className="font-semibold text-foreground">No Hayzer, ela acontece sozinha</span> pra cada pedido que entra: filamento, luz, comissão, taxa de cartão. Tu só confere.
+              Essa conta você fez agora na mão. <span className="font-semibold text-foreground">No Hayzer, ela acontece sozinha</span> pra cada pedido que entra: filamento, luz, comissão, taxa de cartão. Você só confere.
             </p>
           </div>
         </motion.div>

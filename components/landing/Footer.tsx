@@ -102,7 +102,7 @@ export function Footer() {
           className="mt-10 text-center text-[11.5px] leading-relaxed"
           style={{ color: 'hsl(var(--fog-400))' }}
         >
-          Sem promessa de renda fácil. Sem milagre. Só controle real do que tu já vende.
+          Sem promessa de renda fácil. Sem milagre. Só controle real do que você já vende.
         </p>
 
         <div

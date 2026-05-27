@@ -118,7 +118,7 @@ export function WaitlistForm() {
             autoComplete="given-name"
             className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
             aria-label="Seu nome"
-            onInvalid={(e) => e.currentTarget.setCustomValidity('Coloca teu nome aqui.')}
+            onInvalid={(e) => e.currentTarget.setCustomValidity('Coloca seu nome aqui.')}
             onInput={(e) => e.currentTarget.setCustomValidity('')}
           />
         </div>
@@ -133,10 +133,10 @@ export function WaitlistForm() {
             autoComplete="email"
             inputMode="email"
             className="field-dark w-full rounded-md px-3.5 py-2.5 text-[14px]"
-            aria-label="Teu email"
+            aria-label="Seu email"
             onInvalid={(e) => {
               const t = e.currentTarget
-              if (t.validity.valueMissing) t.setCustomValidity('Coloca teu email pra eu te avisar.')
+              if (t.validity.valueMissing) t.setCustomValidity('Coloca seu email pra eu te avisar.')
               else if (t.validity.typeMismatch) t.setCustomValidity('Esse email não tá certo. Exemplo: nome@email.com')
               else t.setCustomValidity('')
             }}

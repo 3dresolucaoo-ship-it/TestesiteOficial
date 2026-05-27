@@ -64,7 +64,7 @@ export function CrmEmptyState({ tab, onCreateLead }: CrmEmptyStateProps) {
         Nenhum cliente ainda
       </h3>
       <p className="text-sm text-[#888888] leading-relaxed max-w-xs">
-        Cliente aparece aqui automatico quando tu marca um lead como{' '}
+        Cliente aparece aqui automatico quando você marca um lead como{' '}
         <span className="text-[#10b981]">Ganho</span> ou quando um pedido fica com status{' '}
         <span className="text-[#10b981]">Pago</span> ou{' '}
         <span className="text-[#a78bfa]">Entregue</span>.
