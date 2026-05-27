@@ -1,0 +1,70 @@
+{
+  "smoke_test": {
+    "date": "2026-05-27",
+    "time_brt": "06:00",
+    "status": "ALERTA_AMARELO",
+    "executed_at_utc": "2026-05-27T09:00:00Z"
+  },
+  "rotas": {
+    "total_verificadas": 4,
+    "ok": 2,
+    "falha": 2,
+    "detalhes": [
+      { "rota": "https://hayzer.com.br", "status": 200, "ok": true, "titulo": "Hayzer — A raiz do seu negócio" },
+      { "rota": "https://hayzer.com.br/calculadora", "status": 200, "ok": true, "titulo": "Calculadora de custo de impressão 3D · Hayzer" },
+      { "rota": "https://hayzer.com.br/waitlist", "status": 404, "ok": false, "nota": "7o dia consecutivo. Fix commitado hoje em feature/ember-destaque-fotos-reais (3806f083) mas PR nao mergeado ao main." },
+      { "rota": "https://hayzer.com.br/calculadora/pro", "status": 404, "ok": false, "nota": "ESPERADO. Calc Pro revogada. Ver decision-024." }
+    ]
+  },
+  "vercel": {
+    "status": "OK",
+    "deployments_24h": 20,
+    "deployments_error": 0,
+    "deployments_building_longo": 0,
+    "todos_ready": true,
+    "producao_hash": "4de0641",
+    "producao_branch": "main",
+    "producao_idade_estimada_h": 76,
+    "latest_preview": {
+      "id": "dpl_ACEk8xQicxBhVvxjty6brnRRiUAQ",
+      "branch": "feature/ember-destaque-fotos-reais",
+      "commit": "3806f083",
+      "mensagem": "fix: remove data falsa hero + /waitlist redireciona pra home"
+    },
+    "runtime_errors_24h": 0
+  },
+  "supabase": {
+    "status": "OK",
+    "projeto": "sqyrkisnllrgylnxwudu",
+    "regiao": "sa-east-1",
+    "health_select1": true,
+    "total_leads": 1,
+    "tabela_notifications": true,
+    "view_search_index": false
+  },
+  "performance": {
+    "disponivel": false,
+    "motivo": "VERCEL_API_TOKEN ausente (issue #23, 7o dia consecutivo)",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "alertas": [
+    {
+      "tipo": "AMARELO",
+      "item": "/waitlist 404",
+      "dia_consecutivo": 7,
+      "contexto": "Fix existe na branch feature/ember-destaque-fotos-reais mas nao mergeado. PR pendente."
+    },
+    {
+      "tipo": "AMARELO",
+      "item": "view search_index inexistente",
+      "contexto": "Persistente desde audit anterior. Impacto a avaliar."
+    },
+    {
+      "tipo": "INFO",
+      "item": "/calculadora/pro 404 esperado",
+      "contexto": "decision-024: Calc Pro revogada. Sem acao necessaria."
+    }
+  ]
+}
