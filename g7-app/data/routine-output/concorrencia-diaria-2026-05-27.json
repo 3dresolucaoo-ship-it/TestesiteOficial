@@ -1,0 +1,126 @@
+{
+  "data": "2026-05-27",
+  "horario_pesquisa": "~09h",
+  "persona_ativa": "Rafael",
+  "fontes": ["instagram_websearch", "reclameaqui_websearch", "websitesFetch"],
+  "limitacoes": "Instagram sem API publica — dados via indexacao Google (titulos de posts/reels). Reclame Aqui bloqueou WebFetch (403); dados via search indexado. Engajamento estimado, nao exato.",
+
+  "alertas": [
+    {
+      "id": "A1",
+      "nivel": "ALTO",
+      "titulo": "3D Geek Show oferece planilha de custos gratuita como lead magnet",
+      "detalhe": "Site 3dgeekshow.com.br disponibiliza 'Planilha de custos' + e-book 'Manual do Empreendedor na Impressao 3D' como download gratuito. Isso concorre diretamente com o Hayzer Calc (nosso magnet eterno). Necessario avaliar profundidade da planilha vs diferenciais do Calc (integracao pedidos, automacao, G-code).",
+      "canal": "website_3dgeekshow",
+      "fonte_url": "https://3dgeekshow.com.br/"
+    },
+    {
+      "id": "A2",
+      "nivel": "MEDIO",
+      "titulo": "AppCustos3D lancou Smart Production com leitura de G-code (PRO)",
+      "detalhe": "Feature tecnica nova: analise automatica de arquivos .gcode para calcular tempo e consumo real de filamento. Preco agressivo: PRO R$36/mes no semestral (R$69,90 mensal). BASIC em R$17/mes semestral. Demo 3 dias sem cartao. Hayzer nao tem essa feature atualmente.",
+      "canal": "website_appcustos3d",
+      "fonte_url": "https://appcustos3d.com.br/"
+    },
+    {
+      "id": "A3",
+      "nivel": "MEDIO",
+      "titulo": "3D Control compete em preco unico agressivo: R$39,99/mes com CRM",
+      "detalhe": "Plano unico sem limitacoes inclui Dashboard financeiro, Gestao pedidos, Controle filamentos, Frota impressoras, CRM e integracao Shopee/ML/Elo7/Instagram. Promessa de +300% lucro e 5h/sem economizadas. Posicionamento mais barato e mais completo na proposta do que o Hayzer atual.",
+      "canal": "website_3dcontrol",
+      "fonte_url": "https://3dcontrol.com.br/"
+    }
+  ],
+
+  "posts_relevantes": [
+    {
+      "perfil": "@3dgeekshow",
+      "seguidores": "128K",
+      "data_post": "2026-05-24",
+      "titulo": "Vamos pra china!!!",
+      "tipo": "video",
+      "tema": "viagem China / visita fabricante (provavelmente Creality ou Bambu)",
+      "relevancia_hayzer": "Murilo visitando fabricante reforca autoridade de hardware. Nao trata de gestao/custo — abre espaco pro Hayzer no nicho de software. Porem a planilha gratuita do site dele e o verdadeiro sinal a monitorar.",
+      "engajamento_estimado": "alto (128K seguidores, conteudo de viagem tem boa performance)",
+      "fonte_url": "https://3dgeekshow.com.br/"
+    },
+    {
+      "perfil": "@3dlab_brasil",
+      "seguidores": "82K",
+      "data_post": "recente (semana 27/05)",
+      "titulo": "@careca3d veio aqui relembrar voces de todos os...",
+      "tipo": "reel",
+      "tema": "collab com creator @careca3d — provavel humor/educativo",
+      "relevancia_hayzer": "3D Lab usando collab com outros criadores para ampliar alcance. Estrategia de parceria creator que Hayzer pode replicar para maker BR.",
+      "engajamento_estimado": "medio-alto",
+      "fonte_url": "https://www.instagram.com/3dlab_brasil/reel/DL0a2U5v-5y/"
+    },
+    {
+      "perfil": "@artbox3d",
+      "seguidores": "82K",
+      "data_post": "recente (semana 27/05)",
+      "titulo": "Bem-vindo a ARTBOX3D! Aqui e onde ideias ganham forma...",
+      "tipo": "reel",
+      "tema": "institucional / boas-vindas novos seguidores",
+      "relevancia_hayzer": "ArtBox3D reafirmando posicionamento de loja fisica SP. Nao e concorrente direto de software.",
+      "engajamento_estimado": "medio",
+      "fonte_url": "https://www.instagram.com/reel/DLSJ7EHMiKl/"
+    }
+  ],
+
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "tema_recorrente": "Sistema instavel — cai e fica lento toda semana",
+      "exemplos_titulos": [
+        "Bling ERP Sistema Lento e Cai toda hora",
+        "BLING ERP CAINDO E LENTO. Toda a Semana e a mesma Historia",
+        "ERP Bling off-line por 8h em plena segunda-feira causando prejuizos"
+      ],
+      "outros_problemas": [
+        "Falha integracao Shopee — pedidos/etiquetas problematicos",
+        "Falta adequacao reforma tributaria IBS/CBS para 2026",
+        "Suporte com 20 dias de resposta media"
+      ],
+      "oportunidade_hayzer": "Makers que usam Bling para gestao estao frustrados com instabilidade e custo (reforma tributaria impacta precificacao). Hayzer pode capturar esse maker com proposta de estabilidade + precificacao automatica que ja considera tributos novos.",
+      "fonte_url": "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/"
+    },
+    {
+      "empresa": "3D Lab (loja hardware)",
+      "tema_recorrente": "Filamento com defeito + suporte via robo quebrado",
+      "exemplos_titulos": [
+        "Filamentos da 3D Lab causam entupimento e erros na impressora 3D",
+        "Filamento defeituoso e pessimo atendimento",
+        "Pos venda e suporte"
+      ],
+      "outros_problemas": [
+        "Atendimento via robo que encerra chat se usuario demora a responder",
+        "Atraso na entrega",
+        "Baixa qualidade em filamentos"
+      ],
+      "oportunidade_hayzer": "Maker que tem problema com filamento precisa de controle de lote/estoque para rastrear falhas. Hayzer pode usar esse dor point em copy: 'saiba exatamente qual rolo causou o problema'.",
+      "fonte_url": "https://www.reclameaqui.com.br/empresa/3d-lab/lista-reclamacoes/"
+    }
+  ],
+
+  "acao_recomendada": {
+    "destinatario": "Marcos + Helena",
+    "urgencia": "amanha (28/05)",
+    "acao": "Verificar profundidade da planilha gratuita do 3D Geek Show (https://3dgeekshow.com.br) e mapear o que ela NAO faz vs o Hayzer Calc. Proposta: criar 1 post ou story mostrando o limite da planilha (ex: 'planilha nao atualiza sozinha quando o preco do filamento muda') e posicionar o Hayzer Calc como a evolucao natural. Tambem avaliar se faz sentido fazer parceria ou mencionamento com @3dgeekshow dado o publico de 128K alinhado com Rafael.",
+    "contexto": "3D Geek Show e o maior canal maker 3D BR (128K) e ja usa lead magnet de custo gratuito — exatamente nosso territorio. Ignorar seria erro. O post de 24/05 sobre China indica que ele vai gerar muito conteudo de hardware nas proximas semanas, deixando o nicho de software mais aberto."
+  },
+
+  "concorrentes_nao_encontrados_reclameaqui": [
+    "MakerFlow",
+    "PrintWorks3D",
+    "ZoomCalc3D",
+    "Custos3D"
+  ],
+  "nota_concorrentes_nao_encontrados": "Provavelmente muito pequenos, sem cadastro no Reclame Aqui ou nomes diferentes na plataforma. Monitorar via WebSearch direto se necessario.",
+
+  "mapa_precos_concorrentes_software": {
+    "AppCustos3D_BASIC": "R$29,90/mes (ou R$17/mes semestral)",
+    "AppCustos3D_PRO": "R$69,90/mes (ou R$36/mes semestral)",
+    "3D_Control_unico": "R$39,99/mes"
+  }
+}
