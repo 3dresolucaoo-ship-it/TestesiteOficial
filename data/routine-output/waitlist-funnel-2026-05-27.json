@@ -1,0 +1,34 @@
+{
+  "date": "2026-05-27",
+  "generated_at": "2026-05-27T09:00:00.000Z",
+  "data_source": "supabase_live",
+  "project_id": "sqyrkisnllrgylnxwudu",
+  "last_24h": {
+    "total_new": 0,
+    "completed_step_2": 0,
+    "conversion_pct": null,
+    "avg_min_step1_to_step2": null,
+    "by_utm": {}
+  },
+  "accumulated": {
+    "total": 3,
+    "last_7d": 1,
+    "prev_7d": 2,
+    "growth_7d_pct": -50.0,
+    "top_utms": [
+      { "utm_source": "direct", "total": 3, "pct": 100.0 }
+    ]
+  },
+  "daily_breakdown_7d": [
+    { "dia": "2026-05-23", "leads": 1, "completados": 0 }
+  ],
+  "trend": "baixa",
+  "daily_avg_7d": 0.14,
+  "actions": [
+    "Volume critico: apenas 3 leads no total (waitlist nao ativada com trafego real ainda)",
+    "Zero leads nas ultimas 24h: normal se nao houve push de aquisicao",
+    "100% direct: nenhuma campanha com UTM ativa -- primeiro post no grupo WhatsApp Beta ainda nao foi feito (tarefa CEO)",
+    "Queda 7d vs 7d anterior: 1 vs 2 leads (-50%). Tendencia negativa, mas base pequena demais pra conclusao estatistica",
+    "Acao imediata: postar no grupo WhatsApp Beta (texto pronto Marcos) + configurar UTM em todos os links de captacao antes do soft launch 11/06"
+  ]
+}
