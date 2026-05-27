@@ -57,7 +57,7 @@ export function Hero({ waitlistCount }: HeroProps) {
               className="sticker-amber mb-8 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11.5px] font-medium tracking-wide"
             >
               <Clock className="h-3 w-3" strokeWidth={2.5} />
-              Lançamento em 27 de junho · vagas limitadas
+              Acesso antecipado · vagas limitadas
             </motion.div>
 
             {/* Headline editorial Fraunces com marker handmade no "caos" */}
