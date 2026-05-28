@@ -1,0 +1,86 @@
+{
+  "date": "2026-05-28",
+  "time_brt": "06:07",
+  "time_utc": "09:07",
+  "status": "ALERTA AMARELO",
+  "rotas": {
+    "total": 4,
+    "ok": 2,
+    "falha": 2,
+    "resultados": {
+      "/": { "status": 200, "ok": true },
+      "/calculadora": { "status": 200, "ok": true },
+      "/waitlist": { "status": 404, "ok": false, "nota": "dia 8 consecutivo. Fix commitado em feature/ember-destaque-fotos-reais (commit 3806f083) mas PR nao mergeado ao main." },
+      "/calculadora/pro": { "status": 404, "ok": false, "nota": "esperado - Calc Pro revogada (decision-024, 21/05)" }
+    }
+  },
+  "vercel": {
+    "projeto": "bvaz-hub",
+    "project_id": "prj_KHkxLpnoblctCyW3LVJWd8KX1nzX",
+    "producao": {
+      "hash": "4de0641",
+      "mensagem": "monitoring: error-scan 2026-05-24",
+      "idade": "~4 dias",
+      "status": "READY"
+    },
+    "deploys_24h": {
+      "total": 2,
+      "erros": 0,
+      "lista": [
+        {
+          "id": "dpl_4mUKhAoCYrTwYszTLrJGAUTvzVGq",
+          "branch": "claude/ecstatic-johnson-638zL",
+          "mensagem": "monitoring: error-scan 2026-05-28",
+          "criado": "2026-05-28T01:08:14Z",
+          "idade_h": 8,
+          "status": "READY"
+        },
+        {
+          "id": "dpl_EXjKKoaXTDzBegMGtPffsFhjciw5",
+          "branch": "claude/pensive-noether-bN0sR",
+          "mensagem": "chore(concorrencia): pesquisa diaria maker 3D BR -- 2026-05-28",
+          "criado": "2026-05-28T00:10:26Z",
+          "idade_h": 9,
+          "status": "READY"
+        }
+      ]
+    }
+  },
+  "supabase": {
+    "projeto": "sqyrkisnllrgylnxwudu",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads_total": 3,
+    "tabela_notifications": true,
+    "view_search_index": false,
+    "nota_search_index": "view ausente - persistente (dia 8+)"
+  },
+  "performance": {
+    "disponivel": false,
+    "motivo": "VERCEL_API_TOKEN ausente (issue #23, dia 8)",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "alertas": [
+    {
+      "severity": 2,
+      "item": "/waitlist 404",
+      "detalhes": "Dia 8 consecutivo. app/waitlist/page.tsx nao existe no repositorio. Fix pronto em PR (commit 3806f083, feature/ember-destaque-fotos-reais) mas nao mergeado. BLOCKER soft launch 11/06 (14 dias restantes).",
+      "acao": "Mergear PR feature/ember-destaque-fotos-reais ao main URGENTE."
+    },
+    {
+      "severity": 1,
+      "item": "search_index view ausente",
+      "detalhes": "View nao encontrada no schema public. Pode afetar funcionalidade de busca.",
+      "acao": "Investigar se view foi dropada ou nunca criada. Criar migration se necessario."
+    },
+    {
+      "severity": 1,
+      "item": "VERCEL_API_TOKEN ausente",
+      "detalhes": "Issue #23 ativa ha 8 dias. Core Web Vitals indisponiveis para monitoramento diario.",
+      "acao": "Configurar VERCEL_API_TOKEN no ambiente da rotina."
+    }
+  ],
+  "resumo": "2/4 rotas OK. /waitlist 404 dia 8 consecutivo - BLOCKER com fix pronto aguardando merge. Vercel todos READY, zero ERROR. Supabase ACTIVE_HEALTHY, 3 leads. Performance indisponivel (issue #23). Dia 14 pre-soft-launch."
+}
