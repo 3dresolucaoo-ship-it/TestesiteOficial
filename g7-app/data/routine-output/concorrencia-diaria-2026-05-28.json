@@ -1,0 +1,146 @@
+{
+  "data": "2026-05-28",
+  "instagram": {
+    "3dlab_brasil": {
+      "seguidores": "82.000",
+      "posts_recentes": [
+        "Reels ativos sobre impressoras 3D e servicos B2B",
+        "Posicionamento como maior empresa de impressao 3D do Brasil",
+        "Conta B2B separada @3dlab.pro (segmento empresa)"
+      ],
+      "acesso": "bloqueado sem login -- dados via indexacao de busca",
+      "observacao": "Empresa de hardware/servicos, nao SaaS de gestao. Referencia de marca no segmento"
+    },
+    "artbox3d": {
+      "seguidores": "sem dados",
+      "posts_recentes": [],
+      "acesso": "bloqueado",
+      "observacao": "Revenda oficial de impressoras 3D, filamentos, resinas. Nao concorrente direto de SaaS"
+    },
+    "3dprintacademy": {
+      "seguidores": "sem dados",
+      "posts_recentes": [],
+      "acesso": "bloqueado",
+      "observacao": "Sem dados disponiveis via busca"
+    },
+    "3dgeekshow": {
+      "seguidores": "sem dados",
+      "posts_recentes": [],
+      "acesso": "bloqueado",
+      "observacao": "Sem dados disponiveis via busca"
+    },
+    "appcustos3d": {
+      "seguidores": "sem dados",
+      "posts_recentes": [],
+      "acesso": "bloqueado",
+      "observacao": "Site ativo em appcustos3d.com.br. Concorrente direto confirmado"
+    }
+  },
+  "reclame_aqui": {
+    "bling": {
+      "reclamacoes": [
+        "Sistema bloqueado por falta de espaco no plano -- impossibilidade de emitir NF",
+        "Erro de comunicacao com SEFAZ ao emitir nota fiscal",
+        "Campo NCM nao preenchido causa rejeicao de NF",
+        "Suporte lento, telefone nao atende",
+        "Falta de adequacao a reforma tributaria 2026 (IBS e CBS) para produtos imunes"
+      ],
+      "tema_recorrente": "Emissao de nota fiscal + suporte lento + adaptacao reforma tributaria 2026"
+    },
+    "makerflow": {
+      "reclamacoes": [],
+      "tema_recorrente": "Sem reclamacoes encontradas no Reclame Aqui -- base de usuarios provavelmente pequena ainda"
+    },
+    "3d_control": {
+      "reclamacoes": [],
+      "tema_recorrente": "Sem reclamacoes encontradas -- produto novo, preco a partir de R$ 39,99/mes"
+    },
+    "appcustos3d": {
+      "reclamacoes": [],
+      "tema_recorrente": "Sem reclamacoes encontradas -- plataforma especializada de nicho"
+    },
+    "impressao_3d_geral": {
+      "reclamacoes": [
+        "3D Lab reclamacoes sobre produtos (hardware, nao software)",
+        "3D Impresso com pagina no Reclame Aqui (servico de impressao, nao gestao)"
+      ],
+      "tema_recorrente": "Reclamacoes concentradas em empresas de hardware/servico, nao SaaS de gestao"
+    }
+  },
+  "novos_players_detectados": [
+    {
+      "nome": "Printora",
+      "url": "https://useprintora.com.br",
+      "blog": "https://blog.useprintora.com.br",
+      "modelo": "Freemium -- 1 impressora gratis + upgrade por escala",
+      "diferencial": "Blog de SEO organico ativo (Camada por Camada) + calculadora embutida",
+      "nivel_ameaca": "ALTO -- executando estrategia de conteudo + freemium antes do Hayzer"
+    },
+    {
+      "nome": "Controle3D",
+      "url": "https://www.controle3d.com.br",
+      "modelo": "Pago",
+      "diferencial": "Posicionamento como CFO Digital para impressao 3D",
+      "nivel_ameaca": "MEDIO"
+    }
+  ],
+  "calculadoras_gratuitas_ativas": [
+    "Precifi3D (precifi3d.com)",
+    "CalculaSTL (calculastl.com.br)",
+    "HypeBuild3D (land.hypebuild3d.com.br)",
+    "QuantoCusta3D",
+    "ZoomCalc3D",
+    "3dprime",
+    "Acelera3D",
+    "Printora Calc"
+  ],
+  "alertas": [
+    "PRINTORA: freemium agressivo + blog SEO ativo com keywords maker BR -- maior ameaca de aquisicao organica detectada",
+    "MAKERFLOW: integracao oficial Mercado Livre + Shopee ativa -- argumento que Rafael vai levantar no onboarding",
+    "EXPO3DBR 21-23 agosto em Sao Caetano -- sazonalidade maker pre-Natal, Hayzer deve estar solido ate la"
+  ],
+  "posts_relevantes": [
+    {
+      "fonte": "Printora Blog",
+      "titulo": "Review de filamentos no Brasil: qual escolher em 2026",
+      "relevancia": "SEO organico direto no segmento maker BR -- Printora construindo autoridade enquanto lanca produto"
+    },
+    {
+      "fonte": "Printora Blog",
+      "titulo": "Como calcular o preco certo na impressao 3D, todos os custos reais",
+      "relevancia": "Conteudo fundo de funil capturando maker no momento de dor (precificacao)"
+    },
+    {
+      "fonte": "MakerFlow 3D",
+      "titulo": "Integracao oficial Mercado Livre + Shopee + fila de producao",
+      "relevancia": "Trial 7 dias sem cartao -- diferenciacao de integracao que Hayzer nao tem no launch"
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling",
+      "reclamacao": "Falta de adequacao a reforma tributaria 2026 (IBS/CBS)",
+      "oportunidade_hayzer": "Posicionar Hayzer como ferramenta sem complexidade fiscal -- 'so o que o maker precisa'"
+    },
+    {
+      "empresa": "Bling",
+      "reclamacao": "Suporte lento, telefone nao atende",
+      "oportunidade_hayzer": "Rafael nao quer ticket, quer resposta rapida -- argumento de CS Sofia"
+    }
+  ],
+  "acao_recomendada": "Criar 1 artigo/landing page com 'calculadora de custo impressao 3D gratuita' antes de 10/06 para capturar trafego organico que hoje vai para Printora, AppCustos3D e HypeBuild3D. Marcos mapeia keywords organicas da Printora como prioridade imediata.",
+  "limitacoes_coleta": "Instagram bloqueou todos os perfis sem login. Dados de Instagram sao de indexacao de busca, nao posts das ultimas 48h. Para monitoramento diario real de Instagram seria necessaria ferramenta de social listening (Mention, BuzzSumo) ou acesso manual via conta logada.",
+  "fontes": [
+    "https://www.instagram.com/3dlab_brasil/",
+    "https://appcustos3d.com.br/",
+    "https://www.makerflow3d.com.br/",
+    "https://useprintora.com.br/",
+    "https://www.controle3d.com.br/",
+    "https://3dcontrol.com.br/",
+    "https://precifi3d.com/",
+    "https://calculastl.com.br/",
+    "https://land.hypebuild3d.com.br/",
+    "https://blog.useprintora.com.br/",
+    "https://www.reclameaqui.com.br/bling/"
+  ]
+}
