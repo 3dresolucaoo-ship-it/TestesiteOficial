@@ -1,0 +1,50 @@
+{
+  "date": "2026-05-28",
+  "generated_at": "2026-05-28T09:00:00-03:00",
+  "periodo_24h": {
+    "total_leads_novos": 0,
+    "completaram_etapa2_whatsapp": 0,
+    "completaram_email_confirmado": 0,
+    "taxa_etapa2_pct": null,
+    "utm_breakdown": {},
+    "nota": "Nenhum lead nas ultimas 24h"
+  },
+  "periodo_7d": {
+    "total_leads": 1,
+    "media_diaria": 0.14,
+    "leads_por_dia": {
+      "2026-05-23": 1
+    }
+  },
+  "acumulado": {
+    "total_waitlist": 3,
+    "leads_reais_estimados": 2,
+    "leads_teste_detectados": 1,
+    "com_whatsapp": 3,
+    "email_confirmado": 0,
+    "taxa_email_confirmado_pct": 0,
+    "taxa_whatsapp_pct": 100,
+    "segment_preenchido": 0,
+    "utm_capturado": 0,
+    "top3_utm_sources": [
+      { "utm_source": null, "total": 3, "label": "direct/organic sem UTM" }
+    ]
+  },
+  "tendencia": {
+    "status": "baixa",
+    "leads_hoje": 0,
+    "media_diaria_7d": 0.14,
+    "variacao_vs_media_7d": -100
+  },
+  "alertas": [
+    "UTM nulo em 100% dos leads - tracking UTM nao esta capturando ou nenhum trafego rastreado chegou ainda",
+    "Zero confirmacoes de email - verificar fluxo de confirmacao (emails chegando?)",
+    "1 lead de teste (Auditor QA) contamina a base - filtrar em analises futuras",
+    "2 leads com mesmo nome 'Gabriel' e whatsapp identico - provavel duplicata"
+  ],
+  "acoes_recomendadas": [
+    "Auditar implementacao do UTM capture no formulario da landing",
+    "Verificar deliverability do email de confirmacao (checar Supabase Auth logs)",
+    "Filtrar leads de teste da base antes do soft launch 11/06"
+  ]
+}
