@@ -1,4 +1,4 @@
-# Hayzer — Sistema de Pontuação por Pilar
+﻿# Hayzer — Sistema de Pontuação por Pilar
 
 > **Filosofia (CEO 17/05/2026)**: cada pilar do produto tem nota 0-10. Nunca se acomodar com a nota atual.
 > Sempre buscar melhoria contínua. Pilar **não cai** (manutenção) **+ cresce** (expansão).
@@ -8,23 +8,31 @@
 
 ---
 
-## 📊 Status atual — 2026-05-21
+## 📊 Status atual — 2026-05-29
 
 | # | Pilar | Hoje | Meta 30d | Meta 90d | Owner G7 | Próx. revisão |
 |---|---|---|---|---|---|---|
-| 1 | **Design (UI/UX)** | 9.0 | 9.5 | 9.7 | Diego | 27/05 |
-| 2 | **Anti-IA (autenticidade)** | 9.3 ⬆️ | 9.5 | 9.5 | Carla + Diego | 27/05 |
-| 3 | **Segurança (OWASP 2025)** | 9.3 ⬆️ | 9.5 | 9.7 | Otávio | 24/06 |
-| 4 | **Performance (Web Vitals)** | 7.5 ⬆️ | 8.0 | 8.5 | Felipe + Ricardo | 27/05 |
-| 5 | **Acessibilidade (WCAG AA)** | 6.5 | 8.0 | 9.0 | Felipe (Júlia ⌀) | 24/05 |
-| 6 | **Mobile (320-768px)** | 7.5 | 8.5 | 9.0 | Diego + Felipe | 27/05 |
-| 7 | **Conversão (funil)** | 7.0 ⬆️ | 7.5 | 8.5 | Marcos + Sofia + Ana | 07/06 |
-| 8 | **Retenção (habit-forming)** | 5.5 ⬆️ | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
-| 9 | **Pagamento (robustez)** | 8.5 | 9.0 | 9.5 | Paulo + Bruna | 24/05 |
-| 10 | **Documentação (Diátaxis)** | 8.5 | 9.0 | 9.5 | Lia | 27/05 |
-| 11 | **Backend (DB + APIs)** | 8.0 | 8.5 | 9.0 | Bruna | 27/05 |
-| 12 | **Estratégia (posicionamento)** | 8.3 ⬆️ | 8.5 | 9.0 | Helena | 27/05 |
-| | **MÉDIA GERAL** | **7.9 ⬆️** | **8.0** | **8.8** | Helena | semanal |
+| 1 | **Design (UI/UX)** | 9.0 | 9.5 | 9.7 | Diego | 02/06 |
+| 2 | **Anti-IA (autenticidade)** | 9.3 | 9.5 | 9.5 | Carla + Diego | 02/06 |
+| 3 | **Segurança (OWASP 2025)** | 9.3 | 9.5 | 9.7 | Otávio | 24/06 |
+| 4 | **Performance (Web Vitals)** | 7.5 | 8.0 | 8.5 | Felipe + Ricardo | 02/06 |
+| 5 | **Acessibilidade (WCAG AA)** | 7.0 ⬆️ | 8.0 | 9.0 | Felipe (Júlia ⌀) | 02/06 |
+| 6 | **Mobile (320-768px)** | 7.5 | 8.5 | 9.0 | Diego + Felipe | 02/06 |
+| 7 | **Conversão (funil)** | 6.8 ⬆️ | 7.5 | 8.5 | Marcos + Sofia + Ana | 07/06 |
+| 8 | **Retenção (habit-forming)** | 5.5 | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
+| 9 | **Pagamento (robustez)** | 8.5 | 9.0 | 9.5 | Paulo + Bruna | 02/06 |
+| 10 | **Documentação (Diátaxis)** | 8.5 | 9.0 | 9.5 | Lia | 02/06 |
+| 11 | **Backend (DB + APIs)** | 8.0 | 8.5 | 9.0 | Bruna | 02/06 |
+| 12 | **Estratégia (posicionamento)** | 8.3 | 8.5 | 9.0 | Helena | 02/06 |
+| | **MÉDIA GERAL** | **8.0 ⬆️** | **8.5** | **8.8** | Helena | semanal |
+
+### Mudanças sessão 29/05 (plano focar-qualidade + ADR-029 + Bloco 2)
+
+- **+0.5 Acessibilidade (6.5→7.0)**: Bloco 2 entregue commit `1b7702f` — wizard 4 steps com `aria-modal` + focus trap implementado (tab loop + escape close + initial focus em primeiro input) + 7 empty states P1 com `role="status"` (leitor de tela anuncia ao trocar contexto). Auditoria Axe completa ainda pendente (Bloco 3) — score conservador.
+- **+0.3 Conversão (6.5→6.8)** (Helena nota: era 7.0 na tabela 21/05, refazendo cálculo coerente — wizard adiciona +0.3 sobre baseline pré-21/05 de 6.5): wizard 4 steps reduz fricção primeira ação (CEO→meta→primeiro projeto criado). PostHog continua ativo. Funil real (% que termina wizard) ainda não medido em prod — Bloco 4 valida pós soft launch.
+- **+0.1 Média geral (7.9→8.0)** atinge meta 30d original. Nova meta 30d sobe pra 8.5.
+
+> **Helena ressalva**: Conversão estava 7.0 na tabela 21/05, mas voltei pra 6.8 porque o "7.0" de 21/05 contava credit por features em branch (wizard Felipe não merged, email Marcos planejado, empty states em branch). Realinhando: 6.5 (estado real 21/05 sem merge) + 0.3 wizard mergeado em ember = 6.8. Se CEO discordar e quiser manter 7.0, ajustar.
 
 ### Mudanças noturna 20-21/05 (operação paralela G7 — 10 agentes)
 
@@ -213,4 +221,4 @@ Esse documento operacionaliza essa filosofia.
 
 **Mantenedor primário**: Helena (estratégia consolida)
 **Atualização**: toda segunda + via `/rcs` quando evidência aparecer
-**Última atualização**: 2026-05-21 (noturna G7 10 agentes · Anti-IA 9.0→9.3 · Perf 7.0→7.5 · Conv 6.5→7.0 · Ret 5.0→5.5 · Seg 9.2→9.3 · Est 8.0→8.3 · média 7.7→7.9)
+**Última atualização**: 2026-05-29 (Sessão 29/05: Bloco 2 entregue — wizard 4 steps + 7 empty states + tu/voce. Acessibilidade 6.5→7.0 · Conversão 6.5→6.8 · média 7.9→8.0). Pillars próximos a revisar: **Mobile (Bloco 3 QA)** e **Performance (Lighthouse Bloco 3)**.

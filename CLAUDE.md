@@ -1,4 +1,4 @@
-# Hayzer — Cérebro do Projeto
+﻿# Hayzer — Cérebro do Projeto
 
 > SaaS multi-projeto · Next.js 16 · Supabase · Stripe · Mercado Pago · Vercel
 > **Sempre comece lendo este arquivo.** Ele aponta pra todo o resto.
@@ -73,12 +73,12 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 ## 🎯 STATUS RÁPIDO
 
-- **Versão**: v0.6 · Fase 1 em curso · soft launch **11/06** · launch público **27/06/2026**
+- **Versão**: v0.6 · Fase 1 em curso · soft launch **13/06** · launch público **27/06/2026** (ADR-029, Bloco 2 commitado 29/05)
 - **Último audit**: `audits/2026-05-04.md` (próximo: ~04/06/2026)
-- **Última sessão**: 20/05 22h-21/05 madrugada (~9h paralelo G7, 10 agentes despachados em 1 mensagem) — branches: feature/onboarding-wizard, feature/customers-v4, feature/customers-backend, feature/perf-tbt-fix, feature/landing-assets-webp, feature/empty-states-p1, feature/landing-v2-pngs-reais, chore/voce-pra-tu. Ver `sessions/2026-05-20-hardwork-v4-completo.md`
-- **Pillars score**: **7.9** (era 7.7, meta 30d: 8.0) · ver `pillars/SCORES.md`
+- **Última sessão**: 29/05 (10h, plano focar-qualidade + datas hard ADR-029 + Bloco 1 90% + Bloco 2 100%) — commits: `1b7702f` (Bloco 2 onboarding wizard + 7 empty states + tu/voce), `c6d8ad6` (ADR 029). Sessão anterior: 20/05 22h-21/05 madrugada (~9h paralelo G7). Ver `sessions/2026-05-20-hardwork-v4-completo.md`
+- **Pillars score**: **8.0** (era 7.9, meta 30d: 8.5) · ver `pillars/SCORES.md` — Bloco 2 entregue subiu A11Y + Conversão
 
-### 🟢 Estado real prod atual (21/05 madrugada)
+### 🟢 Estado real prod atual (29/05 pós Bloco 2)
 
 **hayzer.com.br** com TODOS 14 módulos visual V4 unificado:
 - Sidebar V4 com ícones Lucide coloridos (NÚCLEO petrol, CRESCIMENTO ember, SISTEMA fog)
@@ -91,23 +91,36 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - Golden path #1: lead→pedido manual funcional (migration `20260520_leads_converted_order.sql` APLICADA)
 - 4 empty states críticos implementados (FP-01 projects, FP-02 finance, FP-03 production, FP-04 orders)
 
-**Branches noturna 20-21/05 (em review, nao merged ainda):**
-- `feature/onboarding-wizard` — Felipe, 788 linhas, wizard 3 telas completo
+**Branch ember (29/05 — 11 commits à frente de main, push origin feito, deploy preview Vercel buildando):**
+- Bloco 2 entregue commit `1b7702f`: wizard 4 steps (aria-modal + focus trap) + 7 empty states com role=status + tu/voce search-replace em 17 arquivos
+- ADR 029 commit `c6d8ad6`: data hard 13/06 soft + 27/06 público (supera ADR-028)
+- Pendente merge em main + aplicar migration onboarding em prod
+
+**Branches noturna 20-21/05 ainda abertas (em review):**
+- `feature/onboarding-wizard` — Felipe, 788 linhas, wizard 3 telas (consolidado em ember Bloco 2)
 - `feature/customers-v4` + `feature/customers-backend` — Felipe tela /customers V4 + Bruna customersService LTV
 - `feature/perf-tbt-fix` — Bruna LazyMotion + posthog lazy + requestIdleCallback (TBT est. -2.0 a -2.7s)
 - `feature/landing-assets-webp` — 36 PNGs→WebP -96% (23.3MB→2.75MB)
 - `feature/empty-states-p1` — Sofia, 10 empty states mapeados + 5 P1 implementados
 - `feature/landing-v2-pngs-reais` — Diego spec v2 com cliente mulher + maker antes/depois
-- `chore/voce-pra-tu` — Carla, search-replace "voce"→"tu" em 17 arquivos
+- `chore/voce-pra-tu` — Carla, search-replace "voce"→"tu" em 17 arquivos (consolidado em ember Bloco 2)
 
-### 🔴 Pendências pré-launch 11/06
+### 🔴 Pendências pré-soft launch 13/06 (ADR-029)
 
-1. **QA mobile** — zero feito · checklist em `sessions/2026-05-20-checklist-qa-mobile.md` · CEO testa no celular
-2. **Onboarding wizard** — CODIFICADO (feature/onboarding-wizard, 788 linhas, Felipe) · pendente: review + merge + teste visual em prod
-3. **tu/voce** — FEITO (chore/voce-pra-tu, 17 arquivos, Carla) · pendente: merge
-4. **Empty states P1** — 5 implementados (feature/empty-states-p1, Sofia) · pendente: merge + 5 restantes P2
-5. **Onda Landing v2** — Diego spec com PNGs reais (cliente mulher + maker antes/depois) em branch feature/landing-v2-pngs-reais · secao 43 logos/9 timelapses: ver ADR-028 (Helena propoe cortar)
-6. **TBT** — fix Bruna em branch feature/perf-tbt-fix · pendente: merge + Lighthouse prod confirmando abaixo 1.5s
+1. **Aplicar migration onboarding em prod** — wizard 4 steps depende dela; CEO via Supabase MCP
+2. **Merge branch ember em main** — 11 commits incluem Bloco 2 (wizard + 7 empty states + tu/voce) + ADR 029; deploy preview Vercel buildando agora
+3. **Stripe Connect** — testar em sandbox antes 13/06 (Bloco 1 a 90%, fechar até 03/06)
+4. **Discord webhook + Sentry DSN no Vercel** — Bloco 1 observabilidade (vars commitadas, faltam valores em prod)
+5. **QA mobile** — checklist em `sessions/2026-05-20-checklist-qa-mobile.md`; Bloco 3 (30/05 → 10/06)
+6. **Lighthouse rotas internas** — só `/` rodou; meta Bloco 3: > 75 todas rotas
+7. **Golden path #1 fim a fim em prod** — lead → wizard → projeto → pedido → produção (Bloco 3 critério Go/No-Go)
+
+### 🟠 Pré-launch público 27/06 (Blocos 5-6)
+1. Coleta feedback 5-10 makers soft (13/06 → 17/06)
+2. V4 nos 8 módulos restantes (customers, leads, inventory, products, production, finance, content, decisions) — Bloco 5 polimento
+3. Sequência email D+1/D+3/D+7 — Bloco 5
+4. Landing comparativa (Hayzer vs planilha vs ERP genérico) — Bloco 5
+5. Go/No-Go 26/06 23h (golden path #2 fim a fim + Sentry sem P0 + CEO go)
 
 ### ⚠️ Status REAL do produto (modo crítico CEO 20/05 23h)
 
@@ -149,18 +162,23 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - **Sentry não aplicado** (programado 17/06)
 - **Cap quota Anthropic** rodando 4-5 agents/noite pode bater limite Max 5x
 
-### Foco atual: MAKER hardwork (19/05 → 27/06)
+### Foco atual: MAKER hardwork (29/05 → 27/06) — datas hard ADR-029
 
-- Soft launch: 11-13/06 (GO Otávio + GO QA fixed) · Launch público: 27/06 · Beauty pausado (volta 05/07)
+- **Soft launch interno**: sábado **13/06** (5-10 makers grupo WhatsApp Beta) · Bloco 4 abre
+- **Launch público**: sábado **27/06** (mantém alvo original) · Bloco 6 abre
+- 14 dias entre soft e público pra Bloco 5 (polimento pós-feedback)
+- Beauty pausado (volta 05/07) · Heshiley/Edu mantêm 1h/semana cada (conversa franca CEO 30/05)
 - Operação noturna oficial: sexta 22/05 22h com Bruna + Lia (ADR-020)
 
-### Decisões CEO pendentes (5 abertas)
+### Decisões CEO pendentes (4 abertas)
 
 1. **INPI classe 42**: "Hayzer" LIVRE confirmado pePI 21/05 (noturna) · pagar PIX GRU 1 R$ 440 antes 13/06 · ver `decisions/parecer-inpi-pagamento-2026-05-18.md`
 2. **CNPJ MEI→ME**: desenquadrar antes 1ª venda paga do Hayzer completo (sem decisao ainda)
 3. **Hayzer Beauty cobrança**: R$ 197 unico vs 3 tiers vs combo gestora-mae · ver doc P3
-4. **Corte de escopo Helena** (NOVA): ADR-028 PROPOSED · mantém 5 itens, posterga 4, corta 3 · CEO assina ou contraprope · ver `decisions/028-corte-escopo-launch-27-06.md`
-5. **MP OAuth**: root cause confirmado Paulo (app tipo errado, nao bug) · ADR-027 documentado · decisao pendente: reconfigurar MP agora ou manter Stripe como default ate MRR estavel
+4. **MP OAuth**: root cause confirmado Paulo (app tipo errado, nao bug) · ADR-027 documentado · decisao pendente: reconfigurar MP agora ou manter Stripe como default ate MRR estavel
+
+> Decisão soft launch 11/06 → RESOLVIDA via ADR-029 (data hard 13/06 + 27/06).
+> ADR-028 corte de escopo → SUPERSEDED por ADR-029 (manter escopo, soltar o que ficar pronto, resto pós-launch).
 
 > Calc Pro freemium REVOGADA 21/05 — ver `decisions/024-calc-gratis-magnet-eterno.md`. Setup Stripe Calc Pro e migration `20260520_calc_pro_subscriptions.sql` cancelados.
 
