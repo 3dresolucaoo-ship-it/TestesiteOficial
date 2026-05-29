@@ -1,0 +1,58 @@
+{
+  "digest_date": "2026-05-29",
+  "generated_at": "2026-05-29T09:00:00-03:00",
+  "periodo": "ultimas_24h",
+
+  "ultimas_24h": {
+    "total_novos": 0,
+    "step2_completos": 0,
+    "step2_rate_pct": null,
+    "utm_breakdown": []
+  },
+
+  "acumulado": {
+    "total": 3,
+    "obs": "inclui 1 registro de teste (Auditor QA - 20/05). Leads reais: 2.",
+    "step2_completos": 3,
+    "step2_rate_pct": 100.0,
+    "email_confirmados": 0,
+    "top_utm": [
+      { "utm_source": "direct", "leads": 3, "pct": 100.0 }
+    ]
+  },
+
+  "tendencia_7d": {
+    "leads_semana_atual": 1,
+    "leads_semana_anterior": 2,
+    "variacao_pct": -50.0,
+    "media_diaria_atual": 0.14,
+    "media_diaria_anterior": 0.29,
+    "status": "baixa",
+    "ultimo_lead_em": "2026-05-22T23:19:00-03:00",
+    "dias_sem_lead": 6
+  },
+
+  "step_timing": {
+    "obs": "form e single-shot: created_at == updated_at para todos os registros. Nao ha delay mensuravel entre step1 e step2.",
+    "media_minutos": 0
+  },
+
+  "alertas": [
+    {
+      "tipo": "utm_sem_rastreamento",
+      "msg": "100% dos leads com utm_source NULL (mapeados como 'direct'). Links de divulgacao sem parametros UTM ou tracking quebrado. Verificar PostHog vs Supabase."
+    },
+    {
+      "tipo": "registro_teste",
+      "msg": "Lead 'Auditor QA' (20/05) eh registro de QA. Considerar deletar ou marcar com tag 'test' para nao contaminar metricas."
+    },
+    {
+      "tipo": "inatividade",
+      "msg": "6 dias sem novo lead organico. Ultimo: 22/05. Landing nao distribuida ativamente ainda."
+    },
+    {
+      "tipo": "email_nao_confirmado",
+      "msg": "0 de 3 leads confirmaram o email. Fluxo de confirmacao pode estar com problema ou nao foi ativado."
+    }
+  ]
+}
