@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "date": "2026-05-29",
+    "time_brt": "06:10",
+    "script": "smoke-test-diario",
+    "status": "ALERTA_AMARELO",
+    "dias_consecutivos_alerta": 9
+  },
+  "routes": {
+    "summary": "2/4 respondendo 200",
+    "results": [
+      { "url": "https://hayzer.com.br", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/calculadora", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/waitlist", "status": 404, "ok": false, "note": "DIA 9 consecutivo - BLOCKER soft launch 11/06. Fix em feature/ember-destaque-fotos-reais (commit 3806f083) pronto mas PR nao mergeado." },
+      { "url": "https://hayzer.com.br/calculadora/pro", "status": 404, "ok": false, "note": "ESPERADO - decision-024 (Calc Pro revogada 21/05). Nao e BLOCKER." }
+    ]
+  },
+  "vercel": {
+    "project_id": "prj_KHkxLpnoblctCyW3LVJWd8KX1nzX",
+    "project_name": "bvaz-hub",
+    "latest_deployment": {
+      "id": "dpl_CgsWCHfhXwz32CjpP5hD2h8t95Ni",
+      "target": "preview",
+      "state": "READY",
+      "branch": "claude/ecstatic-johnson-HjTQQ",
+      "created_at_unix_ms": 1780016896609,
+      "age_hours": 8
+    },
+    "last_24h_deployments": {
+      "total": 12,
+      "ready": 12,
+      "error": 0,
+      "building_over_30min": 0,
+      "note": "Todos previews de feature branches - main nao foi atualizado recentemente"
+    },
+    "alert": false
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "region": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads_count": 3,
+    "waitlist_leads_24h": 0,
+    "table_notifications": true,
+    "view_search_index": false,
+    "search_index_issue_days": 9
+  },
+  "performance": {
+    "available": false,
+    "reason": "VERCEL_API_TOKEN ausente",
+    "issue": "#23",
+    "dias_sem_dados": 9,
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "issues_ativos": [
+    {
+      "id": "smoke-001",
+      "descricao": "/waitlist retorna 404",
+      "severity": 3,
+      "dias": 9,
+      "fix_disponivel": true,
+      "fix_referencia": "feature/ember-destaque-fotos-reais commit 3806f083",
+      "acao": "Mergear PR ao main",
+      "blocker_launch": "11/06/2026"
+    },
+    {
+      "id": "smoke-002",
+      "descricao": "view search_index ausente no Supabase",
+      "severity": 2,
+      "dias": 9,
+      "fix_disponivel": false,
+      "acao": "Criar migration para view search_index"
+    },
+    {
+      "id": "smoke-003",
+      "descricao": "VERCEL_API_TOKEN ausente - sem metricas de performance",
+      "severity": 2,
+      "dias": 9,
+      "fix_disponivel": true,
+      "acao": "Adicionar VERCEL_API_TOKEN nas env vars Vercel",
+      "referencia": "issue #23"
+    }
+  ]
+}
