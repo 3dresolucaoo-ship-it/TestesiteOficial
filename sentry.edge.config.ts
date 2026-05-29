@@ -12,7 +12,7 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
-import type { Event as SentryEvent } from "@sentry/nextjs";
+import type { ErrorEvent as SentryEvent } from "@sentry/nextjs";
 
 // Scrubbing simplificado para Edge (sem regex flags avancadas para compat)
 function scrubEdgeEvent(event: SentryEvent): SentryEvent {

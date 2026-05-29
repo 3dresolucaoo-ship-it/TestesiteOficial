@@ -11,7 +11,7 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
-import type { Event as SentryEvent } from "@sentry/nextjs";
+import type { ErrorEvent as SentryEvent } from "@sentry/nextjs";
 
 const PII_PATTERNS: RegExp[] = [
   /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,

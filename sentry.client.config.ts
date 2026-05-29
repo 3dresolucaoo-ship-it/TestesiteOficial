@@ -12,7 +12,7 @@
  */
 
 import * as Sentry from "@sentry/nextjs";
-import type { Event as SentryEvent } from "@sentry/nextjs";
+import type { ErrorEvent as SentryEvent } from "@sentry/nextjs";
 
 // Regex para detectar e remover PII antes do envio (LGPD Art. 6)
 const PII_PATTERNS: RegExp[] = [
