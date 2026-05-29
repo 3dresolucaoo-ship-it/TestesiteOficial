@@ -18,6 +18,11 @@ const PUBLIC_PATHS = [
   // em payments/mercadopago.ts:121). Sem isto aqui, middleware faz 307→/login
   // e o gateway nunca alcança o handler — pagamento aprovado não vira Order.
   '/api/webhooks',
+  // Health check público pra monitoring externo (Sentry uptime, UptimeRobot,
+  // smoke test diário cron Discord). Endpoint não retorna PII, só status
+  // Supabase + version + region + uptime. Auth quebraria monitoring (307→login).
+  // Bug descoberto smoke test 29/05 (Bloco 1.6 plano focar-qualidade).
+  '/api/health',
 ]
 // /mockups REMOVIDO de PUBLIC_PATHS em 2026-05-16:
 // requer auth Supabase + email admin pra prevenir vazamento de WIP visual
