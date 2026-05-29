@@ -75,10 +75,10 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 - **Versão**: v0.6 · Fase 1 em curso · soft launch **11/06** · launch público **27/06/2026**
 - **Último audit**: `audits/2026-05-04.md` (próximo: ~04/06/2026)
-- **Última sessão**: 20/05 tarde-noite (~9h hardwork, ~30 commits, 5 ondas V4 unificado completo + golden path #1) — ver `sessions/2026-05-20-hardwork-v4-completo.md`
-- **Pillars score**: **7.7** (era 7.4, meta 30d: 8.0) · ver `pillars/SCORES.md`
+- **Última sessão**: 20/05 22h-21/05 madrugada (~9h paralelo G7, 10 agentes despachados em 1 mensagem) — branches: feature/onboarding-wizard, feature/customers-v4, feature/customers-backend, feature/perf-tbt-fix, feature/landing-assets-webp, feature/empty-states-p1, feature/landing-v2-pngs-reais, chore/voce-pra-tu. Ver `sessions/2026-05-20-hardwork-v4-completo.md`
+- **Pillars score**: **7.9** (era 7.7, meta 30d: 8.0) · ver `pillars/SCORES.md`
 
-### 🟢 Estado real prod atual (20/05 fim do dia)
+### 🟢 Estado real prod atual (21/05 madrugada)
 
 **hayzer.com.br** com TODOS 14 módulos visual V4 unificado:
 - Sidebar V4 com ícones Lucide coloridos (NÚCLEO petrol, CRESCIMENTO ember, SISTEMA fog)
@@ -91,12 +91,23 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - Golden path #1: lead→pedido manual funcional (migration `20260520_leads_converted_order.sql` APLICADA)
 - 4 empty states críticos implementados (FP-01 projects, FP-02 finance, FP-03 production, FP-04 orders)
 
+**Branches noturna 20-21/05 (em review, nao merged ainda):**
+- `feature/onboarding-wizard` — Felipe, 788 linhas, wizard 3 telas completo
+- `feature/customers-v4` + `feature/customers-backend` — Felipe tela /customers V4 + Bruna customersService LTV
+- `feature/perf-tbt-fix` — Bruna LazyMotion + posthog lazy + requestIdleCallback (TBT est. -2.0 a -2.7s)
+- `feature/landing-assets-webp` — 36 PNGs→WebP -96% (23.3MB→2.75MB)
+- `feature/empty-states-p1` — Sofia, 10 empty states mapeados + 5 P1 implementados
+- `feature/landing-v2-pngs-reais` — Diego spec v2 com cliente mulher + maker antes/depois
+- `chore/voce-pra-tu` — Carla, search-replace "voce"→"tu" em 17 arquivos
+
 ### 🔴 Pendências pré-launch 11/06
 
 1. **QA mobile** — zero feito · checklist em `sessions/2026-05-20-checklist-qa-mobile.md` · CEO testa no celular
-2. **Onboarding wizard implementação** — Carla copy pronta em `brand/onboarding-copy-2026-05-20.md`, Felipe ainda não codou
-3. **Inconsistência tu/voce** — Sofia/Felipe usaram "voce" em empty states, Carla cravou "tu" (search-replace simples)
-4. **Onda Landing** — seção comparativa concorrentes com 43 logos+9 timelapses já jogados em `public/landing/v3/`
+2. **Onboarding wizard** — CODIFICADO (feature/onboarding-wizard, 788 linhas, Felipe) · pendente: review + merge + teste visual em prod
+3. **tu/voce** — FEITO (chore/voce-pra-tu, 17 arquivos, Carla) · pendente: merge
+4. **Empty states P1** — 5 implementados (feature/empty-states-p1, Sofia) · pendente: merge + 5 restantes P2
+5. **Onda Landing v2** — Diego spec com PNGs reais (cliente mulher + maker antes/depois) em branch feature/landing-v2-pngs-reais · secao 43 logos/9 timelapses: ver ADR-028 (Helena propoe cortar)
+6. **TBT** — fix Bruna em branch feature/perf-tbt-fix · pendente: merge + Lighthouse prod confirmando abaixo 1.5s
 
 ### ⚠️ Status REAL do produto (modo crítico CEO 20/05 23h)
 
@@ -120,12 +131,12 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - Inventory.tsx + Products.tsx refatorados em sub-componentes hoje, MAS não testados visualmente em prod com user real
 - Sidebar + FinanceView idem (refatorados, não testados em prod)
 - Mobile dos módulos internos: caos. Só landing foi auditada
-- Empty states quase inexistentes (Sofia mapeou FP-01/02/03 mas não implementou)
-- Onboarding zero (first-time experience inexistente)
+- Empty states: 5 P1 implementados (Sofia, branch feature/empty-states-p1), 5 P2 pendentes, merge pendente
+- Onboarding: wizard CODIFICADO (Felipe, 788 linhas, branch feature/onboarding-wizard), pendente merge + teste visual
 
 #### O que NÃO EXISTE ainda (Wave 1+)
-- Tela /customers completa (lista + perfil + LTV + "sumiu há X dias")
-- Tela /admin protegida (audit log + email massa)
+- Tela /customers: CODIFICADA em branch (Felipe V4 + Bruna LTV), pendente merge + QA
+- Tela /admin protegida (audit log + email massa) — ADR-026 spec pronta, implementacao pos-launch (ver ADR-028)
 - Integração WhatsApp → pedido → produção → estoque → financeiro end-to-end
 - Catálogo público polido (bugs reais reportados)
 - Sequência email D+1/D+3/D+7
@@ -143,11 +154,13 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - Soft launch: 11-13/06 (GO Otávio + GO QA fixed) · Launch público: 27/06 · Beauty pausado (volta 05/07)
 - Operação noturna oficial: sexta 22/05 22h com Bruna + Lia (ADR-020)
 
-### Decisões CEO pendentes (3 abertas)
+### Decisões CEO pendentes (5 abertas)
 
-1. **INPI**: pagar PIX GRU 1 R$ 440 classe 42 antes 13/06 (ver `decisions/parecer-inpi-pagamento-2026-05-18.md`)
-2. **CNPJ MEI→ME**: desenquadrar antes 1ª venda paga do Hayzer completo
-3. **Decisão 7 doc P3**: cobrança Hayzer Beauty (R$ 197 único vs 3 tiers vs combo gestora-mãe)
+1. **INPI classe 42**: "Hayzer" LIVRE confirmado pePI 21/05 (noturna) · pagar PIX GRU 1 R$ 440 antes 13/06 · ver `decisions/parecer-inpi-pagamento-2026-05-18.md`
+2. **CNPJ MEI→ME**: desenquadrar antes 1ª venda paga do Hayzer completo (sem decisao ainda)
+3. **Hayzer Beauty cobrança**: R$ 197 unico vs 3 tiers vs combo gestora-mae · ver doc P3
+4. **Corte de escopo Helena** (NOVA): ADR-028 PROPOSED · mantém 5 itens, posterga 4, corta 3 · CEO assina ou contraprope · ver `decisions/028-corte-escopo-launch-27-06.md`
+5. **MP OAuth**: root cause confirmado Paulo (app tipo errado, nao bug) · ADR-027 documentado · decisao pendente: reconfigurar MP agora ou manter Stripe como default ate MRR estavel
 
 > Calc Pro freemium REVOGADA 21/05 — ver `decisions/024-calc-gratis-magnet-eterno.md`. Setup Stripe Calc Pro e migration `20260520_calc_pro_subscriptions.sql` cancelados.
 

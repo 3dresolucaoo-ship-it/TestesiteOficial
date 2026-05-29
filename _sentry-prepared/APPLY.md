@@ -1,4 +1,7 @@
-# Como aplicar os configs Sentry (passo-a-passo para 17/06/2026)
+# Como aplicar os configs Sentry (passo-a-passo)
+
+> **Janela de aplicação aprovada (ADR-025): 02-06/06/2026**, antes do soft launch 11/06.
+> ADR-019 (data antiga 17/06) foi superseded. Ver `decisions/025-sentry-setup.md`.
 
 **Prerequisito**: CEO criou conta Sentry e setou as 4 env vars no Vercel (ver ADR-017).
 

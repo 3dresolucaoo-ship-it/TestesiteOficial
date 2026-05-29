@@ -367,7 +367,7 @@ export function ProjectsView({
               Criar primeiro projeto
             </button>
             <p className="text-xs text-foreground/40">
-              Voce pode editar ou excluir depois. Nada e definitivo.
+              Você pode editar ou excluir depois. Nada é definitivo.
             </p>
           </div>
         </div>

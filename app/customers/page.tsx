@@ -24,6 +24,7 @@ import {
   Users, UserCheck, UserX, Star,
   Plus, ChevronRight, X,
 } from 'lucide-react'
+import { CustomersEmptyState } from './_components/CustomersEmptyState'
 import { ModuleShell, V4ThemeProvider }    from '@/components/dashboard/v4'
 import { UnderlineMarker }                 from '@/components/visual-library'
 import {
@@ -103,49 +104,13 @@ function MobileCards({
   onClearFilters,
 }: MobileCardsProps) {
   if (customers.length === 0) {
-    if (totalCustomers > 0) {
-      return (
-        <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-          <Users size={28} className="text-foreground/20 mb-3" aria-hidden="true" />
-          <p className="text-sm text-foreground/60 mb-3">
-            Nenhum cliente com esses filtros.
-          </p>
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-foreground/70 hover:text-foreground"
-            style={{ border: '1px solid hsl(200 11% 20%)' }}
-            aria-label="Limpar filtros e ver todos os clientes"
-          >
-            Ver todos
-          </button>
-        </div>
-      )
-    }
-
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-        <Users size={32} className="text-[hsl(173_30%_57%)] mb-3" aria-hidden="true" />
-        <h3 className="text-base font-semibold text-foreground mb-1.5">
-          Ainda sem cliente
-        </h3>
-        <p className="text-xs text-foreground/65 leading-relaxed max-w-xs mb-4">
-          Seu primeiro pedido cria o cliente automatico aqui. Registra um pedido pra comecar.
-        </p>
-        <button
-          type="button"
-          onClick={onNewOrder}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium text-sm transition-colors"
-          style={{
-            background:  'hsl(173 58% 28%)',
-            boxShadow:   '0 0 20px hsl(173 58% 28% / 0.28)',
-          }}
-          aria-label="Registrar primeiro pedido"
-        >
-          <Plus size={15} aria-hidden="true" />
-          Registrar pedido
-        </button>
-      </div>
+      <CustomersEmptyState
+        mode={totalCustomers > 0 ? 'no-results' : 'empty'}
+        variant="mobile"
+        onNewOrder={onNewOrder}
+        onClearFilters={onClearFilters}
+      />
     )
   }
 
@@ -218,59 +183,13 @@ function DesktopTable({
   onClearFilters,
 }: DesktopTableProps) {
   if (customers.length === 0) {
-    if (totalCustomers > 0) {
-      return (
-        <div className="flex flex-col items-center justify-center py-16 text-center max-w-sm mx-auto px-6">
-          <Users size={28} className="text-foreground/20 mb-3" aria-hidden="true" />
-          <p className="text-sm text-foreground/60 mb-3">
-            Nenhum cliente com esses filtros.
-          </p>
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-foreground/70 hover:text-foreground"
-            style={{ border: '1px solid hsl(200 11% 20%)' }}
-            aria-label="Limpar filtros e ver todos os clientes"
-          >
-            Limpar filtros
-          </button>
-        </div>
-      )
-    }
-
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto px-6">
-        <div
-          className="w-16 h-16 mb-5 rounded-2xl flex items-center justify-center"
-          style={{
-            background:  'hsl(173 58% 28% / 0.12)',
-            border:      '1px solid hsl(173 58% 28% / 0.25)',
-            boxShadow:   '0 0 36px hsl(173 58% 28% / 0.18)',
-          }}
-          aria-hidden="true"
-        >
-          <Users size={28} className="text-[hsl(173_30%_57%)]" aria-hidden="true" />
-        </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-          Ainda sem cliente
-        </h3>
-        <p className="text-sm text-foreground/65 leading-relaxed mb-5">
-          Seu primeiro pedido cria o cliente automatico aqui. Cada venda nova aparece nessa lista.
-        </p>
-        <button
-          type="button"
-          onClick={onNewOrder}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium text-sm transition-colors"
-          style={{
-            background: 'hsl(173 58% 28%)',
-            boxShadow:  '0 0 24px hsl(173 58% 28% / 0.30)',
-          }}
-          aria-label="Registrar primeiro pedido"
-        >
-          <Plus size={15} aria-hidden="true" />
-          Registrar pedido
-        </button>
-      </div>
+      <CustomersEmptyState
+        mode={totalCustomers > 0 ? 'no-results' : 'empty'}
+        variant="desktop"
+        onNewOrder={onNewOrder}
+        onClearFilters={onClearFilters}
+      />
     )
   }
 

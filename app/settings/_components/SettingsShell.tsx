@@ -14,10 +14,11 @@
  * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
  */
 
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import type { AdminConfig } from '@/lib/types'
 import { ModuleShell, V4ThemeProvider } from '@/components/dashboard/v4'
 import { SettingsView } from '@/components/SettingsView'
+import { SettingsEmptyState } from './SettingsEmptyState'
 
 // CSS V4 do ModuleShell
 import '../../globals-v4.css'
@@ -45,6 +46,17 @@ export function SettingsShell({
   // FilterBar nao e usada em settings, mas a API exige handlers
   const handleTabChange = useCallback((_id: string) => {}, [])
   const handleSearch    = useCallback((_q: string) => {}, [])
+
+  // Ref pro primeiro campo do SettingsView (nome do negocio) — usado pelo SettingsEmptyState
+  const settingsViewRef = useRef<HTMLDivElement>(null)
+  const handleConfigure = useCallback(() => {
+    // Foca o primeiro input visivel dentro do SettingsView
+    const firstInput = settingsViewRef.current?.querySelector<HTMLInputElement>('input')
+    firstInput?.focus()
+    firstInput?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [])
+
+  const isFirstTime = projectsCount === 0 && ordersCount === 0
 
   const mesAtual = new Date().toLocaleString('pt-BR', { month: 'long' }).toUpperCase()
 
@@ -79,13 +91,20 @@ export function SettingsShell({
         searchPlaceholder="Buscar configuracao..."
         onSearch={handleSearch}
       >
+        {/* First-time experience: exibe orientacao antes do form quando nada foi configurado */}
+        {isFirstTime && (
+          <SettingsEmptyState onConfigure={handleConfigure} />
+        )}
+
         {/* SettingsView gerencia seus proprios tabs internamente */}
-        <SettingsView
-          initialConfig={initialConfig}
-          projectsCount={projectsCount}
-          ordersCount={ordersCount}
-          transactionsCount={transactionsCount}
-        />
+        <div ref={settingsViewRef}>
+          <SettingsView
+            initialConfig={initialConfig}
+            projectsCount={projectsCount}
+            ordersCount={ordersCount}
+            transactionsCount={transactionsCount}
+          />
+        </div>
       </ModuleShell>
     </>
   )

@@ -10,6 +10,7 @@ import {
   Check, Image as ImageIcon, Phone, BookOpen,
 } from 'lucide-react'
 import { Modal, FormField, Input, Textarea, SubmitButton } from '@/components/Modal'
+import { PortfoliosEmptyState } from '@/app/portfolios/_components/PortfoliosEmptyState'
 
 // ─── Portfolio card ───────────────────────────────────────────────────────────
 function PortfolioCard({
@@ -308,28 +309,7 @@ export function PortfoliosView({ initialPortfolios }: { initialPortfolios: Portf
 
       {/* List */}
       {portfolios.length === 0 ? (
-        <div
-          className="rounded-2xl border flex flex-col items-center justify-center py-16 gap-3"
-          style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}
-        >
-          <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center"
-            style={{ background: 'var(--t-surface-2)' }}
-          >
-            <User size={24} style={{ color: 'var(--t-text-muted)' }} />
-          </div>
-          <p className="text-sm font-medium" style={{ color: 'var(--t-text-secondary)' }}>
-            Nenhum portfólio ainda
-          </p>
-          <button
-            onClick={() => setCreatingPortfolio(true)}
-            className="mt-2 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white"
-            style={{ background: '#7c3aed' }}
-          >
-            <Plus size={15} />
-            Criar portfólio
-          </button>
-        </div>
+        <PortfoliosEmptyState onCreateClick={() => setCreatingPortfolio(true)} />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {portfolios.map(p => (

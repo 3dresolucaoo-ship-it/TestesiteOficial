@@ -25,7 +25,7 @@ import { useStore, useStoreModule, uid }  from '@/lib/store'
 import { isSupabaseConfigured }           from '@/lib/supabaseClient'
 import OrdersLoading                      from './loading'
 import type { Order, OrderStatus }        from '@/lib/types'
-import { Plus, Pencil, Trash2, MoreHorizontal, Cpu, ShoppingCart, Download, Filter } from 'lucide-react'
+import { Plus, Pencil, Trash2, MoreHorizontal, Cpu, Download, Filter } from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
 import { calcUnitCost }                   from '@/core/analytics/productionEngine'
 import { ModuleShell, V4ThemeProvider }   from '@/components/dashboard/v4'
@@ -50,8 +50,9 @@ import {
   ORDER_ORIGIN_COLORS,
   type OrderFormData,
 } from './_components/helpers'
-import { OrderStatusBadge } from './_components/Badge'
-import { OrderForm }        from './_components/OrderForm'
+import { OrderStatusBadge }  from './_components/Badge'
+import { OrderForm }         from './_components/OrderForm'
+import { OrdersEmptyState }  from './_components/OrdersEmptyState'
 
 // ---------------------------------------------------------------------------
 // Helpers de formatacao
@@ -136,48 +137,23 @@ function MobileCards({ orders, allOrdersCount, projectName, productName, onEdit,
     // Filtro ativo sem resultado
     if (allOrdersCount > 0) {
       return (
-        <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-          <ShoppingCart size={28} className="text-foreground/20 mb-3" aria-hidden="true" />
-          <p className="text-sm text-foreground/60 mb-3">
-            Nenhum pedido com esses filtros.
-          </p>
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-foreground/70 hover:text-foreground"
-            style={{ border: '1px solid hsl(200 11% 20%)' }}
-            aria-label="Limpar filtros e ver todos os pedidos"
-          >
-            Limpar filtros pra ver tudo
-          </button>
-        </div>
+        <OrdersEmptyState
+          mode="no-results"
+          variant="mobile"
+          onCreateClick={onNewOrder}
+          onClearFilters={onClearFilters}
+        />
       )
     }
 
     // Estado inicial: nenhum pedido ainda
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center px-4">
-        <ShoppingCart size={32} className="text-[hsl(173_30%_57%)] mb-3" aria-hidden="true" />
-        <h3 className="text-base font-semibold text-foreground mb-1.5">
-          Sem pedido por enquanto
-        </h3>
-        <p className="text-xs text-foreground/65 leading-relaxed max-w-xs mb-4">
-          Pedido novo aparece aqui assim que você registra. WhatsApp, Insta, balcao, da onde vier.
-        </p>
-        <button
-          type="button"
-          onClick={onNewOrder}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium text-sm transition-colors"
-          style={{
-            background: 'hsl(173 58% 28%)',
-            boxShadow: '0 0 20px hsl(173 58% 28% / 0.28)',
-          }}
-          aria-label="Registrar primeiro pedido"
-        >
-          <Plus size={15} aria-hidden="true" />
-          Registrar primeiro pedido
-        </button>
-      </div>
+      <OrdersEmptyState
+        mode="empty"
+        variant="mobile"
+        onCreateClick={onNewOrder}
+        onClearFilters={onClearFilters}
+      />
     )
   }
 
@@ -266,58 +242,23 @@ function DesktopTable({ orders, allOrdersCount, projectName, menuOpen, onMenuTog
     // Filtro ativo sem resultado
     if (allOrdersCount > 0) {
       return (
-        <div className="flex flex-col items-center justify-center py-16 text-center max-w-sm mx-auto px-6">
-          <ShoppingCart size={28} className="text-foreground/20 mb-3" aria-hidden="true" />
-          <p className="text-sm text-foreground/60 mb-3">
-            Nenhum pedido com esses filtros. Limpe os filtros pra ver tudo.
-          </p>
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="text-sm font-medium px-4 py-2 rounded-lg border transition-colors text-foreground/70 hover:text-foreground"
-            style={{ border: '1px solid hsl(200 11% 20%)' }}
-            aria-label="Limpar filtros e ver todos os pedidos"
-          >
-            Limpar filtros
-          </button>
-        </div>
+        <OrdersEmptyState
+          mode="no-results"
+          variant="desktop"
+          onCreateClick={onNewOrder}
+          onClearFilters={onClearFilters}
+        />
       )
     }
 
     // Estado inicial: nenhum pedido ainda
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto px-6">
-        <div
-          className="w-16 h-16 mb-5 rounded-2xl flex items-center justify-center"
-          style={{
-            background: 'hsl(173 58% 28% / 0.12)',
-            border: '1px solid hsl(173 58% 28% / 0.25)',
-            boxShadow: '0 0 36px hsl(173 58% 28% / 0.18)',
-          }}
-          aria-hidden="true"
-        >
-          <ShoppingCart size={28} className="text-[hsl(173_30%_57%)]" aria-hidden="true" />
-        </div>
-        <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-          Sem pedido por enquanto
-        </h3>
-        <p className="text-sm text-foreground/65 leading-relaxed mb-5">
-          Pedido novo aparece aqui assim que você registra. WhatsApp, Insta, balcao, da onde vier.
-        </p>
-        <button
-          type="button"
-          onClick={onNewOrder}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-white font-medium text-sm transition-colors"
-          style={{
-            background: 'hsl(173 58% 28%)',
-            boxShadow: '0 0 24px hsl(173 58% 28% / 0.30)',
-          }}
-          aria-label="Registrar primeiro pedido"
-        >
-          <Plus size={15} aria-hidden="true" />
-          Registrar primeiro pedido
-        </button>
-      </div>
+      <OrdersEmptyState
+        mode="empty"
+        variant="desktop"
+        onCreateClick={onNewOrder}
+        onClearFilters={onClearFilters}
+      />
     )
   }
 
