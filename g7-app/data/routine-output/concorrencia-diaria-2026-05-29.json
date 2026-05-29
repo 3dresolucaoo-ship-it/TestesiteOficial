@@ -1,0 +1,127 @@
+{
+  "data": "2026-05-29",
+  "instagram": [
+    {
+      "perfil": "@3dlab_brasil",
+      "post_encontrado": false,
+      "tipo": "desconhecido",
+      "texto_resumido": "Perfil confirmado ativo: 82K seguidores, 835 posts, BH e SP. Foco em impressoras, insumos, cursos e suporte tecnico. Conteudo especifico de maio 2026 nao acessivel sem login.",
+      "engajamento_estimado": "desconhecido",
+      "relevancia_hayzer": "baixa",
+      "nota": "3DLab e concorrente de hardware e insumos, nao SaaS de gestao. Nao compete diretamente com Hayzer. Sem post extraivel nas ultimas 48h."
+    },
+    {
+      "perfil": "@artbox3d",
+      "post_encontrado": false,
+      "tipo": "desconhecido",
+      "texto_resumido": "Perfil confirmado ativo: 82K seguidores, 715 posts, SP. Impressao 3D, modelagem, prototipagem e producao em escala. Revendedor oficial de impressoras e filamentos. Conteudo especifico de maio 2026 nao acessivel.",
+      "engajamento_estimado": "desconhecido",
+      "relevancia_hayzer": "baixa",
+      "nota": "ArtBox3D e prestador de servico, nao SaaS de gestao. Nao compete com Hayzer. Sem post extraivel nas ultimas 48h."
+    },
+    {
+      "perfil": "@3dprintacademy",
+      "post_encontrado": true,
+      "tipo": "desconhecido",
+      "texto_resumido": "ALERTA de rebranding: post de setembro 2024 no Facebook anunciou rebranding e expansao com 'iceberg gigantesco no mercado de Impressao 3D'. 50K seguidores no Instagram, 10 anos de referencia, +6.000 alunos formados. Rebranding em andamento desde set/2024.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "media",
+      "nota": "3DPrintAcademy forma makers que sao a persona Rafael do Hayzer. Rebranding em curso pode indicar expansao para SaaS/ferramentas de gestao no futuro. Vale monitorar se o 'iceberg' incluir produto de software. Conteudo especifico de maio 2026 nao extraivel do Instagram."
+    },
+    {
+      "perfil": "@3dgeekshow",
+      "post_encontrado": true,
+      "tipo": "reels",
+      "texto_resumido": "Posts confirmados semana 24-28/05/2026: (1) 'Ela nao acreditou quando viu!! - VLog 3' (28/05) - viagem a China, Shenzhen; (2) 'Olha o que me deram no aviao! VLOG 2' (27/05); (3) 'Partiu China - VLog 1' (27/05); (4) 'Vamos pra china!!!' (24/05); (5) 'Nova Patente da Creality MUDA a Impressao 3D Multicolor' (23/05); (6) 'Virei meus PERSONAGENS favoritos em colecao chibi' (21/05). 128K seguidores, 1.694 posts.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "media",
+      "nota": "DADO FRESCO: 3DGeekShow esta em Shenzhen na ultima semana. Viagem sugere cobertura de fornecedores/fabricantes chineses, provavelmente novidades de hardware que chegam ao Brasil. Pode ampliar o mercado de makers (mais gente comprando impressora = mais potenciais usuarios Hayzer). Conteudo de hardware, nao gestao -- relevancia indireta."
+    },
+    {
+      "perfil": "@appcustos3d",
+      "post_encontrado": false,
+      "tipo": "desconhecido",
+      "texto_resumido": "Perfil existe. Site appcustos3d.com.br atualizado jan 2026. Plano Basic R$29,90/mes (R$17 semestral), PRO R$69,90/mes (R$36 semestral). Funcionalidades: gcode reader, link rastreio publico, proposta WhatsApp, controle estoque filamento. Sem post especifico extraivel das ultimas 48h.",
+      "engajamento_estimado": "desconhecido",
+      "relevancia_hayzer": "alta",
+      "nota": "Concorrente direto mais proximo do Hayzer. Preco competitivo (R$17-36/mes semestral). Diferenciais: leitura .gcode e link rastreio publico. Lacunas vs Hayzer: sem CRM robusto, sem financeiro completo, sem integracao WhatsApp nativa. Monitorar ativamente."
+    }
+  ],
+  "reclame_aqui": [
+    {
+      "empresa": "Bling ERP",
+      "reclamacao": "Instabilidade cronica do sistema: indisponibilidade mensal recorrente, as vezes multiplas vezes no mesmo mes. Suporte substituiu atendimento humanizado por robos e tickets impessoais. Tempo medio de resposta: 9 dias e 17 horas. Sincronizacao de estoque com Mercado Livre quebra quando produto e variacao no ERP mas listagem unica no marketplace -- limitacao confirmada pelo suporte como nao-resolvel.",
+      "data_reclamacao": "Reclamacoes acumuladas 2025-2026, padrao recorrente confirmado",
+      "recorrente": true,
+      "oportunidade_hayzer": "Makers que usam Bling como ERP generico sofrem com complexidade e instabilidade. Hayzer pode posicionar como 'feito pra quem imprime 3D, nao pra quem vende qualquer coisa'. Mensagem-chave: sem setup complexo, sem travar na hora de atender cliente, suporte que entende o negocio de maker."
+    },
+    {
+      "empresa": "Bling ERP",
+      "reclamacao": "Falta de adequacao a Reforma Tributaria 2026 (IBS e CBS): sistema so permite entrada manual de CST e cClassTrib para produtos imunes. Para operacoes com +1.000 pedidos/dia, e inviavel. Risco fiscal real.",
+      "data_reclamacao": "2026 (inicio do ano, coincidindo com entrada em vigor do IBS/CBS em 01/01/2026)",
+      "recorrente": false,
+      "oportunidade_hayzer": "Hayzer mira maker autonomo pessoa fisica (Rafael) -- nao precisa de NF-e e IBS/CBS agora. Isso e uma vantagem de posicionamento: 'simples pra quem ainda nao tem CNPJ completo'. Planejar integracao futura conforme makers crescem."
+    },
+    {
+      "empresa": "Bling ERP",
+      "reclamacao": "Reajustes de preco sem aviso previo, relatados junto com instabilidade e suporte ineficiente.",
+      "data_reclamacao": "2025-2026",
+      "recorrente": true,
+      "oportunidade_hayzer": "Hayzer pode se posicionar com preco estavel e previsivel. Comunicacao de reajuste com antecedencia e transparencia como diferencial de confianca."
+    },
+    {
+      "empresa": "MakerFlow",
+      "reclamacao": "Sem dados encontrados no Reclame Aqui. Nenhuma pagina cadastrada.",
+      "data_reclamacao": "N/A",
+      "recorrente": false,
+      "oportunidade_hayzer": "Sem dados. MakerFlow pode ser produto muito novo, nicho, ou nome diferente na plataforma."
+    },
+    {
+      "empresa": "3D Control",
+      "reclamacao": "Sem reclamacoes encontradas no Reclame Aqui. Produto ativo: R$39,99/mes, plano unico com CRM, financeiro, pedidos, filamentos, gestao de frota e multi-plataforma (Shopee, ML, Elo7, Instagram). Se autointitula 'Sistema #1 em Gestao de Impressao 3D'.",
+      "data_reclamacao": "N/A",
+      "recorrente": false,
+      "oportunidade_hayzer": "Concorrente direto mais completo encontrado. Preco R$39,99/mes. Hayzer precisa diferenciar em UX (V4 visual), experiencia de onboarding e integracao WhatsApp nativa."
+    },
+    {
+      "empresa": "AppCustos3D",
+      "reclamacao": "Sem pagina encontrada no Reclame Aqui. Produto ativo com funcionalidades: leitura .gcode, link rastreio publico, proposta WhatsApp formatada, controle estoque filamento. Site atualizado jan 2026.",
+      "data_reclamacao": "N/A",
+      "recorrente": false,
+      "oportunidade_hayzer": "AppCustos3D nao tem CRM robusto, sem modulo financeiro completo, sem gestao de producao integrada. Hayzer cobre essas lacunas. Preco Hayzer precisa justificar valor adicional."
+    },
+    {
+      "empresa": "PrintWorks3D",
+      "reclamacao": "Sem reclamacoes encontradas. Produto descrito como gratuito para gestao de impressao 3D.",
+      "data_reclamacao": "N/A",
+      "recorrente": false,
+      "oportunidade_hayzer": "PrintWorks3D gratuito compete no preco zero. Calc gratuita do Hayzer como ancora e a resposta correta."
+    },
+    {
+      "empresa": "Printora",
+      "reclamacao": "Sem reclamacoes encontradas. Produto ativo com plano gratuito (1 impressora, 10 produtos), Basic R$19,90/mes (3 impressoras, 100 produtos), Pro R$39,90/mes (20 impressoras, 500 produtos). Calculo automatico de precos para ML e Shopee descontando taxas das plataformas.",
+      "data_reclamacao": "N/A",
+      "recorrente": false,
+      "oportunidade_hayzer": "Printora tem plano gratuito funcional -- risco de capturar a persona Rafael antes do Hayzer. Porem foca em farms maiores (ate 20 impressoras no Pro). Hayzer pode focar o discurso no maker individual (1-3 impressoras) com experiencia mais simples. Monitorar se Printora lancar plano basico mais robusto."
+    }
+  ],
+  "alertas": [
+    "COMPETITIVO: Pelo menos 4 concorrentes diretos ativos no nicho maker 3D BR com produto funcional em 2026: AppCustos3D (R$17-36/mes), 3D Control (R$39,99/mes), Printora (freemium R$0-39,90/mes), PrintWorks3D (gratuito). Mercado mais competido do que aparentava.",
+    "POSITIVO: Bling ERP acumulando reclamacoes graves em 2026 (instabilidade, suporte ruim, reajuste sem aviso) -- janela de oportunidade para makers insatisfeitos migrarem para solucao especializada.",
+    "MOVIMENTO: 3DGeekShow (128K seguidores) em Shenzhen em 27-28/05/2026 cobrindo novidades de hardware. Conteudo de alto alcance sobre novas impressoras chegando ao Brasil pode expandir base de makers nos proximos 60-90 dias.",
+    "REBRANDING: 3DPrintAcademy anunciou expansao desde set/2024 com 'iceberg gigantesco no mercado de impressao 3D'. Se o produto novo incluir ferramenta de gestao, entra diretamente em colisao com Hayzer com 50K seguidores e credibilidade de 10 anos.",
+    "GRATUITO: Printora oferece plano gratuito com 1 impressora e 10 produtos. PrintWorks3D e 100% gratuito. Presenca de alternativas gratis pode dificultar conversao da persona Rafael."
+  ],
+  "posts_relevantes": [
+    "3DGeekShow: serie de vlogs China/Shenzhen (24-28/05/2026) -- 128K seguidores acompanhando cobertura de hardware maker. Expande o mercado potencial do Hayzer indiretamente.",
+    "3DGeekShow: 'Nova Patente da Creality MUDA a Impressao 3D Multicolor' (23/05/2026) -- conteudo tecnico de alta relevancia para a comunidade maker brasileira.",
+    "3DPrintAcademy: rebranding anunciado com expansao 'iceberg' -- movimento de fundo que merece monitoramento mensal."
+  ],
+  "reclamacoes_interessantes": [
+    "Bling ERP -- instabilidade cronica e suporte por robos: reclamacao recorrente em 2025-2026, tempo medio de resposta 9 dias. Usuarios relatam sistema fora do ar multiplas vezes no mesmo mes. Oportunidade direta para Hayzer se posicionar como 'simples, estavel, suporte humano'.",
+    "Bling ERP -- Reforma Tributaria IBS/CBS 2026: usuarios de produtos imunes precisam configurar manualmente CST e cClassTrib para cada pedido. ERPs genericos nao estao prontos para a realidade do maker. Hayzer (PF por enquanto) tem vantagem de simplicidade."
+  ],
+  "acao_recomendada": "Para Marcos: ativar conteudo reagindo ao movimento 3DGeekShow em Shenzhen -- post tipo 'enquanto o hardware evolui, a gestao do maker precisa acompanhar' pode pegar carona no momento de alto engajamento da comunidade (128K seguidores). Para Helena: mapear 3D Control (R$39,99/mes, plano unico completo) como principal benchmark de paridade de funcionalidades antes do launch 27/06. Para ambos: Printora tem plano gratuito funcional que ja captura a persona Rafael -- avaliar se Calc gratuita do Hayzer e ancora suficiente ou se e necessario freemium mais generoso do produto principal.",
+  "status": "dados_encontrados",
+  "notas_metodologicas": "Instagram bloqueou acesso direto via WebFetch para todas as 5 contas -- retorna tela de login. Dado fresco de Instagram obtido via site proprio do 3DGeekShow (3dgeekshow.com.br). Dados de AppCustos3D, 3DPrintAcademy e ArtBox3D extraidos via WebSearch com cruzamento de multiplas fontes, sem textos literais de posts das ultimas 48h. Reclame Aqui retornou HTTP 403 em URLs diretas -- dados extraidos via WebSearch e snippets do Google. MakerFlow, PrintWorks3D, ZoomCalc3D e Custos3D nao aparecem no Reclame Aqui como empresas cadastradas. Pesquisa feita em 29/05/2026."
+}
