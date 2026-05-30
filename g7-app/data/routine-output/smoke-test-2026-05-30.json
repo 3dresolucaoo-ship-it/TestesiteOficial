@@ -1,0 +1,136 @@
+{
+  "smoke_test": {
+    "date": "2026-05-30",
+    "time_brt": "06:00",
+    "status": "ALERTA_AMARELO",
+    "run_by": "claude-smoke-test-agent"
+  },
+  "routes": {
+    "summary": "2/4 confirmados 200",
+    "results": [
+      {
+        "url": "https://hayzer.com.br",
+        "status": 200,
+        "ok": true,
+        "title": "Hayzer — A raiz do seu negócio"
+      },
+      {
+        "url": "https://hayzer.com.br/calculadora",
+        "status": 200,
+        "ok": true,
+        "title": "Calculadora de custo de impressão 3D · Hayzer"
+      },
+      {
+        "url": "https://hayzer.com.br/waitlist",
+        "status": "INDEFINIDO",
+        "ok": false,
+        "note": "Retornou título da home + 'Carregando...' — provável 404/redirect. 10o dia consecutivo. Fix em feature/ember-destaque-fotos-reais não mergeado."
+      },
+      {
+        "url": "https://hayzer.com.br/calculadora/pro",
+        "status": 404,
+        "ok": false,
+        "note": "ESPERADO — decisão-024, Calc Pro revogada em 21/05"
+      }
+    ]
+  },
+  "vercel": {
+    "project": "bvaz-hub",
+    "production_deployment": {
+      "id": "dpl_JDhrwFmCD7P2pdTujxuog2eihM2A",
+      "state": "READY",
+      "commit_hash": "ddc7355c183bb897df038b1290ef9ee5ba1cc15e",
+      "commit_hash_short": "ddc7355",
+      "commit_message": "docs: ADR 030 (refactor store SSR) + Lighthouse results 29/05",
+      "age_hours": 8.7,
+      "branch": "main",
+      "is_rollback_candidate": true
+    },
+    "deployments_24h": {
+      "total": 20,
+      "states": {
+        "READY": 19,
+        "ERROR": 1
+      },
+      "error_deployments": [
+        {
+          "id": "dpl_G4TjaTuN2o2obf4mT2QixW5J6VJN",
+          "branch": "feature/ember-destaque-fotos-reais",
+          "commit": "chore(bloco-1): ativar Sentry + docs prep",
+          "note": "ESPERADO — Sentry DSN ausente em prod. Não afeta produção."
+        }
+      ]
+    }
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "region": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "sanity_checks": {
+      "waitlist_leads_count": 3,
+      "leads_crm_count": 1,
+      "notifications_table": "EXISTS",
+      "search_index_view": "AUSENTE"
+    },
+    "notes": [
+      "search_index view ausente — persistente, 10o+ dia consecutivo. Não é P0 operacional.",
+      "waitlist_entries não existe — tabela correta é waitlist_leads"
+    ]
+  },
+  "api_health": {
+    "url": "https://hayzer.com.br/api/health",
+    "status": 403,
+    "note": "Fix (middleware PUBLIC_PATHS) está em feature/ember-destaque-fotos-reais — não mergeado em main/prod ainda."
+  },
+  "performance": {
+    "source": "Lighthouse mobile 29/05 (dados mais recentes disponíveis)",
+    "vercel_analytics": "INDISPONIVEL — VERCEL_API_TOKEN ausente (issue #23, 10o dia)",
+    "landing": {
+      "lcp_s": 5.9,
+      "tbt_ms": 780,
+      "cls": 0,
+      "perf_score": 53,
+      "accessibility": 100,
+      "alert": "LCP 5.9s > threshold 4s — ALERTA"
+    },
+    "calculadora": {
+      "lcp_s": 4.1,
+      "tbt_ms": 2600,
+      "perf_score": 53,
+      "accessibility": 95,
+      "alert": "LCP 4.1s + TBT 2.6s — ALERTA"
+    }
+  },
+  "alerts": [
+    {
+      "severity": 2,
+      "type": "ALERTA_AMARELO",
+      "item": "/waitlist inacessível",
+      "detail": "10o dia consecutivo. Fix pronto em feature branch — merge bloqueando soft launch 13/06.",
+      "action": "CEO mergear ember em main + aplicar migration onboarding"
+    },
+    {
+      "severity": 3,
+      "type": "ALERTA_AMARELO",
+      "item": "/api/health retornando 403",
+      "detail": "Fix middleware não chegou em prod (em feature branch)",
+      "action": "Coberto pelo merge acima"
+    },
+    {
+      "severity": 4,
+      "type": "INFO",
+      "item": "search_index view ausente",
+      "detail": "Persistente, não bloqueante operacionalmente",
+      "action": "Criar view quando DB schema estabilizar"
+    },
+    {
+      "severity": 5,
+      "type": "INFO",
+      "item": "Vercel Analytics indisponível",
+      "detail": "VERCEL_API_TOKEN ausente — issue #23",
+      "action": "CEO trazer token ou configurar via painel Vercel"
+    }
+  ],
+  "rollback_command": null
+}
