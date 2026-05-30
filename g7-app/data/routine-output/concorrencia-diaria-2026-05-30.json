@@ -1,0 +1,124 @@
+{
+  "date": "2026-05-30",
+  "instagram": [
+    {
+      "account": "@3dlab_brasil",
+      "post_found": true,
+      "type": "reels",
+      "text_excerpt": "A 3D LAB CHEGOU EM SAO PAULO! Depois de tantos pedidos... inauguracao confirmada. Loja fisica SP aberta.",
+      "engagement_estimate": "alto",
+      "relevance_for_hayzer": "ALTA -- 3D Lab expandindo para SP com loja fisica e 82K seguidores. Nao compete diretamente com Hayzer, mas indica mercado maker 3D aquecido em SP. Makers SP que comprarem na nova loja sao leads quentes para o soft launch 13/06."
+    },
+    {
+      "account": "@artbox3d",
+      "post_found": true,
+      "type": "foto",
+      "text_excerpt": "Lancamento Seminovos.ARTBOX3D.com.br -- canal de revenda de equipamentos usados. 'Nossa loja esta aberta...'",
+      "engagement_estimate": "medio",
+      "relevance_for_hayzer": "MEDIA -- ArtBox3D lancando canal de seminovos indica diversificacao de receita. Makers comprando impressoras usadas = publico potencial para Hayzer sem gestao. Angulo: 'Acabou de montar sua impressora? Controle seus custos desde o dia 1'."
+    },
+    {
+      "account": "@3dprintacademy",
+      "post_found": true,
+      "type": "desconhecido",
+      "text_excerpt": "Curso 'Impressao 3D Total: do ZERO ao Empreendedor' -- 50K alunos, acreditado MEC, Cogna. Sem post especifico das ultimas 24h identificado.",
+      "engagement_estimate": "desconhecido",
+      "relevance_for_hayzer": "MEDIA -- 3D Print Academy treina makers para empreender. Alunos chegam ao mercado sem sistema de gestao. Canal de parceria ou co-marketing potencial: oferecer Hayzer como ferramenta recomendada no curso."
+    },
+    {
+      "account": "@3dgeekshow",
+      "post_found": true,
+      "type": "reels",
+      "text_excerpt": "Curso 'Seu Negocio de Impressao 3D com IA' em lancamento com preco promocional R$ 197 (de R$ 497) com countdown de ~23h. Bonus inclui planilha de precificacao.",
+      "engagement_estimate": "alto",
+      "relevance_for_hayzer": "ALTA -- 3D Geek Show (128K seguidores) vendendo curso de negocio com IA inclui planilha de custos como bonus. Concorrencia indireta direta com a calculadora gratuita do Hayzer. Makers comprando esse curso recebem planilha como substituto parcial."
+    },
+    {
+      "account": "@appcustos3d",
+      "post_found": false,
+      "type": "desconhecido",
+      "text_excerpt": "Nenhum post encontrado via busca publica nas ultimas 24h.",
+      "engagement_estimate": "desconhecido",
+      "relevance_for_hayzer": "MONITORAR -- AppCustos3D ativo (plano Basic R$ 29,90 e PRO R$ 69,90/mes com leitor de G-code), mas sem atividade detectada no Instagram hoje."
+    }
+  ],
+  "reclame_aqui": [
+    {
+      "company": "Bling (ERP)",
+      "complaints_found": true,
+      "complaint_summary": "Instabilidade cronica e recorrente: sistema cai toda segunda-feira, lentidao semanal, fora do ar frequente. Titulos recentes: 'BLING ERP CAINDO E LENTO. Toda a Semana e a mesma Historia', 'O Bling destruiu nossa produtividade. Instabilidade cronica e mudancas arbitrarias de usabilidade'. Tambem: nao adequacao a reforma tributaria IBS/CBS 2026, boletos com data incorreta, controle de estoque falho.",
+      "recurring_theme": true,
+      "opportunity_for_hayzer": "OPORTUNIDADE FORTE -- Bling cobra R$ 99-299/mes e entrega instabilidade toda segunda. Usuarios frustrados buscam alternativas. Hayzer pode atacar: 'Gestao feita pra maker, sem cair na segunda-feira'."
+    },
+    {
+      "company": "MakerFlow",
+      "complaints_found": false,
+      "complaint_summary": "Nenhuma reclamacao encontrada. Produto pode nao ter presenca significativa no mercado brasileiro ou operar com outro nome.",
+      "recurring_theme": false,
+      "opportunity_for_hayzer": "BAIXA relevancia imediata. Monitorar."
+    },
+    {
+      "company": "3D Control",
+      "complaints_found": false,
+      "complaint_summary": "Nenhuma reclamacao encontrada. Produto ativo com plano unico R$ 39,99/mes, trial gratuito. Posicionamento: '#1 sistema de gestao de impressao 3D', promete +300% lucro e economia de 5h/semana.",
+      "recurring_theme": false,
+      "opportunity_for_hayzer": "CONCORRENTE DIRETO ATIVO -- Sem reclamacoes visiveis = produto relativamente estavel. Diferencial Hayzer: fluxo completo lead-producao-financeiro integrado vs gestao de custos isolada do 3D Control."
+    },
+    {
+      "company": "AppCustos3D",
+      "complaints_found": false,
+      "complaint_summary": "Nenhuma reclamacao encontrada. Plano Basic R$ 29,90/mes e PRO R$ 69,90/mes. Diferencial tecnico: leitor de G-code automatico que extrai tempo e consumo de material sem digitacao. Trial de 3 dias.",
+      "recurring_theme": false,
+      "opportunity_for_hayzer": "CONCORRENTE DIRETO -- Leitor de G-code e funcionalidade avancada que Hayzer nao tem na v0.6. Makers tecnico-avancados podem preferir AppCustos3D. Hayzer vence em gestao completa do negocio (CRM, pedidos, financeiro, onboarding)."
+    },
+    {
+      "company": "PrintWorks3D",
+      "complaints_found": false,
+      "complaint_summary": "Identificado como gratuito/freemium -- 'o mais completo gerenciador gratuito de impressao 3D'. Sem reclamacoes encontradas.",
+      "recurring_theme": false,
+      "opportunity_for_hayzer": "MONITORAR -- Se realmente gratuito e funcional, compete pelo publico iniciante que Hayzer quer converter no soft launch. Investigar profundidade real e limites do plano free."
+    },
+    {
+      "company": "ZoomCalc3D",
+      "complaints_found": false,
+      "complaint_summary": "Nenhuma presenca encontrada. Produto pode nao existir ou ter nome diferente.",
+      "recurring_theme": false,
+      "opportunity_for_hayzer": "SEM DADOS. Desconsiderar por ora."
+    },
+    {
+      "company": "Custos3D",
+      "complaints_found": false,
+      "complaint_summary": "Nenhuma presenca encontrada distinta do AppCustos3D. Pode ser o mesmo produto ou marca inexistente.",
+      "recurring_theme": false,
+      "opportunity_for_hayzer": "SEM DADOS. Possivelmente o mesmo que AppCustos3D."
+    }
+  ],
+  "alerts": [
+    "ALERTA 1 -- 3D Lab abrindo loja fisica em SP: movimento de expansao geografica no mercado maker. Makers SP = leads quentes para Hayzer no soft launch 13/06. Considerar comunicacao direcionada para regiao SP.",
+    "ALERTA 2 -- 3D Geek Show (128K seguidores) vendeu curso com planilha de custos como BONUS com countdown ativo hoje (30/05). Makers comprando o curso recebem planilha como substituto do Hayzer. Janela para interceptar esse publico nas proximas 24-48h.",
+    "ALERTA 3 -- SP3DFEST confirmado para 19-21 junho 2026 em SP (Edificio Panamericano, Bela Vista). Evento GRATUITO com suporte de fabricantes mundiais. Coincide com periodo pos-soft-launch Hayzer (13/06). Oportunidade de presenca ou comunicacao direcionada."
+  ],
+  "relevant_posts": [
+    "Reel @3dlab_brasil: 'A 3D LAB CHEGOU EM SAO PAULO!' -- expansao para SP com loja fisica inaugurada. 82K seguidores, engajamento alto esperado.",
+    "Post @artbox3d: lancamento Seminovos.ARTBOX3D.com.br -- canal de revenda de impressoras usadas. Mercado de entrada aquecido, novos makers chegando.",
+    "LP @3dgeekshow: 'Seu Negocio de Impressao 3D com IA' -- R$ 197 com countdown ativo, bonus inclui planilha de precificacao. Concorrencia indireta com calculadora Hayzer."
+  ],
+  "interesting_complaints": [
+    "Bling: 'BLING ERP CAINDO E LENTO. Toda a Semana e a mesma Historia.' -- usuario relata perda financeira, atrasos no atendimento e dificuldades com NF toda segunda-feira.",
+    "Bling: 'O Bling destruiu nossa produtividade. Instabilidade cronica e mudancas arbitrarias de usabilidade.' -- usuario de 3 anos relatando instabilidade e UX degradada por mudancas sem comunicacao."
+  ],
+  "recommended_action": "Marcos e Helena: aproveitar o lancamento do curso 3D Geek Show com countdown ativo hoje para postar nos grupos maker um contraponto claro -- 'planilha resolve o calculo, Hayzer resolve o negocio inteiro'. Post rapido no grupo WhatsApp Beta ou redes antes de amanha. Custo zero, timing perfeito (maker que comprou o curso hoje vai sentir o gap do negocio em 7 dias).",
+  "summary_text": "Resumo inteligencia competitiva 30/05/2026:\n\nO movimento mais relevante do dia e o 3D Geek Show (128K seguidores) com curso 'Negocio de Impressao 3D com IA' em oferta com countdown ativo hoje por R$ 197. O bonus inclui planilha de precificacao -- ou seja, centenas de makers recebendo hoje exatamente o substituto que o Hayzer precisa superar. Janela de resposta: proximas 24-48h.\n\nNo Instagram, destaque para abertura da loja fisica da 3D Lab em Sao Paulo. Com 82K seguidores e expansao confirmada, indica mercado maker SP aquecido -- exatamente o alvo do soft launch 13/06. ArtBox3D lancou canal de seminovos (seminovos.artbox3d.com.br), trazendo novos makers ao mercado sem nenhuma gestao.\n\nNo Reclame Aqui, Bling continua sendo o ERP mais reclamado: sistema cai toda segunda, nao adequou a reforma tributaria 2026, UX degradada. Usuarios de anos sem alternativa clara focada em maker. Oportunidade de copy direto.\n\nConcorrentes diretos de software: 3D Control (R$ 39,99/mes) e AppCustos3D (R$ 29,90-69,90/mes) ativos e sem reclamacoes visiveis. AppCustos3D tem diferencial real com leitor de G-code -- funcionalidade que Hayzer v0.6 nao tem ainda.\n\nEvento estrategico: SP3DFEST (19-21/06/2026, SP, gratuito) acontece na semana pos-soft-launch. Presenca ou comunicacao direcionada pode amplificar o lancamento.",
+  "sources": [
+    "https://www.instagram.com/3dlab_brasil/",
+    "https://www.instagram.com/reel/DL7t8d6upzb/",
+    "https://www.instagram.com/artbox3d/",
+    "https://www.instagram.com/3dgeekshow/",
+    "https://negociocomia.3dgeekshow.com.br/",
+    "https://3dcontrol.com.br/",
+    "https://appcustos3d.com.br/",
+    "https://www.printworks3d.com.br/",
+    "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/",
+    "https://www.sympla.com.br/evento/sp3dfest/3053392"
+  ]
+}
