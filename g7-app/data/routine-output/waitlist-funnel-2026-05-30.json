@@ -1,0 +1,56 @@
+{
+  "date": "2026-05-30",
+  "generated_at": "2026-05-30T09:00:00-03:00",
+  "periodo_24h": {
+    "total_novos": 0,
+    "etapa2_completada": 0,
+    "pct_etapa2": null,
+    "tempo_medio_step1_step2_min": null,
+    "utm_breakdown": []
+  },
+  "acumulado": {
+    "total_leads": 3,
+    "total_email_confirmado": 0,
+    "pct_email_confirmado": 0.0,
+    "total_com_whatsapp": 3,
+    "pct_com_whatsapp": 100.0,
+    "total_com_negocio": 0,
+    "total_high_score": 0,
+    "primeiro_lead": "2026-05-15",
+    "ultimo_lead": "2026-05-23",
+    "utm_top3": [
+      { "utm_source": "direct", "total": 3, "pct": 100.0 }
+    ]
+  },
+  "tendencia_7d": {
+    "ultimos_7d": 0,
+    "7d_anteriores": 2,
+    "variacao_pct": -100.0,
+    "classificacao": "baixa",
+    "media_diaria_7d": 0.0,
+    "dias_sem_novos_leads": 7
+  },
+  "alertas": [
+    {
+      "nivel": "critico",
+      "tipo": "sem_novos_leads",
+      "mensagem": "7 dias sem novos leads (ultimo: 23/05). Funil parado."
+    },
+    {
+      "nivel": "critico",
+      "tipo": "zero_email_confirmado",
+      "mensagem": "0 de 3 leads confirmaram email. Verificar fluxo de confirmacao ou se leads sao testes internos."
+    },
+    {
+      "nivel": "info",
+      "tipo": "utm_monotono",
+      "mensagem": "100% dos leads sao direct. Nenhum canal rastreado ativo ainda."
+    }
+  ],
+  "acoes_recomendadas": [
+    "Verificar se os 3 leads sao testes internos (CEO + time) ou leads reais",
+    "Auditar fluxo de confirmacao de email -- nenhum dos 3 confirmou",
+    "Ativar distribuicao de conteudo (LinkedIn, WhatsApp) para gerar primeiros leads organicos antes do soft launch 13/06",
+    "Configurar UTM tags nos links que serao distribuidos no grupo WhatsApp Beta"
+  ]
+}
