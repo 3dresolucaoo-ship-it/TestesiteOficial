@@ -44,3 +44,10 @@ Testesite3dresolução/
 desktop-tutorial/
 
 .vercel
+
+# Adobe Premiere autosaves — paths longos quebram Windows + binários grandes
+**/Adobe Premiere Pro Auto-Save/
+**/*.prproj
+**/*.prproj.old
+**/*.peak
+**/*.cfa
