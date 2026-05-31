@@ -1,0 +1,85 @@
+{
+  "date": "2026-05-31",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "routes": {
+    "total": 4,
+    "ok": 3,
+    "details": {
+      "hayzer.com.br": { "status": 200, "ok": true },
+      "hayzer.com.br/calculadora": { "status": 200, "ok": true },
+      "hayzer.com.br/waitlist": { "status": 200, "ok": true, "note": "conteudo CSR, carrega no cliente" },
+      "hayzer.com.br/calculadora/pro": { "status": 404, "ok": false, "note": "ESPERADO — ADR-024 Calc Pro revogada 21/05" }
+    },
+    "api_health": {
+      "status": 200,
+      "version": "ddc7355",
+      "supabase_latency_ms": 4,
+      "region": "iad1"
+    }
+  },
+  "vercel": {
+    "deployments_24h": 5,
+    "errors_24h": 0,
+    "prod_deployment": {
+      "id": "dpl_JDhrwFmCD7P2pdTujxuog2eihM2A",
+      "commit": "ddc7355",
+      "branch": "main",
+      "state": "READY",
+      "age_hours": 32.4,
+      "rollback_candidate": true,
+      "rollback_command": "vercel rollback dpl_JDhrwFmCD7P2pdTujxuog2eihM2A --team 3dresolucaoo-5027s-projects"
+    }
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "ok",
+    "waitlist_leads": 3,
+    "tables": {
+      "notifications": true,
+      "search_index_view": false
+    },
+    "note": "search_index ausente dia 11 consecutivo — debito conhecido"
+  },
+  "performance": {
+    "source": "Lighthouse 29/05 (Vercel Analytics indisponivel — issue #23 token ausente, dia 11)",
+    "landing": {
+      "lcp_s": 5.9,
+      "tbt_ms": 780,
+      "cls": 0,
+      "lcp_alerta": true
+    },
+    "calculadora": {
+      "lcp_s": 4.1,
+      "tbt_ms": 2600,
+      "lcp_alerta": true
+    }
+  },
+  "alerts": [
+    {
+      "severity": "AMARELO",
+      "item": "search_index view ausente",
+      "dia_consecutivo": 11,
+      "acao": "criar view — fix direto ou ADR"
+    },
+    {
+      "severity": "AMARELO",
+      "item": "LCP > 4s: landing 5.9s e calculadora 4.1s",
+      "nota": "previsto Bloco 5 (18-25/06)"
+    },
+    {
+      "severity": "AMARELO",
+      "item": "Vercel Analytics indisponivel — VERCEL_API_TOKEN ausente",
+      "dia_consecutivo": 11,
+      "acao": "CEO setar VERCEL_API_TOKEN no Vercel Dashboard"
+    },
+    {
+      "severity": "INFO",
+      "item": "/calculadora/pro 404",
+      "nota": "ESPERADO — ADR-024 Calc Pro revogada"
+    }
+  ],
+  "new_alerts_today": [],
+  "verdict": "Nada novo quebrou. Mesmos alertas amarelos do dia 10-11. Producao estavel."
+}
