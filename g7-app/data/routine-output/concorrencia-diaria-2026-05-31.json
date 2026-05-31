@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "data": "2026-05-31",
+    "rotina": "concorrencia-diaria",
+    "executor": "G7-Research",
+    "duracao_estimada_min": 18,
+    "fontes": ["instagram-public-index", "reclameaqui-web", "sites-concorrentes"],
+    "cobertura_instagram": ["3dlab_brasil", "artbox3d", "3dprintacademy", "3dgeekshow", "appcustos3d"],
+    "cobertura_reclameaqui": ["Bling", "3D Lab", "3D Makers"],
+    "nota": "Instagram sem login: reels indexados via Google; datas exatas nao garantidas para ultimas 24h. Reclame Aqui bloqueou acesso direto (403) - dados via busca indexada."
+  },
+  "alertas": [
+    {
+      "id": "A01",
+      "nivel": "ALTO",
+      "titulo": "AppCustos3D lancou ficha de producao em PDF",
+      "descricao": "Custos3D (appcustos3d.com.br) adicionou geracao de PDF detalhado de ficha de producao com composicao de custos e taxa de risco. Feature nova visivel na pagina principal. Preco: Basic R$ 29,90/mes, PRO R$ 69,90/mes. Tem leitor G-Code no PRO.",
+      "impacto_hayzer": "Feature de ficha de producao diretamente comparavel ao modulo /production do Hayzer. Se nosso modulo nao gera PDF de ordem de producao, perdemos esse diferencial.",
+      "acao_sugerida": "Verificar se Hayzer tem export PDF de ordem de producao. Se nao, avaliar priorizar no Bloco 5."
+    },
+    {
+      "id": "A02",
+      "nivel": "MEDIO",
+      "titulo": "Bling: reclamacoes sistematicas de sistema fora do ar + sem suporte",
+      "descricao": "Padrao consolidado no Reclame Aqui: sistema indisponivel especialmente as segundas-feiras, suporte que nao responde, erros de sincronizacao com ML/Shopee/WooCommerce, nao adequacao a reforma tributaria 2026 (IBS/CBS). Tema muito recorrente, nao pontual.",
+      "impacto_hayzer": "Makers que usam Bling como ERP geral estao frustrados. Abertura para Hayzer se posicionar como alternativa focada no maker (sem a complexidade fiscal de ERP geral).",
+      "acao_sugerida": "Marcos: considerar post 'Por que ERP geral nao funciona pra maker 3D' usando dor especifica do Bling como gancho."
+    },
+    {
+      "id": "A03",
+      "nivel": "BAIXO",
+      "titulo": "Expo3DBr 2026 confirmada: SP, agosto 21-23",
+      "descricao": "Evento presencial de impressao 3D confirmado para Sao Caetano do Sul, agosto 21-23/2026. Concorrentes provavelmente estarao presentes (3D Lab, ArtBox3D, etc).",
+      "impacto_hayzer": "Janela de exposicao pre-launch publico. Potencial para capturar makers early adopters antes do evento.",
+      "acao_sugerida": "Helena: avaliar se faz sentido ter presenca ou parceria na Expo3DBr. Fora do escopo imediato mas no radar."
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "@ph3dmaker",
+      "url_reel": "https://www.instagram.com/reel/DVM1mnNjWXe/",
+      "tipo": "Reels",
+      "data_aprox": "2026-02-25",
+      "titulo_tema": "Ainda vale a pena investir em impressora 3D em 2026?",
+      "caption_resumo": "A impressora e apenas uma ferramenta e nao o produto final. Recomenda encontrar mercados locais sub-atendidos ao inves de competir em marketplaces. Escolher nicho por acesso ao cliente, nao por popularidade.",
+      "engajamento": {
+        "likes": 1500,
+        "comentarios": 71
+      },
+      "relevancia_hayzer": "Ressoa diretamente com persona Rafael: maker que quer profissionalizar, nao apenas imprimir. Linguagem e abordagem alinhadas com posicionamento Hayzer. Alto engajamento indica tema quente.",
+      "nota": "Conta @ph3dmaker, nao @appcustos3d. O reel apareceu indexado na busca pelo perfil appcustos3d - possivel que o perfil nao tenha conta Instagram propria ou e muito pequena."
+    },
+    {
+      "conta": "@3dgeekshow",
+      "url_reel": "https://www.instagram.com/3dgeekshow/reel/DSpj3HvjfG8/",
+      "tipo": "Reels",
+      "data_aprox": "2025-12-24",
+      "titulo_tema": "Conteudo ASMR impressao 3D",
+      "caption_resumo": "Post de conteudo ASMR com hashtags basicas de impressao 3D. Sem pitch de produto ou gestao.",
+      "engajamento": {
+        "likes": 151,
+        "comentarios": 0
+      },
+      "relevancia_hayzer": "Baixa. Conteudo recreativo, nao educacional ou de negocio. 3dgeekshow (128K followers) foca em conteudo lifestyle maker, nao gestao."
+    },
+    {
+      "conta": "@3dlab_brasil",
+      "url_reel": "https://www.instagram.com/3dlab_brasil/reel/DL0a2U5v-5y/",
+      "tipo": "Reels",
+      "data_aprox": "2025-07-07",
+      "titulo_tema": "Clube de Vantagens 3D Lab",
+      "caption_resumo": "Promocao do Clube de Vantagens com @3dcombrian. 328 likes, 87 comentarios.",
+      "engajamento": {
+        "likes": 328,
+        "comentarios": 87
+      },
+      "relevancia_hayzer": "Media. Comentarios revelam frustracoes com atendimento, qualidade de filamento e rastreamento. Indica vulnerabilidade da 3D Lab como fornecedora hardware. Hayzer nao compete direto mas oportunidade de parceria/diferenciacao."
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "tema_principal": "Sistema fora do ar recorrente + suporte inexistente",
+      "descricao": "Multiplas reclamacoes de sistema indisponivel especialmente segundas-feiras. Suporte que nao responde. Erros de sync ML/Shopee. Nao adaptado a reforma tributaria 2026 (IBS/CBS). Usuarios relatam 'perda de 110% da confianca'.",
+      "frequencia": "Recorrente - tema estrutural, nao pontual",
+      "oportunidade_hayzer": "Makers que tentam usar Bling para gestao de impressao 3D sofrem com complexidade de ERP geral. Hayzer pode capturar esse usuario frustrado com mensagem 'feito pra quem imprime, nao pra quem vende de tudo'.",
+      "fonte": "reclameaqui.com.br/empresa/bling"
+    },
+    {
+      "empresa": "3D Lab Brasil",
+      "tema_principal": "Atendimento + qualidade filamento + rastreamento de pedidos",
+      "descricao": "Nos comentarios do proprio Instagram da 3D Lab: usuarios reclamam de atendimento ruim, qualidade de filamento inconsistente e atrasos em rastreamento. Plataforma de hardware mais conhecida do segmento com vulnerabilidade clara.",
+      "frequencia": "Visivelmente recorrente nos comentarios",
+      "oportunidade_hayzer": "Nao direta (Hayzer nao vende hardware), mas sinaliza que makers BR estao insatisfeitos com 'grandes players' e receptivos a solucoes mais proximas e humanas.",
+      "fonte": "instagram.com/3dlab_brasil - comentarios do reel DL0a2U5v-5y"
+    }
+  ],
+  "panorama_precos_concorrentes": {
+    "nota": "Capturado em pesquisa de hoje para referencia Hayzer pricing",
+    "AppCustos3D": {
+      "basic_mensal": "R$ 29,90",
+      "basic_semestral": "R$ 17,00/mes",
+      "pro_mensal": "R$ 69,90",
+      "pro_semestral": "R$ 36,00/mes",
+      "diferencial_pro": "Leitor G-Code, sem mencao de modulo producao completo"
+    },
+    "MakerFlow3D": {
+      "mensal": "R$ 29,90",
+      "trimestral": "R$ 69,90 total",
+      "diferencial": "Integracao oficial OAuth ML/Shopee, dashboard fila producao"
+    },
+    "PrintWorks3D": {
+      "modelo": "Possivelmente gratuito (fonte: descricao busca Google)",
+      "verificacao_necessaria": true
+    }
+  },
+  "acao_recomendada": {
+    "responsavel_primario": "Marcos",
+    "responsavel_secundario": "Helena",
+    "prazo": "ate 02/06",
+    "descricao": "Criar post/thread para grupo WhatsApp Beta ou LinkedIn abordando: 'ERP geral (tipo Bling) nao foi feito pra maker 3D - aqui esta o que falta'. Usar as dores reais do Reclame Aqui como prova social (sistema fora as segundas, sync quebrado, suporte sumido). Posicionar Hayzer como a alternativa vertical especializada. Nao mencionar Bling pelo nome - descrever a dor.",
+    "contexto": "Bling tem volume alto de reclamacoes estruturais em 2026. Janela de captura de maker frustrado esta aberta agora, antes do soft launch 13/06."
+  },
+  "sem_movimentos_significativos": {
+    "artbox3d": "Sem post novo indexado nas ultimas 24h. Reel mais recente encontrado (DLSJ7EHMiKl) retornou 429 - sem dados de conteudo.",
+    "3dprintacademy": "Sem conteudo novo 2026 visivel via busca publica. Ultimo conteudo indexado e de 2024-2025.",
+    "makerflow3d": "Site ativo mas sem novidades recentes visiveis. Preco igual AppCustos3D (R$ 29,90/mes)."
+  }
+}
