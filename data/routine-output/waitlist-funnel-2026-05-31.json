@@ -1,0 +1,38 @@
+{
+  "digest_date": "2026-05-31",
+  "generated_at": "2026-05-31T09:00:00-03:00",
+  "schema_note": "coluna 'step' nao existe na tabela; etapa_2 mapeada para email_confirmed=true",
+  "ultimas_24h": {
+    "total_novos": 0,
+    "confirmaram_email": 0,
+    "preencheram_whatsapp": 0,
+    "pct_etapa_2": null,
+    "pct_qualificados": null,
+    "utm_breakdown": [],
+    "avg_min_step1_to_step2": null
+  },
+  "comparacao_7d": {
+    "media_diaria_7d": 0.0,
+    "total_6d_anteriores": 0,
+    "total_7d_14d_atras": 2,
+    "tendencia": "baixa",
+    "variacao_pct": null
+  },
+  "acumulado": {
+    "total_all_time": 3,
+    "total_last_7d": 0,
+    "total_prev_7d": 2,
+    "total_confirmados_email": 0,
+    "total_convertidos": 0,
+    "crescimento_7d_pct": -100.0,
+    "top_utms": [
+      { "utm_source": "direct", "total": 3, "pct": 100.0 }
+    ]
+  },
+  "alertas": [
+    "zero_leads_7d: nenhum lead nos ultimos 7 dias",
+    "zero_email_confirmed: 0 dos 3 leads totais confirmaram email - verificar fluxo de confirmacao",
+    "sem_utm_tracking: 100% dos leads sao 'direct', sem UTM ativo nos links de divulgacao",
+    "pre_soft_launch: 13 dias para soft launch 13/06 - base silenciosa, momento de ativar canal WhatsApp Beta"
+  ]
+}
