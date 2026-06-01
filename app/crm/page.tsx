@@ -20,8 +20,11 @@
  * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
  */
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useTransition } from 'react'
 import { useStore, useStoreModule, uid }  from '@/lib/store'
+// Server Actions pro golden path (fix auth client travando em prod, 01/06/2026).
+// Workflow G7 wv1c1yo49 cravou essa rota como Plano A pre soft launch 13/06.
+import { createLead, convertLeadToOrder } from './actions'
 import type { Lead, LeadStatus, Order }   from '@/lib/types'
 import CrmLoading                         from './loading'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
@@ -218,7 +221,11 @@ function LeadListView({ leads, projectName, onEdit, onDelete, onAdvance, onConve
 // ---------------------------------------------------------------------------
 
 export default function GlobalCrmPage() {
-  const { state, dispatch } = useStore()
+  // rawDispatch = reducer-only, SEM Supabase sync. Usado apos Server Actions
+  // ja terem persistido no DB (caso contrario dispatch normal dispararia
+  // syncAction -> leadsService.create() -> requireUserId() que trava em prod).
+  const { state, dispatch, rawDispatch } = useStore()
+  const [, startTransition] = useTransition()
   // P2.2 — lazy load dos modulos leads + orders (CRM usa ambos).
   // isLoading true enquanto qualquer um dos dois ainda nao carregou.
   const { isLoading: leadsLoading }  = useStoreModule('leads')
@@ -342,23 +349,36 @@ export default function GlobalCrmPage() {
 
   const handleCreate = useCallback(
     (d: LeadFormData) => {
-      dispatch({
-        type: 'ADD_LEAD',
-        payload: {
-          id:        uid(),
-          projectId: d.projectId,
-          name:      d.name,
-          contact:   d.contact,
-          source:    d.source,
-          status:    d.status,
-          value:     parseFloat(d.value) || 0,
-          notes:     d.notes,
-          date:      d.date,
-        },
+      // Server Action (cookie-based auth, funciona em prod).
+      // Apos persistir, rawDispatch atualiza store local SEM disparar
+      // syncAction (que tem o bug do auth client travado).
+      const leadId = uid()
+      const leadPayload = {
+        id:        leadId,
+        projectId: d.projectId,
+        name:      d.name,
+        contact:   d.contact,
+        source:    d.source,
+        status:    d.status,
+        value:     parseFloat(d.value) || 0,
+        notes:     d.notes,
+        date:      d.date,
+      }
+
+      startTransition(async () => {
+        const result = await createLead(leadPayload)
+        if (!result.success) {
+          console.error('[CRM] createLead Server Action falhou:', result.error)
+          // TODO: substituir por toast quando tivermos sistema de notificacao
+          alert('Erro ao criar lead: ' + result.error)
+          return
+        }
+        // Update store local SEM sync DB (DB ja foi escrito pelo Server Action)
+        rawDispatch({ type: 'ADD_LEAD', payload: result.lead })
+        setCreating(false)
       })
-      setCreating(false)
     },
-    [dispatch],
+    [rawDispatch],
   )
 
   const handleEdit = useCallback(
@@ -399,37 +419,46 @@ export default function GlobalCrmPage() {
       if (!converting) return
       setConvertLoading(true)
       try {
-        const { order, alreadyConverted } = await leadsService.convertToOrder(
-          converting.id,
-          converting.projectId,
-          {
-            item:   d.item,
-            value:  parseFloat(d.value) || 0,
-            status: d.status,
-            date:   d.date,
-          },
-        )
-        if (!alreadyConverted) {
-          // Sincroniza store local: pedido + lead atualizados
-          dispatch({ type: 'ADD_ORDER', payload: order })
-          dispatch({
+        // Server Action pro golden path (cookie-based, funciona em prod).
+        // rawDispatch atualiza store local SEM disparar syncAction bugado.
+        const orderId = uid()
+        const result = await convertLeadToOrder({
+          leadId:    converting.id,
+          projectId: converting.projectId,
+          orderId,
+          item:      d.item,
+          value:     parseFloat(d.value) || 0,
+          status:    d.status,
+          date:      d.date,
+        })
+
+        if (!result.success) {
+          console.error('[CRM] convertLeadToOrder Server Action falhou:', result.error)
+          alert('Erro ao converter lead em pedido: ' + result.error)
+          return
+        }
+
+        if (!result.alreadyConverted) {
+          // Update store local SEM sync DB (DB ja foi escrito pelo Server Action)
+          rawDispatch({ type: 'ADD_ORDER', payload: result.order })
+          rawDispatch({
             type: 'UPDATE_LEAD',
             payload: {
               ...converting,
               status:           'won',
-              convertedOrderId: order.id,
+              convertedOrderId: result.order.id,
             },
           })
         }
         setConverting(null)
       } catch (err) {
-        // TODO: substituir por toast quando tivermos sistema de notificacao
-        console.error('[CRM] convertToOrder falhou', err)
+        console.error('[CRM] convertLeadToOrder erro inesperado', err)
+        alert('Erro inesperado ao converter lead.')
       } finally {
         setConvertLoading(false)
       }
     },
-    [converting, dispatch],
+    [converting, rawDispatch],
   )
 
   // ---------------------------------------------------------------------------
