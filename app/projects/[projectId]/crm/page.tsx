@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { useParams } from 'next/navigation'
 import { useStore, uid } from '@/lib/store'
 import type { Lead, LeadStatus, ContactSource } from '@/lib/types'
+// Server Actions pro CRUD leads (fix auth client travando em prod, 01/06).
+// Affiliates ainda usam dispatch antigo -- debito Bloco 5.
+import { createLead, updateLead, deleteLead, updateLeadStatus } from '@/app/crm/actions'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
 import { Plus, Pencil, Trash2, MoreHorizontal, Users, TrendingUp, LayoutList, Columns } from 'lucide-react'
 import { Modal, FormField, Input, Select, Textarea, SubmitButton } from '@/components/Modal'
@@ -133,7 +136,8 @@ type LeadsView = 'list' | 'kanban'
 export default function ProjectCrmPage() {
   const params = useParams()
   const projectId = params.projectId as string
-  const { state, dispatch, loading } = useStore()
+  const { state, dispatch, rawDispatch, loading } = useStore()
+  const [, startTransition] = useTransition()
   const [tab, setTab] = useState<Tab>('leads')
   const [leadsView, setLeadsView] = useState<LeadsView>('list')
   const [creating, setCreating] = useState(false)
@@ -149,22 +153,62 @@ export default function ProjectCrmPage() {
   const sortedLeads = [...filteredLeads].sort((a, b) => b.date.localeCompare(a.date))
 
   function handleAddLead(data: LeadFormData) {
-    dispatch({ type: 'ADD_LEAD', payload: { id: uid(), projectId, ...data, value: parseFloat(data.value) || 0 } })
+    const leadId = uid()
+    const payload = { id: leadId, projectId, ...data, value: parseFloat(data.value) || 0 }
+    startTransition(async () => {
+      const result = await createLead(payload)
+      if (!result.success) { alert('Erro ao criar lead: ' + result.error); return }
+      rawDispatch({ type: 'ADD_LEAD', payload: result.lead })
+    })
   }
   function handleEditLead(data: LeadFormData) {
     if (!editingLead) return
-    dispatch({ type: 'UPDATE_LEAD', payload: { ...editingLead, ...data, value: parseFloat(data.value) || 0 } })
+    const updated = { ...editingLead, ...data, value: parseFloat(data.value) || 0 }
+    const previous = editingLead
+    rawDispatch({ type: 'UPDATE_LEAD', payload: updated })
     setEditingLead(null)
+    startTransition(async () => {
+      const result = await updateLead({
+        id: updated.id, projectId: updated.projectId, name: updated.name,
+        contact: updated.contact, source: updated.source, status: updated.status,
+        value: updated.value, notes: updated.notes, date: updated.date,
+      })
+      if (!result.success) {
+        rawDispatch({ type: 'UPDATE_LEAD', payload: previous })
+        alert('Erro ao salvar edicao: ' + result.error)
+      }
+    })
   }
   function handleDeleteLead(id: string) {
-    dispatch({ type: 'DELETE_LEAD', payload: id })
+    const lead = state.leads.find((l) => l.id === id)
+    if (!lead) return
+    rawDispatch({ type: 'DELETE_LEAD', payload: id })
     setMenuOpen(null)
+    startTransition(async () => {
+      const result = await deleteLead({ id, projectId: lead.projectId })
+      if (!result.success) {
+        rawDispatch({ type: 'ADD_LEAD', payload: lead })
+        alert('Erro ao deletar lead: ' + result.error)
+      }
+    })
   }
   function advanceLead(lead: Lead) {
     const order: LeadStatus[] = ['new', 'contacted', 'negotiating', 'won']
     const idx = order.indexOf(lead.status)
-    if (idx < order.length - 1) dispatch({ type: 'UPDATE_LEAD', payload: { ...lead, status: order[idx + 1] } })
+    if (idx < 0 || idx >= order.length - 1) return
+    const nextStatus = order[idx + 1]
+    const previousStatus = lead.status
+    rawDispatch({ type: 'UPDATE_LEAD', payload: { ...lead, status: nextStatus } })
     setMenuOpen(null)
+    startTransition(async () => {
+      const result = await updateLeadStatus({
+        leadId: lead.id, projectId: lead.projectId, newStatus: nextStatus,
+      })
+      if (!result.success) {
+        rawDispatch({ type: 'UPDATE_LEAD', payload: { ...lead, status: previousStatus } })
+        alert('Erro ao avancar lead: ' + result.error)
+      }
+    })
   }
 
   function handleAddAff(data: AffFormData) {
