@@ -542,11 +542,19 @@ export function StoreProvider({
         // always becomes false — pages never get stuck in `if (loading)
         // return null` and never render the pre-hydration empty state as
         // if it were real data.
+        // Reduzido de 15s pra 3s em 01/06: skeleton eternal em /inventory /products
+        // /production /content /decisions /metrics era causado por loadFromSupabase
+        // travar no auth bug (auth-js 2.106.0 cold-start) + esse timeout muito alto.
+        // Trade-off: se hidratacao legitimamente demora >3s (rede ruim), usuario ve
+        // empty state em vez de dados reais. Aceitavel porque:
+        // 1. /crm e /orders ja usam useStoreModule (lazy load) — nao dependem disso
+        // 2. Pages que ainda usam loading do store renderizam empty state amigavel
+        //    em vez de splash eterno + usuario pode tentar acoes (criar item, etc)
         const fallback = new Promise<AppState>(resolve =>
           setTimeout(() => {
-            console.warn('[BVaz] hydration timed out — committing empty state')
+            console.warn('[BVaz] hydration timed out (3s) — committing empty state')
             resolve(EMPTY_STATE)
-          }, 15_000),
+          }, 3_000),
         )
         try {
           const data = await Promise.race([loadFromSupabase(), fallback])
