@@ -1,0 +1,77 @@
+{
+  "date": "2026-06-01",
+  "time": "06:00 BRT",
+  "status": "ALERTA_AMARELO",
+  "rotas": {
+    "total": 4,
+    "ok": 3,
+    "detalhes": {
+      "/": { "status": 200, "resultado": "OK" },
+      "/calculadora": {
+        "status": "403_UNAUTHENTICATED / 200_VERCEL_AUTH",
+        "resultado": "ALERTA_AMARELO",
+        "nota": "WebFetch retornou 403 sem auth. Vercel tool autenticado retornou 200. Possivel regressao de fix(auth) commits madrugada 01/06. Verificacao manual recomendada."
+      },
+      "/waitlist": { "status": 200, "resultado": "OK" },
+      "/calculadora/pro": {
+        "status": 404,
+        "resultado": "ESPERADO",
+        "nota": "Rota removida per ADR-024 (Calc Pro revogada 21/05)"
+      }
+    }
+  },
+  "vercel": {
+    "producao": {
+      "id": "dpl_7yQgoyybaBPi4hMHuJ8pgFdabCmM",
+      "commit_hash": "9164f8a",
+      "commit_msg": "feat(crm): drag-and-drop no kanban + Server Action updateLeadStatus",
+      "state": "READY",
+      "idade_horas": 4.9,
+      "criado_brt": "01:06 BRT"
+    },
+    "deploys_24h": 13,
+    "erros": 0,
+    "building_stuck": false,
+    "nota": "Atividade intensa: 6 commits em main (fix auth P0 + drag-drop CRM). Todos READY."
+  },
+  "supabase": {
+    "health": "OK",
+    "status_projeto": "ACTIVE_HEALTHY",
+    "latencia_ms": null,
+    "waitlist_leads_total": 3,
+    "waitlist_novos_24h": 0,
+    "tabela_notifications": true,
+    "view_search_index": false,
+    "nota_search_index": "View ausente dia 12 consecutivo. Bug recorrente nao novo."
+  },
+  "performance": {
+    "fonte": "Lighthouse 29/05/2026 (3 dias atras)",
+    "lcp_landing": "5.9s",
+    "lcp_calc": "4.1s",
+    "inp": null,
+    "cls": null,
+    "alertas": [
+      "LCP 5.9s acima do threshold 4s (TBT fix pendente Bloco 3)",
+      "Vercel Analytics indisponivel via MCP"
+    ]
+  },
+  "alertas": [
+    {
+      "severidade": "AMARELO",
+      "tipo": "ROTA_PROTEGIDA",
+      "descricao": "/calculadora retorna 403 para requests nao autenticados. Possivel regressao dos commits fix(auth) de 01/06 madrugada. Verificacao manual: abrir hayzer.com.br/calculadora em aba anonima."
+    },
+    {
+      "severidade": "AMARELO",
+      "tipo": "VIEW_AUSENTE",
+      "descricao": "search_index view nao existe no schema public. Dia 12 consecutivo. Nao e novidade, mas segue sem resolucao."
+    },
+    {
+      "severidade": "AMARELO",
+      "tipo": "PERFORMANCE",
+      "descricao": "LCP 5.9s em prod (acima do limite 4s). Fix previsto Bloco 3 (ate 10/06)."
+    }
+  ],
+  "rollback_se_critico": "vercel rollback dpl_DJKkZQJY7BZ1q6nTthedzBtPR3B6 --scope team_JPZ2UXx1CVIIr20I4V1u9uID",
+  "proximo_smoke_test": "2026-06-02 06:00 BRT"
+}
