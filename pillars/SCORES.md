@@ -8,23 +8,32 @@
 
 ---
 
-## 📊 Status atual — 2026-05-29
+## 📊 Status atual — 2026-06-01
 
 | # | Pilar | Hoje | Meta 30d | Meta 90d | Owner G7 | Próx. revisão |
 |---|---|---|---|---|---|---|
-| 1 | **Design (UI/UX)** | 9.0 | 9.5 | 9.7 | Diego | 02/06 |
-| 2 | **Anti-IA (autenticidade)** | 9.3 | 9.5 | 9.5 | Carla + Diego | 02/06 |
+| 1 | **Design (UI/UX)** | 9.0 | 9.5 | 9.7 | Diego | 09/06 |
+| 2 | **Anti-IA (autenticidade)** | 9.3 ⚠️ | 9.5 | 9.5 | Carla + Diego | **02/06** |
 | 3 | **Segurança (OWASP 2025)** | 9.3 | 9.5 | 9.7 | Otávio | 24/06 |
-| 4 | **Performance (Web Vitals)** | 7.5 | 8.0 | 8.5 | Felipe + Ricardo | 02/06 |
-| 5 | **Acessibilidade (WCAG AA)** | 7.0 ⬆️ | 8.0 | 9.0 | Felipe (Júlia ⌀) | 02/06 |
-| 6 | **Mobile (320-768px)** | 7.5 | 8.5 | 9.0 | Diego + Felipe | 02/06 |
-| 7 | **Conversão (funil)** | 6.8 ⬆️ | 7.5 | 8.5 | Marcos + Sofia + Ana | 07/06 |
-| 8 | **Retenção (habit-forming)** | 5.5 | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
-| 9 | **Pagamento (robustez)** | 8.5 | 9.0 | 9.5 | Paulo + Bruna | 02/06 |
-| 10 | **Documentação (Diátaxis)** | 8.5 | 9.0 | 9.5 | Lia | 02/06 |
-| 11 | **Backend (DB + APIs)** | 8.0 | 8.5 | 9.0 | Bruna | 02/06 |
-| 12 | **Estratégia (posicionamento)** | 8.3 | 8.5 | 9.0 | Helena | 02/06 |
-| | **MÉDIA GERAL** | **8.0 ⬆️** | **8.5** | **8.8** | Helena | semanal |
+| 4 | **Performance (Web Vitals)** | 7.5 | 8.0 | 8.5 | Felipe + Ricardo | 09/06 |
+| 5 | **Acessibilidade (WCAG AA)** | 7.0 ⚠️ | 8.0 | 9.0 | Felipe (Júlia ⌀) | **02/06** |
+| 6 | **Mobile (320-768px)** | 7.5 | 8.5 | 9.0 | Diego + Felipe | 09/06 |
+| 7 | **Conversão (funil)** | 6.8 | 7.5 | 8.5 | Marcos + Sofia + Ana | 07/06 |
+| 8 | **Retenção (habit-forming)** | 5.5 🔴 | 6.5 | 8.0 | Sofia + Marcos | **02/06** |
+| 9 | **Pagamento (robustez)** | 8.5 | 9.0 | 9.5 | Paulo + Bruna | 09/06 |
+| 10 | **Documentação (Diátaxis)** | 8.5 | 9.0 | 9.5 | Lia | 09/06 |
+| 11 | **Backend (DB + APIs)** | 8.5 ⬆️ | 9.0 | 9.0 | Bruna | 09/06 |
+| 12 | **Estratégia (posicionamento)** | 8.5 ⬆️ | 9.0 | 9.0 | Helena | 09/06 |
+| | **MÉDIA GERAL** | **8.1 ⬆️** | **8.5** | **8.8** | Helena | semanal |
+
+### Mudanças revisão semanal 01/06 (commits 26/05–01/06)
+
+- **+0.5 Backend (8.0→8.5)**: skeleton eternal fix em /crm /orders /production (`2072be4`); timeout robusto em `requireUserId` (`5f0a1f4`); Server Actions golden path validados em prod — SQL JOIN bidirecional `lead.converted_order_id ↔ order.source_lead_id` confirmado (`386ceb6`); D&D kanban Server Action `updateLeadStatus` (`9164f8a`). Golden path #1 lead→pedido funcional em prod.
+- **+0.2 Estratégia (8.3→8.5)**: ADR 031 ACCEPTED com validação de prod (`8baf7f4`). Decisão arquitetural Server Actions como path de writes documentada com evidência SQL. Meta 30d atingida.
+- **+0.1 Média geral (8.0→8.1)**.
+- ⚠️ **Anti-IA 9.3 — requer decisão CEO em 02/06**: revert tu→voce (26/05, CEO) + remove data falsa hero (27/05). Ver `pillars/weekly-2026-06-01.md` nota P2.
+- ⚠️ **Acessibilidade 7.0 → 7.3 proposto**: Landing Lighthouse 100/100 + D&D keyboard nav. Sujeito a validação CEO.
+- 🔴 **Retenção 5.5 — issue criado no GitHub** (único pilar abaixo de 6.0).
 
 ### Mudanças sessão 29/05 (plano focar-qualidade + ADR-029 + Bloco 2)
 
@@ -221,4 +230,4 @@ Esse documento operacionaliza essa filosofia.
 
 **Mantenedor primário**: Helena (estratégia consolida)
 **Atualização**: toda segunda + via `/rcs` quando evidência aparecer
-**Última atualização**: 2026-05-29 (Sessão 29/05: Bloco 2 entregue — wizard 4 steps + 7 empty states + tu/voce. Acessibilidade 6.5→7.0 · Conversão 6.5→6.8 · média 7.9→8.0). Pillars próximos a revisar: **Mobile (Bloco 3 QA)** e **Performance (Lighthouse Bloco 3)**.
+**Última atualização**: 2026-06-01 (Revisão semanal 26/05–01/06: Backend 8.0→8.5 · Estratégia 8.3→8.5 · média 8.0→8.1). Ver `pillars/weekly-2026-06-01.md` para detalhes. Decisões pendentes p/ CEO 02/06: Anti-IA (revert tu/voce) + Acessibilidade (7.0→7.3 proposto) + Retenção (plano ação 5.5→6.0 pré 13/06). Pillars próximos: **Mobile (Bloco 3 QA)** e **Performance (LCP Bloco 5)**.
