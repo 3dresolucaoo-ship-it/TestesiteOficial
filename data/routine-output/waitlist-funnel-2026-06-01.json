@@ -1,0 +1,42 @@
+{
+  "date": "2026-06-01",
+  "generated_at": "2026-06-01T09:00:00-03:00",
+  "last_24h": {
+    "total_new_leads": 0,
+    "completed_step_2": 0,
+    "step_2_rate_pct": null,
+    "by_utm_source": {}
+  },
+  "accumulated": {
+    "total_waitlist": 3,
+    "all_status_new": 3,
+    "email_confirmed": 0,
+    "email_confirmed_pct": 0,
+    "step_2_completed": 3,
+    "step_2_pct": 100,
+    "top_utm_sources": [
+      { "source": "direct", "total": 3, "pct": 100 }
+    ]
+  },
+  "trend_7d": {
+    "leads_last_7d": 0,
+    "leads_prev_7d": 2,
+    "growth_pct": -100,
+    "direction": "baixa",
+    "daily_avg_last_7d": 0,
+    "daily_avg_prev_7d": 0.29
+  },
+  "notes": [
+    "Coluna 'step' nao existe na tabela - etapa 2 mapeada como 'whatsapp preenchido'",
+    "100% dos leads acumulados completaram etapa 2 (whatsapp preenchido)",
+    "Nenhum lead confirmou email (email_confirmed = false em todos)",
+    "UTM tracking ausente - todos os leads entraram como 'direct'",
+    "0 leads nos ultimos 7 dias - alerta critico a 12 dias do soft launch (13/06)"
+  ],
+  "actions": [
+    "CRITICO: funil zerou esta semana - acionar distribuicao ativa (WhatsApp Beta, posts)",
+    "Verificar se formulario da landing esta funcional em prod (pode haver bug silencioso)",
+    "Ativar UTM em todos os links de divulgacao antes do soft launch",
+    "Investigar fluxo de confirmacao de email - 0% de confirmacao em 3 leads"
+  ]
+}
