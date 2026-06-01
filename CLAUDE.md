@@ -135,7 +135,7 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 - Side effects auto de ADD_ORDER (production task + transaction receita + estoque) — `core/flows/processOrder.ts` refactor pra Server Action
 - Writes em production / finance / inventory / products (mesmo bug auth, baixa prio pre-launch)
-- Reads completos via SSR initialState (ADR 030 — leads/orders/etc somem após F5 hoje)
+- ✅ ~~Reads completos via SSR initialState (ADR 030 — leads/orders/etc somem após F5)~~ — **Onda A minimal entregue 01/06** (branch `feature/store-ssr-initialstate-core` commit `4a74a74`, push origin, aguarda preview Vercel + CEO validar). 5 core puxados no SSR: orders/production/inventory/transactions/leads. Falta Onda B (lazy load secundários — já parcial via useStoreModule) + Onda C (invalidar cache ao trocar projeto) + passar projectId nas queries
 - Pin `@supabase/supabase-js` exato no package.json
 
 ### 🟠 Pré-launch público 27/06 (Blocos 5-6)
