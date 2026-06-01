@@ -1,0 +1,101 @@
+{
+  "data": "2026-06-01",
+  "rotina": "concorrencia-diaria",
+  "persona": "Rafael",
+  "status": "dados_parciais",
+  "nota_coleta": "Instagram bloqueou WebFetch (429). Dados de posts via WebSearch apenas (perfil-level). Reclame Aqui bloqueou listagem (403), dados via WebSearch indexado. Concorrentes de software coletados via site direto.",
+
+  "alertas": [
+    {
+      "id": "A1",
+      "prioridade": "ALTA",
+      "titulo": "3D Geek Show com curso ativo em oferta limitada (R$197 com timer 24h)",
+      "detalhe": "Curso 'Seu Negocio 3D com IA' em preco de lancamento R$197 (de R$497, 75% off). Inclui calculadora de precificacao como bonus (valor declarado R$97). Timer ativo de 24h visivel no site negociocomia.3dgeekshow.com.br. Com 128K seguidores no Instagram, alcance alto. Posicionamento direto no problema que o Hayzer resolve: maker que quer virar negocio, mas entrega curso pontual + planilha, nao software continuo.",
+      "impacto_hayzer": "Captura atencao do Rafael no momento de decisao. Pode convencer que planilha resolve -- ate o volume crescer e o caos instalar. Oportunidade: reforcar mensagem 'planilha nao escala' no Hayzer.",
+      "fonte": "https://negociocomia.3dgeekshow.com.br/"
+    },
+    {
+      "id": "A2",
+      "prioridade": "MEDIA",
+      "titulo": "AppCustos3D lanca integracao WhatsApp + rastreio publico de pedido",
+      "detalhe": "Plataforma ativa com plano PRO R$69.90/mes (ou R$36 com desconto semestral 6 meses). Features novas: G-code reader, importacao automatica de pedidos Shopee/Mercado Livre, proposta automatica via WhatsApp formatada, link publico de rastreio para o cliente. Plano Basic R$29.90/mes com inventario + calculadora.",
+      "impacto_hayzer": "AppCustos3D sobe o nivel: ja nao e so calculadora, tem fluxo de pedido e WhatsApp. Diferencial Hayzer: gestao completa (financeiro, producao, CRM) vs foco so em custo/pedido deles.",
+      "fonte": "https://appcustos3d.com.br/"
+    },
+    {
+      "id": "A3",
+      "prioridade": "MEDIA",
+      "titulo": "MakerFlow 3D oferta trial 7 dias sem cartao -- pressao de conversao",
+      "detalhe": "Plataforma de gestao completa para makers com trial gratuito 7 dias sem cartao. Preco: R$29.90/mes ou R$69.90/trimestre. Inclui: dashboard, vendas, estoque automatico, fila de producao visual, financeiro, analise de mercado com IA, integracoes ML e Shopee. Posicionamento: 'nao e ERP generico, e feito para impressao 3D'.",
+      "impacto_hayzer": "Direto concorrente no segmento maker. Preco similar ao Hayzer. Trial sem atrito remove barreira de entrada. Hayzer precisa ter trial igualmente acessivel ou onboarding mais rapido para competir.",
+      "fonte": "https://www.makerflow3d.com.br/"
+    }
+  ],
+
+  "posts_relevantes": [
+    {
+      "conta": "@3dgeekshow",
+      "plataforma": "blog/instagram",
+      "data_aproximada": "2026-05-31",
+      "titulo": "Dessa vez ela nem escondeu! (vlog China - Creality)",
+      "tipo": "vlog/reels",
+      "resumo": "Viagem a Shenzhen para aniversario de 12 anos da Creality. Posiciona o 3DGeekShow como referencia editorial do setor, com acesso privilegiado a fabricantes. Alta producao, alto alcance estimado.",
+      "relevancia_rafael": "Mostra que o canal investe em producao de conteudo premium com viagem internacional. Rafael (maker que quer escalar) consome esse tipo de conteudo. Oportunidade de Hayzer aparecer nesse contexto como ferramenta para quem quer crescer.",
+      "fonte": "https://3dgeekshow.com.br/blog/"
+    },
+    {
+      "conta": "@3dgeekshow",
+      "plataforma": "blog",
+      "data_aproximada": "2026-05-30",
+      "titulo": "5 ajustes no fatiador que acabam com o GHOSTING",
+      "tipo": "tutorial tecnico",
+      "resumo": "Tutorial pratico resolvendo problema de qualidade de impressao (ghosting) via ajustes no slicer. Conteudo de alto valor tecnico -- tipo de post que resolve dor real do maker.",
+      "relevancia_rafael": "Rafael no estagio pre-Hayzer busca muito conteudo tecnico. Esse formato (problema especifico + solucao direta) tem alto engajamento. Hayzer poderia criar conteudo complementar: 'depois de resolver o ghosting, como precificar essa peca?'",
+      "fonte": "https://3dgeekshow.com.br/blog/"
+    },
+    {
+      "conta": "@3dgeekshow",
+      "plataforma": "blog",
+      "data_aproximada": "2026-05-23",
+      "titulo": "Nova Patente da Creality MUDA a Impressao 3D Multicolor",
+      "tipo": "analise/noticia",
+      "resumo": "Analise da patente WO2026091002 sobre impressao multicolor. Sinal de que o canal cobre tendencias tecnicas do setor com profundidade. 128K seguidores -- alto impacto.",
+      "relevancia_rafael": "Maker avancado como Rafael acompanha evolucao tecnica. Impressao multicolor = mais complexidade de gestao de materiais = mais necessidade de software como Hayzer.",
+      "fonte": "https://3dgeekshow.com.br/blog/"
+    }
+  ],
+
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "tema_recorrente": "Sistema lento + suporte ineficaz",
+      "detalhe": "Multiplas reclamacoes ativas em reclameaqui.com.br sobre: (1) sistema caindo/lento toda semana, especialmente segunda-feira, causando perdas financeiras e atrasos no atendimento; (2) suporte com tempo medio de resposta de 9 dias -- usuarios reportam falta de resolucao apos varias tentativas; (3) plano de suporte prioritario pago criou percepcao de 'suporte normal deliberadamente piorado'; (4) problemas de integracao com marketplace; (5) falta de adaptacao a reforma tributaria 2026 (IBS/CBS). Empresa resolve 87.8% das reclamacoes mas leva ~10 dias.",
+      "oportunidade_hayzer": "Maker que usa Bling como ERP 'generico' esta frustrado com instabilidade e suporte ruim. Hayzer pode posicionar como 'feito para maker, nao para loja generica' -- onboarding mais rapido, suporte humano (Discord/WhatsApp), foco no problema real de quem imprime.",
+      "fontes": [
+        "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/",
+        "https://www.reclameaqui.com.br/bling/bling-erp-caindo-e-lento-toda-a-semana-e-a-mesma-historia_DMZFjiKlHP2knXCy/"
+      ]
+    },
+    {
+      "empresa": "AppCustos3D",
+      "tema_recorrente": "Sem reclamacoes encontradas (pequeno/novo)",
+      "detalhe": "Nenhuma reclamacao identificada no Reclame Aqui. Plataforma ainda em fase de crescimento. Pode indicar base de usuarios pequena ou satisfacao alta -- difícil determinar sem dados internos.",
+      "oportunidade_hayzer": "Janela de oportunidade: AppCustos3D esta subindo features rapidamente (WhatsApp, G-code, rastreio). Se Hayzer nao acelerar integracao WhatsApp + fluxo de pedido, gap vai fechar.",
+      "fontes": []
+    }
+  ],
+
+  "acao_recomendada": {
+    "para": ["Marcos", "Helena"],
+    "prazo": "amanha (02/06)",
+    "acao": "Criar post/stories comparando 'planilha vs software' para capturar audiencia do curso do 3DGeekShow",
+    "contexto": "O curso 'Seu Negocio 3D com IA' do 3DGeekShow esta com oferta de 24h ativa e inclui uma 'planilha de precificacao' como bonus. Makers em duvida entre curso+planilha vs software de gestao estao navegando essa decisao agora. Momento ideal para Hayzer aparecer com mensagem: 'a planilha resolve o mes 1. O Hayzer resolve quando voce cresce.' Pode ser Stories com enquete ou post carrossel direto comparando as duas abordagens. Tom: sem atacar o 3DGeekShow (parceiro potencial), mas posicionando a limitacao da planilha como natural na evolucao do maker.",
+    "kpi_esperado": "Capturar makers que estao no momento de decisao de ferramenta antes do soft launch 13/06"
+  },
+
+  "monitoramento_limitacoes": {
+    "instagram": "Bloqueio 429 -- nao foi possivel acessar posts especificos das ultimas 24h via WebFetch. Dados de conteudo via WebSearch indexado (atraso possivel). Recomendado: verificar manualmente os 5 perfis no app.",
+    "reclameaqui": "Listagem geral bloqueou (403). Dados de reclamacoes via WebSearch indexado -- podem ter ate 24-48h de atraso. Reclamacoes especificas de AppCustos3D/MakerFlow/PrintWorks3D/ZoomCalc3D/Custos3D nao encontradas (provavelmente sem pagina no RA por serem pequenos).",
+    "concorrentes_sem_dados": ["PrintWorks3D (site sem conteudo detalhado)", "ZoomCalc3D", "Custos3D (app iOS)", "3D Control"]
+  }
+}
