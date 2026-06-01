@@ -60,6 +60,13 @@ const ConvertLeadSchema = z.object({
   date:      z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 })
 
+// Drag-and-drop kanban: muda status do lead ao soltar em outra coluna.
+const UpdateLeadStatusSchema = z.object({
+  leadId:    z.string().min(1),
+  projectId: z.string().min(1),
+  newStatus: z.enum(LEAD_STATUSES),
+})
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function getAuthenticatedClient() {
@@ -139,6 +146,45 @@ export async function createLead(
   }
 
   return { success: true, lead }
+}
+
+// ─── Server Action: atualizar status do lead (drag-and-drop kanban) ──────────
+
+export async function updateLeadStatus(
+  rawInput: z.input<typeof UpdateLeadStatusSchema>,
+): Promise<
+  | { success: true }
+  | { success: false; error: string }
+> {
+  const parsed = UpdateLeadStatusSchema.safeParse(rawInput)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues.map(i => i.message).join(', ') }
+  }
+
+  let supabase, userId
+  try {
+    ({ supabase, userId } = await getAuthenticatedClient())
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  const { leadId, projectId, newStatus } = parsed.data
+
+  const { error } = await supabase
+    .from('leads')
+    .update({ status: newStatus })
+    .eq('id', leadId)
+    .eq('user_id', userId)
+    .eq('project_id', projectId)
+
+  if (error) {
+    return { success: false, error: `Erro ao atualizar status: ${error.message}` }
+  }
+
+  revalidatePath('/crm')
+  revalidatePath('/dashboard')
+
+  return { success: true }
 }
 
 // ─── Server Action: converter lead em pedido ──────────────────────────────────

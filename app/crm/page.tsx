@@ -24,7 +24,7 @@ import { useState, useMemo, useCallback, useTransition } from 'react'
 import { useStore, useStoreModule, uid }  from '@/lib/store'
 // Server Actions pro golden path (fix auth client travando em prod, 01/06/2026).
 // Workflow G7 wv1c1yo49 cravou essa rota como Plano A pre soft launch 13/06.
-import { createLead, convertLeadToOrder } from './actions'
+import { createLead, convertLeadToOrder, updateLeadStatus } from './actions'
 import type { Lead, LeadStatus, Order }   from '@/lib/types'
 import CrmLoading                         from './loading'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
@@ -347,6 +347,35 @@ export default function GlobalCrmPage() {
     [dispatch],
   )
 
+  /**
+   * Drag-and-drop: usuario arrastou card pra outra coluna no kanban.
+   * Optimistic update (rawDispatch instantaneo) + Server Action async.
+   * Se Server Action falhar, reverte (rollback rawDispatch volta status original).
+   */
+  const handleStatusChange = useCallback(
+    (l: Lead, newStatus: LeadStatus) => {
+      const previousStatus = l.status
+
+      // Optimistic: UI atualiza instantaneo (lead pula de coluna)
+      rawDispatch({ type: 'UPDATE_LEAD', payload: { ...l, status: newStatus } })
+
+      startTransition(async () => {
+        const result = await updateLeadStatus({
+          leadId:    l.id,
+          projectId: l.projectId,
+          newStatus,
+        })
+        if (!result.success) {
+          // Rollback: volta lead pro status original
+          rawDispatch({ type: 'UPDATE_LEAD', payload: { ...l, status: previousStatus } })
+          console.error('[CRM] updateLeadStatus falhou:', result.error)
+          alert('Erro ao mover lead: ' + result.error)
+        }
+      })
+    },
+    [rawDispatch],
+  )
+
   const handleCreate = useCallback(
     (d: LeadFormData) => {
       // Server Action (cookie-based auth, funciona em prod).
@@ -561,6 +590,7 @@ export default function GlobalCrmPage() {
                 onDelete={handleDelete}
                 onAdvance={handleAdvance}
                 onConvert={setConverting}
+                onStatusChange={handleStatusChange}
               />
             ) : (
               <LeadListView
