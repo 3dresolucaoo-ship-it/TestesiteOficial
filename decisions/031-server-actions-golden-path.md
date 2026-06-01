@@ -145,17 +145,28 @@ Modal fechou em 2s. Kanban moveu lead pra coluna "Ganho". KPI Conversão 0→100
 
 ---
 
-## Débitos abertos (NÃO atacar antes de 13/06)
+## Débitos — atualizado 01/06/2026 22h (continuação da mesma sessão)
 
-| Débito | Onde | Impacto pré-launch | Quando atacar |
+| Débito | Onde | Impacto | Status |
 |---|---|---|---|
-| UPDATE_LEAD via path antigo | `store.tsx:334` syncAction | Beta tester edita lead, "salva" mas não persiste | Bloco 5 (18-25/06) |
-| DELETE_LEAD via path antigo | `store.tsx:335-339` | Idem, mas pra deletar | Bloco 5 |
-| ADD_ORDER standalone (orders/page.tsx) | `services/orders.ts:create` | CEO cria pedido sem lead, não persiste | Bloco 5 (criar `app/orders/actions.ts`) |
-| UPDATE_ORDER / DELETE_ORDER | `store.tsx:276-303` | Edit/delete pedido falha | Bloco 5 |
-| production, finance, inventory, products | `services/*.ts` | Todo write em módulo interno falha | Bloco 5+ ou até pós-launch |
-| Reads (loadFromSupabase) | `store.tsx:524-540` | UI mostra estado vazio após F5 | Junto com ADR 030 |
-| Pin `@supabase/supabase-js` exato | `package.json` | Risco de pegar 2.107.x com bug novo | Quando voltar a tocar deps |
+| UPDATE_LEAD via path antigo | `store.tsx:334` syncAction | Editar lead não persistia | ✅ **FECHADO** — `updateLead` Server Action (commit d48f462) |
+| DELETE_LEAD via path antigo | `store.tsx:335-339` | Deletar lead não persistia | ✅ **FECHADO** — `deleteLead` Server Action (commit d48f462) |
+| ADD_ORDER standalone (orders/page.tsx) | `services/orders.ts:create` | Criar pedido sem lead não persistia | ✅ **FECHADO** — `createOrder` Server Action em `app/orders/actions.ts` (commit d48f462) |
+| UPDATE_ORDER / DELETE_ORDER | `store.tsx:276-303` | Edit/delete pedido falhava | ✅ **FECHADO** — `updateOrder` + `deleteOrder` Server Actions (commit d48f462) |
+| **Side effects de ADD_ORDER** (auto production task + transaction receita + decrement estoque) | `core/flows/processOrder.ts` | Pedido novo não cria production task auto | ⏳ **ABERTO** — Bloco 5 (refactor processOrder pra Server Action) |
+| production, finance, inventory, products writes | `services/*.ts` | Todo write em módulo interno falha | ⏳ Bloco 5+ ou pós-launch |
+| Reads (loadFromSupabase) | `store.tsx:524-540` | UI mostra estado vazio após F5 | ⏳ Junto com ADR 030 |
+| Pin `@supabase/supabase-js` exato | `package.json` | Risco de pegar 2.107.x com bug novo | ⏳ Quando voltar a tocar deps |
+
+### Resumo dos commits Server Actions da sessão 01/06
+
+1. `386ceb6` — createLead + convertLeadToOrder (golden path lead→pedido)
+2. `9164f8a` — updateLeadStatus (drag-and-drop kanban) + @dnd-kit
+3. `d48f462` — updateLead + deleteLead + createOrder + updateOrder + deleteOrder
+
+**Total**: 8 Server Actions cobrindo todo CRUD de leads + pedidos. Golden path
+completo + edição/deleção sem trampar em prod. Bug auth-js 2.106.0 contornado
+via cookie-based createServerClient em todos os writes críticos.
 
 ---
 
