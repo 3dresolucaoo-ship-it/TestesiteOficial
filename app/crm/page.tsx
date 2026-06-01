@@ -340,11 +340,28 @@ export default function GlobalCrmPage() {
     (l: Lead) => {
       const order: LeadStatus[] = ['new', 'contacted', 'negotiating', 'won']
       const i = order.indexOf(l.status)
-      if (i >= 0 && i < order.length - 1) {
-        dispatch({ type: 'UPDATE_LEAD', payload: { ...l, status: order[i + 1] } })
-      }
+      if (i < 0 || i >= order.length - 1) return
+
+      const nextStatus = order[i + 1]
+      const previousStatus = l.status
+
+      // Optimistic + Server Action + rollback (mesmo padrao do drag-and-drop)
+      rawDispatch({ type: 'UPDATE_LEAD', payload: { ...l, status: nextStatus } })
+
+      startTransition(async () => {
+        const result = await updateLeadStatus({
+          leadId:    l.id,
+          projectId: l.projectId,
+          newStatus: nextStatus,
+        })
+        if (!result.success) {
+          rawDispatch({ type: 'UPDATE_LEAD', payload: { ...l, status: previousStatus } })
+          console.error('[CRM] handleAdvance updateLeadStatus falhou:', result.error)
+          alert('Erro ao avancar lead: ' + result.error)
+        }
+      })
     },
-    [dispatch],
+    [rawDispatch],
   )
 
   /**
