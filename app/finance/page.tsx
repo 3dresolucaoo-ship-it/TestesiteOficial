@@ -19,8 +19,8 @@ export default async function FinancePage() {
   const user = await getUser()
   if (!user) redirect('/login')
 
-  const supabase                   = await createServerClient()
-  const { transactions, projects } = await loadInitialState(supabase, user.id)
+  const supabase    = await createServerClient()
+  const { state }   = await loadInitialState(supabase, user.id)
 
-  return <FinanceView initialTransactions={transactions} initialProjects={projects} />
+  return <FinanceView initialTransactions={state.transactions} initialProjects={state.projects} />
 }

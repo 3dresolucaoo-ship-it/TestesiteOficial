@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
-import { StoreProvider, useStore } from '@/lib/store'
+import { StoreProvider, useStore, type LazyModuleKey } from '@/lib/store'
 import { V4Shell } from '@/components/dashboard/v4/V4Shell'
 import { OnboardingController } from '@/components/onboarding/OnboardingController'
 import { AlertTriangle, X } from 'lucide-react'
@@ -190,11 +190,18 @@ function V4ShellAdapter({ children }: { children: ReactNode }) {
 export function AppShell({
   children,
   initialState,
+  preloadedKeys,
 }: {
   children: ReactNode
   /** SSR-fetched store state injected by RootLayout. Eliminates the F5 flash
    *  of empty data on pages that read directly from useStore(). */
   initialState?: AppState | null
+  /** Lazy modules pre-loaded by SSR (orders, production, inventory, transactions,
+   *  leads). StoreProvider marks only these as 'loaded' — others stay 'idle'
+   *  and dispatch on-demand fetch via useStoreModule. Fixes ADR 031 bug
+   *  "F5 some dados" where non-fetched modules were incorrectly marked as
+   *  loaded with empty arrays. */
+  preloadedKeys?: LazyModuleKey[]
 }) {
   const { loading } = useAuth()
   const pathname    = usePathname()
@@ -215,7 +222,7 @@ export function AppShell({
   if (loading) return <LoadingScreen />
 
   return (
-    <StoreProvider initialState={initialState}>
+    <StoreProvider initialState={initialState} preloadedKeys={preloadedKeys}>
       <V4ShellAdapter>{children}</V4ShellAdapter>
       <DbErrorToast />
       <OnboardingController />

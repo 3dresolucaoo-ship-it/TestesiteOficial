@@ -11,7 +11,7 @@ import { ServiceWorkerRegister } from '@/components/ServiceWorkerRegister'
 import { getUser }           from '@/lib/auth'
 import { createServerClient } from '@/lib/supabaseServer'
 import { loadInitialState }  from '@/lib/serverDataLoader'
-import type { AppState }     from '@/lib/types'
+import type { InitialStateBundle } from '@/lib/serverDataLoader'
 
 // Fonts loading otimizado (20/05/2026 — Lighthouse audit LCP fix):
 //   display: 'swap'  -> fallback aparece, troca quando custom carrega (zero FOIT)
@@ -131,12 +131,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Pre-fetch the full app state SSR for authenticated users so the client store
   // starts already populated. LayoutSwitch decides whether to wrap with AppShell
   // (auth) or render naked (landing pública).
-  let initialState: AppState | null = null
+  //
+  // Bundle inclui preloadedKeys — quais módulos lazy o SSR puxou (orders,
+  // production, inventory, transactions, leads no path atual). Módulos fora
+  // dessa lista ficam 'idle' no client e disparam fetch on-demand via
+  // useStoreModule. Sem isso, F5 mostraria empty state nos módulos lazy
+  // (bug ADR 031).
+  let initialBundle: InitialStateBundle | null = null
   try {
     const user = await getUser()
     if (user) {
       const supabase = await createServerClient()
-      initialState   = await loadInitialState(supabase, user.id)
+      initialBundle  = await loadInitialState(supabase, user.id)
     }
   } catch (err) {
     console.error('[RootLayout] SSR state prefetch failed:', err)
@@ -147,7 +153,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen antialiased" suppressHydrationWarning>
         <PostHogProvider>
           <ThemeProvider>
-            <LayoutSwitch initialState={initialState}>
+            <LayoutSwitch
+              initialState={initialBundle?.state ?? null}
+              preloadedKeys={initialBundle?.preloadedKeys ?? []}
+            >
               {children}
             </LayoutSwitch>
           </ThemeProvider>

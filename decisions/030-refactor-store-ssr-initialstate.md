@@ -1,8 +1,39 @@
 # ADR 030 — Refactor store.tsx: SSR initialState + projectId
 
-> Status: PROPOSED (aguarda execução Bloco 5 — 18-25/06)
-> Data: 2026-05-29 (noite, descoberto pós-deploy prod)
-> Autor: Claude (Opus 4.7) · Aprovado: CEO Gabriel (ack visual /orders skeleton "eternal")
+> Status: **ACCEPTED PARCIAL** — Onda A minimal entregue 2026-06-01 (branch `feature/store-ssr-initialstate-core`). Onda B e C + passar projectId continuam aguardando Bloco 5 (18-25/06).
+> Data: 2026-05-29 (criado) · 2026-06-01 (Onda A minimal entregue)
+> Autor: Claude (Opus 4.7) · Aprovado: CEO Gabriel (ack visual /orders skeleton "eternal" + ack execução Onda A minimal 01/06)
+
+---
+
+## Status execução
+
+### ✅ Onda A minimal — entregue 2026-06-01
+
+Resolve o sintoma raiz do bug ADR 031 "dados somem após F5". Escopo reduzido vs. plano original pra caber no timebox pré-soft launch:
+
+- `lib/serverDataLoader.ts`: expandido de 2 → 7 queries (projects + config + **orders + production + inventory + transactions + leads**). Retorna `InitialStateBundle = { state, preloadedKeys }`.
+- `lib/store.tsx`: `StoreProvider` aceita prop nova `preloadedKeys?: LazyModuleKey[]`. Marca como 'loaded' SÓ os módulos em preloadedKeys — antes marcava TODOS, causando empty state nos não-puxados.
+- `app/layout.tsx` + `components/LayoutSwitch.tsx` + `components/AppShell.tsx`: propagam o bundle.
+- `app/finance/page.tsx` + `app/projects/page.tsx` + `app/settings/page.tsx`: atualizadas pra `(await loadInitialState).state.xxx`. Bônus: **conserta bug latente** — antes recebiam orders/transactions vazios do loader e silenciosamente mostravam empty state.
+- `app/catalogs/page.tsx`: usa `loadCatalogsForUser` + `loadProductsForUser` (já existentes em serverDataLoaderLazy.ts) pra puxar dados reais. Antes recebia vazios.
+
+**NÃO incluído** (Onda B+C — pós soft launch 13/06):
+- Passar projectId nas queries (mantém padrão filtragem na UI; débito conhecido)
+- Lazy load por módulo trocando projeto ativo
+- Invalidar cache ao mudar projeto
+
+**Validação build**: TSC zero erros, `npm run build` completa 50 pages.
+
+**Validação prod**: pendente — branch `feature/store-ssr-initialstate-core` aguarda deploy preview Vercel + CEO confirmar via F5 em /crm e /orders após criar lead/pedido via Server Action.
+
+### ⏳ Onda B — Lazy load secundários (já parcialmente entregue)
+
+`useStoreModule()` JÁ existe (Onda Perf 2, 2026-05-20) — content, decisions, affiliates, movements, products, catalogs disparam fetch on-demand quando page monta. Pós Onda A minimal, esses módulos ficam 'idle' no boot (antes ficavam 'loaded' com array vazia, mascarando o bug de F5).
+
+### ⏳ Onda C — Trocar projeto ativo (Bloco 5)
+
+Sem execução. Atacado depois do soft launch.
 
 ---
 

@@ -5,6 +5,7 @@ import { useEffect, type ReactNode } from 'react'
 import { AppShell } from '@/components/AppShell'
 import { AuthProvider } from '@/context/AuthContext'
 import type { AppState } from '@/lib/types'
+import type { LazyModuleKey } from '@/lib/store'
 
 const MARKETING_PATHS = ['/', '/waitlist', '/privacidade', '/termos', '/calculadora', '/mockups']
 
@@ -24,9 +25,11 @@ function isV4Path(pathname: string) {
 export function LayoutSwitch({
   children,
   initialState,
+  preloadedKeys,
 }: {
   children: ReactNode
   initialState: AppState | null
+  preloadedKeys: LazyModuleKey[]
 }) {
   const pathname    = usePathname()
   const isMarketing = isMarketingPath(pathname)
@@ -59,7 +62,9 @@ export function LayoutSwitch({
 
   return (
     <AuthProvider>
-      <AppShell initialState={initialState}>{children}</AppShell>
+      <AppShell initialState={initialState} preloadedKeys={preloadedKeys}>
+        {children}
+      </AppShell>
     </AuthProvider>
   )
 }

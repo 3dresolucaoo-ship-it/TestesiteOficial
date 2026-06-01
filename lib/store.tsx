@@ -462,12 +462,18 @@ const STORAGE_KEY  = 'bvaz-hub-v2'
 export function StoreProvider({
   children,
   initialState,
+  preloadedKeys,
 }: {
   children: ReactNode
   /** SSR-fetched state injected by the root layout. When provided, the client
    *  starts already populated and skips the async hydration step entirely —
    *  pages that read `state` directly never see a flash of EMPTY_STATE. */
   initialState?: AppState | null
+  /** Módulos lazy que foram puxados pelo SSR. Apenas esses ficam 'loaded' —
+   *  os demais ficam 'idle' e disparam fetch on-demand via useStoreModule
+   *  quando a page que precisa deles é montada. Sem isso, módulos não-puxados
+   *  ficariam 'loaded' com array vazia (bug "F5 some dados" do ADR 031). */
+  preloadedKeys?: LazyModuleKey[]
 }) {
   // SSR state takes priority. Falls back to EMPTY_STATE when Supabase is
   // configured (so users never see stale mock data) or to mock initialData
@@ -513,26 +519,18 @@ export function StoreProvider({
   // Usada apenas quando NAO ha initialState SSR. Carrega tudo de uma vez.
   useEffect(() => {
     // SSR already populated the store — skip client-side hydration entirely.
-    // CRITICAL: Also mark all lazy modules as 'loaded' so useStoreModule()
-    // doesn't keep them in isLoading=true forever. Without this, pages that
-    // gate render on useStoreModule (orders, crm, production, etc) get stuck
-    // in skeleton eternal because:
-    //   1. initialState path skips setModuleStatus({...'loaded'})
-    //   2. useStoreModule reads moduleStatus[key]=undefined → isLoading=true
-    //   3. useEffect triggers loadModule(key) → MODULE_FETCHERS calls
-    //      ordersService.getAll() → calls requireUserId() → calls
-    //      supabase.auth.getUser() which is currently timing out in prod (12s)
-    //   4. fetcher never resolves → moduleStatus stays 'loading' forever
-    //   5. Skeleton renders forever, user sees broken page
-    // Marking as 'loaded' bypasses the lazy fetch (data already came via
-    // initialState in app/layout.tsx → lib/serverDataLoader.ts).
+    // CRITICAL: Marca como 'loaded' SÓ as keys que vieram preenchidas pelo
+    // SSR. Antes (01/06) marcava TODAS, mas isso causava bug "F5 some dados"
+    // (ADR 031): módulo não-puxado ficava 'loaded' com array vazia, e
+    // useStoreModule nem disparava fetch. Agora SSR puxa 5 núcleo (orders,
+    // production, inventory, transactions, leads) e marca só essas — demais
+    // ficam 'idle' e disparam fetch on-demand quando a page é montada.
     if (initialState) {
-      setModuleStatus({
-        orders:       'loaded', production: 'loaded', content:  'loaded',
-        decisions:    'loaded', transactions: 'loaded', leads:   'loaded',
-        affiliates:   'loaded', inventory:   'loaded', movements: 'loaded',
-        products:     'loaded', catalogs:    'loaded',
-      })
+      const status: ModuleStatusMap = {}
+      for (const key of (preloadedKeys ?? [])) {
+        status[key] = 'loaded'
+      }
+      setModuleStatus(status)
       return
     }
     async function hydrate() {

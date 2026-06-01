@@ -20,15 +20,15 @@ export default async function SettingsPage() {
   const user = await getUser()
   if (!user) redirect('/login')
 
-  const supabase                                       = await createServerClient()
-  const { config, projects, orders, transactions }     = await loadInitialState(supabase, user.id)
+  const supabase  = await createServerClient()
+  const { state } = await loadInitialState(supabase, user.id)
 
   return (
     <SettingsShell
-      initialConfig={config}
-      projectsCount={projects.length}
-      ordersCount={orders.length}
-      transactionsCount={transactions.length}
+      initialConfig={state.config}
+      projectsCount={state.projects.length}
+      ordersCount={state.orders.length}
+      transactionsCount={state.transactions.length}
     />
   )
 }

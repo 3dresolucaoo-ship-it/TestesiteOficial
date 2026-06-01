@@ -8,14 +8,14 @@ export default async function ProjectsPage() {
   const user = await getUser()
   if (!user) redirect('/login')
 
-  const supabase                     = await createServerClient()
-  const { projects, transactions, orders } = await loadInitialState(supabase, user.id)
+  const supabase  = await createServerClient()
+  const { state } = await loadInitialState(supabase, user.id)
 
   return (
     <ProjectsView
-      initialProjects={projects}
-      initialTransactions={transactions}
-      initialOrders={orders}
+      initialProjects={state.projects}
+      initialTransactions={state.transactions}
+      initialOrders={state.orders}
     />
   )
 }
