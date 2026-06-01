@@ -181,6 +181,11 @@
 
 ## 🔴 CRÍTICOS — fazer ASAP
 
+### Detectados em audit 2026-06-01
+- [ ] **[VERCEL_API_TOKEN ausente]** — error scan falha há 10 dias consecutivos (22/05→01/06). Zero visibilidade de erros em prod. Configurar no ambiente do agente de monitoramento. — detectado em audit 2026-06-01 · arquivo: `monitoring/error-scan-2026-06-01.md`
+- [ ] **[Migration onboarding status incerto]** — `20260520_user_settings_onboarding.sql` pode não ter sido aplicada em prod. Onboarding wizard 4-steps depende dela. CEO confirmar via Supabase MCP: `SELECT * FROM user_settings LIMIT 1` — detectado em audit 2026-06-01 · arquivo: `supabase/migrations/20260520_user_settings_onboarding.sql`
+- [ ] **[Sentry DSN não configurado em prod]** — `sentry.client.config.ts` pronto mas sem DSN real no Vercel. Zero error tracking até launch. Ver ADR-025 — detectado em audit 2026-06-01 · arquivo: `_sentry-prepared/sentry.client.config.ts`
+
 ### Schema do banco
 - [x] **Migration `orders` e-commerce columns**: `20260504_orders_ecommerce_columns.sql` ✅ 2026-05-04
 - [x] **Criar tabelas `portfolios` + `portfolio_items`**: `20260504_portfolios.sql` ✅ 2026-05-04

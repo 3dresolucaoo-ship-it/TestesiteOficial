@@ -5,19 +5,22 @@
 
 ---
 
-## 📅 Audits arquivados
+## 📅 Audits
 
-| Data | Arquivo | Bugs críticos | Itens cleanup |
-|---|---|---|---|
-| 2026-05-04 | `audits/2026-05-04.md` | 6 | 10+ |
+| Data | Arquivo | Bugs críticos | Itens importantes | Score médio |
+|---|---|---|---|---|
+| 2026-06-01 | `audits/2026-06-01.md` | 3 (B1-B3) | 10 (P1-P10) | **8.0** |
+| 2026-05-04 | `audits/2026-05-04.md` | 6 | 9 | ~7.3 (est.) |
 
 ---
 
-## 📈 Tendência
+## 📈 Tendência (2 audits)
 
-> Atualizar quando tiver 2+ audits.
-
-- _Sem dados suficientes ainda — primeiro audit em 2026-05-04._
+- **Score médio**: 7.3 → **8.0** (+0.7 em 28 dias) — maior salto em Conversão (+1.8) e Performance (+1.0)
+- **Bugs críticos**: 6 → 3 (−3) — resolvidos 6, abertos 3 novos (infra/observabilidade, não produto)
+- **Cobertura de produto**: ~50% (mai) → ~65% (jun) — estimativa CEO em CLAUDE.md
+- **Commits**: 124 em 28 dias = média de 4,4 commits/dia — alta velocidade
+- **Migrations**: 4 → 24 (+20) — DB amadurecendo rapidamente
 
 ---
 
@@ -25,15 +28,30 @@
 
 > Sinaliza dívida técnica que não está sendo resolvida.
 
-- _A preencher conforme audits forem rodando._
+- **`app/showcase/page.tsx`** — presente desde mai/04 sem ser removido (era M4, agora P6)
+- **`lib/mockData.ts`** — presente nos 2 audits, ainda referenciado em store.tsx
+- **README.md template** — presente nos 2 audits sem atualização
+- **QA mobile** — mencionado no primeiro audit indiretamente, explícito no segundo como P3 crítico pré-launch
+- **Testes (vitest/playwright)** — ausentes em ambos os audits; ROADMAP projeta Fase 4
 
 ---
 
-## ✅ Itens resolvidos entre audits
+## ✅ Itens resolvidos entre audits (mai → jun)
 
-> Quando um item de audit anterior some no novo audit, registrar aqui.
-
-- _A preencher._
+- B1 orders e-commerce columns ausentes → ✅ migration 20260504
+- B2 portfolios/portfolio_items ausentes → ✅ migration 20260504
+- B3 inventory.image_url ausente → ✅ migration 20260504
+- B6 NEXT_PUBLIC_APP_URL localhost em prod → ✅ Vercel atualizado
+- P1 /api/content/sync sem auth → ✅ hardened (Zod + server client + getUser)
+- P2 Stripe legado duplicado → ✅ removido
+- P3 console.log em products.ts → ✅ removido
+- SettingsView.tsx 999→238 linhas → ✅ quebrado em sub-tabs
+- inventory/page.tsx 1472→514 linhas → ✅ refatorado
+- products/page.tsx 1028→411 linhas → ✅ refatorado
+- Sem Zod nas APIs → ✅ 8+ schemas (apiSchemas.ts)
+- Sem rate limiting → ✅ DB-based aplicado (apiRateLimit.ts)
+- Sem transaction atômica webhook → ✅ RPC process_webhook_atomic
+- Métricas inconsistentes dashboard → ✅ labels clarificados
 
 ---
 
