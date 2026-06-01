@@ -513,7 +513,28 @@ export function StoreProvider({
   // Usada apenas quando NAO ha initialState SSR. Carrega tudo de uma vez.
   useEffect(() => {
     // SSR already populated the store — skip client-side hydration entirely.
-    if (initialState) return
+    // CRITICAL: Also mark all lazy modules as 'loaded' so useStoreModule()
+    // doesn't keep them in isLoading=true forever. Without this, pages that
+    // gate render on useStoreModule (orders, crm, production, etc) get stuck
+    // in skeleton eternal because:
+    //   1. initialState path skips setModuleStatus({...'loaded'})
+    //   2. useStoreModule reads moduleStatus[key]=undefined → isLoading=true
+    //   3. useEffect triggers loadModule(key) → MODULE_FETCHERS calls
+    //      ordersService.getAll() → calls requireUserId() → calls
+    //      supabase.auth.getUser() which is currently timing out in prod (12s)
+    //   4. fetcher never resolves → moduleStatus stays 'loading' forever
+    //   5. Skeleton renders forever, user sees broken page
+    // Marking as 'loaded' bypasses the lazy fetch (data already came via
+    // initialState in app/layout.tsx → lib/serverDataLoader.ts).
+    if (initialState) {
+      setModuleStatus({
+        orders:       'loaded', production: 'loaded', content:  'loaded',
+        decisions:    'loaded', transactions: 'loaded', leads:   'loaded',
+        affiliates:   'loaded', inventory:   'loaded', movements: 'loaded',
+        products:     'loaded', catalogs:    'loaded',
+      })
+      return
+    }
     async function hydrate() {
       if (isSupabaseConfigured) {
         // Race against a fallback timer that RESOLVES (not rejects) with
