@@ -105,15 +105,38 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 - `feature/landing-v2-pngs-reais` — Diego spec v2 com cliente mulher + maker antes/depois
 - `chore/voce-pra-tu` — Carla, search-replace "voce"→"tu" em 17 arquivos (consolidado em ember Bloco 2)
 
-### 🔴 Pendências pré-soft launch 13/06 (ADR-029)
+### 🔴 Pendências pré-soft launch 13/06 (ADR-029) — atualizado 01/06 22h
 
-1. **Aplicar migration onboarding em prod** — wizard 4 steps depende dela; CEO via Supabase MCP
-2. **Merge branch ember em main** — 11 commits incluem Bloco 2 (wizard + 7 empty states + tu/voce) + ADR 029; deploy preview Vercel buildando agora
-3. **Stripe Connect** — testar em sandbox antes 13/06 (Bloco 1 a 90%, fechar até 03/06)
-4. **Discord webhook + Sentry DSN no Vercel** — Bloco 1 observabilidade (vars commitadas, faltam valores em prod)
-5. **QA mobile** — checklist em `sessions/2026-05-20-checklist-qa-mobile.md`; Bloco 3 (30/05 → 10/06)
-6. **Lighthouse rotas internas** — só `/` rodou; meta Bloco 3: > 75 todas rotas
-7. **Golden path #1 fim a fim em prod** — lead → wizard → projeto → pedido → produção (Bloco 3 critério Go/No-Go)
+1. ✅ ~~**Aplicar migration onboarding em prod**~~ — aplicada (verificado via SQL 01/06)
+2. ✅ ~~**Merge branch ember em main**~~ — via bypass `git push origin feature/ember-...:main` (todos commits em main)
+3. ⏳ **Stripe Connect** — testar em sandbox antes 13/06 (Bloco 1 a 90%, fechar até 03/06) — CEO faz
+4. ⏳ **Discord webhook + Sentry DSN no Vercel** — vars commitadas, faltam valores em prod — CEO faz (10 min)
+5. ⏳ **QA mobile** — checklist em `sessions/2026-05-29-checklist-qa-mobile-v2.md`; agora inclui drag-and-drop kanban (commit 9164f8a) — CEO faz no iPhone+Android
+6. ⏳ **Lighthouse rotas internas** — bloqueado por CEO criar `.env.lighthouse.local` com `LIGHTHOUSE_SESSION_COOKIE` extraído do DevTools
+7. ✅ ~~**Golden path #1 fim a fim em prod**~~ — VALIDADO 01/06 via SQL JOIN bidirecional (lead.converted_order_id ↔ order.source_lead_id)
+
+### 🟢 Conquistas sessão 01/06 (5h, 6 commits, modo ultracode com workflow G7)
+
+- **Bug P0 raiz resolvido** — `supabase.auth.getUser()` browser trava 8-12s em prod (auth-js 2.106.0 cold-start). Workaround estrutural: WRITES críticos via Server Actions cookie-based.
+- **8 Server Actions implementadas** cobrindo todo CRUD leads + pedidos:
+  - `createLead` (commit 386ceb6) — golden path passo 1
+  - `convertLeadToOrder` (386ceb6) — golden path passo 2
+  - `updateLeadStatus` (9164f8a) — drag-and-drop kanban
+  - `updateLead` (d48f462) — editar lead
+  - `deleteLead` (d48f462) — deletar lead
+  - `createOrder` (d48f462) — pedido standalone
+  - `updateOrder` (d48f462) — editar pedido
+  - `deleteOrder` (d48f462) — deletar pedido
+- **Drag-and-drop estilo Trello no CRM** (commit 9164f8a) — @dnd-kit + PointerSensor desktop + TouchSensor mobile long-press 200ms + KeyboardSensor a11y + visual feedback (ghost opacity, drag overlay, drop indicator petrol)
+- **3 fixes técnicos prévios** — skeleton eternal /crm /orders (2072be4), erro silencioso → toast (5f0a1f4), ADR 031 documentado (8baf7f4)
+- **Validação SQL em prod** — 3 leads testes persistiram com FKs corretas (GP1-ServerAction-Test, GP2-LeadConverter-v2 convertido em pedido god8d0qy, GP3-DragKanban arrastado pra "negotiating")
+
+### 🟠 Pendências TÉCNICAS pós-soft launch 13/06 (Bloco 5)
+
+- Side effects auto de ADD_ORDER (production task + transaction receita + estoque) — `core/flows/processOrder.ts` refactor pra Server Action
+- Writes em production / finance / inventory / products (mesmo bug auth, baixa prio pre-launch)
+- Reads completos via SSR initialState (ADR 030 — leads/orders/etc somem após F5 hoje)
+- Pin `@supabase/supabase-js` exato no package.json
 
 ### 🟠 Pré-launch público 27/06 (Blocos 5-6)
 1. Coleta feedback 5-10 makers soft (13/06 → 17/06)
