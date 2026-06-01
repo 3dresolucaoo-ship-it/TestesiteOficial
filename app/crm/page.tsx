@@ -24,7 +24,7 @@ import { useState, useMemo, useCallback, useTransition } from 'react'
 import { useStore, useStoreModule, uid }  from '@/lib/store'
 // Server Actions pro golden path (fix auth client travando em prod, 01/06/2026).
 // Workflow G7 wv1c1yo49 cravou essa rota como Plano A pre soft launch 13/06.
-import { createLead, convertLeadToOrder, updateLeadStatus } from './actions'
+import { createLead, convertLeadToOrder, updateLeadStatus, updateLead, deleteLead } from './actions'
 import type { Lead, LeadStatus, Order }   from '@/lib/types'
 import CrmLoading                         from './loading'
 import { LEAD_STATUS_LABELS, CONTACT_SOURCE_LABELS } from '@/lib/types'
@@ -413,28 +413,65 @@ export default function GlobalCrmPage() {
   const handleEdit = useCallback(
     (d: LeadFormData) => {
       if (!editing) return
-      dispatch({
-        type: 'UPDATE_LEAD',
-        payload: {
-          ...editing,
-          projectId: d.projectId,
-          name:      d.name,
-          contact:   d.contact,
-          source:    d.source,
-          status:    d.status,
-          value:     parseFloat(d.value) || 0,
-          notes:     d.notes,
-          date:      d.date,
-        },
-      })
+      const updatedPayload = {
+        ...editing,
+        projectId: d.projectId,
+        name:      d.name,
+        contact:   d.contact,
+        source:    d.source,
+        status:    d.status,
+        value:     parseFloat(d.value) || 0,
+        notes:     d.notes,
+        date:      d.date,
+      }
+
+      // Optimistic: UI atualiza na hora; Server Action persiste async; rollback se falhar
+      const previous = editing
+      rawDispatch({ type: 'UPDATE_LEAD', payload: updatedPayload })
       setEditing(null)
+
+      startTransition(async () => {
+        const result = await updateLead({
+          id:        updatedPayload.id,
+          projectId: updatedPayload.projectId,
+          name:      updatedPayload.name,
+          contact:   updatedPayload.contact,
+          source:    updatedPayload.source,
+          status:    updatedPayload.status,
+          value:     updatedPayload.value,
+          notes:     updatedPayload.notes,
+          date:      updatedPayload.date,
+        })
+        if (!result.success) {
+          rawDispatch({ type: 'UPDATE_LEAD', payload: previous })
+          console.error('[CRM] updateLead falhou:', result.error)
+          alert('Erro ao salvar edicao: ' + result.error)
+        }
+      })
     },
-    [editing, dispatch],
+    [editing, rawDispatch],
   )
 
   const handleDelete = useCallback(
-    (id: string) => dispatch({ type: 'DELETE_LEAD', payload: id }),
-    [dispatch],
+    (id: string) => {
+      // Precisa do projectId pro guard multi-tenant — buscar no state
+      const lead = state.leads.find((l) => l.id === id)
+      if (!lead) return
+
+      // Optimistic delete
+      const previous = lead
+      rawDispatch({ type: 'DELETE_LEAD', payload: id })
+
+      startTransition(async () => {
+        const result = await deleteLead({ id, projectId: lead.projectId })
+        if (!result.success) {
+          rawDispatch({ type: 'ADD_LEAD', payload: previous })
+          console.error('[CRM] deleteLead falhou:', result.error)
+          alert('Erro ao deletar lead: ' + result.error)
+        }
+      })
+    },
+    [state.leads, rawDispatch],
   )
 
   /**

@@ -19,9 +19,13 @@
  * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
  */
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback, useEffect, useTransition } from 'react'
 import { useRouter, useSearchParams }     from 'next/navigation'
 import { useStore, useStoreModule, uid }  from '@/lib/store'
+// Server Actions pro CRUD pedidos (fix auth client travando em prod, 01/06).
+// Side effects de ADD_ORDER (auto production task + transaction + estoque)
+// NAO sao replicados aqui — ficam pra Bloco 5 / ADR 030 (refactor processOrder).
+import { createOrder, updateOrder, deleteOrder } from './actions'
 import { isSupabaseConfigured }           from '@/lib/supabaseClient'
 import OrdersLoading                      from './loading'
 import type { Order, OrderStatus }        from '@/lib/types'
@@ -442,7 +446,8 @@ function DesktopTable({ orders, allOrdersCount, projectName, menuOpen, onMenuTog
 // ---------------------------------------------------------------------------
 
 export default function OrdersPage() {
-  const { state, dispatch } = useStore()
+  const { state, dispatch, rawDispatch } = useStore()
+  const [, startTransition] = useTransition()
   // P2.2 — lazy load do modulo orders. Exibe skeleton enquanto carrega.
   const { isLoading: ordersLoading } = useStoreModule('orders')
   const router       = useRouter()
@@ -639,14 +644,35 @@ export default function OrdersPage() {
         qtyUsed:         data.inventoryItemId ? (parseFloat(data.qtyUsed) || 1) : undefined,
         productId:       product?.id,
         productionCost,
+        source:          'manual',
       }
 
-      dispatch({ type: 'ADD_ORDER', payload: order })
+      startTransition(async () => {
+        const result = await createOrder({
+          id:              order.id,
+          projectId:       order.projectId,
+          clientName:      order.clientName,
+          origin:          order.origin,
+          item:            order.item,
+          value:           order.value,
+          status:          order.status,
+          date:            order.date,
+          inventoryItemId: order.inventoryItemId,
+          qtyUsed:         order.qtyUsed,
+          productId:       order.productId,
+          productionCost:  order.productionCost,
+        })
+        if (!result.success) {
+          console.error('[Orders] createOrder Server Action falhou:', result.error)
+          alert('Erro ao criar pedido: ' + result.error)
+          return
+        }
+        // DB ja escrito — rawDispatch atualiza store local sem disparar syncAction
+        rawDispatch({ type: 'ADD_ORDER', payload: result.order })
 
-      // Efeitos colaterais local-only (syncAction lida com Supabase mode)
-      if (!isSupabaseConfigured) {
-        if (product) {
-          dispatch({
+        // Efeitos colaterais local-only (mantido pra modo dev sem Supabase)
+        if (!isSupabaseConfigured && product) {
+          rawDispatch({
             type: 'ADD_PRODUCTION',
             payload: {
               id:             uid(),
@@ -661,11 +687,11 @@ export default function OrdersPage() {
             },
           })
         }
-      }
 
-      setCreating(false)
+        setCreating(false)
+      })
     },
-    [state.products, state.inventory, state.production, dispatch],
+    [state.products, state.inventory, state.production, rawDispatch],
   )
 
   const handleEdit = useCallback(
@@ -678,34 +704,71 @@ export default function OrdersPage() {
         ? calcUnitCost(product, state.inventory).totalCost
         : editing.productionCost
 
-      dispatch({
-        type: 'UPDATE_ORDER',
-        payload: {
-          ...editing,
-          projectId:       data.projectId,
-          clientName:      data.clientName,
-          origin:          data.origin,
-          item:            data.item,
-          value:           parseFloat(data.value) || 0,
-          status:          data.status,
-          date:            data.date,
-          inventoryItemId: data.inventoryItemId || undefined,
-          qtyUsed:         data.inventoryItemId ? (parseFloat(data.qtyUsed) || 1) : undefined,
-          productId:       product?.id,
-          productionCost,
-        },
-      })
+      const updatedOrder: Order = {
+        ...editing,
+        projectId:       data.projectId,
+        clientName:      data.clientName,
+        origin:          data.origin,
+        item:            data.item,
+        value:           parseFloat(data.value) || 0,
+        status:          data.status,
+        date:            data.date,
+        inventoryItemId: data.inventoryItemId || undefined,
+        qtyUsed:         data.inventoryItemId ? (parseFloat(data.qtyUsed) || 1) : undefined,
+        productId:       product?.id,
+        productionCost,
+      }
+
+      // Optimistic update
+      const previous = editing
+      rawDispatch({ type: 'UPDATE_ORDER', payload: updatedOrder })
       setEditing(null)
+
+      startTransition(async () => {
+        const result = await updateOrder({
+          id:              updatedOrder.id,
+          projectId:       updatedOrder.projectId,
+          clientName:      updatedOrder.clientName,
+          origin:          updatedOrder.origin,
+          item:            updatedOrder.item,
+          value:           updatedOrder.value,
+          status:          updatedOrder.status,
+          date:            updatedOrder.date,
+          inventoryItemId: updatedOrder.inventoryItemId,
+          qtyUsed:         updatedOrder.qtyUsed,
+          productId:       updatedOrder.productId,
+          productionCost:  updatedOrder.productionCost,
+        })
+        if (!result.success) {
+          rawDispatch({ type: 'UPDATE_ORDER', payload: previous })
+          console.error('[Orders] updateOrder falhou:', result.error)
+          alert('Erro ao salvar edicao: ' + result.error)
+        }
+      })
     },
-    [editing, state.products, state.inventory, dispatch],
+    [editing, state.products, state.inventory, rawDispatch],
   )
 
   const handleDelete = useCallback(
     (id: string) => {
-      dispatch({ type: 'DELETE_ORDER', payload: id })
+      const order = state.orders.find((o) => o.id === id)
+      if (!order) return
+
+      // Optimistic delete
+      const previous = order
+      rawDispatch({ type: 'DELETE_ORDER', payload: id })
       setMenuOpen(null)
+
+      startTransition(async () => {
+        const result = await deleteOrder({ id, projectId: order.projectId })
+        if (!result.success) {
+          rawDispatch({ type: 'ADD_ORDER', payload: previous })
+          console.error('[Orders] deleteOrder falhou:', result.error)
+          alert('Erro ao deletar pedido: ' + result.error)
+        }
+      })
     },
-    [dispatch],
+    [state.orders, rawDispatch],
   )
 
   const handleMenuToggle = useCallback(

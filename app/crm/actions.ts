@@ -67,6 +67,25 @@ const UpdateLeadStatusSchema = z.object({
   newStatus: z.enum(LEAD_STATUSES),
 })
 
+// Atualizar campos completos de um lead (editar via formulario).
+const UpdateLeadSchema = z.object({
+  id:        z.string().min(1),
+  projectId: z.string().min(1),
+  name:      z.string().min(1, 'Nome obrigatorio'),
+  contact:   z.string().default(''),
+  source:    z.enum(CONTACT_SOURCES),
+  status:    z.enum(LEAD_STATUSES),
+  value:     z.number().min(0).default(0),
+  notes:     z.string().default(''),
+  date:      z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+})
+
+// Deletar lead (guard multi-tenant).
+const DeleteLeadSchema = z.object({
+  id:        z.string().min(1),
+  projectId: z.string().min(1),
+})
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function getAuthenticatedClient() {
@@ -179,6 +198,101 @@ export async function updateLeadStatus(
 
   if (error) {
     return { success: false, error: `Erro ao atualizar status: ${error.message}` }
+  }
+
+  revalidatePath('/crm')
+  revalidatePath('/dashboard')
+
+  return { success: true }
+}
+
+// ─── Server Action: editar lead completo ──────────────────────────────────────
+
+export async function updateLead(
+  rawInput: z.input<typeof UpdateLeadSchema>,
+): Promise<
+  | { success: true; lead: Lead }
+  | { success: false; error: string }
+> {
+  const parsed = UpdateLeadSchema.safeParse(rawInput)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues.map(i => i.message).join(', ') }
+  }
+
+  let supabase, userId
+  try {
+    ({ supabase, userId } = await getAuthenticatedClient())
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  const l = parsed.data
+  const { error } = await supabase
+    .from('leads')
+    .update({
+      name:    l.name,
+      contact: l.contact,
+      source:  l.source,
+      status:  l.status,
+      value:   l.value,
+      notes:   l.notes,
+      date:    l.date,
+    })
+    .eq('id', l.id)
+    .eq('user_id', userId)
+    .eq('project_id', l.projectId)
+
+  if (error) {
+    return { success: false, error: `Erro ao atualizar lead: ${error.message}` }
+  }
+
+  revalidatePath('/crm')
+
+  const lead: Lead = {
+    id:        l.id,
+    projectId: l.projectId,
+    name:      l.name,
+    contact:   l.contact,
+    source:    l.source as ContactSource,
+    status:    l.status as LeadStatus,
+    value:     l.value,
+    notes:     l.notes,
+    date:      l.date,
+  }
+
+  return { success: true, lead }
+}
+
+// ─── Server Action: deletar lead ──────────────────────────────────────────────
+
+export async function deleteLead(
+  rawInput: z.input<typeof DeleteLeadSchema>,
+): Promise<
+  | { success: true }
+  | { success: false; error: string }
+> {
+  const parsed = DeleteLeadSchema.safeParse(rawInput)
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues.map(i => i.message).join(', ') }
+  }
+
+  let supabase, userId
+  try {
+    ({ supabase, userId } = await getAuthenticatedClient())
+  } catch (err) {
+    return { success: false, error: (err as Error).message }
+  }
+
+  const { id, projectId } = parsed.data
+  const { error } = await supabase
+    .from('leads')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', userId)
+    .eq('project_id', projectId)
+
+  if (error) {
+    return { success: false, error: `Erro ao deletar lead: ${error.message}` }
   }
 
   revalidatePath('/crm')
