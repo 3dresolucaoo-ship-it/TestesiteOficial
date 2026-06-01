@@ -2494,14 +2494,42 @@
    MODULE SHELL — responsivo (media queries)
    Extraído de mockups/orders-v4-tom-novo.html linhas 1194-1213
    ============================================================ */
+/* ============================================================
+   KPI ROW — variantes por quantidade de satellites (desktop)
+   Substitui inline style do ModuleShell.tsx que ignorava media queries.
+   ============================================================ */
+.kpi-row-sat-1 { grid-template-columns: 1.4fr 1fr; }
+.kpi-row-sat-2 { grid-template-columns: 1.4fr 1fr 1fr; }
+.kpi-row-sat-3 { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+.kpi-row-sat-4 { grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; }
+
 @media (max-width: 1100px) {
-  .kpi-row { grid-template-columns: 1fr 1fr; }
+  /* Tablet: 2 colunas, hero ocupa largura inteira */
+  .kpi-row,
+  .kpi-row-sat-1, .kpi-row-sat-2, .kpi-row-sat-3, .kpi-row-sat-4 {
+    grid-template-columns: 1fr 1fr;
+  }
   .kpi-row .kpi-card.hero-petrol { grid-column: span 2; }
 }
 @media (max-width: 768px) {
+  /* Mobile: 1 coluna empilhada */
   .page-title { font-size: 44px; }
-  .kpi-row { grid-template-columns: 1fr; }
+  .kpi-row,
+  .kpi-row-sat-1, .kpi-row-sat-2, .kpi-row-sat-3, .kpi-row-sat-4 {
+    grid-template-columns: 1fr;
+  }
   .kpi-row .kpi-card.hero-petrol { grid-column: span 1; }
+  /* Reduz Fraunces gigante pra não quebrar textos longos tipo "sem dados" */
+  .kpi-row .kpi-card .kpi-value { font-size: 48px; line-height: 1.05; }
+  /* Padding interno menor — mobile não tem espaço pra respiro de desktop */
+  .kpi-row .kpi-card { padding: 20px 18px 18px 18px; }
+}
+@media (max-width: 480px) {
+  /* iPhone pequeno: ainda menor */
+  .kpi-row .kpi-card .kpi-value { font-size: 40px; }
+  .kpi-row .kpi-card { padding: 18px 16px 16px 16px; }
+  .kpi-row .kpi-card .kpi-eyebrow { font-size: 10px; }
+  .kpi-row .kpi-card .kpi-sub { font-size: 12px; }
 }
 
 /* ============================================================

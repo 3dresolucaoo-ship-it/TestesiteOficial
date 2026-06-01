@@ -463,12 +463,12 @@ export function ModuleShell({
       {/* 2. KPI ROW                                                          */}
       {/* ------------------------------------------------------------------ */}
       <section
-        className="kpi-row"
+        // className modifier por quantidade de satellites; CSS controla
+        // grid-template-columns + breakpoints mobile/tablet.
+        // Antes era inline style que sobrescrevia media queries → quebrava mobile.
+        className={`kpi-row kpi-row-sat-${satelliteKpis.length}`}
         aria-label="Indicadores principais"
-        style={{
-          // Grid: hero ocupa 1.4fr, demais 1fr cada
-          gridTemplateColumns: `1.4fr ${satelliteKpis.map(() => '1fr').join(' ')}`,
-        }}
+        data-satellite-count={satelliteKpis.length}
       >
         <KpiHeroCard kpi={heroKpi} />
         {satelliteKpis.map((sat, i) => (
