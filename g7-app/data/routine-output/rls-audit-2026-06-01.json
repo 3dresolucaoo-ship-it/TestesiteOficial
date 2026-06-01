@@ -1,0 +1,114 @@
+{
+  "audit_date": "2026-06-01",
+  "project_id": "sqyrkisnllrgylnxwudu",
+  "schema": "public",
+  "summary": {
+    "total_tables": 25,
+    "rls_enabled": 25,
+    "rls_enabled_pct": 100,
+    "tables_with_policies": 23,
+    "tables_zero_policies": 2,
+    "total_policies": 46,
+    "security_definer_functions": 7,
+    "anon_callable_secdef_functions": 6,
+    "permissive_policies_no_filter": 3
+  },
+  "tables": [
+    { "name": "affiliates",       "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "api_rate_limits",  "rls": true, "policies": 0, "cmds": [],                                    "filter_type": "none",    "risk": "amarelo_sem_policy" },
+    { "name": "catalogs",         "rls": true, "policies": 2, "cmds": ["ALL","SELECT"],                      "filter_type": "user_id+is_public", "risk": "ok" },
+    { "name": "config",           "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id_ou_id1_null", "risk": "amarelo_config_global_row" },
+    { "name": "content",          "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "customers",        "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "decisions",        "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "fixed_costs",      "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "inventory",        "rls": true, "policies": 2, "cmds": ["ALL","SELECT"],                      "filter_type": "user_id+TRUE_OPEN", "risk": "alto_cross_tenant_read" },
+    { "name": "leads",            "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "movements",        "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "notifications",    "rls": true, "policies": 4, "cmds": ["SELECT","INSERT","UPDATE","DELETE"],  "filter_type": "user_id", "risk": "ok_insert_with_check_false" },
+    { "name": "orders",           "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "payment_configs",  "rls": true, "policies": 8, "cmds": ["SELECT","INSERT","UPDATE","DELETE"],  "filter_type": "user_id+admin_or", "risk": "amarelo_policies_duplicadas" },
+    { "name": "portfolio_items",  "rls": true, "policies": 3, "cmds": ["ALL","SELECT"],                      "filter_type": "user_id+portfolio_public", "risk": "amarelo_policies_duplicadas" },
+    { "name": "portfolios",       "rls": true, "policies": 3, "cmds": ["ALL","SELECT"],                      "filter_type": "user_id+is_public", "risk": "amarelo_policies_duplicadas" },
+    { "name": "production",       "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id_with_check", "risk": "ok" },
+    { "name": "products",         "rls": true, "policies": 2, "cmds": ["ALL","SELECT"],                      "filter_type": "user_id+TRUE_OPEN", "risk": "alto_cross_tenant_read" },
+    { "name": "profiles",         "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "auth_uid_eq_id", "risk": "ok" },
+    { "name": "profit_goals",     "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "projects",         "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "transactions",     "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id", "risk": "ok" },
+    { "name": "user_settings",    "rls": true, "policies": 1, "cmds": ["ALL"],                               "filter_type": "user_id_with_check", "risk": "ok" },
+    { "name": "waitlist_leads",   "rls": true, "policies": 4, "cmds": ["SELECT","INSERT","UPDATE","DELETE"],  "filter_type": "admin_meta+insert_true", "risk": "amarelo_insert_sem_filtro" },
+    { "name": "webhook_events",   "rls": true, "policies": 0, "cmds": [],                                    "filter_type": "none",    "risk": "amarelo_sem_policy" }
+  ],
+  "critical_gaps": [
+    {
+      "severity": 4,
+      "table": "inventory",
+      "policy": "inventory_public_read",
+      "type": "permissive_no_filter",
+      "detail": "SELECT com qual=true — qualquer anon le inventario de TODOS os makers. Cross-tenant leak."
+    },
+    {
+      "severity": 4,
+      "table": "products",
+      "policy": "products_public_read",
+      "type": "permissive_no_filter",
+      "detail": "SELECT com qual=true — qualquer anon le produtos de TODOS os makers. Cross-tenant leak."
+    },
+    {
+      "severity": 4,
+      "function": "process_webhook_atomic",
+      "type": "secdef_anon_callable",
+      "detail": "SECURITY DEFINER callable por anon via REST. Permite criar orders+transactions+production sem autenticacao."
+    },
+    {
+      "severity": 3,
+      "function": "set_active_payment_config",
+      "type": "secdef_idor",
+      "detail": "p_user_id vem do caller externo, nao de auth.uid(). Qualquer anon pode tentar manipular configs de pagamento de outros users."
+    },
+    {
+      "severity": 3,
+      "function": "rls_auto_enable",
+      "type": "secdef_anon_ddl",
+      "detail": "Event trigger SECURITY DEFINER callable por anon via REST. DDL operation exposta."
+    }
+  ],
+  "yellow_alerts": [
+    { "type": "sem_policy_deny_implicito", "table": "api_rate_limits", "detail": "RLS on mas zero policies = implicit deny. Verificar se intencional (service_role only)." },
+    { "type": "sem_policy_deny_implicito", "table": "webhook_events",  "detail": "RLS on mas zero policies = implicit deny. Provavel intencional (funcao SECDEF gerencia insercao)." },
+    { "type": "secdef_anon_callable",      "function": "refresh_search_index",           "detail": "Callable por anon. Potencial DoS (força REFRESH de materialized view)." },
+    { "type": "secdef_anon_callable",      "function": "handle_new_user",                "detail": "Trigger callable via REST. Sem necessidade de exposicao anon." },
+    { "type": "secdef_anon_callable",      "function": "update_user_settings_updated_at","detail": "Trigger callable via REST. Sem necessidade de exposicao anon." },
+    { "type": "mutable_search_path",       "function": "handle_new_user",                "detail": "SET search_path ausente — risco de search path injection." },
+    { "type": "mutable_search_path",       "function": "update_payment_configs_updated_at", "detail": "SET search_path ausente." },
+    { "type": "mutable_search_path",       "function": "touch_payment_configs_updated_at",  "detail": "SET search_path ausente." },
+    { "type": "matview_no_rls",            "matview": "search_index",                    "detail": "Materialized view acessivel por anon+authenticated sem politica RLS." },
+    { "type": "policies_duplicadas",       "tables": ["payment_configs","portfolio_items","portfolios"], "detail": "Policies com mesmo cmd duplicadas. Technical debt, potencial confusao." },
+    { "type": "extension_public",          "extension": "citext",                        "detail": "Extensao citext no schema public. Mover para schema separado." },
+    { "type": "storage_listing",           "buckets": ["inventory-images","products-images"], "detail": "SELECT broadcast nos buckets — qualquer usuario lista todos os arquivos." },
+    { "type": "auth_config",              "entity": "Auth",                              "detail": "Leaked password protection desabilitado (HaveIBeenPwned check off)." }
+  ],
+  "diff_vs_previous": {
+    "note": "Primeira auditoria registrada — baseline estabelecido",
+    "policies_removed": [],
+    "policies_added": [],
+    "changes": []
+  },
+  "fix_sql": {
+    "priority_1_high": [
+      "-- FIX 1: inventory_public_read — substituir qual=true por filtro real\nDROP POLICY IF EXISTS inventory_public_read ON public.inventory;\n-- Se necessario acesso publico, recriar com campo is_public:\n-- CREATE POLICY inventory_public_read ON public.inventory FOR SELECT USING (is_public = true);",
+      "-- FIX 2: products_public_read — substituir qual=true por filtro is_public\nDROP POLICY IF EXISTS products_public_read ON public.products;\nCREATE POLICY products_public_read ON public.products FOR SELECT TO anon, authenticated USING (is_public = true);",
+      "-- FIX 3: revogar EXECUTE de process_webhook_atomic do anon (usar via server-side API route)\nREVOKE EXECUTE ON FUNCTION public.process_webhook_atomic(text,text,text,jsonb,text,uuid,uuid,text,text,text,numeric,text,text,text,text,text,text,text,uuid) FROM anon;\nREVOKE EXECUTE ON FUNCTION public.process_webhook_atomic(text,text,text,jsonb,text,uuid,uuid,text,text,text,numeric,text,text,text,text,text,text,text,uuid) FROM authenticated;"
+    ],
+    "priority_2_medium": [
+      "-- FIX 4: revogar EXECUTE de set_active_payment_config do anon\nREVOKE EXECUTE ON FUNCTION public.set_active_payment_config(uuid, uuid) FROM anon;",
+      "-- FIX 5: revogar EXECUTE de funcoes trigger/util expostas desnecessariamente\nREVOKE EXECUTE ON FUNCTION public.refresh_search_index() FROM anon;\nREVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM anon;\nREVOKE EXECUTE ON FUNCTION public.rls_auto_enable() FROM anon;\nREVOKE EXECUTE ON FUNCTION public.update_user_settings_updated_at() FROM anon;",
+      "-- FIX 6: fix search_path de handle_new_user\nCREATE OR REPLACE FUNCTION public.handle_new_user()\n RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER\n SET search_path TO 'public'\nAS $$\nBEGIN\n  INSERT INTO public.profiles (id, role)\n  VALUES (NEW.id, 'user')\n  ON CONFLICT (id) DO NOTHING;\n  RETURN NEW;\nEND;\n$$;"
+    ],
+    "priority_3_cleanup": [
+      "-- FIX 7: remover policies duplicadas de payment_configs (manter *_own, remover versoes sem sufixo)\nDROP POLICY IF EXISTS payment_configs_delete ON public.payment_configs;\nDROP POLICY IF EXISTS payment_configs_select ON public.payment_configs;\nDROP POLICY IF EXISTS payment_configs_insert ON public.payment_configs;\nDROP POLICY IF EXISTS payment_configs_update ON public.payment_configs;",
+      "-- FIX 8: remover policies duplicadas de portfolios e portfolio_items\nDROP POLICY IF EXISTS portfolios_owner_all ON public.portfolios;\nDROP POLICY IF EXISTS portfolio_items_owner_all ON public.portfolio_items;"
+    ]
+  }
+}

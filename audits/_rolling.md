@@ -10,14 +10,26 @@
 | Data | Arquivo | Bugs críticos | Itens cleanup |
 |---|---|---|---|
 | 2026-05-04 | `audits/2026-05-04.md` | 6 | 10+ |
+| 2026-06-01 | `audits/rls-audit-2026-06-01.md` | 5 gaps RLS (2 sev-4, 2 sev-3) | 12 alertas amarelos |
+
+---
+
+## 🔐 Auditoria RLS Semanal
+
+| Data | Tabelas | RLS% | Gaps Criticos | Gaps Resolvidos |
+|---|---|---|---|---|
+| 2026-06-01 | 25 | 100% | inventory+products (qual=true), process_webhook_atomic (anon), set_active_payment_config (IDOR) | — (baseline) |
+
+**Proxima auditoria RLS:** ~08/06/2026
 
 ---
 
 ## 📈 Tendência
 
-> Atualizar quando tiver 2+ audits.
+> Atualizar quando tiver 2+ audits mensais.
 
-- _Sem dados suficientes ainda — primeiro audit em 2026-05-04._
+- _Primeiro audit mensal: 2026-05-04._
+- _Primeira auditoria RLS semanal: 2026-06-01 — baseline estabelecido._
 
 ---
 
