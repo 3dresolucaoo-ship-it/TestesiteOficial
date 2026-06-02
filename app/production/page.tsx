@@ -24,12 +24,17 @@
  * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
  */
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useTransition } from 'react'
 import { useStore, uid }                  from '@/lib/store'
 import type { ProductionItem, StockMovement, Transaction } from '@/lib/types'
 import { Plus, Trash2 }                   from 'lucide-react'
 import { Modal }                          from '@/components/Modal'
 import { ModuleShell, V4ThemeProvider }   from '@/components/dashboard/v4'
+import {
+  createProductionTask, updateProductionTask, deleteProductionTask,
+} from './actions'
+import { adjustStock }      from '@/app/inventory/actions'
+import { createTransaction } from '@/app/finance/actions'
 
 import '../globals-v4.css'
 
@@ -87,7 +92,9 @@ function ProjectFilter({ projects, value, onChange }: ProjectFilterProps) {
 // ---------------------------------------------------------------------------
 
 export default function ProductionPage() {
-  const { state, dispatch, loading } = useStore()
+  const { state, rawDispatch, loading } = useStore()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, startTransition] = useTransition()
 
   // Estado de UI
   const [creating,      setCreating]      = useState(false)
@@ -225,7 +232,9 @@ export default function ProductionPage() {
 
   const changeStatus = useCallback(
     (item: ProductionItem, status: ProductionStatus) => {
-      dispatch({ type: 'UPDATE_PRODUCTION', payload: { ...item, status } })
+      const updated: ProductionItem = { ...item, status }
+      // Optimistic update local
+      rawDispatch({ type: 'UPDATE_PRODUCTION', payload: updated })
 
       // Registra timestamp de inicio no evento — semanticamente correto e
       // evita useEffect + setState (react-hooks/set-state-in-effect).
@@ -235,72 +244,99 @@ export default function ProductionPage() {
         )
       }
 
-      // Side effect duplo: consome filamento + cria despesa ao iniciar impressao.
-      if (status === 'printing' && item.status !== 'printing') {
-        const order   = state.orders.find((o) => o.id === item.orderId)
-        const product = order?.productId
-          ? state.products.find((p) => p.id === order.productId)
-          : undefined
-        const baseGrams  = product?.materialGrams ?? 0
-        const filamentId = product?.inventoryItemId
-        const filament   = filamentId
-          ? state.inventory.find((i) => i.id === filamentId)
-          : undefined
+      // Persiste status via Server Action + rollback se falhar
+      startTransition(async () => {
+        const res = await updateProductionTask(updated)
+        if (!res.success) {
+          console.error('[production] updateProductionTask failed:', res.error)
+          rawDispatch({ type: 'UPDATE_PRODUCTION', payload: item })
+          return
+        }
 
-        const uso = filament?.filamentUso
-        const canConsume = !uso || uso === 'impressao' || uso === 'ambos'
+        // Side effect duplo: consome filamento + cria despesa ao iniciar impressao.
+        // Cada um vai via Server Action propria. Sem atomicidade entre eles —
+        // se adjustStock passar e createTransaction falhar, estoque ja descontou.
+        // Trade-off aceito pre soft launch. Refactor pra Server Action unica = Bloco 5.
+        if (status === 'printing' && item.status !== 'printing') {
+          const order   = state.orders.find((o) => o.id === item.orderId)
+          const product = order?.productId
+            ? state.products.find((p) => p.id === order.productId)
+            : undefined
+          const baseGrams  = product?.materialGrams ?? 0
+          const filamentId = product?.inventoryItemId
+          const filament   = filamentId
+            ? state.inventory.find((i) => i.id === filamentId)
+            : undefined
 
-        if (
-          product &&
-          filament &&
-          baseGrams > 0 &&
-          filament.category === 'filament' &&
-          canConsume
-        ) {
-          const totalGrams = baseGrams * (1 + (product.failureRate ?? 0.1))
-          const delta =
-            filament.unit === 'kg' ? -(totalGrams / 1000) : -totalGrams
+          const uso = filament?.filamentUso
+          const canConsume = !uso || uso === 'impressao' || uso === 'ambos'
 
-          const movement: StockMovement = {
-            id:        uid(),
-            projectId: filament.projectId,
-            itemId:    filament.id,
-            type:      'out',
-            quantity:  Math.abs(delta),
-            reason:    'printing',
-            date:      new Date().toISOString().slice(0, 10),
-            notes:     `Impressao iniciada - ${product.name} (${totalGrams.toFixed(0)}g)`,
-          }
-          dispatch({
-            type:    'ADJUST_STOCK',
-            payload: { movement, itemId: filament.id, delta },
-          })
+          if (
+            product &&
+            filament &&
+            baseGrams > 0 &&
+            filament.category === 'filament' &&
+            canConsume
+          ) {
+            const totalGrams = baseGrams * (1 + (product.failureRate ?? 0.1))
+            const delta =
+              filament.unit === 'kg' ? -(totalGrams / 1000) : -totalGrams
 
-          const costPerUnit  = filament.costPrice ?? 0
-          const filamentCost =
-            filament.unit === 'kg'
-              ? costPerUnit * (totalGrams / 1000)
-              : costPerUnit * totalGrams
-
-          if (filamentCost > 0) {
-            const transaction: Transaction = {
-              id:          uid(),
-              projectId:   filament.projectId,
-              type:        'expense',
-              value:       Math.round(filamentCost * 100) / 100,
-              category:    'filament',
-              description: `Filamento: ${product.name} (${totalGrams.toFixed(0)}g)`,
-              date:        new Date().toISOString().slice(0, 10),
-              source:      'Auto-gerado ao iniciar impressao',
+            const movement: StockMovement = {
+              id:        uid(),
+              projectId: filament.projectId,
+              itemId:    filament.id,
+              type:      'out',
+              quantity:  Math.abs(delta),
+              reason:    'printing',
+              date:      new Date().toISOString().slice(0, 10),
+              notes:     `Impressao iniciada - ${product.name} (${totalGrams.toFixed(0)}g)`,
             }
-            dispatch({ type: 'ADD_TRANSACTION', payload: transaction })
+            rawDispatch({
+              type:    'ADJUST_STOCK',
+              payload: { movement, itemId: filament.id, delta },
+            })
+            const adjRes = await adjustStock({ movement, itemId: filament.id, delta })
+            if (!adjRes.success) {
+              console.error('[production] adjustStock failed:', adjRes.error)
+              // Rollback do ADJUST: reverte delta
+              rawDispatch({
+                type:    'ADJUST_STOCK',
+                payload: { movement: { ...movement, id: uid() }, itemId: filament.id, delta: -delta },
+              })
+            }
+
+            const costPerUnit  = filament.costPrice ?? 0
+            const filamentCost =
+              filament.unit === 'kg'
+                ? costPerUnit * (totalGrams / 1000)
+                : costPerUnit * totalGrams
+
+            if (filamentCost > 0) {
+              const transaction: Transaction = {
+                id:          uid(),
+                projectId:   filament.projectId,
+                type:        'expense',
+                value:       Math.round(filamentCost * 100) / 100,
+                category:    'filament',
+                description: `Filamento: ${product.name} (${totalGrams.toFixed(0)}g)`,
+                date:        new Date().toISOString().slice(0, 10),
+                source:      'Auto-gerado ao iniciar impressao',
+              }
+              rawDispatch({ type: 'ADD_TRANSACTION', payload: transaction })
+              const txRes = await createTransaction(transaction)
+              if (!txRes.success) {
+                console.error('[production] createTransaction failed:', txRes.error)
+                rawDispatch({ type: 'DELETE_TRANSACTION', payload: transaction.id })
+              }
+            }
           }
         }
-      }
+      })
 
       setMenuOpen(null)
     },
-    [dispatch, state.orders, state.products, state.inventory],
+    [rawDispatch, state.orders, state.products, state.inventory],
   )
 
   // ---------------------------------------------------------------------------
@@ -315,44 +351,64 @@ export default function ProductionPage() {
         (filterProject !== 'all' ? filterProject : '') ||
         (state.projects[0]?.id ?? '')
 
-      dispatch({
-        type:    'ADD_PRODUCTION',
-        payload: {
-          id:             uid(),
-          ...data,
-          projectId:      derivedProjectId,
-          estimatedHours: parseFloat(data.estimatedHours) || 4,
-          priority:       parseInt(data.priority)         || 1,
-        },
-      })
+      const payload: ProductionItem = {
+        id:             uid(),
+        ...data,
+        projectId:      derivedProjectId,
+        estimatedHours: parseFloat(data.estimatedHours) || 4,
+        priority:       parseInt(data.priority)         || 1,
+      }
+      rawDispatch({ type: 'ADD_PRODUCTION', payload })
       setCreating(false)
+      startTransition(async () => {
+        const res = await createProductionTask(payload)
+        if (!res.success) {
+          console.error('[production] createProductionTask failed:', res.error)
+          rawDispatch({ type: 'DELETE_PRODUCTION', payload: payload.id })
+        }
+      })
     },
-    [dispatch, orderProjectId, filterProject, state.projects],
+    [rawDispatch, orderProjectId, filterProject, state.projects],
   )
 
   const handleEdit = useCallback(
     (data: ProductionFormData) => {
       if (!editing) return
-      dispatch({
-        type:    'UPDATE_PRODUCTION',
-        payload: {
-          ...editing,
-          ...data,
-          estimatedHours: parseFloat(data.estimatedHours) || 4,
-          priority:       parseInt(data.priority)         || 1,
-        },
-      })
+      const prev    = editing
+      const payload: ProductionItem = {
+        ...editing,
+        ...data,
+        estimatedHours: parseFloat(data.estimatedHours) || 4,
+        priority:       parseInt(data.priority)         || 1,
+      }
+      rawDispatch({ type: 'UPDATE_PRODUCTION', payload })
       setEditing(null)
+      startTransition(async () => {
+        const res = await updateProductionTask(payload)
+        if (!res.success) {
+          console.error('[production] updateProductionTask failed:', res.error)
+          rawDispatch({ type: 'UPDATE_PRODUCTION', payload: prev })
+        }
+      })
     },
-    [editing, dispatch],
+    [editing, rawDispatch],
   )
 
   const handleDelete = useCallback(
     (id: string) => {
-      dispatch({ type: 'DELETE_PRODUCTION', payload: id })
+      const prev = state.production.find(p => p.id === id)
+      if (!prev) return
+      rawDispatch({ type: 'DELETE_PRODUCTION', payload: id })
       setMenuOpen(null)
+      startTransition(async () => {
+        const res = await deleteProductionTask({ id })
+        if (!res.success) {
+          console.error('[production] deleteProductionTask failed:', res.error)
+          rawDispatch({ type: 'ADD_PRODUCTION', payload: prev })
+        }
+      })
     },
-    [dispatch],
+    [state.production, rawDispatch],
   )
 
   const handleMenuToggle = useCallback(
