@@ -155,8 +155,9 @@ Modal fechou em 2s. Kanban moveu lead pra coluna "Ganho". KPI Conversão 0→100
 | UPDATE_ORDER / DELETE_ORDER | `store.tsx:276-303` | Edit/delete pedido falhava | ✅ **FECHADO** — `updateOrder` + `deleteOrder` Server Actions (commit d48f462) |
 | **Side effects de ADD_ORDER** (auto production task + transaction receita + decrement estoque) | `core/flows/processOrder.ts` | Pedido novo não cria production task auto | ⏳ **ABERTO** — Bloco 5 (refactor processOrder pra Server Action) |
 | production, finance, inventory, products writes | `services/*.ts` | Todo write em módulo interno falha | ⏳ Bloco 5+ ou pós-launch |
-| Reads (loadFromSupabase) | `store.tsx:524-540` | UI mostra estado vazio após F5 | ⏳ Junto com ADR 030 |
-| Pin `@supabase/supabase-js` exato | `package.json` | Risco de pegar 2.107.x com bug novo | ⏳ Quando voltar a tocar deps |
+| Reads (loadFromSupabase) | `store.tsx:524-540` | UI mostra estado vazio após F5 | ✅ **FECHADO Onda A minimal** — SSR puxa 5 core (commit `4a74a74`, branch `feature/store-ssr-initialstate-core`) |
+| Pin `@supabase/supabase-js` exato | `package.json` | Risco de pegar 2.107.x com bug novo | ✅ **FECHADO** — pin 2.106.0 (commit `1397b0d`) |
+| PostHog event `supabase_sync_error` | `store.tsx:syncDispatch catch` | CEO só via rollback via console + toast UI | ✅ **FECHADO** — track sanitizado (commit `7a1eae2`) |
 
 ### Resumo dos commits Server Actions da sessão 01/06
 
