@@ -1,0 +1,93 @@
+{
+  "date": "2026-06-02",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "run_duration_s": 120,
+  "routes": {
+    "summary": "3/4 respondendo 200 (1 esperado 404)",
+    "items": [
+      { "url": "https://hayzer.com.br", "status": 200, "ok": true, "title": "Hayzer — A raiz do seu negócio" },
+      { "url": "https://hayzer.com.br/calculadora", "status": 200, "ok": true, "title": "Calculadora de custo de impressão 3D · Hayzer" },
+      { "url": "https://hayzer.com.br/waitlist", "status": 200, "ok": true, "note": "CSR rendering — conteúdo carrega client-side (esperado)" },
+      { "url": "https://hayzer.com.br/calculadora/pro", "status": 404, "ok": true, "note": "404 ESPERADO — Calc Pro revogada ADR-024 (21/05)" }
+    ]
+  },
+  "api_health": {
+    "url": "https://hayzer.com.br/api/health",
+    "status": 200,
+    "ok": true,
+    "supabase_latency_ms": 6,
+    "uptime_ms": 22
+  },
+  "vercel": {
+    "project": "bvaz-hub",
+    "project_id": "prj_KHkxLpnoblctCyW3LVJWd8KX1nzX",
+    "production_deployment": {
+      "id": "dpl_5eLHyzHxsjwuu45ioqbKJ44ZgpuP",
+      "hash": "c0959ec",
+      "commit_message": "fix(store): timeout hydration 15s -> 3s pra acabar com splash eterno",
+      "branch": "main",
+      "state": "READY",
+      "created_at_unix": 1780329771544,
+      "age_hours": 17,
+      "is_rollback_candidate": true
+    },
+    "deployments_24h": {
+      "total": 5,
+      "ready": 5,
+      "error": 0,
+      "building_over_30min": 0
+    },
+    "alerts": [],
+    "note": "VERCEL_API_TOKEN ausente — sem acesso a Vercel Analytics (dia 12, issue #23)"
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "region": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads": {
+      "total": 3,
+      "signups_24h": 0,
+      "last_signup": "2026-05-23T02:19:36Z"
+    },
+    "tables": {
+      "notifications": true,
+      "search_index_view": false,
+      "search_index_note": "View ausente — conhecido, dia 2 rastreamento neste smoke test"
+    }
+  },
+  "performance": {
+    "source": "Lighthouse 2026-05-29 (último disponível)",
+    "lcp_s": 5.9,
+    "lcp_alert": true,
+    "lcp_threshold_s": 4.0,
+    "inp_ms": null,
+    "cls": null,
+    "note": "VERCEL_API_TOKEN ausente impede Core Web Vitals em tempo real. Fix hydration timeout (15s->3s) aplicado 02/06 00:42 BRT deve melhorar INP percebido."
+  },
+  "alerts_amarelos": [
+    {
+      "id": "PERF-01",
+      "severity": 2,
+      "message": "LCP 5.9s > threshold 4s (Lighthouse 29/05). Fix parcial entregue (timeout hydration 3s). Bloco 5: TBT fix pendente."
+    },
+    {
+      "id": "DB-01",
+      "severity": 1,
+      "message": "search_index view ausente. Sem funcionalidade crítica bloqueada pre-launch, mas search global não funcional."
+    },
+    {
+      "id": "INFRA-01",
+      "severity": 1,
+      "message": "VERCEL_API_TOKEN ausente — analytics e Core Web Vitals em tempo real indisponíveis. Dia 12 consecutivo."
+    }
+  ],
+  "alerts_criticos": [],
+  "rollback_command": "vercel rollback dpl_AKKScvU5LBsqf5zTa6DpWk41LVgy --scope team_JPZ2UXx1CVIIr20I4V1u9uID",
+  "previous_prod_deployment": {
+    "id": "dpl_AKKScvU5LBsqf5zTa6DpWk41LVgy",
+    "hash": "ec9f7ea",
+    "commit_message": "fix(v4/mobile): KPIs no mobile espremidas em 4 colunas"
+  }
+}
