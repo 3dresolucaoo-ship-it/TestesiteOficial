@@ -21,9 +21,12 @@
  * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
  */
 
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect, useCallback, useTransition } from 'react'
 import { useStore, uid } from '@/lib/store'
 import type { Transaction, TransactionType, TransactionCategory, Project, FixedCost, IncomeCategory, ExpenseCategory } from '@/lib/types'
+import {
+  createTransaction, updateTransaction, deleteTransaction,
+} from '@/app/finance/actions'
 import { INCOME_CATEGORY_LABELS, EXPENSE_CATEGORY_LABELS } from '@/lib/types'
 import {
   calcRevenue, calcExpenses, calcProfit, monthlyBreakdown,
@@ -92,7 +95,9 @@ export function FinanceView({
   initialTransactions: Transaction[]
   initialProjects:     Project[]
 }) {
-  const { state, dispatch } = useStore()
+  const { state, rawDispatch } = useStore()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, startTransition] = useTransition()
 
   const transactions = state.transactions.length > 0 || initialTransactions.length === 0
     ? state.transactions : initialTransactions
@@ -251,22 +256,48 @@ export function FinanceView({
     [projects],
   )
 
-  // ── Transaction handlers ─────────────────────────────────────────────────────
+  // ── Transaction handlers (ADR 031: Server Actions cookie-based) ─────────────
   const handleCreate = useCallback((data: FormData) => {
-    dispatch({ type: 'ADD_TRANSACTION', payload: { id: uid(), ...data, value: parseFloat(data.value) || 0 } })
+    const payload: Transaction = { id: uid(), ...data, value: parseFloat(data.value) || 0 }
+    rawDispatch({ type: 'ADD_TRANSACTION', payload })
     setCreating(false)
-  }, [dispatch])
+    startTransition(async () => {
+      const res = await createTransaction(payload)
+      if (!res.success) {
+        console.error('[finance] createTransaction failed:', res.error)
+        rawDispatch({ type: 'DELETE_TRANSACTION', payload: payload.id })
+      }
+    })
+  }, [rawDispatch])
 
   const handleEdit = useCallback((data: FormData) => {
     if (!editing) return
-    dispatch({ type: 'UPDATE_TRANSACTION', payload: { ...editing, ...data, value: parseFloat(data.value) || 0 } })
+    const prev    = editing
+    const payload: Transaction = { ...editing, ...data, value: parseFloat(data.value) || 0 }
+    rawDispatch({ type: 'UPDATE_TRANSACTION', payload })
     setEditing(null)
-  }, [editing, dispatch])
+    startTransition(async () => {
+      const res = await updateTransaction(payload)
+      if (!res.success) {
+        console.error('[finance] updateTransaction failed:', res.error)
+        rawDispatch({ type: 'UPDATE_TRANSACTION', payload: prev })
+      }
+    })
+  }, [editing, rawDispatch])
 
   const handleDelete = useCallback((id: string) => {
-    dispatch({ type: 'DELETE_TRANSACTION', payload: id })
+    const prev = transactions.find(t => t.id === id)
+    if (!prev) return
+    rawDispatch({ type: 'DELETE_TRANSACTION', payload: id })
     setMenuOpen(null)
-  }, [dispatch])
+    startTransition(async () => {
+      const res = await deleteTransaction({ id, projectId: prev.projectId })
+      if (!res.success) {
+        console.error('[finance] deleteTransaction failed:', res.error)
+        rawDispatch({ type: 'ADD_TRANSACTION', payload: prev })
+      }
+    })
+  }, [transactions, rawDispatch])
 
   const handleExport = useCallback(() => {
     const csv  = exportCsv(transactions, projectId)
