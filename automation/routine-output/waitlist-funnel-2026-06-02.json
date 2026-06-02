@@ -1,0 +1,76 @@
+{
+  "digest_date": "2026-06-02",
+  "generated_at": "2026-06-02T09:00:00-03:00",
+  "periodo_24h": {
+    "total_new": 0,
+    "completed_step_2": 0,
+    "pct_step_2": null,
+    "breakdown_utm": []
+  },
+  "acumulado": {
+    "total_all_time": 3,
+    "leads_reais": 2,
+    "leads_teste": 1,
+    "last_7d": 0,
+    "prev_7d": 2,
+    "avg_per_day_7d": 0.0,
+    "avg_per_day_prev_7d": 0.3,
+    "crescimento_7d_pct": -100
+  },
+  "utm_top_acumulado": [
+    { "utm_source": "direct", "total": 3, "pct": 100.0 }
+  ],
+  "qualidade": {
+    "nota": "Nenhum lead completou etapa 2 (business_name/segment/pain nunca preenchidos). Formulario atual coleta apenas step 1: email + nome + whatsapp.",
+    "avg_min_step1_to_step2": null
+  },
+  "tendencia": "baixa",
+  "alertas": [
+    "Funil parado ha 10 dias -- ultimo lead real em 23/05",
+    "UTM tracking ausente: 100% dos leads sem origem rastreada",
+    "Step 2 do formulario nunca ativado ou nunca preenchido por nenhum usuario",
+    "1 lead de teste no DB (audit-1779246218969@hayzer-test.local) -- remover antes do soft launch",
+    "Soft launch 13/06 em 11 dias com apenas 2 leads reais na waitlist"
+  ],
+  "acoes_recomendadas": [
+    "URGENTE: ativar UTM params no formulario da landing (hoje, 10min)",
+    "URGENTE: reativar campanha de divulgacao -- zero leads em 10 dias pre-soft-launch",
+    "Postar Post #1 grupo WhatsApp Hayzer Beta (texto do Marcos ja pronto)",
+    "Remover lead de teste do DB antes do soft launch",
+    "Verificar se wizard step 2 (business_name/segment/pain) esta sendo exibido apos step 1"
+  ],
+  "raw_leads": [
+    {
+      "email_masked": "g***@gmail.com",
+      "name": "Gabriel",
+      "whatsapp": "sim",
+      "business_name": null,
+      "segment": null,
+      "status": "new",
+      "score": 0,
+      "utm_source": null,
+      "created_at": "2026-05-23"
+    },
+    {
+      "email_masked": "audit-***@hayzer-test.local",
+      "name": "Auditor QA",
+      "business_name": null,
+      "status": "new",
+      "score": 0,
+      "utm_source": null,
+      "created_at": "2026-05-20",
+      "is_test": true
+    },
+    {
+      "email_masked": "g***@gmail.com",
+      "name": "Gabriel",
+      "whatsapp": "sim",
+      "business_name": null,
+      "segment": null,
+      "status": "new",
+      "score": 0,
+      "utm_source": null,
+      "created_at": "2026-05-15"
+    }
+  ]
+}
