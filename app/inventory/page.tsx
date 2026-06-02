@@ -25,13 +25,17 @@
  * Convencoes: zero em-dash, PT-BR em UI, TypeScript estrito, zero any.
  */
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useTransition } from 'react'
 import { useStore, uid } from '@/lib/store'
 import type { InventoryItem, InventoryCategory, StockMovement } from '@/lib/types'
 import { INVENTORY_CATEGORY_LABELS } from '@/lib/types'
 import { Plus, ArrowDownLeft, ArrowUpRight, Package } from 'lucide-react'
 import { Modal } from '@/components/Modal'
 import { ModuleShell, V4ThemeProvider } from '@/components/dashboard/v4'
+import {
+  createInventoryItem, updateInventoryItem,
+  deleteInventoryItem, adjustStock,
+} from './actions'
 
 // CSS V4 do ModuleShell (mesmo pattern de /orders e /dashboard).
 // Sem isso, page-header / kpi-card / filter-bar viram texto plano.
@@ -77,7 +81,11 @@ function fmtBRL(n: number): string {
 // ---------------------------------------------------------------------------
 
 export default function InventoryPage() {
-  const { state, dispatch, loading } = useStore()
+  const { state, rawDispatch, loading } = useStore()
+  // useTransition mantem UI responsiva durante os 1-2s do Server Action
+  // (cookie auth path) sem bloquear cliques. Padrao identico ao /orders e /crm.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, startTransition] = useTransition()
 
   // Estado local de modais
   const [creating,     setCreating]     = useState(false)
@@ -205,62 +213,87 @@ export default function InventoryPage() {
   }, [lowStockList.length, scopedItems.length, profitPotentialTotal])
 
   // ── Handlers de CRUD ──────────────────────────────────────────────────────
+  // Padrao Server Action (ADR 031): optimistic via rawDispatch (sem disparar
+  // syncAction bugado), Server Action persiste via cookie-based auth client,
+  // rollback se falhar. NAO usa dispatch (que chamaria inventoryService.create
+  // → requireUserId → trampamento auth-js 2.106).
+
   const handleCreate = useCallback(
     (data: ItemFormData) => {
-      dispatch({
-        type: 'ADD_INVENTORY',
-        payload: {
-          id:          uid(),
-          projectId:   data.projectId,
-          category:    data.category,
-          name:        data.name.trim(),
-          sku:         data.sku.trim(),
-          quantity:    parseFloat(data.quantity)  || 0,
-          unit:        data.unit,
-          costPrice:   parseFloat(data.costPrice) || 0,
-          salePrice:   parseFloat(data.salePrice) || 0,
-          notes:       data.notes.trim(),
-          minStock:    parseInt(data.minStock)    || 2,
-          imageUrl:    data.imageUrl.trim() || undefined,
-          filamentUso: data.category === 'filament' && data.filamentUso ? data.filamentUso : undefined,
-        },
-      })
+      const payload: InventoryItem = {
+        id:          uid(),
+        projectId:   data.projectId,
+        category:    data.category,
+        name:        data.name.trim(),
+        sku:         data.sku.trim(),
+        quantity:    parseFloat(data.quantity)  || 0,
+        unit:        data.unit,
+        costPrice:   parseFloat(data.costPrice) || 0,
+        salePrice:   parseFloat(data.salePrice) || 0,
+        notes:       data.notes.trim(),
+        minStock:    parseInt(data.minStock)    || 2,
+        imageUrl:    data.imageUrl.trim() || undefined,
+        filamentUso: data.category === 'filament' && data.filamentUso ? data.filamentUso : undefined,
+      }
+      rawDispatch({ type: 'ADD_INVENTORY', payload })
       setCreating(false)
+      startTransition(async () => {
+        const res = await createInventoryItem(payload)
+        if (!res.success) {
+          console.error('[inventory] createInventoryItem failed:', res.error)
+          rawDispatch({ type: 'DELETE_INVENTORY', payload: payload.id })
+        }
+      })
     },
-    [dispatch],
+    [rawDispatch],
   )
 
   const handleEdit = useCallback(
     (data: ItemFormData) => {
       if (!editing) return
-      dispatch({
-        type: 'UPDATE_INVENTORY',
-        payload: {
-          ...editing,
-          projectId:   data.projectId,
-          category:    data.category,
-          name:        data.name.trim(),
-          sku:         data.sku.trim(),
-          quantity:    parseFloat(data.quantity)  || 0,
-          unit:        data.unit,
-          costPrice:   parseFloat(data.costPrice) || 0,
-          salePrice:   parseFloat(data.salePrice) || 0,
-          notes:       data.notes.trim(),
-          minStock:    parseInt(data.minStock)    || 2,
-          imageUrl:    data.imageUrl.trim() || undefined,
-          filamentUso: data.category === 'filament' && data.filamentUso ? data.filamentUso : undefined,
-        },
-      })
+      const prev    = editing
+      const payload: InventoryItem = {
+        ...editing,
+        projectId:   data.projectId,
+        category:    data.category,
+        name:        data.name.trim(),
+        sku:         data.sku.trim(),
+        quantity:    parseFloat(data.quantity)  || 0,
+        unit:        data.unit,
+        costPrice:   parseFloat(data.costPrice) || 0,
+        salePrice:   parseFloat(data.salePrice) || 0,
+        notes:       data.notes.trim(),
+        minStock:    parseInt(data.minStock)    || 2,
+        imageUrl:    data.imageUrl.trim() || undefined,
+        filamentUso: data.category === 'filament' && data.filamentUso ? data.filamentUso : undefined,
+      }
+      rawDispatch({ type: 'UPDATE_INVENTORY', payload })
       setEditing(null)
+      startTransition(async () => {
+        const res = await updateInventoryItem(payload)
+        if (!res.success) {
+          console.error('[inventory] updateInventoryItem failed:', res.error)
+          rawDispatch({ type: 'UPDATE_INVENTORY', payload: prev })
+        }
+      })
     },
-    [editing, dispatch],
+    [editing, rawDispatch],
   )
 
   const handleDelete = useCallback(
     (id: string) => {
-      dispatch({ type: 'DELETE_INVENTORY', payload: id })
+      const prev = allItems.find(i => i.id === id)
+      if (!prev) return
+      rawDispatch({ type: 'DELETE_INVENTORY', payload: id })
+      startTransition(async () => {
+        const res = await deleteInventoryItem({ id, projectId: prev.projectId })
+        if (!res.success) {
+          console.error('[inventory] deleteInventoryItem failed:', res.error)
+          rawDispatch({ type: 'ADD_INVENTORY', payload: prev })
+        }
+      })
     },
-    [dispatch],
+    [allItems, rawDispatch],
   )
 
   const handleMovement = useCallback(
@@ -279,10 +312,22 @@ export default function InventoryPage() {
         date:      data.date,
         notes:     data.notes,
       }
-      dispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: data.itemId, delta } })
+      // Optimistic: aplica delta no store + adiciona movimento na lista
+      rawDispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: data.itemId, delta } })
       setMovementCtx(null)
+      startTransition(async () => {
+        const res = await adjustStock({ movement, itemId: data.itemId, delta })
+        if (!res.success) {
+          console.error('[inventory] adjustStock failed:', res.error)
+          // Rollback: reverte o delta (aplica o oposto)
+          rawDispatch({
+            type:    'ADJUST_STOCK',
+            payload: { movement: { ...movement, id: uid() }, itemId: data.itemId, delta: -delta },
+          })
+        }
+      })
     },
-    [allItems, dispatch],
+    [allItems, rawDispatch],
   )
 
   const quickAdjust = useCallback(
@@ -297,9 +342,19 @@ export default function InventoryPage() {
         date:      new Date().toISOString().slice(0, 10),
         notes:     '',
       }
-      dispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: item.id, delta } })
+      rawDispatch({ type: 'ADJUST_STOCK', payload: { movement, itemId: item.id, delta } })
+      startTransition(async () => {
+        const res = await adjustStock({ movement, itemId: item.id, delta })
+        if (!res.success) {
+          console.error('[inventory] quickAdjust failed:', res.error)
+          rawDispatch({
+            type:    'ADJUST_STOCK',
+            payload: { movement: { ...movement, id: uid() }, itemId: item.id, delta: -delta },
+          })
+        }
+      })
     },
-    [dispatch],
+    [rawDispatch],
   )
 
   const handleTabChange = useCallback(
