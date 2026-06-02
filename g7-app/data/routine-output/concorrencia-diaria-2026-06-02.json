@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "data": "2026-06-02",
+    "rotina": "concorrencia-diaria",
+    "responsavel": "G7-Claude",
+    "fontes": ["WebSearch", "WebFetch Instagram", "WebFetch Reclame Aqui", "WebFetch sites concorrentes"],
+    "cobertura_instagram": "limitada (Instagram retornou 429/sem login; dados via Google index)",
+    "nota": "Pasta OneDrive/Contextos Projetos nao existe neste ambiente remoto — append em _Timeline feito apenas localmente no projeto"
+  },
+
+  "alertas": [
+    {
+      "id": "A1",
+      "prioridade": "ALTA",
+      "titulo": "AppCustos3D e MakerFlow3D com preco identico ao Hayzer + integracao ML/Shopee",
+      "detalhe": "AppCustos3D cobra R$29,90/mes (BASIC) e R$69,90/mes (PRO). MakerFlow3D cobra R$29,90/mes. Ambos oferecem importacao de pedidos Mercado Livre e Shopee (que o Hayzer nao tem ainda). AppCustos3D tem leitor de G-Code no PRO. Os dois sao 'feitos por makers para makers' — exatamente o mesmo posicionamento do Hayzer.",
+      "impacto": "Hayzer precisa diferenciar pelo produto completo (CRM, producao, financeiro integrado) ou por marca. Preco sozinho nao ganha.",
+      "acao_sugerida": "Helena comparar feature parity Hayzer vs AppCustos3D/MakerFlow. Definir se integracao ML/Shopee entra no roadmap pre-27/06 ou pos-launch."
+    },
+    {
+      "id": "A2",
+      "prioridade": "MEDIA",
+      "titulo": "Bling ERP com reclamacoes cronicas — makers que usam Bling sao leads qualificados",
+      "detalhe": "Padroes recorrentes no Reclame Aqui: sistema cai toda segunda-feira, inventario nao reserva estoque automaticamente (causa oversell), suporte demora media 9 dias e 17h para responder, cada update introduz novos bugs. Score de resolucao 87.8% mas com frustracao alta. Makers que usam Bling como ERP-gambarra sao exatamente o perfil Rafael.",
+      "impacto": "Oportunidade de captacao ativa. Makers insatisfeitos estao vocalizando publicamente.",
+      "acao_sugerida": "Marcos criar conteudo comparativo: 'Hayzer vs usar Bling pra gerir maker 3D'. Sem citar pelo nome — so listar as dores que Bling nao resolve que o Hayzer resolve."
+    },
+    {
+      "id": "A3",
+      "prioridade": "BAIXA",
+      "titulo": "Precifi3D expandindo para marketplace de fornecedores",
+      "detalhe": "Alem de calculadora, Precifi3D lancou secao de conexao maker-cliente ('conecte-se com fornecedores verificados'). Esta mudando de ferramenta para plataforma. Modelo freemium: Starter gratis, Pro ilimitado + PDF + Enterprise para equipes.",
+      "impacto": "Meio prazo. Hoje nao compete diretamente com Hayzer, mas ampliacao de escopo e sinal de mercado aquecendo.",
+      "acao_sugerida": "Monitorar proximas 4 semanas. Nao requer acao imediata."
+    }
+  ],
+
+  "posts_relevantes": [
+    {
+      "conta": "@3dlab_brasil",
+      "tipo": "Reel",
+      "data_indexada": "recente (ultimo indexado: Jul/2025)",
+      "titulo": "A 3D LAB CHEGOU EM SAO PAULO!",
+      "url": "https://www.instagram.com/reel/DL7t8d6upzb/",
+      "resumo": "Anuncio de abertura de loja fisica em SP com brunch de lancamento. Ingresso gratis via link na bio. 165 likes, 60 comentarios. Hashtags: #impressao3d #impressao3dbrasil #impressao3dsp.",
+      "relevancia_hayzer": "3D Lab e referencia em hardware/filamento BR (82K seguidores). Expansao fisica em SP aumenta presenca da marca no hub maker nacional. Nao compete diretamente com Hayzer (sao insumos, nao gestao), mas influencia makers SP que sao publico-alvo.",
+      "nota": "Post mais recente publicamente indexado. Instagram sem login bloqueou acesso direto ao feed."
+    },
+    {
+      "conta": "@3dgeekshow",
+      "tipo": "Perfil monitorado",
+      "seguidores": "128K",
+      "posts_totais": "1704",
+      "bio": "Impressao 3D sem enrolacao",
+      "resumo": "Sem posts novos identificados nas ultimas 24h via indexacao publica. Canal e grande amplificador de conteudo maker BR — qualquer post sobre gestao/software aqui seria sinal de mercado.",
+      "relevancia_hayzer": "Se mencionar qualquer concorrente (Smart3D, MakerFlow) = alerta maximo."
+    },
+    {
+      "conta": "@3dprintacademy",
+      "tipo": "Perfil monitorado",
+      "seguidores": "50K",
+      "resumo": "Sem posts novos identificados nas ultimas 24h. Foco em educacao maker 3D.",
+      "relevancia_hayzer": "Audiencia educada e qualificada — parceria potencial ou canal de aquisicao."
+    }
+  ],
+
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "fonte": "Reclame Aqui",
+      "temas_recorrentes": [
+        "Sistema lento e cai toda segunda-feira — causa perda financeira direta",
+        "Inventario nao reserva automaticamente sem importacao manual de pedidos",
+        "Suporte com resposta media de 9 dias e 17 horas",
+        "A cada atualizacao surgem novos bugs — sistema regride",
+        "Mudanca de plano impossibilitada no painel"
+      ],
+      "score_resolucao": "87.8% (Oct/2025-Mar/2026)",
+      "oportunidade_hayzer": "Makers que usam Bling como ERP alternativo para gestao 3D estao frustrados com instabilidade e suporte generico. Hayzer e verticalmente especializado — dor #1 (sistema cai) nao existe em SaaS moderno Next.js/Supabase."
+    },
+    {
+      "empresa": "MakerFlow3D / AppCustos3D / Smart3D",
+      "fonte": "Reclame Aqui",
+      "temas_recorrentes": [],
+      "oportunidade_hayzer": "Nenhuma reclamacao encontrada publicamente para essas ferramentas — sao recentes e pequenas. Isso significa que a guerra e por aquisicao, nao por retencao ainda. Quem chegar primeiro com melhor produto ganha."
+    }
+  ],
+
+  "acao_recomendada": {
+    "responsavel": "Marcos + Helena",
+    "prazo": "ate 04/06 (antes do soft launch 13/06)",
+    "descricao": "Fazer conta gratis no AppCustos3D e MakerFlow3D. Mapear em 30 minutos quais features eles tem que o Hayzer nao tem (principalmente: importacao ML/Shopee, leitor G-Code, rastreamento publico cliente). Definir: (1) o que damos como diferencial sem essas features? (2) integracao ML/Shopee entra no Bloco 5 pos-soft-launch? Responder isso antes de comunicar posicionamento ao grupo Beta 13/06.",
+    "contexto": "Com preco quase identico (R$29,90 todos), a batalha e de produto + marca. Hayzer tem vantagem em CRM, producao integrada e design V4. Mas maker que vende no ML/Shopee vai perguntar sobre isso no onboarding."
+  },
+
+  "concorrentes_mapeados_hoje": [
+    {
+      "nome": "MakerFlow3D",
+      "url": "https://www.makerflow3d.com.br/",
+      "preco_mensal": "R$29,90",
+      "modulos": ["financeiro", "vendas/pedidos", "estoque", "producao", "maquinas", "calculadora", "marketplace ML/Shopee"],
+      "diferencial": "Analise de Mercado com IA, trial 7 dias sem cartao",
+      "ameaca": "ALTA"
+    },
+    {
+      "nome": "AppCustos3D",
+      "url": "https://appcustos3d.com.br/",
+      "preco_mensal": "R$29,90 (BASIC) / R$69,90 (PRO)",
+      "modulos": ["custos", "estoque", "pedidos", "producao", "gcode-reader (PRO)", "ML/Shopee (PRO)", "rastreamento-cliente", "financeiro (PRO)"],
+      "diferencial": "Leitor G-Code nativo, rastreamento publico para cliente final",
+      "ameaca": "ALTA"
+    },
+    {
+      "nome": "Smart3D",
+      "url": "https://smart3d.opcognos.com/",
+      "preco_mensal": "Plano gratis + upgrade",
+      "modulos": ["custos", "pedidos", "orcamentos PDF"],
+      "diferencial": "Plano gratuito permanente — isca de aquisicao",
+      "ameaca": "MEDIA"
+    },
+    {
+      "nome": "Precifi3D",
+      "url": "https://precifi3d.com/",
+      "preco_mensal": "Freemium (Starter gratis, Pro pago)",
+      "modulos": ["calculadora", "orcamentos PDF", "marketplace fornecedores"],
+      "diferencial": "Expandindo para plataforma de conexao maker-cliente",
+      "ameaca": "BAIXA-MEDIA"
+    },
+    {
+      "nome": "ZoomCalc3D",
+      "url": "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d/",
+      "preco_mensal": "Gratis",
+      "modulos": ["precificacao", "estoque", "multi-materiais", "orcamentos"],
+      "diferencial": "Totalmente gratis — posicao de magnet",
+      "ameaca": "BAIXA"
+    }
+  ]
+}
