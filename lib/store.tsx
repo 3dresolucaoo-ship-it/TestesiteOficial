@@ -24,6 +24,7 @@ import { configService }                      from '@/services/config'
 import { productsService }                    from '@/services/products'
 import { catalogsService }                    from '@/services/catalogs'
 import { processNewOrder, processOrderUpdate } from '@/core/flows/processOrder'
+import { track } from './posthog'
 
 /** Deep-merge a DB-loaded config with defaults so new fields are always present. */
 function mergeConfig(loaded: Partial<AdminConfig> | null | undefined): AdminConfig {
@@ -611,6 +612,17 @@ export function StoreProvider({
           err?.code ? `code=${err.code}` : null,
         ].filter(Boolean).join(' | ')
         console.error(`[Supabase sync error: ${action.type}]`, detail || err)
+        // PostHog signal — só metadata, NUNCA payload (evita PII tipo whatsapp
+        // em leads/orders). CEO recebe sinal quando algum write dá rollback.
+        // sanitizeProps no posthog.ts cobre safeguard extra.
+        track('supabase_sync_error', {
+          action_type: action.type,
+          error_code: typeof err?.code === 'string' ? err.code : undefined,
+          error_message: typeof err?.message === 'string'
+            ? err.message.slice(0, 200)
+            : undefined,
+          has_details: Boolean(err?.details),
+        })
         // Rollback: reload from DB so local state stays consistent with what was
         // actually persisted. Without this, optimistic data silently disappears
         // on the next page refresh.
