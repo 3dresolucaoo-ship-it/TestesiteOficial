@@ -133,15 +133,46 @@ Se passou >35 dias do último audit, eu devo **avisar** e sugerir rodar.
 
 ### 🟠 Pendências TÉCNICAS pós-soft launch 13/06 (Bloco 5)
 
-- Side effects auto de ADD_ORDER (production task + transaction receita + estoque) — `core/flows/processOrder.ts` refactor pra Server Action
-- Writes em production / finance / inventory / products (mesmo bug auth, baixa prio pre-launch)
-- ✅ ~~Reads completos via SSR initialState (ADR 030 — leads/orders/etc somem após F5)~~ — **Onda A minimal entregue 01/06** (branch `feature/store-ssr-initialstate-core` commit `4a74a74`, push origin, aguarda preview Vercel + CEO validar). 5 core puxados no SSR: orders/production/inventory/transactions/leads. Falta Onda B (lazy load secundários — já parcial via useStoreModule) + Onda C (invalidar cache ao trocar projeto) + passar projectId nas queries
-- Pin `@supabase/supabase-js` exato no package.json
+- ⏳ Side effects auto de ADD_ORDER (production task + transaction receita + estoque) — `core/flows/processOrder.ts` refactor pra Server Action
+- ✅ ~~Writes em production / finance / inventory / products~~ — **MERGEADA em main 03/06 noite** (commit 871c70f + 3 ancestrais, 13 Server Actions cobrindo CRUD)
+- ✅ ~~Reads completos via SSR initialState (ADR 030)~~ — **Onda A minimal mergeada em main 03/06** (commit 73c202f, 5 core puxados: orders/production/inventory/transactions/leads)
+- ✅ ~~Pin `@supabase/supabase-js` exato~~ — entregue 02/06 (2.106.0 pinado)
+- ⏳ Onda C ADR 030 (invalidar cache ao trocar projeto)
+- ⏳ Mobile QA real (CEO no iPhone 18h+ 03/06)
+- 🚨 **BUG auth-js getSession 20s no read inicial** — confirmado em prod 03/06 noite via Chrome MCP: `[Auth] getSession timed out — unblocking UI` aparece 5x antes da hidratação. Bloqueador real pré-launch. Tracking em [[hayzer-auth-bug-supabase-2106]]
+
+### 🟢 Conquistas sessão 03/06 manhã (~6h, 14 commits, 3 branches preview)
+
+**Branch `feature/store-ssr-initialstate-core` (6 commits) — MERGEADA em main 03/06 ✅**
+- ADR 030 Onda A: SSR puxa 5 core no initialState (resolve "F5 some dados")
+- Pin @supabase/supabase-js 2.106.0
+- PostHog event `supabase_sync_error` no rollback
+- Docs atualizadas
+
+**Branch `feature/server-actions-writes-restantes` (4 commits) — MERGEADA em main 03/06 noite ✅**
+- 4 services migrados pra Server Actions cookie-based (inventory + finance + production + products)
+- 13 Server Actions novas cobrindo CRUD completo
+- Production task changeStatus compõe side effects (adjustStock + createTransaction)
+- Validado em prod via Chrome MCP (/dashboard, /products, /finance carregando OK após auth timeout)
+
+**Branch `feature/ui-quality-pre-launch` (5 commits) — em rebase pra merge 03/06 noite ⏳**
+- 6 loading.tsx (inventory/products/production/decisions/content/settings) com skeleton V4
+- OG image dinâmica `/catalogo/[slug]/opengraph-image.tsx` (share Instagram/WhatsApp bonito)
+- Reset password (`/reset-password` + `/reset-password/confirm`) — Supabase Auth flow
+- Signup público (`/signup`)
+- Email sequence D+1/D+3/D+7 + cron Vercel (vercel.json + /api/cron/email-sequence)
+- Migration `email_sequence_log` (aplicada em prod 03/06 via Supabase MCP)
+- CRON_SECRET adicionado no Vercel (preview + production)
+- Fix middleware: `/api/cron` público pra cron Vercel chegar no handler
+
+**Falsos débitos descobertos (já existiam):**
+- NotificationBell.tsx (Bruna 18/05) — sino funcional, badge, drawer, mark as read
+- GlobalSearch.tsx (Bruna 18/05) — cmdk Ctrl+K, debounce, agrupamento por tipo
 
 ### 🟠 Pré-launch público 27/06 (Blocos 5-6)
 1. Coleta feedback 5-10 makers soft (13/06 → 17/06)
-2. V4 nos 8 módulos restantes (customers, leads, inventory, products, production, finance, content, decisions) — Bloco 5 polimento
-3. Sequência email D+1/D+3/D+7 — Bloco 5
+2. V4 nos 2 módulos restantes (content, decisions — ainda layout dark/roxo legacy)
+3. ✅ ~~Sequência email D+1/D+3/D+7~~ — ENTREGUE 03/06 (aguarda merge branch ui-quality)
 4. Landing comparativa (Hayzer vs planilha vs ERP genérico) — Bloco 5
 5. Go/No-Go 26/06 23h (golden path #2 fim a fim + Sentry sem P0 + CEO go)
 
