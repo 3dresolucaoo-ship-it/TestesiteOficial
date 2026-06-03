@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 // Otávio (Security): cabeçalhos Tier 1 — HSTS, anti-clickjacking, MIME sniffing, referrer.
 // Aplicados em todas as rotas via async headers().
@@ -85,4 +86,31 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// ── Sentry wrapper ───────────────────────────────────────────────────────────
+// withSentryConfig habilita:
+//   - Source map upload automatico (build time, exige SENTRY_AUTH_TOKEN)
+//   - Tunneling pra contornar ad-blockers (rotas /monitoring → Sentry)
+//   - Tree-shake de log/debug em prod
+//
+// Env vars necessarios (todos ja existem no Vercel preview + production):
+//   - NEXT_PUBLIC_SENTRY_DSN  → init no browser/server
+//   - SENTRY_ORG              → upload source map
+//   - SENTRY_PROJECT          → upload source map
+//   - SENTRY_AUTH_TOKEN       → upload source map
+//
+// Aplicado 2026-06-03 (debito ADR 032). Antes desse commit, Sentry funcionava
+// MAS sem source map upload (stacktrace em prod ficava minificado/ilegivel).
+export default withSentryConfig(nextConfig, {
+  org:           process.env.SENTRY_ORG,
+  project:       process.env.SENTRY_PROJECT,
+  silent:        !process.env.CI,            // suprime log no dev local
+  widenClientFileUpload: true,               // sobe ate arquivos shared
+  reactComponentAnnotation: { enabled: true }, // marca componente nos erros
+  tunnelRoute:   "/monitoring",              // contorna ad-blocker
+  disableLogger:  true,                      // tree-shake logs em prod
+  automaticVercelMonitors: true,             // expoe Sentry no painel Vercel
+  sourcemaps: {
+    disable:     false,                      // upload ativo
+    deleteSourcemapsAfterUpload: true,       // nao serve .map publico
+  },
+});
