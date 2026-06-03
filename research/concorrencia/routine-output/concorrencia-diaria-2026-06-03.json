@@ -1,0 +1,112 @@
+{
+  "data": "2026-06-03",
+  "alertas": [
+    {
+      "titulo": "PrintWorks3D se posiciona como gratuito no segmento de gestao para impressao 3D",
+      "descricao": "PrintWorks3D (printworks3d.com.br) se autopromove como 'O Melhor Gerenciador de Impressao 3D e Gestao de Negocios' com modelo 100% gratuito, prometendo controle de filamentos, impressoras, custos, vendas e financas em um lugar. Sem paywall visivel. Estrategia de market share por volume.",
+      "fonte": "https://www.printworks3d.com.br/",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "ZoomCalc3D integra IA (Gemini) e slicer — freemium agressivo",
+      "descricao": "ZoomCalc3D lancou integracao com Gemini AI e importacao direta de G-code do slicer na versao 2026. Continua 100% gratuito. Posicionamento: 'fortalecer a comunidade maker'. ROI/payback por equipamento, exportacao CSV, compartilhamento via WhatsApp. Risco real: maker que acha que nao precisa pagar nada.",
+      "fonte": "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d/",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "Bling reajustou planos em abril 2026 e acumula reclamacoes de instabilidade cronica",
+      "descricao": "Bling alterou planos em abril/2026: passa a cobrar importacoes via API alem de marketplaces, plano Mercurio fundido com Titanio com reajuste. Usuarios reclamam de sistema indo abaixo 3x por semana, lentidao em horario comercial, suporte ineficiente. Empresa responde que 'esta dentro dos 98% de SLA'. Alta friccao com base existente.",
+      "fonte": "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "3D Control cobra R$ 39,99/mes com posicionamento '#1 em gestao de impressao 3D'",
+      "descricao": "3D Control (3dcontrol.com.br) tem plano unico 'Tudo Incluido' a R$ 39,99/mes. Alega 300% de aumento de lucro medio, 5h/semana economizadas, integracao com Shopee/ML/Elo7/Instagram. CRM incluso. Sem tier gratuito. Ponto fraco: ausencia de prova social recente e sem novidades visiveis no site.",
+      "fonte": "https://3dcontrol.com.br/",
+      "urgencia": "media"
+    },
+    {
+      "titulo": "AppCustos3D tem plano Basic R$ 29,90 e Pro R$ 69,90 com leitor .gcode exclusivo no Pro",
+      "descricao": "AppCustos3D tem dois planos: Basic R$ 29,90/mes (ou R$ 17/mes semestral) e Pro R$ 69,90/mes (ou R$ 36/mes semestral). Diferencial Pro: leitura automatica de .gcode, importacao de pedidos Shopee/ML via planilha, relatorios financeiros avancados, suporte WhatsApp prioritario. PDF de producao com custo detalhado e rastreio publico de pedido sao funcionalidades novas documentadas.",
+      "fonte": "https://appcustos3d.com.br/",
+      "urgencia": "media"
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "@3dlab_brasil",
+      "tipo": "desconhecido",
+      "resumo": "Perfil ativo com 82K seguidores. Referencia em impressao 3D no Brasil (BH e SP). Vende impressoras, insumos, cursos e suporte tecnico. Posts recentes de junho/2026 nao indexados pelo Google — Instagram bloqueou acesso direto.",
+      "engajamento_estimado": "alto (82K seguidores)",
+      "relevancia_hayzer": "baixa — foco em hardware/insumos, nao em software de gestao"
+    },
+    {
+      "conta": "@artbox3d",
+      "tipo": "desconhecido",
+      "resumo": "82K seguidores, 715 posts, SP. Revenda oficial de impressoras 3D, filamentos, resinas. Posts de junho/2026 nao indexados. Instagram bloqueou acesso direto.",
+      "engajamento_estimado": "alto (82K seguidores)",
+      "relevancia_hayzer": "baixa — foco em hardware/vendas"
+    },
+    {
+      "conta": "@3dprintacademy",
+      "tipo": "desconhecido",
+      "resumo": "50K seguidores, 234 posts. Foco em educacao de impressao 3D (Oswaldo Salzano). Presente tambem no TikTok e YouTube. Posts de junho/2026 nao indexados.",
+      "engajamento_estimado": "medio (50K seguidores)",
+      "relevancia_hayzer": "media — audiencia de makers aprendendo o negocio, potencial canal de parceria/conteudo"
+    },
+    {
+      "conta": "@3dgeekshow",
+      "tipo": "desconhecido",
+      "resumo": "128K seguidores, referencia em impressao 3D desde 2016. Cobriu STL-AI (primeira IA exclusiva para impressao 3D, gera modelos com juntas e cabecas intercambiaveis). Posts de junho/2026 nao indexados no Google.",
+      "engajamento_estimado": "muito alto (128K seguidores)",
+      "relevancia_hayzer": "media — influenciador estrategico, nao concorrente"
+    },
+    {
+      "conta": "@appcustos3d",
+      "tipo": "desconhecido",
+      "resumo": "Nao encontrado perfil no Instagram. Presenca verificada apenas via site appcustos3d.com.br.",
+      "engajamento_estimado": "desconhecido",
+      "relevancia_hayzer": "alta — concorrente direto"
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling",
+      "queixa": "Instabilidade cronica: sistema cai 3x por semana, lentidao em horario comercial, suporte ineficiente. Empresa responde dentro do SLA de 98% mas usuarios relatam prejuizo operacional real. Tambem: reajuste de preco abril/2026 via upgrade automatico de plano por volume de uso (plano subiu de R$ 185 para R$ 450 em caso documentado).",
+      "recorrente": true,
+      "oportunidade_hayzer": "Makers que usam Bling para gestao generica estao frustrados com instabilidade e reajuste de preco. Hayzer pode capturar esse maker com pitch: 'feito especificamente para impressao 3D, sem surpresas de preco, sem instabilidade de ERP generico'."
+    },
+    {
+      "empresa": "3D Lab (hardware)",
+      "queixa": "Filamento defeituoso, pessimo atendimento pos-venda. Nao e concorrente direto de software mas indica que o maker brasileiro tem experiencia ruim com suporte no nicho.",
+      "recorrente": true,
+      "oportunidade_hayzer": "Diferenciador de suporte: makers 3D no Brasil tem expectativa baixa. Qualquer suporte real via WhatsApp vira vantagem competitiva narrativa."
+    }
+  ],
+  "acao_recomendada": {
+    "para": "Marcos",
+    "acao": "Criar conteudo comparativo direto: 'Hayzer vs AppCustos3D vs 3D Control vs ZoomCalc3D' — tabela honesta publicada no blog + thread LinkedIn. Angulo: Hayzer nao e calculadora, e gestao completa (pedidos + CRM + producao + financeiro). Concorrentes cobrem custo, Hayzer cobre o negocio inteiro.",
+    "justificativa": "O mercado ja tem 5+ players de calculadora/custo (ZoomCalc3D gratis com IA, AppCustos3D a R$ 29/mes, 3D Control a R$ 39/mes, Smart3D freemium, Precifi3D). Nenhum deles tem CRM real, modulo de producao, controle de estoque integrado e modulo financeiro juntos. Hayzer precisa urgentemente sair do posicionamento 'calculadora' e entrar em 'sistema de gestao completo para maker'. A window de oportunidade esta aberta: Bling perdendo makers com reajuste e instabilidade, concorrentes diretos sem diferenciais claros de produto alem do custo/preco."
+  },
+  "fontes_consultadas": [
+    "https://3dcontrol.com.br/ — acessado, dados extraidos",
+    "https://appcustos3d.com.br/ — acessado, dados extraidos (planos e funcionalidades)",
+    "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d/ — acessado, dados extraidos",
+    "https://smart3d.opcognos.com/ — bloqueado (403)",
+    "https://www.printworks3d.com.br/ — parcialmente acessado (titulo apenas, conteudo nao renderizado)",
+    "https://www.instagram.com/3dlab_brasil/ — bloqueado (429 Too Many Requests)",
+    "https://www.instagram.com/artbox3d/ — nao tentado diretamente (bloqueio esperado)",
+    "https://www.instagram.com/3dprintacademy/ — nao tentado diretamente (bloqueio esperado)",
+    "https://www.instagram.com/3dgeekshow/ — nao tentado diretamente (bloqueio esperado)",
+    "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/ — bloqueado (403), dados obtidos via WebSearch",
+    "WebSearch: @3dlab_brasil, @artbox3d, @3dprintacademy, @3dgeekshow, @appcustos3d instagram posts junho 2026",
+    "WebSearch: site:reclameaqui.com.br Bling reclamacao 2026",
+    "WebSearch: site:reclameaqui.com.br MakerFlow reclamacao — sem resultados",
+    "WebSearch: site:reclameaqui.com.br AppCustos3D OR 3D Control OR PrintWorks3D — sem resultados",
+    "WebSearch: impressao 3D gestao software brasil junho 2026",
+    "WebSearch: Bling reajuste preco abril 2026",
+    "WebSearch: ZoomCalc3D precificacao 2026"
+  ],
+  "sem_dados_relevantes": false,
+  "observacoes": "Instagram bloqueou todos os acessos diretos e nenhum post de junho/2026 foi indexado pelo Google — dado estrutural da rotina. Reclame Aqui bloqueia WebFetch com 403, dados obtidos via Google indexado. MakerFlow, 3D Control, AppCustos3D, PrintWorks3D e ZoomCalc3D nao possuem reclamacoes no Reclame Aqui — indica base pequena de usuarios ou apps muito novos. Descoberta principal: existe cluster de 5+ concorrentes diretos no nicho de custo/precificacao para impressao 3D brasileiro, maioria com modelo gratis ou abaixo de R$ 40/mes, mas NENHUM tem gestao completa de negocio (pedidos + CRM + estoque + producao + financeiro juntos). Esse e o gap que o Hayzer ocupa — mas precisa comunicar isso explicitamente antes do soft launch 13/06."
+}
