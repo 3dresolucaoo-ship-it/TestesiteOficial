@@ -25,6 +25,11 @@ const PUBLIC_PATHS = [
   // Supabase + version + region + uptime. Auth quebraria monitoring (307→login).
   // Bug descoberto smoke test 29/05 (Bloco 1.6 plano focar-qualidade).
   '/api/health',
+  // Vercel Cron: bate via HTTP sem cookie de sessão, mas com header
+  // Authorization: Bearer <CRON_SECRET>. Validação acontece dentro do
+  // route handler (route.ts). Sem isto, middleware faz 307→/login e o
+  // cron nunca dispara. Bug descoberto smoke test pós-merge main 03/06.
+  '/api/cron',
 ]
 // /mockups REMOVIDO de PUBLIC_PATHS em 2026-05-16:
 // requer auth Supabase + email admin pra prevenir vazamento de WIP visual
