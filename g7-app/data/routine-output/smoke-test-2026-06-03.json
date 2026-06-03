@@ -1,0 +1,61 @@
+{
+  "date": "2026-06-03",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "rotas": {
+    "score": "3/4 (404 esperado em /calculadora/pro via ADR-024)",
+    "hayzer_com_br": { "status": 200, "ok": true },
+    "calculadora": { "status": 200, "ok": true },
+    "waitlist": { "status": 200, "ok": true },
+    "calculadora_pro": { "status": 404, "ok": true, "nota": "ESPERADO — Calc Pro revogada ADR-024 (21/05)" }
+  },
+  "vercel": {
+    "deploy_prod_id": "dpl_5eLHyzHxsjwuu45ioqbKJ44ZgpuP",
+    "deploy_prod_hash": "c0959ec",
+    "deploy_prod_state": "READY",
+    "deploy_prod_idade_h": 41,
+    "deploy_prod_commit": "fix(store): timeout hydration 15s -> 3s",
+    "erros_24h": 0,
+    "building_stuck": false,
+    "total_deploys_listados": 20
+  },
+  "supabase": {
+    "projeto_status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads_total": 3,
+    "waitlist_leads_24h": 0,
+    "notifications_table": true,
+    "search_index_view": false,
+    "search_index_ausente_dias": 3
+  },
+  "performance": {
+    "vercel_api_token": "AUSENTE",
+    "vercel_api_token_dias_sem": 13,
+    "lcp_historico_s": 5.9,
+    "lcp_data_medicao": "2026-05-29",
+    "lcp_threshold_s": 4.0,
+    "lcp_alerta": true,
+    "nota": "Sem dados em tempo real — VERCEL_API_TOKEN nao configurado no Vercel"
+  },
+  "alertas": [
+    {
+      "tipo": "AMARELO",
+      "item": "search_index view ausente",
+      "detalhe": "view publica nao existe no schema public (dia 3 consecutivo)",
+      "acao": "verificar se migration de search_index foi aplicada em prod"
+    },
+    {
+      "tipo": "AMARELO",
+      "item": "VERCEL_API_TOKEN ausente",
+      "detalhe": "Sem analytics em tempo real. Dia 13. Issue #23.",
+      "acao": "CEO: adicionar VERCEL_API_TOKEN nas env vars do Vercel (10min)"
+    },
+    {
+      "tipo": "AMARELO",
+      "item": "LCP alto",
+      "detalhe": "Ultimo Lighthouse: LCP 5.9s (threshold 4s). Dado de 29/05.",
+      "acao": "Lighthouse bloqueado por CEO nao ter criado .env.lighthouse.local"
+    }
+  ],
+  "conclusao": "Nenhuma quebra nova detectada. Issues sao todas persistentes e conhecidas. Produto em ar."
+}
