@@ -42,6 +42,7 @@ import { CatalogCard }       from './_components/CatalogCard'
 import { ProductForm }       from './_components/ProductForm'
 import { ProductBestWorst }  from './_components/ProductBestWorst'
 import { ProductFilters }    from './_components/ProductFilters'
+import { ProductEmptyState } from './_components/ProductEmptyState'
 import { useProductActions } from './_components/useProductActions'
 import { r2, fmtPct }        from './_components/helpers'
 
@@ -202,12 +203,7 @@ export default function ProductsPage() {
   if (loading) return null
 
   if (projects.length === 0) {
-    return (
-      <div className="max-w-4xl mx-auto flex flex-col items-center justify-center py-24 text-center">
-        <Package size={40} className="text-[#2a2a2a] mb-4" aria-hidden="true" />
-        <p className="text-[#555555] text-sm">Crie um projeto primeiro para cadastrar produtos.</p>
-      </div>
-    )
+    return <ProductEmptyState variant="no-project" />
   }
 
   const mesAtual = new Date().toLocaleString('pt-BR', { month: 'long' }).toUpperCase()
@@ -280,38 +276,15 @@ export default function ProductsPage() {
         {/* Grid de produtos */}
         {filtered.length === 0 ? (
           products.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 text-center max-w-md mx-auto px-6">
-              <div
-                className="w-16 h-16 mb-5 rounded-2xl flex items-center justify-center"
-                style={{
-                  background: 'hsl(173 58% 28% / 0.12)',
-                  border:     '1px solid hsl(173 58% 28% / 0.25)',
-                }}
-                aria-hidden="true"
-              >
-                <Package size={28} className="text-[hsl(173_30%_57%)]" aria-hidden="true" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground mb-2 tracking-tight">
-                Cadastra o que você vende
-              </h3>
-              <p className="text-sm text-foreground/70 leading-relaxed mb-2">
-                Produto aqui é qualquer peca que você imprime e vende: suporte de celular, miniatura, peca tecnica.
-              </p>
-              <p className="text-sm text-foreground/70 leading-relaxed mb-6">
-                Ao cadastrar, o Hayzer calcula custo de impressao, margem de lucro e preco sugerido por marketplace.
-              </p>
-              <button
-                onClick={() => setCreating(true)}
-                className="flex items-center gap-2 bg-[hsl(173_58%_28%)] hover:bg-[hsl(173_58%_32%)] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors"
-              >
-                <Plus size={15} aria-hidden="true" /> Cadastrar meu primeiro produto
-              </button>
-            </div>
+            <ProductEmptyState
+              variant="empty"
+              onCreateClick={() => setCreating(true)}
+            />
           ) : (
-            <div className="flex flex-col items-center justify-center py-24 text-center">
-              <Package size={40} className="text-[#2a2a2a] mb-4" aria-hidden="true" />
-              <p className="text-[#555555] text-sm">Nenhum produto neste filtro.</p>
-            </div>
+            <ProductEmptyState
+              variant="no-results"
+              onClearFilter={() => setFilterProject('all')}
+            />
           )
         ) : viewMode === 'catalog' ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
