@@ -1,0 +1,248 @@
+{
+  "meta": {
+    "data": "2026-06-03",
+    "versao": "1.0",
+    "tipo": "pesquisa-competitiva-semanal",
+    "gerado_por": "deep-research-workflow",
+    "fontes_verificadas": 47,
+    "agentes_utilizados": 5
+  },
+  "concorrentes_gestao_saas": [
+    {
+      "nome": "Printora",
+      "url": "https://useprintora.com.br",
+      "modelo": "freemium",
+      "preco_entrada": "R$ 0 permanente",
+      "planos": [
+        { "nome": "Gratis", "preco": "R$ 0", "tipo": "permanente" },
+        { "nome": "Basico", "preco": "R$ 19,90/mes" },
+        { "nome": "Pro", "preco": "R$ 39,90/mes" }
+      ],
+      "features": ["gestao de pedidos", "financeiro em tempo real", "fila de producao com priorizacao", "estoque com alertas", "loja online propria integrada (NOVO)", "monitoramento de manutencao de impressoras"],
+      "frase_ancora": "Pare de perder dinheiro. Saiba o lucro real de cada peca.",
+      "diferencial": "unico concorrente com freemium permanente + loja de vendas integrada",
+      "blog_ativo": true,
+      "blog_nome": "Camada por Camada",
+      "status": "ATIVO",
+      "novidade_semana": "loja online propria integrada ao sistema de gestao",
+      "nivel_ameaca_hayzer": "ALTO"
+    },
+    {
+      "nome": "MakerFlow 3D",
+      "url": "https://www.makerflow3d.com.br",
+      "modelo": "pago",
+      "preco_entrada": "R$ 29,90/mes",
+      "planos": [
+        { "nome": "Mensal", "preco": "R$ 29,90/mes" },
+        { "nome": "Trimestral", "preco": "R$ 69,90/trimestre (~R$ 23,30/mes)", "destaque": "mais popular" }
+      ],
+      "features": ["gestao de vendas centralizada", "controle de estoque com baixa automatica", "fila de producao visual", "gerenciamento individual de impressoras", "calculadora de custos", "modulo financeiro", "analise de mercado PRO", "integracao ML+Shopee"],
+      "frase_ancora": "Gerencie sua operacao 3D de forma inteligente",
+      "frase_ancora_secundaria": "Transforme sua impressora em uma maquina de lucro previsivel",
+      "diferencial": "fila visual de producao + analise de mercado PRO",
+      "blog_ativo": false,
+      "status": "ATIVO",
+      "novidade_semana": null,
+      "nivel_ameaca_hayzer": "MEDIO"
+    },
+    {
+      "nome": "3DControl",
+      "url": "https://3dcontrol.com.br",
+      "modelo": "pago",
+      "preco_entrada": "R$ 39,99/mes",
+      "planos": [
+        { "nome": "Unico", "preco": "R$ 39,99/mes", "trial": true }
+      ],
+      "features": ["dashboard financeiro com graficos", "gestao de pedidos com custo automatico", "controle de filamentos com alertas", "frota de impressoras com depreciacao/ROI", "CRM com ranking de clientes", "integracao ML+Shopee+Elo7+Instagram"],
+      "frase_ancora": "Transforme seu Hobby em um Negocio Lucrativo",
+      "frase_ancora_secundaria": "Pare de perder dinheiro com calculos errados",
+      "diferencial": "plano unico sem tier + CRM com ranking de clientes + ROI por impressora",
+      "blog_ativo": false,
+      "status": "ATIVO",
+      "novidade_semana": null,
+      "nivel_ameaca_hayzer": "MEDIO"
+    },
+    {
+      "nome": "AppCustos3D",
+      "url": "https://appcustos3d.com.br",
+      "modelo": "pago",
+      "preco_entrada": "R$ 29,90/mes",
+      "planos": [
+        { "nome": "Basic", "preco": "R$ 29,90/mes", "semestral": "R$ 17/mes" },
+        { "nome": "PRO", "preco": "R$ 69,90/mes", "semestral": "R$ 36/mes" }
+      ],
+      "features_basic": ["calculo real de custo", "gestao de estoque", "gestao de impressoras", "rastreio de taxa de falha", "controle de pedidos"],
+      "features_pro": ["leitor de G-Code (UNICO)", "importacao pedidos Shopee/ML", "simulador de orcamento", "relatorios financeiros avancados", "link publico para cliente acompanhar pedido", "PDF com breakdown de custo"],
+      "frase_ancora": "Pare de decidir no escuro. Custo e margem visiveis na impressao 3D.",
+      "diferencial": "leitor automatico de G-code extrai tempo e consumo do slicer",
+      "blog_ativo": false,
+      "status": "ATIVO",
+      "novidade_semana": null,
+      "nivel_ameaca_hayzer": "MEDIO"
+    },
+    {
+      "nome": "HYPE BUILD 3D",
+      "url": "https://land.hypebuild3d.com.br",
+      "modelo": "pago",
+      "preco_entrada": "R$ 35/mes",
+      "planos": [
+        { "nome": "Unico", "preco": "R$ 35/mes", "preco_original": "R$ 50/mes", "desconto": "promocional ativo", "trial": "3 dias" }
+      ],
+      "features": ["calculo filamento + resina", "6 simuladores marketplace (Shopee ML Elo7 OLX TikTok Magalu)", "relatorios PDF+CSV", "rastreamento de vendas", "sistema de pintura 3 niveis", "backup cloud criptografado", "offline com auto-sync", "multi-plataforma (Android iOS PC Mac)"],
+      "frase_ancora": "A unica calculadora do Brasil que une precisao matematica com inteligencia de mercado",
+      "frase_ancora_secundaria": "Pare de perder dinheiro",
+      "diferencial": "6 marketplaces + multi-plataforma nativo + funciona offline",
+      "blog_ativo": false,
+      "status": "ATIVO",
+      "novidade_semana": null,
+      "nivel_ameaca_hayzer": "BAIXO"
+    },
+    {
+      "nome": "PrintWorks 3D",
+      "url": "https://www.printworks3d.com.br",
+      "modelo": "gratuito",
+      "preco_entrada": "R$ 0",
+      "frase_ancora": "O Melhor Gerenciador de Impressao 3D e Gestao de Negocios",
+      "diferencial": "declarado como gratuito e completo",
+      "blog_ativo": false,
+      "status": "INCERTO - site inacessivel",
+      "novidade_semana": null,
+      "nivel_ameaca_hayzer": "BAIXO"
+    },
+    {
+      "nome": "Infinity Maker",
+      "url": "https://www.infinitymaker.com.br",
+      "modelo": "freemium",
+      "preco_entrada": "R$ 0",
+      "features": ["gestao de materiais", "calculadora de custos automatica", "relatorios com dashboards", "multi-usuarios", "eventos sazonais (novo)"],
+      "diferencial": "suporta FDM SLA resina qualquer metodo",
+      "blog_ativo": false,
+      "status": "ATIVO - em desenvolvimento ativo",
+      "novidade_semana": "funcionalidade Eventos Sazonais destacada no topo do site",
+      "nivel_ameaca_hayzer": "BAIXO"
+    }
+  ],
+  "calculadoras_entrada_funil": [
+    { "nome": "ZoomCalc3D", "url": "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d", "modelo": "gratuito", "diferencial": "IA Gemini + CSV export + blog ativo com posts jun/2026", "blog_ativo": true },
+    { "nome": "Precifi3D", "url": "https://precifi3d.com", "modelo": "freemium", "diferencial": "FDM + Resina + Laser" },
+    { "nome": "CalculaSTL", "url": "https://calculastl.com.br", "modelo": "gratuito", "diferencial": "integra taxas ML/Shopee" },
+    { "nome": "Calcu3D", "url": "https://calcu3d.vercel.app", "modelo": "freemium", "diferencial": "V2 PRO anunciada", "novidade": "V2 anunciada sem data" },
+    { "nome": "Quanto Custa 3D", "url": "https://quantocusta3d.com.br", "modelo": "gratuito", "diferencial": "ultra-minimalista sem cadastro" },
+    { "nome": "3D Lab Calc", "url": "https://3dlab.com.br/calculadora-de-preco-impressao-3d", "modelo": "desconhecido", "status": "INACESSIVEL (403)" },
+    { "nome": "Custos3D.com.br", "url": "https://custos3d.com.br", "modelo": "desconhecido", "status": "ENCERRADO - dominio estacionado Hostinger" },
+    { "nome": "HYPE BUILD 3D", "url": "https://land.hypebuild3d.com.br", "modelo": "pago", "preco": "R$ 35/mes", "diferencial": "6 marketplaces + offline" }
+  ],
+  "erps_genericos": [
+    { "nome": "Bling ERP", "url": "https://www.bling.com.br", "preco_entrada": "R$ 55/mes (Cobalto)", "features_maker": ["ordens de producao", "controle de estoque multi-deposito", "250+ marketplaces", "emissao NF-e ilimitada", "DRE"], "risco_hayzer": "ameaca para makers que crescem e precisam de NF-e" },
+    { "nome": "Tiny ERP", "url": "https://tiny.com.br", "preco_entrada": "R$ 55/mes (Avance)", "features_maker": ["100+ marketplaces", "controle de estoque", "emissao NF-e"], "risco_hayzer": "baixo - fraco em producao/manufatura" }
+  ],
+  "ecossistema_hardware": {
+    "bambu_lab": {
+      "lancamento_semana": {
+        "produto": "A2L",
+        "data": "2026-06-01",
+        "preco_usd": 469,
+        "preco_combo_usd": 569,
+        "specs": {
+          "volume_impressao_mm": "330x320x325",
+          "volume_vs_a1": "+105%",
+          "velocidade_max_mms": 500,
+          "temperatura_bico_max_c": 300,
+          "temperatura_cama_max_c": 80,
+          "cores_max_com_ams": 19,
+          "ruido_modo_silencioso_db": 49,
+          "tipo": "bed slinger (nao CoreXY)"
+        },
+        "fontes": ["Tom's Hardware", "PR Newswire oficial", "3D Printing Industry"]
+      },
+      "software": {
+        "versao_atual": "Bambu Studio 2.7.1",
+        "novidades": ["suporte A2L", "Texture-to-Color Painting", "Filament Manager"]
+      },
+      "controversia_ativa": {
+        "tipo": "violacao AGPL + ameaca legal a dev OrcaSlicer",
+        "status": "Bambu recuou das ameacas legais mas NAO resolveu violacoes tecnicas AGPL",
+        "organizacoes_envolvidas": ["Software Freedom Conservancy (SFC)", "Gamers Nexus", "Louis Rossmann"],
+        "violacoes_confirmadas_sfc": [
+          "nao fornece codigo-fonte de libbambu_networking.so/.dll/.dylib",
+          "ameacas legais contra fork legalmente derivado de codigo AGPL"
+        ],
+        "impacto_comunidade": "Gamers Nexus declarou boicote; SFC lancou comite Right-to-Repair e crowdfunding 'baltobu'",
+        "nivel_impacto_hayzer": "OPORTUNIDADE - narrativa anti-ecossistema fechado favorece ferramentas independentes"
+      }
+    }
+  },
+  "makerworld": {
+    "tendencias_semana": ["Flexi/Fidget (dragons, clickers, spinners)", "Pancakes Clicker", "Puzzles modulares", "World Cup 2026 items"],
+    "mudancas_plataforma": [
+      "MakerLab Credits: algumas features passam a consumir credito no momento da geracao (nao so no export) - efetivo fim de junho",
+      "Image to 3D: tarefas concorrentes de 1 para 5",
+      "Integracao Meshy AI para geracao de modelos"
+    ]
+  },
+  "hotmart_cursos": [
+    { "nome": "Impressao 3D para Iniciantes", "instrutor": "Oswaldo Salzano (3D Print Academy)", "alunos": "+7.000", "destaque": "maior escola impressao 3D da AL segundo eles" },
+    { "nome": "Curso de Impressao 3D Intensivo", "instrutor": "3D Lab", "avaliacao": "4.8/5", "destaque": "modulo 'como ganhar dinheiro com impressoras 3D'" },
+    { "nome": "Curso Completo IMPRESSAO 3D (BrMakers)", "instrutor": "Lello (BrMakers)", "avaliacao": "5.0/5", "destaque": "acesso a comunidade Telegram 100+ membros" },
+    { "nome": "Impressora 3D do Zero ao Avancado", "instrutor": "Pedro Accioly" },
+    { "nome": "Metodo de Impressao 3D para Colecionaveis", "instrutor": "Leandro Correa Peres", "destaque": "nicho colecionaveis ticket R$ 200-600/peca" }
+  ],
+  "marketplaces": {
+    "mercado_total_br_2025_usd_mi": 730,
+    "cagr_2026_2034": "17.2%",
+    "top_vendedores_identificados": ["Voolt3D (filamentos PLA, rating 4.9)", "Masterprint via Mundoware (PETG, 1062 avaliacoes)", "NIC 3D (impressoras, rating 4.8)", "Facil 3D", "Print It 3D"],
+    "faixa_preco_servico_impressao_3d": {
+      "peca_simples": "R$ 25-80",
+      "decoracao_personalizada": "R$ 60-130",
+      "litofane": "R$ 80-150",
+      "modelo_anatomico": "R$ 150-500",
+      "colecionavel_pintado": "R$ 200-600"
+    },
+    "produtos_maior_margem": [
+      { "produto": "pecas de reposicao eletrodomesticos", "margem": "300%+", "destaque": "cliente nao negocia preco" },
+      { "produto": "litofanas personalizadas", "margem": "200-300%" },
+      { "produto": "gabaritos marcenaria/serralheria", "margem": "200%+", "destaque": "B2B pouco explorado" }
+    ]
+  },
+  "analise_hayzer": {
+    "gaps_nao_cobertos_por_concorrentes": [
+      "CRM completo com pipeline visual drag-and-drop kanban",
+      "gestao multi-projeto / multi-marca",
+      "golden path lead-para-pedido com Server Actions",
+      "modulo de conteudo/portfolio",
+      "onboarding wizard estruturado"
+    ],
+    "mudancas_principais_impacto_hayzer": [
+      {
+        "rank": 1,
+        "titulo": "Printora lanca loja propria integrada",
+        "impacto": "MEDIO-ALTO",
+        "acao_recomendada": "Acelerar catalogo publico polido antes do soft launch 13/06"
+      },
+      {
+        "rank": 2,
+        "titulo": "Bambu A2L expande volume de producao dos makers",
+        "impacto": "POSITIVO",
+        "acao_recomendada": "Comunicar: 'voce cresceu o hardware, cresceu o negocio tambem?'"
+      },
+      {
+        "rank": 3,
+        "titulo": "Crise AGPL Bambu Lab - narrativa anti-ecossistema fechado",
+        "impacto": "OPORTUNIDADE",
+        "acao_recomendada": "Posicionamento: ferramenta que respeita o criador"
+      }
+    ],
+    "oportunidade_nova": "Nicho B2B de pecas de reposicao + gabaritos industriais - margem 300%+ e nenhum concorrente comunica gestao para este segmento",
+    "ameaca_nova": "Printora freemium permanente + loja propria = plataforma default do maker iniciante antes do soft launch 13/06"
+  },
+  "frases_ancora_banco": [
+    { "empresa": "MakerFlow 3D", "frase": "Transforme sua impressora em uma maquina de lucro previsivel", "contexto": "hero secundaria" },
+    { "empresa": "MakerFlow 3D", "frase": "Gerencie sua operacao 3D de forma inteligente", "contexto": "hero principal" },
+    { "empresa": "3DControl", "frase": "Transforme seu Hobby em um Negocio Lucrativo", "contexto": "hero principal" },
+    { "empresa": "3DControl", "frase": "Pare de perder dinheiro com calculos errados", "contexto": "hero secundaria" },
+    { "empresa": "AppCustos3D", "frase": "Pare de decidir no escuro. Custo e margem visiveis na impressao 3D.", "contexto": "hero principal" },
+    { "empresa": "Printora", "frase": "Pare de perder dinheiro. Saiba o lucro real de cada peca.", "contexto": "hero principal" },
+    { "empresa": "HYPE BUILD 3D", "frase": "A unica calculadora do Brasil que une precisao matematica com inteligencia de mercado", "contexto": "claim diferencial" },
+    { "empresa": "PrintWorks 3D", "frase": "O Melhor Gerenciador de Impressao 3D e Gestao de Negocios", "contexto": "hero principal" }
+  ]
+}
