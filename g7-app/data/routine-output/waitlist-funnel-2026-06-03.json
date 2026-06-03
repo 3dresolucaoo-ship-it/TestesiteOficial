@@ -1,0 +1,30 @@
+{
+  "date": "2026-06-03",
+  "generated_at": "2026-06-03T09:00:00-03:00",
+  "periodo_24h": {
+    "leads_novos": 0,
+    "completaram_etapa2": 0,
+    "pct_etapa2": null,
+    "utm_breakdown": {}
+  },
+  "acumulado": {
+    "total_waitlist": 3,
+    "ultimos_7d": 0,
+    "prev_7d": 1,
+    "crescimento_7d_pct": -100,
+    "ultimo_lead_em": "2026-05-23",
+    "dias_sem_novo_lead": 11
+  },
+  "etapa2_proxy": "business_name IS NOT NULL (nenhum dos 3 leads preencheu)",
+  "utm_acumulado": {
+    "direct": { "total": 3, "pct": 100 }
+  },
+  "top3_utm_acumulado": [
+    { "source": "direct", "total": 3, "pct": 100 }
+  ],
+  "tendencia_vs_media_7d": "baixa",
+  "media_diaria_7d": 0,
+  "media_diaria_prev_7d": 0.14,
+  "tempo_medio_step1_step2_horas": null,
+  "obs": "Coluna 'step' nao existe na tabela. Etapa 2 mapeada como preenchimento de business_name+segment+size (nenhum lead completou). Coluna 'whatsapp' preenchida em 3/3."
+}
