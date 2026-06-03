@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import { isSupabaseConfigured } from '@/lib/supabaseClient'
@@ -229,13 +230,29 @@ export default function LoginPage() {
                   </>
                 )}
               </button>
+
+              {/* Links secundários */}
+              <div className="flex items-center justify-between text-xs">
+                <Link
+                  href="/reset-password"
+                  className="text-[#888888] hover:text-[#a78bfa] transition-colors"
+                >
+                  Esqueci a senha
+                </Link>
+                <Link
+                  href="/signup"
+                  className="text-[#888888] hover:text-[#a78bfa] transition-colors"
+                >
+                  Criar conta
+                </Link>
+              </div>
             </form>
           </div>
 
           {/* Bottom */}
           <div className="px-8 pb-6">
             <p className="text-center text-[#3a3a3a] text-[11px]">
-              Acesso restrito — Hayzer v0.4
+              Hayzer v0.4 · Sistema operacional do maker 3D
             </p>
           </div>
         </div>
