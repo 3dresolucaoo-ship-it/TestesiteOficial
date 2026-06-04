@@ -1,0 +1,52 @@
+{
+  "digest_date": "2026-06-04",
+  "generated_at": "2026-06-04T09:00:00-03:00",
+  "schema_note": "Coluna 'step' nao existe no DB. Etapa 1 = cadastro (name+email+whatsapp). Etapa 2 = qualificacao (segment+size+revenue_band+pain). Mapeado via schema real em 04/06.",
+
+  "ultimas_24h": {
+    "total_novos": 0,
+    "completaram_etapa_2": 0,
+    "taxa_etapa_2_pct": null,
+    "tempo_medio_step1_to_step2_min": null,
+    "utm_breakdown": {}
+  },
+
+  "acumulado": {
+    "total_leads": 3,
+    "completaram_etapa_2": 0,
+    "taxa_etapa_2_pct": 0,
+    "email_confirmados": 0,
+    "top_utm_sources": [
+      { "utm_source": "direct", "total": 3, "pct": 100 }
+    ]
+  },
+
+  "tendencia_7d": {
+    "leads_ultimos_7d": 0,
+    "media_diaria_7d": 0,
+    "vs_hoje": "estavel_em_zero",
+    "classificacao": "baixa",
+    "ultimo_lead_registrado": "2026-05-22"
+  },
+
+  "alertas": [
+    "Nenhum lead novo nos ultimos 13 dias (ultimo: 22/05/2026)",
+    "0% de qualificacao completa (etapa 2 -- segment sempre null em todos os 3 leads)",
+    "100% dos leads sem UTM rastreado -- pode ser trafego direto ou links sem parametros",
+    "3 leads existentes sao provavelmente testes internos (criados 15/05, 20/05, 22/05 durante dev)"
+  ],
+
+  "acoes_recomendadas": [
+    "Ativar divulgacao ativa: primeiro post no grupo WhatsApp Beta ou LinkedIn para retomar entrada de leads",
+    "Adicionar UTM em todos os links de divulgacao antes do soft launch 13/06 (hoje sem rastreamento = cego pos-launch)",
+    "Verificar wizard de qualificacao (etapa 2): 0% completion pode indicar bug no formulario ou ausencia de prompts pos-cadastro"
+  ],
+
+  "raw": {
+    "leads": [
+      { "created": "2026-05-22", "has_whatsapp": true, "segment": null, "utm_source": null, "status": "new", "email_confirmed": false },
+      { "created": "2026-05-20", "has_whatsapp": true, "segment": null, "utm_source": null, "status": "new", "email_confirmed": false },
+      { "created": "2026-05-15", "has_whatsapp": true, "segment": null, "utm_source": null, "status": "new", "email_confirmed": false }
+    ]
+  }
+}
