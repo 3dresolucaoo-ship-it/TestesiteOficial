@@ -1,20 +1,23 @@
 /**
  * Hayzer — Service Worker simples
  *
- * Estratégia mínima viável pra ser PWA-installable em mobile:
- *   - Cache-first pra shell estática (manifest, favicon, fontes Google)
- *   - Network-first pra HTML (sempre tenta fresh, cache só como fallback offline)
+ * Estratégia (2026-06-04, v2 pós-bug crítico):
+ *   - Network-first pra HTML E assets estáticos (sempre tenta fresh, cache só
+ *     como fallback offline). MUDOU de cache-first pra assets pra evitar o bug
+ *     descoberto 04/06: SW servindo JS bundle cacheado antigo de versões mais
+ *     antigas, framer-motion travado em prod target. Ver memoria
+ *     [[hayzer-framer-motion-prod-stuck]] + session 2026-06-04-madrugada-hotfix.
  *   - Bypass total pra /api/* e /mockups/* (nunca cachear — dados dinâmicos)
  *
  * Sem dependências externas. Sem Workbox. Sem next-pwa.
- * Pra evoluir: adicionar background sync, push notifications, cache de fontes.
  *
  * Versionamento: bump CACHE_VERSION sempre que mudar o SW pra forçar update.
  *
  * Criado em 2026-05-16 — Frente 4 (PWA setup).
+ * v2 em 2026-06-04 — fix bug landing em branco em prod.
  */
 
-const CACHE_VERSION = 'hayzer-v1-2026-05-16'
+const CACHE_VERSION = 'hayzer-v2-2026-06-04'
 const OFFLINE_FALLBACK = '/offline.html'
 
 // Shell mínima que faz sentido cachear no install
@@ -104,11 +107,12 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // Assets estáticos — cache-first
+  // Assets estáticos — NETWORK-FIRST (mudou em 04/06).
+  // Antes era cache-first, mas SW estava servindo JS chunks cacheados de
+  // versões antigas, congelando framer-motion. Agora sempre tenta fresh
+  // primeiro; cache so como fallback offline.
   event.respondWith(
     (async () => {
-      const cached = await caches.match(request)
-      if (cached) return cached
       try {
         const fresh = await fetch(request)
         if (fresh.ok && fresh.type === 'basic') {
@@ -117,6 +121,8 @@ self.addEventListener('fetch', (event) => {
         }
         return fresh
       } catch {
+        const cached = await caches.match(request)
+        if (cached) return cached
         return new Response('Offline', { status: 503 })
       }
     })()
