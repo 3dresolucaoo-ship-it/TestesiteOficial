@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "date": "2026-06-04",
+    "time_brt": "06:00",
+    "time_utc": "09:00",
+    "runner": "claude-sonnet-4-6",
+    "status": "ALERTA_AMARELO"
+  },
+  "routes": {
+    "summary": "3/4 respondendo 200 (1 esperado)",
+    "results": [
+      { "url": "https://hayzer.com.br", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/calculadora", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/waitlist", "status": 200, "ok": true, "note": "Redireciona para / via Next.js redirect -- form na landing, comportamento esperado" },
+      { "url": "https://hayzer.com.br/calculadora/pro", "status": 404, "ok": false, "note": "ESPERADO -- Calc Pro revogada ADR-024 (21/05). Rota removida intencionalmente." }
+    ]
+  },
+  "vercel": {
+    "project_id": "prj_KHkxLpnoblctCyW3LVJWd8KX1nzX",
+    "project_name": "bvaz-hub",
+    "production_deployment": {
+      "id": "dpl_CbHsjp3WPy5SNDRGBBkXtRXnWCU5",
+      "commit_sha": "871c70fa2de09ff2163f8369f121ac9d79aa97fd",
+      "commit_short": "871c70fa",
+      "commit_message": "feat(products): Server Actions writes (ADR 031)",
+      "state": "READY",
+      "target": "production",
+      "created_ms": 1780539160336,
+      "age_hours_approx": 6,
+      "branch": "main"
+    },
+    "errors_24h": 0,
+    "builds_stuck": 0,
+    "alert": null
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads": {
+      "total": 3,
+      "last_24h": 0
+    },
+    "tables": {
+      "notifications": true,
+      "search_index_view": false
+    },
+    "alerts": [
+      {
+        "type": "AMARELO",
+        "msg": "view search_index ausente -- dia 4 consecutivo. Nao impacta funcionalidade core."
+      }
+    ]
+  },
+  "performance": {
+    "source": "indisponivel",
+    "reason": "VERCEL_API_TOKEN ausente no env (issue #23, dia 14 consecutivo)",
+    "historical_lcp_s": 5.9,
+    "historical_date": "2026-05-29",
+    "lcp_threshold": 4.0,
+    "lcp_alert": "AMARELO -- LCP historico 5.9s acima do threshold 4s (dado de 05/06 dias atras)"
+  },
+  "known_issues": [
+    { "id": 1, "issue": "view search_index ausente", "dias": 4, "severidade": "baixa" },
+    { "id": 2, "issue": "VERCEL_API_TOKEN ausente (Core Web Vitals sem API)", "dias": 14, "referencia": "issue #23", "severidade": "media" },
+    { "id": 3, "issue": "LCP historico 5.9s (threshold 4s)", "severidade": "media", "nota": "dado de 29/05" }
+  ],
+  "new_issues": [],
+  "overall": {
+    "status": "ALERTA_AMARELO",
+    "critico": false,
+    "summary": "Nenhuma quebra nova. Todas issues sao persistentes e conhecidas. Prod respondendo, deploy READY, Supabase saudavel."
+  }
+}
