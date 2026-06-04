@@ -17,7 +17,7 @@ export default function TermosPage() {
         <h2>1. O que estes termos cobrem</h2>
         <p>
           Estes termos se aplicam à lista de espera do Hayzer e, futuramente,
-          ao produto quando lançar (previsão: 04 de julho de 2026).
+          ao produto quando lançar.
         </p>
 
         <h2>2. Sobre a lista de espera</h2>
@@ -25,7 +25,7 @@ export default function TermosPage() {
           <li>Entrar na lista é gratuito.</li>
           <li>Você só recebe emails relacionados ao Hayzer.</li>
           <li>Pode sair da lista a qualquer momento — basta responder qualquer email pedindo descadastro, ou usar o link no final do email.</li>
-          <li>Não garantimos data de lançamento exata, embora trabalhemos pra 04/07/2026.</li>
+          <li>Não cravamos data de lançamento. Trabalhamos pra entregar em breve.</li>
         </ul>
 
         <h2>3. Comunicação</h2>

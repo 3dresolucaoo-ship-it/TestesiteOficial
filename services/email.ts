@@ -240,10 +240,9 @@ ${groupUrl ? `Grupo Hayzer Beta no WhatsApp: ${groupUrl}\n\n` : ''}— Gabriel`,
           </ul>
           <p>O Hayzer foi construído pra esse maker. Vocabulário em português,
           filamento em gramas, taxa de falha brasileira, WhatsApp como cidadão de primeira.</p>
-          <p>Soft launch é dia <strong>13 de junho</strong>, faltam alguns dias.
-          Lançamento público dia <strong>27 de junho</strong>.</p>
+          <p>O lançamento tá próximo, faltam poucas semanas.</p>
           <p>Se você é um dos primeiros 10 a responder esse email, eu te coloco
-          no beta antes do soft launch — sem custo, sem compromisso.</p>
+          no beta antes do lançamento. Sem custo, sem compromisso.</p>
           <p style="margin-top:24px;">— Gabriel</p>
         `),
         text: `${firstName}, deixa eu te contar uma coisa.
@@ -259,20 +258,20 @@ Maker brasileiro é outra coisa:
 
 O Hayzer foi construído pra esse maker. Vocabulário em português, filamento em gramas, taxa de falha brasileira, WhatsApp como cidadão de primeira.
 
-Soft launch é dia 13 de junho, faltam alguns dias. Lançamento público dia 27 de junho.
+O lançamento tá próximo, faltam poucas semanas.
 
-Se você é um dos primeiros 10 a responder esse email, eu te coloco no beta antes do soft launch — sem custo, sem compromisso.
+Se você é um dos primeiros 10 a responder esse email, eu te coloco no beta antes do lançamento. Sem custo, sem compromisso.
 
 — Gabriel`,
       }
 
     case 'd7':
       return {
-        subject: 'Soft launch em poucos dias — lembrete + o que tá pronto',
+        subject: 'Lançamento em breve. Lembrete + o que tá pronto',
         html: wrapHtml(`
           <h1>${safeName}, lembrete rápido.</h1>
-          <p>Faz 7 dias que você entrou na lista. Soft launch é <strong>13 de junho</strong>.</p>
-          <p>O que tá pronto pro launch:</p>
+          <p>Faz 7 dias que você entrou na lista. O lançamento tá próximo.</p>
+          <p>O que tá pronto pro lançamento:</p>
           <ul style="margin:16px 0 18px; padding-left:22px; color:#2a2a2a; font-size:15px;">
             <li style="margin-bottom:6px;"><strong>CRM no estilo Trello</strong> — arrasta lead entre colunas, do "Negociando" pro "Ganho"</li>
             <li style="margin-bottom:6px;"><strong>Lead vira pedido com 1 clique</strong> — sem redigitar nome, valor, WhatsApp</li>
@@ -284,14 +283,14 @@ Se você é um dos primeiros 10 a responder esse email, eu te coloco no beta ant
           <p>Se ainda não respondeu o email pedindo entrada no beta, ainda dá tempo.
           Responde esse aqui contando o que você vende.</p>
           <p>Final: se Hayzer não for pra você, é só ignorar esse último email. Não
-          mando mais até o launch público.</p>
+          mando mais até o lançamento.</p>
           <p style="margin-top:24px;">— Gabriel</p>
         `),
         text: `${firstName}, lembrete rápido.
 
-Faz 7 dias que você entrou na lista. Soft launch é 13 de junho.
+Faz 7 dias que você entrou na lista. O lançamento tá próximo.
 
-O que tá pronto pro launch:
+O que tá pronto pro lançamento:
 - CRM no estilo Trello — arrasta lead entre colunas, do "Negociando" pro "Ganho"
 - Lead vira pedido com 1 clique — sem redigitar nome, valor, WhatsApp
 - Estoque em gramas com alerta de mínimo
@@ -301,7 +300,7 @@ O que tá pronto pro launch:
 
 Se ainda não respondeu o email pedindo entrada no beta, ainda dá tempo. Responde esse aqui contando o que você vende.
 
-Final: se Hayzer não for pra você, é só ignorar esse último email. Não mando mais até o launch público.
+Final: se Hayzer não for pra você, é só ignorar esse último email. Não mando mais até o lançamento.
 
 — Gabriel`,
       }
