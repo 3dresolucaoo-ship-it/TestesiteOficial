@@ -126,9 +126,44 @@ O hotfix CSS `!important` em `globals.css` (commit `94b1849`) é mantido **tempo
 4. **Validação prod deve incluir viewport pública deslogada** em cada deploy. Esse bug ficou 24h+ no ar porque eu só validava /dashboard logado. Lição registrada em [[feedback-validar-viewport-publica-toda-sessao]].
 5. **Hotfix mascara, root cause resolve.** Inicial 30min em CSS `!important` foi necessário (urgência: prod em branco), mas só foi a metade do trabalho. Investigar profundo no /rcs imediato foi crítico.
 
+## Limitação descoberta pós-deploy (CATCH-22)
+
+Após deploy do commit `31a1439` (sw.js v2) + `0ab5125` (ADR), validação em prod via Chrome MCP revelou que **o sw.js servido em hayzer.com.br AINDA mostra `CACHE_VERSION = 'hayzer-v1-2026-05-16'`**, mesmo:
+- Local commit OK (sw.js v2)
+- origin/main OK (sw.js v2)
+- Deploy production `dpl_2KKP1Sb8F49CoEday7m21zf1Nwaf` READY
+- Vercel serve `/sw.js` com `cache-control: public, max-age=0, must-revalidate`
+
+**Por quê**: o **próprio SW v1 está cacheando `/sw.js`** (linha 70-79 do sw.js v1: pega TODOS fetches GET em mesmo origin, cache-first em assets estáticos). Quando o browser pede `/sw.js` pra checar update, **SW v1 serve a si mesmo do cache** → browser pensa "SW não mudou" → nunca atualiza pra v2.
+
+Mesmo `cache-control` HTTP é ignorado — Service Worker fetch intercept acontece ANTES da camada HTTP cache do browser.
+
+**Catch-22**: o sw.js v2 está no CDN do Vercel, mas chega pra **ZERO usuário** até:
+1. User limpar SW manualmente via DevTools (Application → Service Workers → Unregister)
+2. Browser desinstalar SW por timeout natural (semanas/meses sem usar)
+3. **Site mudar a URL do registro** (`/sw-v2.js`) e atualizar `ServiceWorkerRegister.tsx`
+
+### Plano de mitigação pós-launch
+
+**Camada A (hotfix CSS) — MANTÉM permanente**: o hotfix `!important` em `globals.css` (commit `94b1849`) garante que landing pública renderiza independente do SW. É a única defesa real pra usuários que já visitaram o site desde 16/05.
+
+**Camada B (migração URL SW) — futura, decisão pendente**:
+- Renomear `public/sw.js` → `public/sw-v2.js`
+- Atualizar `ServiceWorkerRegister.tsx`: `navigator.serviceWorker.register('/sw-v2.js')`
+- No install do sw-v2.js: `caches.delete('hayzer-v1-2026-05-16')` + `clients.claim()` + `skipWaiting()`
+- Pra browsers existentes com SW v1: nada acontece (continua servindo v1 do cache).
+- Pra browsers NOVOS ou que limparam: registra sw-v2.js.
+- **Limitação**: usuários existentes só atualizam quando navegarem com SW v1 desativado (ex: dado bug similar futuro, eles vão limpar cache).
+
+**Camada C (alternativa drástica) — opção nuclear**:
+- Mudar URL do scope completamente (registrar SW com scope diferente).
+- OU deixar o sw.js v1 servir SW vazio que se desregistra: o user pega o vazio uma vez (ainda do cache v1), executa o unregister, e nas próximas navegações fica sem SW. Não funciona pq SW v1 não atualiza.
+
+**Recomendação atual**: manter hotfix CSS + Camada B em sessão futura. Atrasar Camada C até medir impacto real (quantos users têm SW v1).
+
 ## Refs
 
 - Memória: [[hayzer-framer-motion-prod-stuck]]
 - Memória: [[feedback-validar-viewport-publica-toda-sessao]]
 - Session: `sessions/2026-06-04-madrugada-hotfix-landing-prod.md`
-- Commits envolvidos: `220fd5f` (hotfix CSS v1), `94b1849` (hotfix CSS v2), `31a1439` (fix SW root cause)
+- Commits envolvidos: `220fd5f` (hotfix CSS v1), `94b1849` (hotfix CSS v2 — defesa permanente), `31a1439` (fix SW root cause — bloqueado por catch-22), `0ab5125` (ADR)
