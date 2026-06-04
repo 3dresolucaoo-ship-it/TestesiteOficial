@@ -62,49 +62,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Safety timeout: if getSession() hangs (bad key, CORS, network failure,
-    // Supabase cold start), unblock the UI after 12 s instead of loading forever.
-    // We track whether getSession() has already resolved so the timer never
-    // overrides a real "user is logged in" state.
-    let sessionResolved = false
-    const safetyTimer = setTimeout(() => {
-      if (!sessionResolved) {
-        console.warn('[Auth] getSession timed out — unblocking UI (no session confirmed)')
-        // role left as 'user' so admin-gated paths fall through to redirect
-        // instead of getting stuck in <LoadingScreen /> forever.
-        setRole('user')
-        setLoading(false)
-      }
-    }, 12_000)
-
-    // Validate session against Supabase server (getUser makes a network round-trip,
-    // unlike getSession which reads the local cookie without verifying expiry).
-    // This ensures client and middleware use the same auth source of truth.
+    // STEP 1: Read local session from cookie (no network round-trip).
+    // Unblocks the UI in ~50 ms. Antes esse boot chamava getUser() PRIMEIRO,
+    // que faz network roundtrip pro Supabase pra validar o JWT — em prod com
+    // Vercel Fluid cold-start travava 8-12s + safety timer 12s = ~20s no
+    // splash. Ver [[hayzer-auth-bug-supabase-2106]] + screenshot CEO 03/06 noite.
     //
-    // Loading unblocks AS SOON AS we know user+session — loadProfile() runs
-    // fire-and-forget. Role defaults to 'user' enquanto profile carrega; admin
-    // promotion chega depois sem manter UI travada. Antes esse await fazia o
-    // shell esperar profiles roundtrip e bloqueava 20-25s em rotas AppShell.
-    supabase.auth.getUser().then(async ({ data: { user: validUser } }) => {
-      sessionResolved = true
-      clearTimeout(safetyTimer)
-      if (validUser) {
-        const { data: { session } } = await supabase.auth.getSession()
+    // getSession() lê do cookie via adapter @supabase/ssr (local, ~50ms).
+    // Risco: token pode ter expirado entre client e server — mitigado pela
+    // revalidação STEP 2 abaixo + middleware SSR continua sendo source of truth.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
         setSession(session)
-        setUser(validUser)
-        setRole('user')          // optimistic default — loadProfile may upgrade
-        setLoading(false)
-        void loadProfile(validUser.id)
-      } else {
+        setUser(session.user)
+        setRole('user')         // optimistic — loadProfile pode promover
+      }
+      setLoading(false)         // ← UI libera aqui (era 12-20s, agora ~50ms)
+    }).catch(err => {
+      // Cookie read shouldn't fail, but be safe
+      console.warn('[Auth] getSession local read failed:', err?.message)
+      setLoading(false)
+    })
+
+    // STEP 2: In parallel, revalidate session against Supabase server.
+    // Slow on cold start (8-12s) but doesn't block UI. Se o token tiver
+    // expirado/revogado, derruba o estado local — middleware SSR já vai
+    // bounce pra /login na proxima request mesmo. Se válido, promove role
+    // via loadProfile.
+    supabase.auth.getUser().then(({ data: { user: validUser }, error }) => {
+      if (error || !validUser) {
         setSession(null)
         setUser(null)
-        setLoading(false)
+        setRole(null)
+      } else {
+        void loadProfile(validUser.id)
       }
     }).catch(err => {
-      sessionResolved = true
-      clearTimeout(safetyTimer)
-      console.error('[Auth] getUser failed:', err?.message)
-      setLoading(false)
+      console.warn('[Auth] server revalidation failed:', err?.message)
     })
 
     // Subscribe to session changes (login / logout / token refresh)
@@ -121,7 +115,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     )
 
     return () => {
-      clearTimeout(safetyTimer)
       subscription.unsubscribe()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
