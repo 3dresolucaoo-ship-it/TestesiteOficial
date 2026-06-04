@@ -1,0 +1,90 @@
+{
+  "data": "2026-06-04",
+  "rotina": "concorrencia-diaria",
+  "status": "executado",
+  "limitacoes_tecnicas": [
+    "Instagram bloqueia WebFetch direto (429/auth). Dados via indexacao Google.",
+    "Reclame Aqui bloqueia /lista-reclamacoes/ (403). Dados via busca indexada.",
+    "MakerFlow, PrintWorks3D, ZoomCalc3D, 3D Control: sem registro Reclame Aqui (muito pequenos ou novos)."
+  ],
+  "alertas": [
+    {
+      "nivel": "ALTO",
+      "titulo": "InfinityMaker lanca plano gratuito permanente + ERP completo",
+      "detalhe": "InfinityMaker (infinitymaker.com.br / erp.solutionmaker.com.br) opera como ERP maker completo com plano FREE permanente. Funcionalidades: gestao de materiais, calculadora de custos, relatorios, multi-usuarios, FDM+SLA+resina. Novidade recente: 'Eventos Sazonais'. Plano anual com 20% desconto. Ameaca direta ao magnet Calc gratuita do Hayzer — o concorrente zero em on-boarding e usa plano gratuito como hook de conversao.",
+      "acao_sugerida": "Marcos/Helena: mapear InfinityMaker como concorrente Tier 1 na comparativa de landing. Hayzer diferencial: golden path lead-pedido-producao-financeiro integrado (InfinityMaker foca em custos/materiais, sem CRM ou gestao de pedidos visivel)."
+    },
+    {
+      "nivel": "MEDIO",
+      "titulo": "Bling com crise cronica de instabilidade e reajuste abusivo",
+      "detalhe": "Multiplas reclamacoes recentes no Reclame Aqui: sistema instavel (indisponivel por horas), suporte com tickets demorando semanas, reajuste automatico para plano Platina quando usuario ultrapassa limite de pedidos, mudanca arbitraria de regras em fevereiro 2026 (exige CNPJ para ver pedido simples). Resolve 87.8% dos casos mas demora media ~10 dias.",
+      "acao_sugerida": "Carla/Marcos: oportunidade de conteudo direto — 'saiu do Bling pra Hayzer' como angulo de copy. Persona Rafael provavelmente usa Bling ou planilha. Dor real: ser cobrado a mais sem aviso por crescer."
+    },
+    {
+      "nivel": "BAIXO",
+      "titulo": "Artbox3D abre Seminovos — mercado de impressoras usadas",
+      "detalhe": "Post recente indexado: 'Seminovos.ARTBOX3D.com.br' — espaco para venda de impressoras usadas. Movimento novo no mercado fisico (loja SP). Nao afeta Hayzer diretamente, mas indica que Artbox3D esta expandindo canais de receita.",
+      "acao_sugerida": "Observar. Potencial de parcerias futuras (maker que compra impressora usada via Artbox pode ser lead Hayzer)."
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "perfil": "@artbox3d",
+      "texto_indexado": "60 mil pessoas que enxergam a impressao 3D como...",
+      "url": "https://www.instagram.com/p/DTUwqf8jos-/",
+      "tipo": "desconhecido (acesso bloqueado)",
+      "relevancia": "Angulo comunitario/identidade. Hayzer pode usar similar: 'makers que levam o negocio a serio'.",
+      "nota": "Conteudo exato nao acessivel. Post aparece em busca Google recente."
+    },
+    {
+      "perfil": "@3dlab_brasil",
+      "texto_indexado": "A 3D LAB CHEGOU EM SAO PAULO! Depois de tantos...",
+      "url": "https://www.instagram.com/reel/DL7t8d6upzb/",
+      "tipo": "Reels",
+      "relevancia": "Expansao geografica. 3DLab agora BH + SP — aumenta alcance fisico. Nao afeta Hayzer diretamente (foco em hardware/cursos, nao software).",
+      "nota": "Post pode ser de abril/maio 2026, nao confirmado como 24h."
+    },
+    {
+      "perfil": "@3dgeekshow",
+      "texto_indexado": "Impressao 3D Industrial: O Futuro Chegou e Vai Dominar 2026",
+      "url": "https://3dgeekshow.com.br/impressao-3d-industrial-o-futuro-chegou-e-vai-dominar-2026-shorts/",
+      "tipo": "Shorts/Blog (jan 2026)",
+      "relevancia": "128K seguidores. Linha editorial voltando pro industrial. Oportunidade: Hayzer como 'ERP do maker que escala pro industrial'. Nao ha mencao a ferramentas de gestao/precificacao — espaco em aberto."
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling",
+      "tema": "Instabilidade cronica + suporte lento",
+      "reclamacoes_padrao": [
+        "Sistema cai por horas — NFe e pedidos bloqueados",
+        "Reajuste automatico pro plano Platina sem aviso quando volume cresce",
+        "Mudanca de regra em fev/2026: exige CNPJ pra ver pedido simples",
+        "Tickets sem resposta por semanas",
+        "Perda de produtividade documentada"
+      ],
+      "oportunidade_hayzer": "Maker que usa Bling como ERP/NF-e sofre com instabilidade e preco crescente. Hayzer pode posicionar como complementar (gestao maker-specific) ou substituto parcial pro controle de pedidos/producao. Angulo: 'feito pra quem imprime, nao pra quem revende no varejo'.",
+      "fonte": "Reclame Aqui — multiplas reclamacoes indexadas pelo Google, periodo 2025-2026"
+    },
+    {
+      "empresa": "Custos3D (appcustos3d.com.br)",
+      "tema": "Sem reclamacoes — mas preco agressivo",
+      "observacao": "R$ 29,90/mes Basic e R$ 69,90/mes Pro. Nenhum registro Reclame Aqui. Funcionalidades solidas: G-code reader, Shopee/ML import, rastreio publico, WhatsApp proposta. Novidade recente: ficha PDF de composicao de custos. Silencio em junho 2026 — nenhuma atividade nova detectada.",
+      "oportunidade_hayzer": "Custos3D e forte em custo por peca mas fraco em gestao do negocio (sem CRM, sem kanban, sem modulos integrados). Hayzer completo ganha no escopo."
+    }
+  ],
+  "acao_recomendada": {
+    "prioridade": "ALTA",
+    "destinatario": "Marcos + Helena",
+    "acao": "Adicionar InfinityMaker como concorrente nomeado na landing comparativa de lancamento (27/06). Usar o angulo: InfinityMaker faz custos/materiais — Hayzer faz o negocio inteiro (lead, pedido, producao, financeiro, catalogo). Criar 1 post Instagram Rafael com dor do Bling: 'fui cobrado a mais sem aviso so porque meu negocio cresceu'. Testar como Reels curto antes do soft launch 13/06."
+  },
+  "fontes": {
+    "instagram": "Acesso indireto via Google indexacao. Posts das ultimas 24h nao confirmados — Instagram bloqueia scraping sem login.",
+    "reclame_aqui": "Via busca Google — paginas /lista-reclamacoes/ retornam 403. Tendencias por titulos indexados.",
+    "sites_diretos": [
+      "https://appcustos3d.com.br/",
+      "https://www.infinitymaker.com.br/",
+      "https://3dgeekshow.com.br/"
+    ]
+  }
+}
