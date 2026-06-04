@@ -1215,6 +1215,41 @@ html.dark select option:checked {
 .ember-dot-delay-2 { animation-delay: 700ms; }
 .ember-dot-delay-3 { animation-delay: 1400ms; }
 
+/* ─── HOTFIX 2026-06-04: framer-motion stuck em production target ──────────────
+ * Bug capturado 04/06 madrugada: motion.div com initial={{ opacity: 0 }} ficam
+ * congelados em produccao (hayzer.com.br/) — landing renderiza tela em branco
+ * (so o header aparece). Mesmo commit em preview deploys funciona normal.
+ *
+ * Diagnostico via Chrome MCP:
+ *   - DOM tem 10 sections, h1 "Seu negocio, sem caos" presente
+ *   - getComputedStyle h1: opacity:0 (initial style do motion.div congelado)
+ *   - forcando .is-visible + opacity:1 via JS, conteudo aparece inteiro
+ *   - testado em 4 production deploys (c3b5171 ate 17d0829), TODOS bugados
+ *   - mesmos deploys em preview target funcionam perfeito
+ *
+ * Hipoteses pra root cause (a investigar pos-launch):
+ *   - PostHogProvider/ServiceWorker em prod interferindo com framer-motion lifecycle
+ *   - Bundle diff prod vs preview removendo animation engine
+ *   - CSP enforcement diferente em prod target
+ *   - Algum reactComponentAnnotation do Sentry interferindo
+ *
+ * Hotfix: forca animation CSS em qualquer elemento com inline opacity:0 dentro
+ * da landing. 300ms delay pra permitir framer-motion disparar se conseguir;
+ * apos isso, garante visibility via keyframe.
+ *
+ * TODO: criar sessions/2026-06-04-prod-landing-em-branco.md + ADR. Remover
+ * este hotfix quando descobrir root cause real. */
+@keyframes hayzer-anti-stuck {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+html[data-layout="marketing"] [style*="opacity:0"],
+html[data-layout="marketing"] [style*="opacity: 0"] {
+  animation: hayzer-anti-stuck 0.6s ease-out 0.3s forwards;
+}
+
 /* ─── prefers-reduced-motion — a11y global ──────────────────────────────────── */
 /* Desativa todas as animacoes/transicoes. Imagens continuam visiveis (nao dependem
    de animacao pra aparecer — .reveal-img garante opacity:1). */
