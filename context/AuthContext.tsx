@@ -84,21 +84,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
     })
 
-    // STEP 2: In parallel, revalidate session against Supabase server.
-    // Slow on cold start (8-12s) but doesn't block UI. Se o token tiver
-    // expirado/revogado, derruba o estado local — middleware SSR já vai
-    // bounce pra /login na proxima request mesmo. Se válido, promove role
-    // via loadProfile.
+    // STEP 2: In parallel, revalidate session against Supabase server +
+    // promote role via loadProfile if valid.
+    //
+    // IMPORTANT: NÃO derruba session local se getUser() falhar por
+    // network/timeout. Em prod com Vercel Fluid cold-start essa chamada
+    // pode dar erro transient (8-12s timeout), e logout indevido seria
+    // pior que sessão "fantasma" momentanea. Middleware SSR continua sendo
+    // source of truth — derruba no proximo request server-side se token
+    // realmente expirou.
+    //
+    // Só derruba se o SERVER respondeu explicitamente que o token nao vale
+    // (AuthApiError com status 401/403). Erros de rede/timeout = mantem
+    // session local.
     supabase.auth.getUser().then(({ data: { user: validUser }, error }) => {
-      if (error || !validUser) {
+      if (validUser) {
+        // Server confirmou — promove role
+        void loadProfile(validUser.id)
+      } else if (error && (error.status === 401 || error.status === 403)) {
+        // Server EXPLICITAMENTE rejeitou o token — limpa estado local
         setSession(null)
         setUser(null)
         setRole(null)
       } else {
-        void loadProfile(validUser.id)
+        // Sem user mas sem erro 401/403 = transient. Log e mantem session
+        // local (middleware vai derrubar na proxima request se expirou).
+        console.warn('[Auth] revalidation indeterminate, keeping local session:', error?.message ?? 'no user, no error')
       }
     }).catch(err => {
-      console.warn('[Auth] server revalidation failed:', err?.message)
+      // Network error completo (DNS, CORS, etc) — mantem session local
+      console.warn('[Auth] server revalidation failed (keeping local session):', err?.message)
     })
 
     // Subscribe to session changes (login / logout / token refresh)
