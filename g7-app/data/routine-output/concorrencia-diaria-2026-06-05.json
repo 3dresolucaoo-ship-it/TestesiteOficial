@@ -1,0 +1,218 @@
+{
+  "meta": {
+    "data": "2026-06-05",
+    "rotina": "concorrencia-diaria",
+    "executado_por": "claude-sonnet-4-6",
+    "cobertura": "Instagram (5 perfis) + Reclame Aqui + WebSearch competitivo",
+    "limitacoes": [
+      "Instagram 100% bloqueado sem autenticação (HTTP 429). Dados parciais via Google indexing.",
+      "Reclame Aqui retornou HTTP 403 nas URLs diretas. Dados via snippets indexados.",
+      "PrintLog e PrintCalc retornaram HTTP 403 — sites novos/protegidos."
+    ]
+  },
+
+  "resumo_executivo": {
+    "alertas": [
+      {
+        "nivel": "ALTO",
+        "titulo": "PrintLog lançou com PRO 100% OFF",
+        "descricao": "Novo entrante com pitch 'criado por makers para a comunidade 3D' usando promoção agressiva de land-grab. Site protegido (403), produto em desenvolvimento ativo. Estratégia clássica de ganhar base antes de monetizar.",
+        "acao_sugerida": "Marcos/Helena: visitar printlog.com.br manualmente e mapear features + pitch. Se estiver em fase de crescimento, pode absorver leads do segmento antes do soft launch 13/06."
+      },
+      {
+        "nivel": "MEDIO",
+        "titulo": "ARTBOX3D lançou marketplace C2C de seminovos",
+        "descricao": "seminovos.artbox3d.com.br — marketplace de impressoras usadas sem comissão, 100+ usuários ativos já. Post recente no Instagram confirmado. Pode virar ponto de entrada de novos makers que ainda não têm sistema de gestão.",
+        "acao_sugerida": "Avaliar parceria de conteúdo ou menção cruzada. Novo maker comprando impressora usada = lead perfeito para Hayzer."
+      },
+      {
+        "nivel": "MEDIO",
+        "titulo": "Guerra de preços em andamento",
+        "descricao": "PrintWorks3D e ZoomCalc3D gratuitos. PrintLog PRO grátis no lançamento. CordeirFlow ~R$25/mês. MakerFlow R$29,90. Pressão downward consistente. Hayzer precisa justificar premium por fit vertical, não por paridade de features.",
+        "acao_sugerida": "Helena: revisar argumento de valor na landing. 'Feito para maker BR' precisa estar acima do fold com provas concretas (ex: calcula custo de filamento + gestão de pedidos + integração WhatsApp em um lugar só)."
+      }
+    ],
+
+    "posts_relevantes": [
+      {
+        "perfil": "@artbox3d",
+        "tipo": "post_produto",
+        "conteudo_estimado": "Lancamento do ARTBOX3D Classificados (seminovos.artbox3d.com.br) — marketplace de impressoras usadas sem comissão",
+        "url_estimada": "https://www.instagram.com/p/DQ5OQCCEpfl/",
+        "engajamento_estimado": "alto (82K seguidores, empresa consolidada)",
+        "relevancia_hayzer": "Novo ponto de entrada de makers no ecossistema. Maker que compra impressora usada = perfil exato do Rafael antes de profissionalizar o negócio."
+      }
+    ],
+
+    "reclamacoes_interessantes": [
+      {
+        "empresa": "Bling ERP",
+        "tema": "Instabilidade crônica + UX arbitrária",
+        "exemplos": [
+          "O Bling destruiu nossa produtividade. Instabilidade crônica e mudanças arbitrárias de usabilidade.",
+          "ATENÇÃO: ERP que não controla estoque e-commerce",
+          "Impossível mudar de plano no ERP Bling"
+        ],
+        "padrão_recorrente": "Makers usam Bling como ERP genérico e sofrem com sistema pensado para e-commerce, não manufatura. Sync de estoque falha em picos. Atendimento 9+ dias de espera.",
+        "oportunidade_hayzer": "Copy direta: 'O Bling foi feito para e-commerce. O Hayzer foi feito para quem fabrica.' Dor real, validada publicamente.",
+        "nota_media_bling": "4.1/5 (Analister 2026) — sólido mas fraco em manufatura. Taxa resolucao RA: 87.8%, tempo médio 9d17h."
+      }
+    ],
+
+    "acao_recomendada": {
+      "para": "Marcos + Helena",
+      "prazo": "amanha 06/06",
+      "acao": "Visitar manualmente printlog.com.br + makerflow3d.com.br e documentar features e preço atual. Usar as reclamações do Bling ('instabilidade crônica', 'muda sem avisar', 'não pensa em quem fabrica') como inspiração para copy da landing — especialmente na secao WhyDifferent. O argumento 'ERP feito para maker, nao adaptado para maker' tem evidencia publica para suportar."
+    }
+  },
+
+  "instagram": [
+    {
+      "perfil": "@3dlab_brasil",
+      "status": "bloqueado",
+      "seguidores_estimados": "83K",
+      "posts_recentes": [],
+      "notas": "HTTP 429. Empresa com lojas em BH e SP, vende impressoras + filamentos + cursos + suporte. Sem dados de posts recentes."
+    },
+    {
+      "perfil": "@artbox3d",
+      "status": "bloqueado_com_dado_parcial",
+      "seguidores_estimados": "82K",
+      "posts_recentes": [
+        {
+          "url": "https://www.instagram.com/p/DQ5OQCCEpfl/",
+          "tema": "Lancamento ARTBOX3D Classificados (seminovos.artbox3d.com.br)",
+          "tipo": "produto",
+          "data_estimada": "ultimas_48h",
+          "fonte": "snippet Google indexado"
+        }
+      ],
+      "notas": "HTTP 429. Dado parcial via Google: post recente sobre marketplace C2C de seminovos sem comissão, 100+ usuários."
+    },
+    {
+      "perfil": "@3dprintacademy",
+      "status": "bloqueado",
+      "seguidores_estimados": null,
+      "posts_recentes": [],
+      "notas": "HTTP 429. Sem indexação recente encontrada."
+    },
+    {
+      "perfil": "@3dgeekshow",
+      "status": "bloqueado",
+      "seguidores_estimados": null,
+      "posts_recentes": [],
+      "notas": "HTTP 429. Site 3dgeekshow.com.br com conteúdo sobre 3D industrial."
+    },
+    {
+      "perfil": "@appcustos3d",
+      "status": "sem_presenca",
+      "seguidores_estimados": null,
+      "posts_recentes": [],
+      "notas": "Sem menções indexadas. App 'Custos 3D' na App Store (id6504573310): rating 3.8/5, apenas 4 reviews, ultima atualizacao outubro/2025. Produto dormindo."
+    }
+  ],
+
+  "reclame_aqui": [
+    {
+      "empresa": "Bling ERP",
+      "status_acesso": "403_dados_via_busca",
+      "nota_media": "4.1/5 (Analister 2026)",
+      "taxa_resolucao_ra": "87.8% (out/2025 a mar/2026)",
+      "tempo_medio_resposta_ra": "9 dias 17 horas",
+      "preco_entrada": "R$ 55/mes (plano Cobalto)",
+      "reclamacoes_indexadas": [
+        "O Bling destruiu nossa produtividade. Instabilidade crônica e mudanças arbitrárias de usabilidade.",
+        "ATENÇÃO: ERP que não controla estoque e-commerce",
+        "Problemas atrás de problemas",
+        "O Bling não funciona como deveria. É o pior ERP",
+        "Impossível mudar de plano no ERP Bling"
+      ],
+      "temas_recorrentes": [
+        "Instabilidade em picos de tráfego",
+        "Mudanças de UX sem aviso que quebram fluxos",
+        "Sync de estoque com marketplaces falha",
+        "Atendimento lento (telefone, horas de espera)",
+        "Mudança de plano bloqueada",
+        "Emissão NF travada por storage"
+      ]
+    },
+    {
+      "empresa": "MakerFlow / 3DControl / PrintWorks / outros SaaS maker",
+      "status_acesso": "ausente_no_ra",
+      "nota_media": null,
+      "reclamacoes_indexadas": [],
+      "notas": "Nenhum SaaS vertical para maker 3D aparece no Reclame Aqui. Base de usuarios ainda pequena para gerar reclamações públicas. Mercado pre-maturidade."
+    }
+  ],
+
+  "mapa_concorrentes": [
+    {
+      "nome": "MakerFlow 3D",
+      "url": "https://www.makerflow3d.com.br/",
+      "preco": "R$ 29,90/mes | R$ 69,90/trimestral | 7d gratis",
+      "diferenciais": ["Integracao ML + Shopee OAuth", "Analise mercado PRO", "Controle impressoras individuais", "Canal YouTube ativo"],
+      "risco_hayzer": "MEDIO — integracao marketplaces é ponto forte deles"
+    },
+    {
+      "nome": "3D Control",
+      "url": "https://3dcontrol.com.br/",
+      "preco": "R$ 39,99/mes",
+      "diferenciais": ["Gestao multi-plataforma", "CRM integrado", "Frota de impressoras com depreciacao"],
+      "risco_hayzer": "MEDIO — pricing similar, features parecidas"
+    },
+    {
+      "nome": "PrintLog",
+      "url": "https://printlog.com.br/",
+      "preco": "PRO 100% OFF (lancamento)",
+      "diferenciais": ["Pitch maker comunitario", "Interface alta densidade"],
+      "risco_hayzer": "ALTO — novo entrante com estrategia agressiva de base"
+    },
+    {
+      "nome": "PrintWorks3D",
+      "url": "https://www.printworks3d.com.br/",
+      "preco": "Gratuito",
+      "diferenciais": ["'Mais completo gratuito' declarado"],
+      "risco_hayzer": "BAIXO — posicionamento free sem monetizacao visivel"
+    },
+    {
+      "nome": "CordeirFlow",
+      "url": "https://www.cordeiroflow.com/",
+      "preco": "Gratis (3 pedidos) / USD 4.99/mes ilimitado",
+      "diferenciais": ["Storefront publico", "Alertas WhatsApp prazo", "Videoaulas", "Trial 7d"],
+      "risco_hayzer": "MEDIO — comunidade + educacao, pricing USD sugere mercado amplo"
+    },
+    {
+      "nome": "ZoomCalc3D",
+      "url": "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d/",
+      "preco": "100% gratuito",
+      "diferenciais": ["Gemini AI integrado", "Lancado dez/2025", "CSV export"],
+      "risco_hayzer": "BAIXO — calculadora, nao SaaS de gestao"
+    },
+    {
+      "nome": "InfinityMaker ERP",
+      "url": "https://www.infinitymaker.com.br/",
+      "preco": "Gratis + planos mensais/anuais (sem preço público)",
+      "diferenciais": ["Multi-usuario", "Eventos Sazonais (feature nova)", "Criptografia de dados"],
+      "risco_hayzer": "MEDIO — ERP mais completo, feature 'Eventos Sazonais' parece adicao recente"
+    },
+    {
+      "nome": "Precifi3D",
+      "url": "https://precifi3d.com/",
+      "preco": "Starter gratis / Pro ilimitado / Enterprise",
+      "diferenciais": ["Diretorio de fornecedores", "Copyright 2026 ativo"],
+      "risco_hayzer": "BAIXO — foco em precificacao, nao gestao completa"
+    }
+  ],
+
+  "oportunidades_seo": {
+    "constatacao": "Busca 'gestao maker 3D software brasil' retorna CAD/CAM (SolidWorks, Autodesk) — nenhum player de gestao de negocio maker está ranqueando para termos de negocio.",
+    "potencial": "SEO virgin territory. Blog com artigos 'como precificar impressao 3D', 'gestao de pedidos maker', 'controle estoque filamento' sem concorrencia.",
+    "recomendacao": "3-5 artigos pilares nos proximos 30 dias antes do launch publico 27/06."
+  },
+
+  "contexto_mercado": {
+    "tamanho_br": "USD 620M (2024) → USD 2.75B projecao 2033 (IMARC Group)",
+    "tendencia_2026": "Profissionalizacao de farms, integracao vertical, diferenciacao por material — segundo blog 3D Fila",
+    "nota": "Tailwind forte. Mercado crescendo mas ainda sem SaaS de gestao consolidado. Janela de oportunidade aberta."
+  }
+}
