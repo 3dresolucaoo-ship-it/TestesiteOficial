@@ -1,0 +1,60 @@
+{
+  "date": "2026-06-05",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "rotas": {
+    "hayzer_com_br": { "status": 200, "ok": true },
+    "calculadora": { "status": 200, "ok": true },
+    "waitlist": { "status": 200, "ok": true },
+    "calculadora_pro": {
+      "status": 404,
+      "ok": false,
+      "nota": "ESPERADO — Calc Pro revogada ADR-024 (21/05). Rota removida intencionalmente."
+    }
+  },
+  "rotas_respondendo_200": "3/4 (1 esperada)",
+  "vercel": {
+    "deployment_prod_id": "dpl_5KB5Pho2u5VN3A1p86whpA6bxwkn",
+    "deployment_prod_hash": "c54ef0a",
+    "deployment_prod_hash_full": "c54ef0a8de5f48121ca10faa9c2a1f96fae16711",
+    "deployment_prod_branch": "main",
+    "deployment_prod_msg": "monitoring: error-scan 2026-06-05",
+    "deployment_prod_age_h": 8,
+    "deployment_prod_state": "READY",
+    "deployments_24h_total": 20,
+    "deployments_24h_errors": 0,
+    "deployments_24h_building_stuck": 0,
+    "status": "OK"
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "health": "OK",
+    "waitlist_leads_count": 3,
+    "waitlist_leads_note": "3 registros de teste (golden path) — normal pre-launch",
+    "notifications_table": true,
+    "search_index_view": false,
+    "search_index_note": "View nao existe. Verificar se foi criada ou ainda pendente de migration.",
+    "status": "ALERTA_AMARELO"
+  },
+  "performance": {
+    "status": "SEM_DADOS",
+    "nota": "Vercel Analytics nao disponivel via MCP. Requer painel manual."
+  },
+  "alertas": [
+    {
+      "severity": 1,
+      "tipo": "AMARELO",
+      "item": "search_index view ausente no Supabase",
+      "acao": "Verificar se view foi criada ou esta pendente de migration"
+    },
+    {
+      "severity": 1,
+      "tipo": "INFO",
+      "item": "/calculadora/pro retornou 404",
+      "acao": "Esperado (ADR-024). Nenhuma acao necessaria."
+    }
+  ],
+  "rollback_cmd": "vercel rollback dpl_Ap6FZvcuHxbSPMzLoE8Sn1ud3YJB --scope 3dresolucaoo-5027s-projects",
+  "gerado_por": "smoke-test-diario",
+  "run_at_utc": "2026-06-05T09:00:00Z"
+}
