@@ -1,0 +1,34 @@
+{
+  "date": "2026-06-05",
+  "generated_at": "2026-06-05T09:00:00-03:00",
+  "periodo_24h": {
+    "total_novos": 0,
+    "qualificados_step2": 0,
+    "pct_qualificados": null,
+    "breakdown_utm": [],
+    "nota": "Nenhum lead nas ultimas 24h — esperado em pre-lançamento (soft launch 13/06)"
+  },
+  "acumulado": {
+    "total_waitlist": 3,
+    "total_qualificados": 3,
+    "pct_qualificados": 100.0,
+    "leads_7d": 0,
+    "leads_prev_7d": 1,
+    "crescimento_7d_pct": -100.0,
+    "top_utm_sources": [
+      { "utm_source": "direct", "total": 3, "pct": 100.0 }
+    ]
+  },
+  "qualidade": {
+    "avg_minutes_step1_to_step2": null,
+    "nota": "Leads sao internos/teste. Form parece single-step (updated_at = created_at). Sem delta mensuravel."
+  },
+  "tendencia": "baixa",
+  "contexto": "Pre-lançamento. Soft launch 13/06. Leads atuais sao internos/testes. Aquisição externa ainda nao iniciada.",
+  "acoes_recomendadas": [
+    "Nenhuma acao de funil necessaria hoje — volume zero é esperado pré-13/06.",
+    "Garantir que UTM params estejam configurados nos links do grupo WhatsApp Beta antes do soft launch (atualmente 100% direct).",
+    "Considerar postagem no grupo WhatsApp Beta já nos proximos dias para aquecer antes de 13/06."
+  ],
+  "schema_note": "Etapa 2 proxied por campo whatsapp IS NOT NULL (coluna 'step' nao existe na tabela)."
+}
