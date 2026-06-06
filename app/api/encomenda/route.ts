@@ -41,27 +41,36 @@ export async function POST(req: NextRequest) {
 
     const admin = getSupabaseAdmin()
 
-    // Busca catálogo → project_id + user_id
+    // Busca catálogo → project_id + user_id + product_ids
     const { data: catalog } = await admin
       .from('catalogs')
-      .select('id, user_id, project_id')
+      .select('id, user_id, project_id, product_ids')
       .eq('slug', catalogSlug)
       .eq('is_public', true)
       .maybeSingle()
 
     if (!catalog) {
-      return NextResponse.json({ error: 'Catálogo não encontrado.' }, { status: 400 })
+      // Erro genérico (SEC-7): não ecoa o slug (evita oráculo de enumeração).
+      return NextResponse.json({ error: 'Não foi possível registrar este pedido.' }, { status: 400 })
     }
 
-    // Busca produto → nome + preço
+    // SEC-0: produto TEM que estar neste catálogo + pertencer ao dono.
+    // Sem isso: usar productId de outro maker polui o pedido/financeiro alheio.
+    const catalogProductIds: string[] = Array.isArray(catalog.product_ids) ? catalog.product_ids : []
+    if (!catalogProductIds.includes(productId)) {
+      return NextResponse.json({ error: 'Não foi possível registrar este pedido.' }, { status: 400 })
+    }
+
+    // Busca produto → nome + preço (amarrado ao merchant)
     const { data: product } = await admin
       .from('products')
       .select('id, name, sale_price')
       .eq('id', productId)
+      .eq('user_id', catalog.user_id)
       .maybeSingle()
 
     if (!product) {
-      return NextResponse.json({ error: 'Produto não encontrado.' }, { status: 400 })
+      return NextResponse.json({ error: 'Não foi possível registrar este pedido.' }, { status: 400 })
     }
 
     const salePrice = Number(product.sale_price ?? 0)

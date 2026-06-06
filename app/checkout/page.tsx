@@ -14,24 +14,32 @@ export default async function CheckoutPage({
 
   const admin = getSupabaseAdmin()
 
-  const { data: product } = await admin
-    .from('products')
-    .select('id, name, sale_price')
-    .eq('id', productId)
-    .maybeSingle()
-
-  // Encomenda permite sale_price = 0 (produto sem preço ainda)
-  if (!product) notFound()
-  if (!isEncomenda && Number(product.sale_price ?? 0) <= 0) notFound()
-
+  // Busca catálogo primeiro (dono + produtos que ele contém).
   const { data: catalog } = await admin
     .from('catalogs')
-    .select('id, name, whatsapp')
+    .select('id, name, whatsapp, user_id, product_ids')
     .eq('slug', catalogSlug)
     .eq('is_public', true)
     .maybeSingle()
 
   if (!catalog) notFound()
+
+  // SEC-0 (defense-in-depth): o productId vem da URL. Produto TEM que estar
+  // neste catálogo, senão dá pra montar uma página de checkout com produto de
+  // outro maker / fazer price-shopping. A API /api/checkout valida de novo.
+  const catalogProductIds: string[] = Array.isArray(catalog.product_ids) ? catalog.product_ids : []
+  if (!catalogProductIds.includes(productId)) notFound()
+
+  const { data: product } = await admin
+    .from('products')
+    .select('id, name, sale_price')
+    .eq('id', productId)
+    .eq('user_id', catalog.user_id)
+    .maybeSingle()
+
+  // Encomenda permite sale_price = 0 (produto sem preço ainda)
+  if (!product) notFound()
+  if (!isEncomenda && Number(product.sale_price ?? 0) <= 0) notFound()
 
   const initialQty = Math.max(1, Math.min(Number(qty) || 1, 999))
 

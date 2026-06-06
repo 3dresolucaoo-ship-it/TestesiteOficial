@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { catalogsService } from '@/services/catalogs'
-import { supabase } from '@/lib/supabaseClient'
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin'
 import type { Product } from '@/lib/types'
 import type { CatalogTemplate } from '@/core/catalog/types'
 import { ShareButton } from '@/components/ShareButton'
@@ -10,23 +10,35 @@ import { MinimalTemplate } from './MinimalTemplate'
 import { FloatingWhatsApp } from './FloatingWhatsApp'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
+// SEGURANÇA (SEC-1): esta página é PÚBLICA. Usa o admin client (server-only,
+// Server Component) e seleciona SÓ as colunas públicas — NUNCA custo/margem/
+// tempo/notas. Antes usava o client anon + select('*'), o que (a) dependia de
+// uma RLS public-read ampla demais e (b) serializava margem/custo/failureRate
+// no payload RSC, visível no view-source do catálogo público (vazava o negócio
+// do maker pra concorrente). Os campos sensíveis são zerados no objeto Product
+// pra não viajarem pro browser; os componentes só usam name/preço/imagem/estoque.
 async function getProducts(ids: string[]): Promise<Product[]> {
   if (ids.length === 0) return []
-  const { data } = await supabase.from('products').select('*').in('id', ids)
+  const admin = getSupabaseAdmin()
+  const { data } = await admin
+    .from('products')
+    .select('id, name, sale_price, inventory_item_id, image_url, checkout_mode, variants, allows_custom')
+    .in('id', ids)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (data ?? []).map((r: any) => ({
     id:                r.id,
-    projectId:         r.project_id,
+    projectId:         '',                 // interno — não expor no catálogo público
     name:              r.name,
-    materialGrams:     Number(r.material_grams ?? 0),
-    printTimeHours:    Number(r.print_time_hours ?? 0),
-    failureRate:       Number(r.failure_rate ?? 0.10),
-    energyCostPerHour: Number(r.energy_cost_per_hour ?? 0.50),
-    supportCost:       Number(r.support_cost ?? 0),
-    marginPercentage:  Number(r.margin_percentage ?? 0.30),
+    // Campos de CUSTO/MARGEM zerados de propósito (não vão pro browser público):
+    materialGrams:     0,
+    printTimeHours:    0,
+    failureRate:       0,
+    energyCostPerHour: 0,
+    supportCost:       0,
+    marginPercentage:  0,
     salePrice:         Number(r.sale_price ?? 0),
     inventoryItemId:   r.inventory_item_id ?? undefined,
-    notes:             r.notes ?? '',
+    notes:             '',                 // pode conter info interna — não expor
     imageUrl:          r.image_url ?? undefined,
     checkoutMode:      (r.checkout_mode ?? 'direct') as Product['checkoutMode'],
     variants:          Array.isArray(r.variants) ? r.variants : undefined,
@@ -35,7 +47,11 @@ async function getProducts(ids: string[]): Promise<Product[]> {
 }
 
 async function getInventoryQuantity(id: string): Promise<number | null> {
-  const { data } = await supabase.from('inventory').select('quantity').eq('id', id).maybeSingle()
+  // Admin client + seleciona SÓ `quantity` (nunca cost_price/sale_price/notes do
+  // estoque). Antes lia via anon → exigia a policy inventory_public_read (que
+  // expunha TODO o estoque/custo de todos os makers a qualquer anônimo).
+  const admin = getSupabaseAdmin()
+  const { data } = await admin.from('inventory').select('quantity').eq('id', id).maybeSingle()
   return data ? Number(data.quantity ?? 0) : null
 }
 

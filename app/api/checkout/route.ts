@@ -72,14 +72,15 @@ export async function POST(req: NextRequest) {
     // Uses admin client so no auth cookie is required (public checkout page).
     const { data: catalog } = await admin
       .from('catalogs')
-      .select('id, user_id, project_id')
+      .select('id, user_id, project_id, product_ids')
       .eq('slug', catalogSlug)
       .eq('is_public', true)
       .maybeSingle()
 
     if (!catalog) {
+      // Erro genérico (SEC-7): não ecoa o slug de volta (evita oráculo de enumeração).
       return NextResponse.json(
-        { error: `Catalog not found or not public: ${catalogSlug}` },
+        { error: 'Não foi possível processar este pedido.' },
         { status: 400 },
       )
     }
@@ -87,16 +88,31 @@ export async function POST(req: NextRequest) {
     const merchantId = catalog.user_id  as string
     const projectId  = catalog.project_id as string
 
-    // ── Look up product → name + price ────────────────────────────────────────
+    // ── SEC-0: amarrar produto ao catálogo + merchant ─────────────────────────
+    // O productId vem da URL (cliente controla). SEM esta trava, dá pra:
+    //  (1) trocar productId por um produto barato e comprar o caro (price-shopping)
+    //  (2) usar productId de OUTRO maker e poluir o pedido/financeiro alheio.
+    // Defesa: produto TEM que estar neste catálogo (product_ids) E pertencer ao
+    // dono do catálogo (user_id). Espelha o padrão de create_catalog_lead.
+    const catalogProductIds: string[] = Array.isArray(catalog.product_ids) ? catalog.product_ids : []
+    if (!catalogProductIds.includes(productId)) {
+      return NextResponse.json(
+        { error: 'Não foi possível processar este pedido.' },
+        { status: 400 },
+      )
+    }
+
+    // ── Look up product → name + price (amarrado ao merchant) ─────────────────
     const { data: product } = await admin
       .from('products')
       .select('id, name, sale_price')
       .eq('id', productId)
+      .eq('user_id', merchantId)
       .maybeSingle()
 
     if (!product) {
       return NextResponse.json(
-        { error: `Product not found: ${productId}` },
+        { error: 'Não foi possível processar este pedido.' },
         { status: 400 },
       )
     }

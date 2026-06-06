@@ -45,13 +45,14 @@ const STEP_DAYS: Record<SequenceStep, number> = {
 }
 
 export async function GET(request: NextRequest) {
-  // Auth via header secreto (Vercel Cron envia automaticamente Authorization: Bearer)
+  // Auth via header secreto (Vercel Cron envia automaticamente Authorization: Bearer).
+  // FAIL-CLOSED (SEC-4): se CRON_SECRET não estiver setado, BLOQUEIA — antes o
+  // `if (expected)` deixava a rota 100% aberta sem a env, permitindo qualquer um
+  // disparar a sequência de email pra toda a base (spam/queima de quota Resend).
   const expected = process.env.CRON_SECRET
-  if (expected) {
-    const provided = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
-    if (provided !== expected) {
-      return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
-    }
+  const provided = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
+  if (!expected || provided !== expected) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   }
 
   const admin = getSupabaseAdmin()

@@ -136,12 +136,23 @@ export async function POST(req: NextRequest) {
   // Este SELECT é o único que permanece fora da transação — é read-only e
   // idempotente: não muda o resultado mesmo que o produto seja editado
   // no instante do webhook (o preço "snapshot" no momento da compra é o correto).
+  // SEC-0 (defense-in-depth): amarrar produto ao merchant também aqui. O checkout
+  // já valida na entrada, mas o webhook recalcula value pelo produto — se o
+  // metadata.productId não pertencer a este merchant, não usamos o preço dele.
   const admin = getSupabaseAdmin()
   const { data: product } = await admin
     .from('products')
     .select('name, sale_price')
     .eq('id', metadata.productId)
+    .eq('user_id', merchantId)
     .maybeSingle()
+
+  if (!product) {
+    console.warn(
+      `[webhook/payment] produto não pertence ao merchant ou não existe — possível tampering. ` +
+      `productId=${metadata.productId} | merchantId=${merchantId} | paymentId=${payload.paymentId}`,
+    )
+  }
 
   const productName = product?.name ?? metadata.productId
   const orderValue  = product

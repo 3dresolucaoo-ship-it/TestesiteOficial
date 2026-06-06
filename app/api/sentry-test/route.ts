@@ -23,13 +23,11 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-  // Auth via mesmo CRON_SECRET (não vale criar outra var só pra isso)
+  // Auth via mesmo CRON_SECRET. FAIL-CLOSED (SEC-4): sem a env, bloqueia.
   const expected = process.env.CRON_SECRET
-  if (expected) {
-    const provided = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
-    if (provided !== expected) {
-      return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
-    }
+  const provided = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
+  if (!expected || provided !== expected) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
   }
 
   // Erro proposital pra Sentry capturar
