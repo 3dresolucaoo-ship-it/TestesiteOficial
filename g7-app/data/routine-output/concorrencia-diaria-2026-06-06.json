@@ -1,0 +1,97 @@
+{
+  "data": "2026-06-06",
+  "gerado_em": "2026-06-06T12:00:00-03:00",
+  "rotina": "concorrencia-diaria",
+  "resumo_palavra": "3D Lab anuncia expansao fisica para SP (julho); Bling com historico solido de instabilidade em horario de pico; mapa SaaS concorrentes maker 3D atualizado com 9 players.",
+
+  "alertas": [
+    {
+      "prioridade": "ALTA",
+      "titulo": "3D Lab abre loja fisica em Sao Paulo - brunch de inauguracao 20 de julho",
+      "detalhe": "Reel DL7t8d6upzb publicado recentemente: '3D LAB CHEGOU EM SAO PAULO!' com evento de brunch 20/07, vagas limitadas gratuitas. Empresa saia apenas de BH (MG). Expansao para SP indica crescimento do mercado maker 3D no maior estado do Brasil. Positivo para Hayzer: mais makers ativos em SP = mais usuarios potenciais. Risco: 3D Lab pode passar a oferecer suporte presencial a makers paulistas, criando comunidade local.",
+      "fonte": "Instagram @3dlab_brasil reel DL7t8d6upzb",
+      "acao_sugerida": "Monitorar se 3D Lab lanca algum produto SaaS de gestao junto com a loja fisica. Por enquanto e varejista de hardware sem concorrencia direta."
+    },
+    {
+      "prioridade": "MEDIA",
+      "titulo": "Mapa SaaS maker 3D BR tem 9 players ativos confirmados",
+      "detalhe": "Confirmados: 3D Control (R$ 39,99/mes tudo incluido), MakerFlow3D (R$ 29,90/mes, mais barato), PrintWorks3D (gratis), AppCustos3D (site ativo), Smart3D, MakerOS, PrintCalc, GL3DE, ZoomCalc3D. Nenhum tem reclamacao no Reclame Aqui, indicando que sao ainda pequenos ou com usuario base restrita. Hayzer diferencial: multi-modulo integrado vs calculadoras isoladas.",
+      "fonte": "WebSearch + sites diretos",
+      "acao_sugerida": "Mapear feature-set de 3D Control e MakerFlow (os mais completos) para landing comparativa Bloco 5."
+    },
+    {
+      "prioridade": "BAIXA",
+      "titulo": "Bling com padrao recorrente de quedas em horario de pico",
+      "detalhe": "Reclamacoes recentes no Reclame Aqui: ERP offline 8h numa segunda-feira, instabilidade cronica com mudancas arbitrarias de usabilidade sem aviso, suporte que responde em media 9 dias. Score 87.8% resolucao. Bling nao e concorrente direto do Hayzer (e ERP generalista), mas makers que usam Bling para gestao sao exatamente o publico que Hayzer quer migrar.",
+      "fonte": "Reclame Aqui / reclameaqui.com.br/empresa/bling",
+      "acao_sugerida": "Usar dor especifica do Bling (instabilidade + suporte lento) como argumento na landing: 'sistema feito pra maker, nao adaptado'"
+    }
+  ],
+
+  "posts_relevantes": [
+    {
+      "conta": "@3dlab_brasil",
+      "tipo": "Reel",
+      "url": "https://www.instagram.com/reel/DL7t8d6upzb/",
+      "tema": "Expansao fisica para SP",
+      "resumo": "Anuncio de inauguracao de loja fisica em Sao Paulo com brunch em 20 de julho. Slogan 'com aquele carinho de sempre'. Vagas gratuitas limitadas via link na bio.",
+      "relevancia_hayzer": "Sinaliza crescimento do ecossistema maker 3D em SP. Nao e concorrente direto mas indica maturidade crescente do mercado alvo.",
+      "engajamento_estimado": "nao_coletado"
+    },
+    {
+      "conta": "@3dgeekshow",
+      "tipo": "Reel",
+      "url": "https://www.instagram.com/reel/DSpj3HvjfG8/",
+      "tema": "Conteudo tecnico (tema nao identificado - reel bloqueado para fetch)",
+      "resumo": "Reel recente de Murilo Laffranchi (128K seguidores). Conta e referencia educacional para makers. URL sugere publicacao recente.",
+      "relevancia_hayzer": "Parceria ou patrocinio com 3dgeekshow seria canal direto para Rafael (persona). Acompanhar.",
+      "engajamento_estimado": "nao_coletado"
+    }
+  ],
+
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "url": "https://www.reclameaqui.com.br/bling/erp-bling-off-line-por-8h-em-plena-segunda-feira-causando-prejuizos_bJPwV6wee3imrcbl/",
+      "queixa": "ERP offline por 8h em uma segunda-feira causando prejuizos diretos. Reclamante nao conseguia emitir notas, gerar pedidos ou acessar financeiro.",
+      "tema_recorrente": true,
+      "tema_descricao": "Instabilidade em horario de pico e suporte lento (media 9 dias para resposta). Padrão aparece em multiplas reclamacoes com titulos como 'O Bling destruiu nossa produtividade' e 'instabilidade cronica'.",
+      "oportunidade_hayzer": "Makers que usam Bling genericamente para vender na Shopee/ML sofrem exatamente com isso. Hayzer pode posicionar: 'feito para maker, sem downtime surpresa'."
+    },
+    {
+      "empresa": "Bling ERP",
+      "url": "https://www.reclameaqui.com.br/bling/o-bling-destruiu-nossa-produtividade-instabilidade-cronica-e-mudancas-arbitrarias-de-usabilidade_7U5PnmzXuLpSIBEM/",
+      "queixa": "Bling altera dinâmica de funcionamento sem aviso (ex: passou a exigir validacao de CNPJ para ver pedidos), destruindo fluxos de trabalho estruturados. Suporte responde com 'e assim que funciona'.",
+      "tema_recorrente": true,
+      "tema_descricao": "Mudancas de UX sem aviso + suporte que nao adapta sistema ao usuario. Recorrente em usuarios de negocio.",
+      "oportunidade_hayzer": "Contra-argumento direto: Hayzer foi construido do zero pra fluxo do maker, nao adaptado de ERP generico."
+    }
+  ],
+
+  "acao_recomendada": {
+    "para": "Marcos / Helena",
+    "prazo": "antes 10/06",
+    "acao": "Monitorar @3dgeekshow (Murilo Laffranchi, 128K seguidores) para avaliar parceria de divulgacao pre-launch 27/06. Ele e a voz mais reach do mercado maker 3D no Instagram BR. Um reel patrocinado ou menção organica no periodo 13-27/06 teria impacto direto na base Rafael. Verificar DM ou contato via site 3dgeekshow.com.br/loja.",
+    "contexto": "Nenhum concorrente SaaS maker 3D tem presenca relevante em Instagram. Janela aberta para Hayzer ser o primeiro a aparecer no feed de Murilo antes do launch."
+  },
+
+  "mapa_concorrentes_saas": [
+    { "nome": "3D Control", "url": "3dcontrol.com.br", "preco": "R$ 39,99/mes", "modelo": "Tudo incluido", "diferencial": "CRM + pedidos + estoque + dashboard + suporte prioritario" },
+    { "nome": "MakerFlow 3D", "url": "makerflow3d.com.br", "preco": "R$ 29,90/mes", "modelo": "Mensal/trimestral", "diferencial": "Mais barato, integracao ML/Shopee, suporte WhatsApp" },
+    { "nome": "PrintWorks3D", "url": "printworks3d.com.br", "preco": "Gratis", "modelo": "Freemium ou local", "diferencial": "Zero custo, gestao filamentos/custos/financeiro" },
+    { "nome": "AppCustos3D", "url": "appcustos3d.com.br", "preco": "nao_identificado", "modelo": "nao_identificado", "diferencial": "Foco em calculo de custos" },
+    { "nome": "Smart3D", "url": "smart3d.opcognos.com", "preco": "nao_identificado", "modelo": "SaaS", "diferencial": "Dashboard + orcamentos PDF + financeiro" },
+    { "nome": "MakerOS", "url": "makeros3d.com", "preco": "nao_identificado", "modelo": "SaaS mobile-first", "diferencial": "Dashboard moderno, mobile-first design" },
+    { "nome": "PrintCalc", "url": "printcalc.com.br", "preco": "nao_identificado", "modelo": "Cloud", "diferencial": "Orcamentos PDF multiplate, impostos incluidos" },
+    { "nome": "ZoomCalc3D", "url": "zoomdigital.com.br/zoomcalc3d", "preco": "nao_identificado", "modelo": "Calculadora", "diferencial": "Precificacao com margem de risco de falha" },
+    { "nome": "Custos3D", "url": "nao_identificado", "preco": "nao_identificado", "modelo": "Desktop/app", "diferencial": "Importa Shopee/ML via planilha, gera ordens de producao do .gcode" }
+  ],
+
+  "status_pesquisa": {
+    "instagram_login_required": true,
+    "instagram_cobertura": "parcial - reels publicos com fetch limitado pelo Instagram. Dado mais rico: 3D Lab SP via URL publica.",
+    "reclameaqui_acesso": "parcial - paginas de listagem retornam 403. Dados via WebSearch (titulos e snippets indexados pelo Google).",
+    "concorrentes_saas_sem_reclameaqui": true,
+    "proxima_acao_rotina": "2026-06-07"
+  }
+}
