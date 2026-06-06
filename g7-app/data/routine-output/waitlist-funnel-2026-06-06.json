@@ -1,0 +1,34 @@
+{
+  "date": "2026-06-06",
+  "generated_at": "2026-06-06T09:00:00-03:00",
+  "periodo_24h": {
+    "total_novos": 0,
+    "completaram_etapa_2": 0,
+    "pct_etapa_2": null,
+    "por_utm_source": {}
+  },
+  "acumulado": {
+    "total_waitlist": 3,
+    "leads_reais_estimados": 2,
+    "nota": "1 lead e QA test (audit-...@hayzer-test.local), 2 leads sao mesmo usuario (Gabriel, typo no email)",
+    "last_7d": 0,
+    "prev_7d": 0,
+    "crescimento_7d_pct": null,
+    "media_diaria_7d": 0.0,
+    "top_utm_acumulado": {
+      "null_sem_utm": 3
+    }
+  },
+  "qualidade": {
+    "etapa_2_criterio": "whatsapp IS NOT NULL",
+    "total_com_whatsapp": 3,
+    "total_email_confirmado": 0,
+    "total_convertido": 0,
+    "avg_score": 0.0
+  },
+  "tempo_step1_step2_min": null,
+  "tendencia": "sem_movimento",
+  "ultimo_lead_real": "2026-05-23",
+  "dias_sem_lead_novo": 14,
+  "schema_note": "Coluna 'step' nao existe na tabela. Etapa 2 mapeada para whatsapp IS NOT NULL (dado coletado no passo 2 do form). Coluna 'step2_at' idem nao existe."
+}
