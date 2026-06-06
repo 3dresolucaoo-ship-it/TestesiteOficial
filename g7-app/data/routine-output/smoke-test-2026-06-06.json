@@ -1,0 +1,51 @@
+{
+  "date": "2026-06-06",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "rotas": {
+    "summary": "3/4 confirmadas 200 (1 ambigua SSR, 1 esperada 404)",
+    "hayzer_com_br": { "status": 200, "ok": true, "title": "Hayzer - A raiz do seu negocio" },
+    "calculadora": { "status": 200, "ok": true, "title": "Calculadora de custo de impressao 3D - Hayzer" },
+    "waitlist": { "status": "ambiguo_ssr", "ok": true, "nota": "respondeu loading state (SSR Next.js), conteudo presente, servidor online" },
+    "calculadora_pro": { "status": 404, "ok": true, "nota": "esperado — ADR-024 Calc Pro revogada 21/05" }
+  },
+  "vercel": {
+    "producao_deploy_id": "dpl_5KB5Pho2u5VN3A1p86whpA6bxwkn",
+    "producao_sha": "c54ef0a",
+    "producao_commit": "monitoring: error-scan 2026-06-05",
+    "producao_branch": "main",
+    "producao_criado_utc": "2026-06-05T01:09:21Z",
+    "producao_idade_horas": 32,
+    "estado": "READY",
+    "erros_ultimas_24h": 0,
+    "total_deploys_listados": 20,
+    "todos_ready": true
+  },
+  "supabase": {
+    "health_check": "OK",
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "region": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "waitlist_leads_total": 6,
+    "ultimo_lead_at": "2026-06-01T15:54:00",
+    "tabela_notifications": true,
+    "view_search_index": false
+  },
+  "performance": {
+    "fonte": "N/A",
+    "nota": "Vercel Analytics nao acessivel via MCP — checar manualmente em prod se necessario"
+  },
+  "alertas": [
+    {
+      "nivel": "amarelo",
+      "item": "search_index view ausente",
+      "detalhe": "view search_index nao existe no Supabase — bug conhecido (visto tambem em 05/06). Funcionalidade de busca pode estar comprometida."
+    },
+    {
+      "nivel": "info",
+      "item": "/waitlist SSR loading",
+      "detalhe": "rota retornou shell de loading (normal em Next.js CSR), nao confirmado como 200 explicito mas servidor respondeu"
+    }
+  ],
+  "rollback_cmd": "vercel rollback dpl_Ap6FZvcuHxbSPMzLoE8Sn1ud3YJB --team team_JPZ2UXx1CVIIr20I4V1u9uID"
+}
