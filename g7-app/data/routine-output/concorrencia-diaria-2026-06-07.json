@@ -1,0 +1,80 @@
+{
+  "data": "2026-06-07",
+  "rotina": "concorrencia-diaria",
+  "executado_por": "claude-sonnet-4-6",
+  "fontes_consultadas": [
+    "instagram.com/3dgeekshow",
+    "instagram.com/3dlab_brasil",
+    "instagram.com/artbox3d",
+    "instagram.com/3dprintacademy",
+    "3dgeekshow.com.br",
+    "appcustos3d.com.br",
+    "zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d",
+    "reclameaqui.com.br/empresa/bling"
+  ],
+  "limitacoes": [
+    "Instagram nao indexa posts recentes via busca publica — conteudo obtido via site proprio do 3D Geek Show",
+    "Reclame Aqui retornou HTTP 403 no fetch direto — dados obtidos via busca indexada",
+    "OneDrive nao acessivel neste ambiente — append em _Timeline mudancas.md nao executado"
+  ],
+  "alertas": [
+    {
+      "prioridade": "ALTA",
+      "titulo": "ZoomCalc3D e 100% gratuito com IA integrada",
+      "detalhe": "ZoomCalc3D (Zoom Digital) oferece calculadora de custos 3D totalmente gratuita com integracao Gemini AI, importacao G-code, gestao de estoque de filamentos, calculo ROI/Payback e exportacao WhatsApp/CSV. Concorre diretamente com a calculadora Hayzer como magnet. Diferencial deles: gratuito permanente + IA. Diferencial Hayzer: gestao completa maker (pedidos, producao, financeiro, CRM) — calculadora e apenas porta de entrada.",
+      "impacto": "Pode capturar makers que buscam somente precificacao sem pagar. Hayzer precisa reforcar que a calc e isca pro ecossistema completo."
+    },
+    {
+      "prioridade": "MEDIA",
+      "titulo": "3D Geek Show postou sobre nichos de ticket alto em 06/06",
+      "detalhe": "Post de 06/06/2026 no site/Instagram: '5 Nichos ESQUECIDOS da Impressao 3D (Ticket Alto, Zero Concorrencia)'. Canal com 128K seguidores. Exatamente o angulo de valor que ressoa com o Rafael — maker que quer sair de commodities e entrar em servicos premium.",
+      "impacto": "Audiencia-alvo Hayzer consumindo esse conteudo. Oportunidade de reforcar que Hayzer e o sistema de gestao para quem opera nichos de ticket alto."
+    },
+    {
+      "prioridade": "MEDIA",
+      "titulo": "Bling ERP: padrao cronico de instabilidade confirmado em 2026",
+      "detalhe": "Reclame Aqui lista multiplas reclamacoes recentes com temas: 'sistema lento e cai toda hora', 'suporte horrivel e sistema instavel', 'bugs de integracao com Shopee/ML/WBuy', 'tickets sem resposta por dias'. Padroes identicos ha mais de 1 ano sem resolucao.",
+      "impacto": "Makers que usam Bling para gestao estao frustrados. Hayzer especifico para maker 3D e proposta radicalmente diferente de ERP generico."
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "perfil": "@3dgeekshow",
+      "seguidores": "128K",
+      "titulo": "5 Nichos ESQUECIDOS da Impressao 3D (Ticket Alto, Zero Concorrencia)",
+      "data": "2026-06-06",
+      "tipo": "post/artigo (cross-postado no site)",
+      "engajamento_estimado": "alto (canal de referencia, tema evergreen de alta busca)",
+      "relevancia_hayzer": "Audiencia que quer crescer profissionalmente precisa de sistema de gestao — gancho natural pro Hayzer"
+    },
+    {
+      "perfil": "@3dgeekshow",
+      "seguidores": "128K",
+      "titulo": "FUI JANTAR E VOLTEI COM UMA INSTA360!",
+      "data": "2026-06-06",
+      "tipo": "giveaway/promocional",
+      "engajamento_estimado": "muito alto (giveaways geram picos de engajamento)",
+      "relevancia_hayzer": "Baixa — conteudo de engajamento sem relacao com gestao. Sinal que o canal usa mix educational + giveaway."
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "plataforma": "Reclame Aqui",
+      "temas_recorrentes": [
+        "Sistema lento / cai toda hora",
+        "Suporte horrivel — tickets ignorados por dias",
+        "Bugs de integracao com marketplaces (Shopee, ML, WBuy)",
+        "Falhas ao emitir NF em horario de pico"
+      ],
+      "frequencia": "Multiplas reclamacoes recentes em 2026 — padrao cronico nao resolvido",
+      "oportunidade_hayzer": "Maker que usa Bling para gestao e claramente subaservido. Hayzer especifico para impressao 3D elimina complexidade de ERP generico e foca no fluxo real: pedido -> producao -> estoque -> financeiro."
+    }
+  ],
+  "acao_recomendada": {
+    "destinatario": "Marcos (marketing) + Helena (estrategia)",
+    "acao": "Criar post/reels respondendo ao angulo do 3D Geek Show ('nichos de ticket alto'): 'Para operar nicho de ticket alto, voce precisa de controle real — calcular certo e so o comeco.' CTA para a calculadora Hayzer + upsell subtil para o sistema completo. Timing ideal: publicar 08-09/06 aproveitando o momento do tema quente nos 128K seguidores do canal.",
+    "esforco_estimado": "2-3h (Carla copy + Diego visual)"
+  },
+  "status_geral": "MOVIMENTOS RELEVANTES DETECTADOS — 3 alertas, acao recomendada com timing claro"
+}
