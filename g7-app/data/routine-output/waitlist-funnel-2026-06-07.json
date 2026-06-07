@@ -1,0 +1,47 @@
+{
+  "digest_date": "2026-06-07",
+  "gerado_em": "2026-06-07T09:00:00-03:00",
+  "periodo_24h": {
+    "total_novos": 0,
+    "email_confirmados": 0,
+    "pct_confirmacao": null,
+    "enriquecidos_whatsapp": 0,
+    "por_utm": {}
+  },
+  "acumulado": {
+    "total": 3,
+    "email_confirmados": 0,
+    "pct_confirmados": 0.0,
+    "com_whatsapp": 3,
+    "pct_enriquecidos": 100.0,
+    "score_medio": 0,
+    "status_todos": "new"
+  },
+  "crescimento": {
+    "ultimos_7d": 0,
+    "semana_anterior": 0,
+    "variacao_pct": null,
+    "tendencia": "parado",
+    "ultimo_lead_entrada": "2026-05-22",
+    "dias_sem_entrada": 16
+  },
+  "utm_acumulado": {
+    "direct": { "total": 3, "pct": 100.0 },
+    "linkedin": { "total": 0, "pct": 0.0 },
+    "whatsapp": { "total": 0, "pct": 0.0 },
+    "organic": { "total": 0, "pct": 0.0 }
+  },
+  "tempo_medio_step1_step2_min": null,
+  "alertas": [
+    "FUNIL PARADO: zero leads nos últimos 16 dias (último: 22/05)",
+    "EMAIL CONFIRMATION: 3 leads com WhatsApp preenchido, nenhum confirmou email — fluxo possivelmente quebrado",
+    "UTM TRACKING: todos os leads sem parâmetro UTM (todos direct/null) — links de campanha sem ?utm_source",
+    "SOFT LAUNCH 13/06: 6 dias — urgente ativar canal de entrada agora"
+  ],
+  "acoes_recomendadas": [
+    "Testar fluxo de confirmação de email manualmente (entrar na waitlist e verificar se email chega)",
+    "Adicionar parâmetros UTM em todos os links de divulgação (WhatsApp, Instagram, LinkedIn)",
+    "Postar no grupo WhatsApp Beta hoje para gerar entradas antes do soft launch 13/06",
+    "Checar se landing /waitlist está acessível em prod (hayzer.com.br)"
+  ]
+}
