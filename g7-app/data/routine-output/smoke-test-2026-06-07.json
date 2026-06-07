@@ -1,0 +1,69 @@
+{
+  "date": "2026-06-07",
+  "time": "06:00 BRT",
+  "status": "ALERTA_AMARELO",
+  "rotas": {
+    "total": 4,
+    "ok": 3,
+    "details": [
+      { "url": "https://hayzer.com.br", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/calculadora", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/waitlist", "status": 200, "ok": true, "nota": "responde 200, renderizacao client-side esperada" },
+      { "url": "https://hayzer.com.br/calculadora/pro", "status": 404, "ok": false, "nota": "ESPERADO — Calc Pro revogada ADR-024 (21/05)" }
+    ]
+  },
+  "vercel": {
+    "projeto": "bvaz-hub",
+    "producao": {
+      "deployment_id": "dpl_Gmhgp814QLw7XFmhQK477Le8k8dT",
+      "commit_sha": "9a06284",
+      "commit_message": "docs(adr-034): plano mestre de launch + status auditoria OWASP",
+      "state": "READY",
+      "idade_horas": 18,
+      "target": "production"
+    },
+    "deploys_24h": {
+      "total": 16,
+      "erros": 0,
+      "building_longo": 0,
+      "todos_ready": true
+    }
+  },
+  "supabase": {
+    "projeto_id": "sqyrkisnllrgylnxwudu",
+    "regiao": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": true,
+    "leads_7d": 5,
+    "tabelas": {
+      "notifications": true,
+      "search_index_view": false
+    },
+    "alertas": [
+      "search_index view ausente — bug recorrente (3 smoke tests consecutivos)"
+    ]
+  },
+  "performance": {
+    "disponivel": false,
+    "motivo": "Vercel Analytics sem acesso via MCP",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "alertas": [
+    {
+      "severity": 1,
+      "tipo": "AMARELO",
+      "item": "/calculadora/pro retorna 404",
+      "acao": "nenhuma — rota nunca existiu, ADR-024 documenta decisao de nao construir Calc Pro"
+    },
+    {
+      "severity": 1,
+      "tipo": "AMARELO",
+      "item": "search_index view ausente no Supabase",
+      "acao": "pendente — recorrente ha 3 dias consecutivos, avaliar criar view ou remover da checklist"
+    }
+  ],
+  "critico": false,
+  "resumo": "Tudo verde exceto dois itens amarelos conhecidos e recorrentes. Nenhuma novidade desde ontem."
+}
