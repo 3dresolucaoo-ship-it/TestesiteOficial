@@ -1,0 +1,73 @@
+{
+  "digest_date": "2026-06-08",
+  "generated_at": "2026-06-08T09:00:00-03:00",
+  "period": "ultimas_24h",
+
+  "hoje": {
+    "total_novos": 0,
+    "step2_completos": 0,
+    "step2_pct": null,
+    "ultimo_lead_ha_dias": 16,
+    "ultimo_lead_data": "2026-05-23",
+    "utm_breakdown": {
+      "linkedin": 0,
+      "whatsapp": 0,
+      "organic": 0,
+      "direct": 0,
+      "outros": 0
+    }
+  },
+
+  "acumulado": {
+    "total_waitlist": 3,
+    "total_step2_completos": 0,
+    "total_email_confirmados": 0,
+    "score_medio": 0.0,
+    "primeiro_lead": "2026-05-15",
+    "ultimo_lead": "2026-05-23",
+    "utm_breakdown": {
+      "direct": 3,
+      "linkedin": 0,
+      "whatsapp": 0,
+      "organic": 0
+    }
+  },
+
+  "tendencia_7d": {
+    "leads_esta_semana": 0,
+    "leads_semana_anterior": 0,
+    "variacao_pct": null,
+    "direcao": "estavel_zero",
+    "media_diaria_7d": 0.0
+  },
+
+  "alertas": [
+    {
+      "nivel": "critico",
+      "codigo": "FUNIL_PARADO_16D",
+      "mensagem": "Nenhum lead novo ha 16 dias. Soft launch em 5 dias (13/06). Acao imediata necessaria."
+    },
+    {
+      "nivel": "alto",
+      "codigo": "STEP2_ZERO",
+      "mensagem": "0% de qualificacao completa. Verificar se step 2 do wizard esta sendo exibido e funcionando."
+    },
+    {
+      "nivel": "alto",
+      "codigo": "EMAIL_CONFIRMACAO_ZERO",
+      "mensagem": "0 emails confirmados. Testar fluxo de confirmacao - pode nao estar disparando."
+    },
+    {
+      "nivel": "medio",
+      "codigo": "UTM_SEM_RASTREIO",
+      "mensagem": "100% dos leads sem UTM. Links de campanha nao estao com parametros rastreados."
+    }
+  ],
+
+  "acoes_recomendadas": [
+    "Ativar post/story urgente pre-launch nos canais (WhatsApp Beta, Instagram, LinkedIn) com link UTM rastreado",
+    "Testar fluxo completo da waitlist (step 1 + step 2 + email confirmacao) em producao",
+    "Configurar UTM nos links: ?utm_source=whatsapp&utm_medium=grupo&utm_campaign=soft-launch",
+    "Revisar se email de confirmacao esta chegando (checar Resend / logs Supabase Auth)"
+  ]
+}
