@@ -1,0 +1,100 @@
+{
+  "data": "2026-06-08",
+  "executado_em": "00:07",
+  "alertas": [
+    {
+      "tipo": "web",
+      "concorrente": "3D Geek Show",
+      "descricao": "Curso 'Seu Negocio de Impressao 3D com IA' ativo com preco de lancamento R$ 197 (sobe para R$ 497). Proposta direta ao Rafael: monetizar impressora sem saber modelar, usando IA (Meshy, Luma AI, 3DFY). Alcance estimado 128K seguidores Instagram + YouTube ativo.",
+      "urgencia": "alta"
+    },
+    {
+      "tipo": "web",
+      "concorrente": "MakerFlow 3D",
+      "descricao": "Plano trimestral R$ 69,90 (R$ 23,30/mes) ativo com fila visual 100%, baixa automatica de estoque, integracao ML+Shopee e 'Analise de Mercado PRO' com IA. Posicionamento direto contra Hayzer: 'transformar impressora em maquina de lucro previsivel'. Metricas de validacao exibidas: +500 operacoes ativas.",
+      "urgencia": "alta"
+    },
+    {
+      "tipo": "web",
+      "concorrente": "3D Control",
+      "descricao": "Produto com CRM integrado, multi-plataforma (Shopee, ML, Elo7, Instagram), plano unico R$ 39,99/mes sem limitacoes. Posicionado especificamente para makers br que vendem em marketplace. Feature de CRM com ranking de clientes e segmentacao B2B/B2C e Revenda e diferencial nao coberto pelas outras calcuadoras.",
+      "urgencia": "media"
+    },
+    {
+      "tipo": "reclameaqui",
+      "concorrente": "Bling ERP",
+      "descricao": "Multiplas reclamacoes indexadas sobre falha na sincronizacao de estoque com Mercado Livre: vendas erradas, cancelamentos, reputacao prejudicada. Suporte lento com respostas genericas. Problema estrutural confirmado: migracao para modelo UP do ML gerou erros sistematicos. Reclamacoes de jan-abr 2026.",
+      "urgencia": "media"
+    },
+    {
+      "tipo": "web",
+      "concorrente": "Precifi3D",
+      "descricao": "Novo concorrente identificado: calculadora com marketplace integrado conectando demandantes a fornecedores verificados, exportacao PDF, suporte FDM+Resina+Laser. Plano Starter gratuito e planos Pro/Enterprise. Potencial de adocao como ferramenta entry-level antes de upgrade para Hayzer.",
+      "urgencia": "baixa"
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "perfil": "@3dgeekshow",
+      "tipo_conteudo": "desconhecido",
+      "tema": "Curso 'Seu Negocio de Impressao 3D com IA' — monetizar impressora com IA sem modelagem",
+      "ressonancia_hayzer": "Atinge exatamente o Rafael (maker sem gestao estruturada). O curso ensina a vender mas nao a gerir — abre janela para Hayzer como camada de gestao pos-curso. Possivel co-marketing ou posicionamento como 'ferramenta que o 3D Geek Show nao ensina mas todo maker precisa'.",
+      "engajamento_estimado": "alto"
+    },
+    {
+      "perfil": "@3dlab_brasil",
+      "tipo_conteudo": "desconhecido",
+      "tema": "Sem acesso a posts especificos — conta com 83K seguidores, 844 posts, BH e SP",
+      "ressonancia_hayzer": "Player de equipamentos, nao software. Audiencia relevante para Hayzer mas sem post concreto identificado nas ultimas 24h.",
+      "engajamento_estimado": "desconhecido"
+    },
+    {
+      "perfil": "@artbox3d",
+      "tipo_conteudo": "desconhecido",
+      "tema": "Revenda oficial de impressoras, filamentos e resinas. Loja propria em maker.artbox3d.com.br e pagina no ML",
+      "ressonancia_hayzer": "Vendor de hardware, nao software. Audiencia de makers que compram equipamento e podem precisar de gestao. Sem post especifico identificado.",
+      "engajamento_estimado": "desconhecido"
+    },
+    {
+      "perfil": "@3dprintacademy",
+      "tipo_conteudo": "desconhecido",
+      "tema": "Academia de impressao 3D com acreditacao MEC. 50K seguidores. Foco em educacao e resultado real",
+      "ressonancia_hayzer": "Formam makers que vao precisar de ferramenta de gestao. Parceria educacional potencial.",
+      "engajamento_estimado": "desconhecido"
+    },
+    {
+      "perfil": "@appcustos3d",
+      "tipo_conteudo": "desconhecido",
+      "tema": "Sem acesso ao Instagram. Site appcustos3d.com.br confirmado ativo com planos Basic R$ 29,90/mes e Pro R$ 69,90/mes",
+      "ressonancia_hayzer": "Concorrente direto com leitor .gcode, importacao de pedidos Shopee/ML via planilha, simulador de orcamentos. Posicionamento 'maker pra maker, codigo na mao nao IA gerador'.",
+      "engajamento_estimado": "desconhecido"
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "queixa": "Sincronizacao de estoque com Mercado Livre quebra com frequencia: vendas efetuadas sem estoque disponivel, cancelamentos forcados, reputacao do vendedor prejudicada. Suporte demora a responder e entrega respostas genericas. Problema estrutural ligado a migracao do ML para modelo UP (User Product) onde variacoes perderam o MLB pai.",
+      "tema_recorrente": true,
+      "oportunidade_hayzer": "Makers que usam Bling + ML estao queimando reputacao por bug de sincronizacao. Hayzer pode posicionar estoque com baixa automatica e integracao ML confiavel como diferencial central. Copy direta: 'chega de vender sem estoque e perder reputacao no ML'."
+    },
+    {
+      "empresa": "Bling ERP",
+      "queixa": "Impossibilidade de downgrade de plano e cobranca indevida. Usuarios relatam que o sistema nao permite mudar para plano inferior e continua cobrando valor maior.",
+      "tema_recorrente": true,
+      "oportunidade_hayzer": "Hayzer pode enfatizar transparencia de precos e ausencia de lock-in. Framing: 'cancela quando quiser, sem pegadinha'."
+    },
+    {
+      "empresa": "3D Fila",
+      "queixa": "Produto com cor diferente do anunciado e filamento com no e variacao de espessura. Tempo medio de resposta de suporte: 4 dias e 17h (out/25-mar/26).",
+      "tema_recorrente": false,
+      "oportunidade_hayzer": "Indireta: maker que recebe filamento ruim precisa de controle de qualidade no estoque (registrar lote, fornecedor, taxa de falha). Hayzer pode ter campo de qualidade de lote no modulo de estoque de filamento."
+    }
+  ],
+  "acao_recomendada": {
+    "para": "Marcos",
+    "acao": "Criar post/reels de posicionamento Hayzer vs calcuadoras gratuitas e vs MakerFlow: 'calculadora te diz quanto custa, Hayzer te diz se seu negocio esta de pe'. Gancho urgente: curso do 3D Geek Show esta ativo — maker que faz o curso aprende a vender mas nao a gerir. Anunciar Hayzer no mesmo momento em que o Rafael compra o curso. Considerar comentar nos posts do @3dgeekshow com CTA organico.",
+    "prazo": "amanha"
+  },
+  "sem_mudancas": false,
+  "notas_coleta": "Instagram bloqueou todas as 5 URLs com HTTP 429 (rate limit/login wall) — zero acesso a posts individuais ou metricas de engajamento das ultimas 24h. Reclame Aqui bloqueou acesso direto com HTTP 403 em todas as URLs tentadas (empresa e busca). Dados de reclamacoes do Bling vieram via busca web indexada pelo Google, nao acesso direto ao RA. MakerFlow 3D e AppCustos3D (appcustos3d.com.br) acessados com sucesso — dados de planos e features completos. 3D Control (3dcontrol.com.br) acessado com sucesso — dados completos. Novos concorrentes identificados nao listados no briefing original: Precifi3D, CalculaSTL, Calculo3D, Calculadora3DBR, ZoomCalc3D — ecossistema de calculadoras gratuitas mais fragmentado do que o esperado, com pelo menos 5 ferramentas entry-level ativas. Sem evidencias de lancamento de produto ou post especifico nas ultimas 24h para nenhum dos perfis monitorados."
+}
