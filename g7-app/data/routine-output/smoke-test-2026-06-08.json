@@ -1,0 +1,56 @@
+{
+  "date": "2026-06-08",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "rotas": {
+    "score": "3/4",
+    "results": [
+      { "url": "https://hayzer.com.br", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/calculadora", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/waitlist", "status": 200, "ok": true },
+      { "url": "https://hayzer.com.br/calculadora/pro", "status": 404, "ok": false, "nota": "4o dia consecutivo, esperado ADR-024, pre-launch" }
+    ]
+  },
+  "vercel": {
+    "project": "bvaz-hub",
+    "production_deployment_id": "dpl_Gmhgp814QLw7XFmhQK477Le8k8dT",
+    "production_commit": "9a06284",
+    "production_commit_msg": "docs(adr-034): plano mestre de launch + status auditoria OWASP",
+    "production_age_h": 42,
+    "production_state": "READY",
+    "deployments_24h_total": 9,
+    "deployments_24h_error": 0,
+    "deployments_24h_building_stuck": 0,
+    "ok": true
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": true,
+    "waitlist_leads_total": 3,
+    "notifications_table_exists": true,
+    "search_index_view_exists": false,
+    "ok": true,
+    "lag_detected": false
+  },
+  "performance": {
+    "lcp": null,
+    "inp": null,
+    "cls": null,
+    "source": "N/A - Vercel Analytics sem acesso via MCP"
+  },
+  "alertas": [
+    {
+      "level": "amarelo",
+      "item": "/calculadora/pro 404",
+      "detalhe": "4o dia consecutivo. Esperado per ADR-024, pre-launch. Nao bloqueia soft launch.",
+      "recorrente": true
+    },
+    {
+      "level": "amarelo",
+      "item": "search_index view ausente",
+      "detalhe": "View nao existe em producao. Recorrente (presente em 06/06 e 07/06). Precisa migration.",
+      "recorrente": true
+    }
+  ]
+}
