@@ -1,0 +1,156 @@
+{
+  "audit_date": "2026-06-08",
+  "project_id": "sqyrkisnllrgylnxwudu",
+  "project_name": "Hayzer",
+  "schema": "public",
+  "summary": {
+    "total_tables": 26,
+    "rls_enabled": 26,
+    "rls_enabled_pct": 100,
+    "tables_with_policies": 23,
+    "tables_rls_no_policy": 3,
+    "total_policies": 44,
+    "security_definer_functions": 7,
+    "anon_granted_tables": 20,
+    "gaps_criticos": 4,
+    "alertas_amarelos": 10
+  },
+  "tables": [
+    { "table": "affiliates",       "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "api_rate_limits",  "rls": true, "policies": 0, "has_project_id_filter": false, "flag": "RLS_SEM_POLICY" },
+    { "table": "catalogs",         "rls": true, "policies": 2, "has_project_id_filter": false },
+    { "table": "config",           "rls": true, "policies": 1, "has_project_id_filter": false, "flag": "POLICY_BRANCH_SEM_AUTH_UID" },
+    { "table": "content",          "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "customers",        "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "decisions",        "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "email_sequence_log","rls": true, "policies": 0, "has_project_id_filter": false, "flag": "RLS_SEM_POLICY" },
+    { "table": "fixed_costs",      "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "inventory",        "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "leads",            "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "movements",        "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "notifications",    "rls": true, "policies": 4, "has_project_id_filter": false },
+    { "table": "orders",           "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "payment_configs",  "rls": true, "policies": 8, "has_project_id_filter": false, "flag": "POLICIES_DUPLICADAS" },
+    { "table": "portfolio_items",  "rls": true, "policies": 3, "has_project_id_filter": false, "flag": "POLICIES_DUPLICADAS" },
+    { "table": "portfolios",       "rls": true, "policies": 3, "has_project_id_filter": false, "flag": "POLICIES_DUPLICADAS" },
+    { "table": "production",       "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "products",         "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "profiles",         "rls": true, "policies": 2, "has_project_id_filter": false, "flag": "SEM_UPDATE_POLICY" },
+    { "table": "profit_goals",     "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "projects",         "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "transactions",     "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "user_settings",    "rls": true, "policies": 1, "has_project_id_filter": false },
+    { "table": "waitlist_leads",   "rls": true, "policies": 4, "has_project_id_filter": false, "flag": "INSERT_WITH_CHECK_TRUE" },
+    { "table": "webhook_events",   "rls": true, "policies": 0, "has_project_id_filter": false, "flag": "RLS_SEM_POLICY" }
+  ],
+  "gaps_criticos": [
+    {
+      "severidade": 4,
+      "tabela": "email_sequence_log",
+      "tipo": "RLS_SEM_POLICY",
+      "descricao": "RLS habilitado mas zero policies existem. Cron Vercel (api/cron/email-sequence) insere via anon key — insercoes estao falhando silenciosamente desde deploy. Sequencia email D+1/D+3/D+7 nao funciona em prod.",
+      "fix_sql": "CREATE POLICY email_sequence_log_service_insert ON public.email_sequence_log FOR INSERT WITH CHECK (true);\nCREATE POLICY email_sequence_log_admin_select ON public.email_sequence_log FOR SELECT USING (auth.uid() IS NOT NULL AND EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));"
+    },
+    {
+      "severidade": 4,
+      "tabela": "webhook_events",
+      "tipo": "RLS_SEM_POLICY",
+      "descricao": "RLS habilitado mas zero policies. Webhooks externos (Stripe/MP) tentam inserir eventos — falham silenciosamente. process_webhook_atomic e SECURITY DEFINER mas precisa de policy para que insercoes via service_role funcionem no contexto de auth.",
+      "fix_sql": "CREATE POLICY webhook_events_service_all ON public.webhook_events FOR ALL USING (true) WITH CHECK (true);\n-- ATENCAO: esta tabela deve ser acessada APENAS via service_role (server-side). Revogar grant do anon apos confirmar."
+    },
+    {
+      "severidade": 4,
+      "tabela": "config",
+      "tipo": "POLICY_BRANCH_SEM_AUTH_UID",
+      "descricao": "Policy config_own tem branch 'user_id IS NULL AND id = 1' sem checar auth.uid(). Row de config global (id=1, user_id NULL) acessivel por qualquer usuario autenticado — possivelmente ate anon, pois anon tem SELECT grant e a policy nao exige auth.uid() nesse branch.",
+      "policy_atual": "((user_id IS NOT NULL AND auth.uid() = user_id) OR (user_id IS NULL AND id = 1))",
+      "fix_sql": "DROP POLICY config_own ON public.config;\nCREATE POLICY config_own ON public.config FOR ALL USING (\n  (user_id IS NOT NULL AND auth.uid() = user_id)\n  OR (user_id IS NULL AND id = 1 AND auth.uid() IS NOT NULL)\n) WITH CHECK (\n  user_id IS NOT NULL AND auth.uid() = user_id\n);"
+    },
+    {
+      "severidade": 3,
+      "tabela": "api_rate_limits",
+      "tipo": "RLS_SEM_POLICY",
+      "descricao": "RLS habilitado, zero policies. Tabela completamente bloqueada para todos os roles. Se rate limiting e escrito pelo backend via service_role isso e seguro; se usa anon/authenticated key, operacoes falham.",
+      "fix_sql": "-- Se acesso for apenas service_role, nao precisa de policy (service_role bypassa RLS).\n-- Se precisar de acesso autenticado:\nCREATE POLICY api_rate_limits_own ON public.api_rate_limits FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);"
+    }
+  ],
+  "alertas_amarelos": [
+    {
+      "severidade": 3,
+      "tipo": "DESIGN_GAP_PROJECT_ID_RLS",
+      "descricao": "NENHUMA das 26 tabelas filtra por project_id nas RLS policies. Isolamento multi-projeto e 100% responsabilidade da camada de aplicacao. Se qualquer query omitir project_id, usuario ve dados de TODOS seus projetos misturados. Nao e cross-user leakage, mas e cross-project leakage dentro do mesmo usuario. Risco aumenta com bugs de aplicacao."
+    },
+    {
+      "severidade": 3,
+      "tabela": "profiles",
+      "tipo": "SEM_UPDATE_POLICY",
+      "descricao": "Tabela profiles tem apenas INSERT e SELECT policies. Sem UPDATE policy = usuarios nao conseguem editar dados do proprio perfil. Pode ser intencional (perfil imutavel) ou bug. Verificar se existe endpoint de update de perfil quebrando em prod."
+    },
+    {
+      "severidade": 2,
+      "tabela": "payment_configs",
+      "tipo": "POLICIES_DUPLICADAS",
+      "descricao": "8 policies para 4 operacoes: cada operacao tem uma policy '_own' (apenas user_id) E uma policy sem sufixo (user_id OR admin). As '_own' sao subconjuntos das admin-enabled — completamente redundantes. Aumenta complexidade e risco de divergencia futura.",
+      "fix_sql": "DROP POLICY payment_configs_delete_own ON public.payment_configs;\nDROP POLICY payment_configs_insert_own ON public.payment_configs;\nDROP POLICY payment_configs_select_own ON public.payment_configs;\nDROP POLICY payment_configs_update_own ON public.payment_configs;"
+    },
+    {
+      "severidade": 2,
+      "tabela": "portfolios",
+      "tipo": "POLICIES_DUPLICADAS",
+      "descricao": "policies 'portfolios_own' e 'portfolios_owner_all' sao identicas (cmd=ALL, qual=auth.uid()=user_id). Uma e redundante.",
+      "fix_sql": "DROP POLICY portfolios_own ON public.portfolios;"
+    },
+    {
+      "severidade": 2,
+      "tabela": "portfolio_items",
+      "tipo": "POLICIES_DUPLICADAS",
+      "descricao": "policies 'portfolio_items_own' e 'portfolio_items_owner_all' sao identicas. Uma e redundante.",
+      "fix_sql": "DROP POLICY portfolio_items_own ON public.portfolio_items;"
+    },
+    {
+      "severidade": 2,
+      "tipo": "SECDEF_MUTABLE_SEARCH_PATH",
+      "functions": ["handle_new_user", "update_payment_configs_updated_at", "touch_payment_configs_updated_at"],
+      "descricao": "3 funcoes sem search_path fixo. Risco teorico de search_path injection se schema publico for comprometido.",
+      "fix_sql": "ALTER FUNCTION public.handle_new_user() SET search_path = public;\nALTER FUNCTION public.update_payment_configs_updated_at() SET search_path = public;\nALTER FUNCTION public.touch_payment_configs_updated_at() SET search_path = public;"
+    },
+    {
+      "severidade": 2,
+      "tipo": "ANON_SECDEF_FUNCTION",
+      "function": "create_catalog_lead",
+      "descricao": "SECURITY DEFINER callable por anon. Intencional (captura de leads do catalogo publico). Confirmar que a funcao nao expoe dados de outros usuarios via retorno ou side effects."
+    },
+    {
+      "severidade": 2,
+      "tipo": "MATERIALIZED_VIEW_ANON_API",
+      "view": "search_index",
+      "descricao": "Materialized view search_index exposta na API publica (acessivel por anon e authenticated). Se indexa dados privados (produtos, clientes), pode vazar informacao via /rest/v1/search_index."
+    },
+    {
+      "severidade": 1,
+      "tipo": "STORAGE_BUCKET_LISTING",
+      "buckets": ["inventory-images", "products-images"],
+      "descricao": "Buckets publicos com SELECT broad permitem listar todos os arquivos. URLs diretas funcionam sem listing; remover a broad SELECT policy nao quebra acesso a imagens por URL."
+    },
+    {
+      "severidade": 1,
+      "tipo": "AUTH_LEAKED_PASSWORD_DISABLED",
+      "descricao": "HaveIBeenPwned check desabilitado no Supabase Auth. Usuarios podem cadastrar senhas comprometidas. Habilitar em Auth > Settings > Password Protection."
+    }
+  ],
+  "security_definer_functions": [
+    { "name": "rls_auto_enable",              "callable_anon": false, "risco": "baixo"  },
+    { "name": "create_catalog_lead",          "callable_anon": true,  "risco": "medio - intencional mas monitorar" },
+    { "name": "refresh_search_index",         "callable_anon": false, "risco": "baixo"  },
+    { "name": "update_user_settings_updated_at", "callable_anon": false, "risco": "baixo" },
+    { "name": "handle_new_user",              "callable_anon": false, "risco": "baixo - trigger auth" },
+    { "name": "process_webhook_atomic",       "callable_anon": false, "risco": "baixo"  },
+    { "name": "set_active_payment_config",    "callable_anon": false, "risco": "baixo"  }
+  ],
+  "diff_vs_semana_anterior": {
+    "nota": "PRIMEIRO audit registrado. Sem baseline anterior para comparacao.",
+    "policies_removidas": 0,
+    "policies_adicionadas": 44,
+    "tabelas_novas": 26
+  }
+}
