@@ -8,23 +8,35 @@
 
 ---
 
-## 📊 Status atual — 2026-05-29
+## 📊 Status atual — 2026-06-08
 
 | # | Pilar | Hoje | Meta 30d | Meta 90d | Owner G7 | Próx. revisão |
 |---|---|---|---|---|---|---|
-| 1 | **Design (UI/UX)** | 9.0 | 9.5 | 9.7 | Diego | 02/06 |
-| 2 | **Anti-IA (autenticidade)** | 9.3 | 9.5 | 9.5 | Carla + Diego | 02/06 |
-| 3 | **Segurança (OWASP 2025)** | 9.3 | 9.5 | 9.7 | Otávio | 24/06 |
-| 4 | **Performance (Web Vitals)** | 7.5 | 8.0 | 8.5 | Felipe + Ricardo | 02/06 |
-| 5 | **Acessibilidade (WCAG AA)** | 7.0 ⬆️ | 8.0 | 9.0 | Felipe (Júlia ⌀) | 02/06 |
-| 6 | **Mobile (320-768px)** | 7.5 | 8.5 | 9.0 | Diego + Felipe | 02/06 |
-| 7 | **Conversão (funil)** | 6.8 ⬆️ | 7.5 | 8.5 | Marcos + Sofia + Ana | 07/06 |
-| 8 | **Retenção (habit-forming)** | 5.5 | 6.5 | 8.0 | Sofia + Marcos | 07/06 |
-| 9 | **Pagamento (robustez)** | 8.5 | 9.0 | 9.5 | Paulo + Bruna | 02/06 |
-| 10 | **Documentação (Diátaxis)** | 8.5 | 9.0 | 9.5 | Lia | 02/06 |
-| 11 | **Backend (DB + APIs)** | 8.0 | 8.5 | 9.0 | Bruna | 02/06 |
-| 12 | **Estratégia (posicionamento)** | 8.3 | 8.5 | 9.0 | Helena | 02/06 |
-| | **MÉDIA GERAL** | **8.0 ⬆️** | **8.5** | **8.8** | Helena | semanal |
+| 1 | **Design (UI/UX)** | 9.1 ⬆️ | 9.5 | 9.7 | Diego | 15/06 |
+| 2 | **Anti-IA (autenticidade)** | 9.3 | 9.5 | 9.5 | Carla + Diego | 15/06 |
+| 3 | **Segurança (OWASP 2025)** | 9.5 ⬆️ | 9.7 | 9.7 | Otávio | 24/06 |
+| 4 | **Performance (Web Vitals)** | 8.0 ⬆️ | 8.5 | 8.5 | Felipe + Ricardo | 15/06 |
+| 5 | **Acessibilidade (WCAG AA)** | 7.0 | 8.0 | 9.0 | Felipe (Júlia ⌀) | 16/06 ⚠️ |
+| 6 | **Mobile (320-768px)** | 7.7 ⬆️ | 8.5 | 9.0 | Diego + Felipe | 15/06 |
+| 7 | **Conversão (funil)** | 7.0 ⬆️ | 7.5 | 8.5 | Marcos + Sofia + Ana | 15/06 |
+| 8 | **Retenção (habit-forming)** | 6.0 ⬆️ | 6.5 | 8.0 | Sofia + Marcos | 15/06 |
+| 9 | **Pagamento (robustez)** | 8.5 | 9.0 | 9.5 | Paulo + Bruna | 15/06 |
+| 10 | **Documentação (Diátaxis)** | 8.5 | 9.0 | 9.5 | Lia | 15/06 |
+| 11 | **Backend (DB + APIs)** | 8.3 ⬆️ | 8.5 | 9.0 | Bruna | 15/06 |
+| 12 | **Estratégia (posicionamento)** | 8.5 ⬆️ | 9.0 | 9.0 | Helena | 15/06 |
+| | **MÉDIA GERAL** | **8.1 ⬆️** | **8.5** | **8.8** | Helena | semanal |
+
+### Mudanças semana 01–08/06 (revisão semanal — 38 commits, foco qualidade pré-launch)
+
+- **+0.1 Design (9.0→9.1)**: `8a8abc3` + `72387b4` — /content e /decisions migrados para ModuleShell V4. **100% dos 14 módulos em V4** agora (último módulo legacy removido). `da28881`: skeleton V4 em 6 rotas. `02a0087`: ProductEmptyState 3 variantes em /products.
+- **+0.2 Segurança (9.3→9.5)**: `78bac11` — SEC-0 price-shopping/cross-merchant fechado em checkout + encomenda + webhook (produto amarrado ao merchant). Catálogo público: admin client + scrub custo/margem/tempo (dados internos não vazam mais no payload RSC). SEC-4 CRON fail-closed. Migration `20260606_security_hardening_owasp` aplicada em prod. `17c3632`: Sentry withSentryConfig + source maps — stacktraces em prod legíveis (antes minificados). Auditoria de 4 camadas (3 auditores + red team) validada ao vivo impersonando anon.
+- **+0.5 Performance (7.5→8.0)**: `89d2f71` + `cbefed7` — auth boot non-blocking: splash de 20s → ~100ms (getSession local first, getUser revalida em background; remove safetyTimer 12s). `c0959ec`: timeout hydration 15s → 3s (elimina skeleton eternal em 6+ rotas). `31a1439`: SW CACHE_VERSION bump + network-first em assets estáticos (SW de 16/05 servia JS antigo → landing em branco em prod; bug de 3 semanas corrigido).
+- **+0.2 Mobile (7.5→7.7)**: `ec9f7ea` — KPI grid fix: inline style sobrescrevia media queries de ResponsiveGrid no ModuleShell. KPIs em 4 colunas em iPhone 390px (ilegíveis) → 1 coluna empilhada. Aplica em CRM/finance/orders/production/customers imediato. Bug confirmado pelo CEO em iPhone 01/06.
+- **+0.2 Conversão (6.8→7.0)**: `31a1439`: landing voltando a renderizar completa pra usuários recorrentes (bug SW — eram ~100% das visitas a partir de 16/05). `b7ed1f7`: OG image dinâmica `/catalogo/[slug]` — share WhatsApp/Instagram com imagem real do produto.
+- **+0.5 Retenção (5.5→6.0)**: `acf4cb1` — sequência email D+1/D+3/D+7 pós-waitlist implementada: 3 emails maker BR sem sinais de IA, cron Vercel diário 10h BRT, idempotência via `email_sequence_log` + UNIQUE(lead_id, step), migration aplicada em prod. Fecha item #1 do plano de ação deste pilar. **Score sujeito a confirmação CEO** (cron em prod não validado ao vivo ainda).
+- **+0.3 Backend (8.0→8.3)**: `871c70f`+`0e81da4`+`2bc8f9e`+`7a21b82` — 4 services migrados pra Server Actions cookie-based (products/production/finance/inventory), 13 Server Actions novas, CRUD completo. `4a74a74`: SSR puxa 5 core no initialState (resolve "F5 some dados" — orders/production/inventory/transactions/leads). `78bac11`: checkout amarrado ao merchant.
+- **+0.2 Estratégia (8.3→8.5)**: `9a06284` — ADR-034 plano mestre de launch: pesquisa competitiva 10+ players BR (3D Control, Smart3D, Vultrix, Cordeiro Flow etc.), 5 verdades estratégicas, posicionamento "ponta-a-ponta de verdade", Círculo de Fundadores (3-5 makers, não 10), roadmap Ondas 0-2.
+- **+0.1 Média geral (8.0→8.1)** avança em direção à meta 30d 8.5. Meta 30d Performance atingida (7.5→8.0 era meta).
 
 ### Mudanças sessão 29/05 (plano focar-qualidade + ADR-029 + Bloco 2)
 
@@ -221,4 +233,4 @@ Esse documento operacionaliza essa filosofia.
 
 **Mantenedor primário**: Helena (estratégia consolida)
 **Atualização**: toda segunda + via `/rcs` quando evidência aparecer
-**Última atualização**: 2026-05-29 (Sessão 29/05: Bloco 2 entregue — wizard 4 steps + 7 empty states + tu/voce. Acessibilidade 6.5→7.0 · Conversão 6.5→6.8 · média 7.9→8.0). Pillars próximos a revisar: **Mobile (Bloco 3 QA)** e **Performance (Lighthouse Bloco 3)**.
+**Última atualização**: 2026-06-08 (Revisão semanal 01–08/06: 38 commits analisados. Design 9.0→9.1 · Segurança 9.3→9.5 · Performance 7.5→8.0 · Mobile 7.5→7.7 · Conversão 6.8→7.0 · Retenção 5.5→6.0 · Backend 8.0→8.3 · Estratégia 8.3→8.5 · média 8.0→8.1). Pillars próximos a revisar: **Acessibilidade (auditoria Axe, hard deadline 16/06)** e **Performance (Lighthouse rotas internas)**.
