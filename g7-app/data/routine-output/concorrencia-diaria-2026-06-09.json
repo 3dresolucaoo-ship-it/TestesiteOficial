@@ -1,0 +1,115 @@
+{
+  "data": "2026-06-09",
+  "fonte": "pesquisa-web-diaria",
+  "alertas": [
+    {
+      "tipo": "ALERTA",
+      "concorrente": "AppCustos3D / Custos3D",
+      "descricao": "Concorrente direto operacional com planos ativos: Basic R$ 29,90/mes e Pro R$ 69,90/mes. Pro inclui leitura de G-Code, importacao de pedidos Shopee/ML via planilha, integracao WhatsApp para propostas automatizadas e rastreio publico de pedidos. E o concorrente mais proximo funcionalmente do Hayzer no segmento maker 3D brasileiro. Ultimo conteudo indexado data de janeiro 2026, sem lancamentos novos detectados em junho.",
+      "urgencia": "alta",
+      "fonte_url": "https://appcustos3d.com.br/"
+    },
+    {
+      "tipo": "ALERTA",
+      "concorrente": "Expo3DBr",
+      "descricao": "Maior feira de impressao 3D do Brasil confirmada para 21-23 agosto 2026 em Sao Caetano do Sul (Instituto Maua de Tecnologia). Oportunidade de presenca/patrocinio e risco de concorrentes anunciarem produtos no evento. Janela de 45 dias a partir de hoje para preparar posicionamento.",
+      "urgencia": "media",
+      "fonte_url": "https://expo3dbr.com.br/"
+    },
+    {
+      "tipo": "ALERTA",
+      "concorrente": "Bling ERP",
+      "descricao": "Reclamacoes recorrentes e ativas no Reclame Aqui: sistema lento/cai toda hora, problemas catastroficos com estoque, suporte horivel, bugs de sistema, impossibilidade de mudar plano, falhas de integracao. Perfil de insatisfacao alto especialmente em controle de estoque e-commerce e emissao de NF. Makers que usam Bling para gestao basica estao frustrados com instabilidade.",
+      "urgencia": "alta",
+      "fonte_url": "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/"
+    },
+    {
+      "tipo": "ALERTA",
+      "concorrente": "Precifi3D",
+      "descricao": "Produto com 3 planos (Starter gratis, Pro, Enterprise) que ja inclui marketplace para fornecedores e busca de servicos. Embora foque em precificacao, plano Enterprise menciona 'gestao de equipe' e 'funcionalidades avancadas'. Possivelmente expandindo escopo para alem da calculadora. Sem novidades de junho 2026 detectadas.",
+      "urgencia": "baixa",
+      "fonte_url": "https://precifi3d.com/"
+    },
+    {
+      "tipo": "ALERTA",
+      "concorrente": "3D Lab Brasil",
+      "descricao": "83K seguidores no Instagram, reel recente identificado (DL0a2U5v-5y). Conteudo do reel nao acessivel via fetch (bloqueio auth). Sinal de atividade de conteudo recente mas sem detalhe do que promovem. Referencia dominante em BH e SP com B2B solutions.",
+      "urgencia": "baixa",
+      "fonte_url": "https://www.instagram.com/3dlab_brasil/reel/DL0a2U5v-5y/"
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "@artbox3d",
+      "tipo_post": "desconhecido",
+      "conteudo_resumo": "Multiplos posts recentes encontrados via Google indexado (codigos DSc2v0TEZT7, DSGPL0MgaLR, DTUwqf8jos-). Post DTUwqf8jos- menciona '60 mil pessoas que enxergam a impressao 3D como...' - possivel anuncio de marco de audiencia. Post sobre 'Seminovos.ARTBOX3D.com.br' sugere lancamento de marketplace de produtos seminovos.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "ARTBOX3D lancando marketplace seminovos pode indicar movimento de verticalizacao - empresa de hardware entrando em servicos digitais/plataforma. Monitorar se criam ferramenta de gestao para seus clientes makers.",
+      "url": "https://www.instagram.com/artbox3d/"
+    },
+    {
+      "conta": "@3dgeekshow",
+      "tipo_post": "reels",
+      "conteudo_resumo": "128K seguidores, 1.704 posts, conta ativa. Foco em 'impressao 3D sem complicacao - do primeiro print ao negocio lucrativo'. Referencia desde 2016.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "Canal com maior audiencia focado em monetizacao de impressao 3D. Parceria ou patrocinio seria canal de aquisicao direto para publico-alvo exato do Hayzer.",
+      "url": "https://www.instagram.com/3dgeekshow/"
+    },
+    {
+      "conta": "@3dlab_brasil",
+      "tipo_post": "reels",
+      "conteudo_resumo": "Reel recente identificado (DL0a2U5v-5y). Conteudo nao extraivel via fetch (bloqueio Instagram). Conta com 83K seguidores, operacao B2B confirmada.",
+      "engajamento_estimado": "medio",
+      "relevancia_hayzer": "Possivel parceria de distribuicao - 3D Lab tem base de clientes makers em BH e SP que podem ser usuarios Hayzer.",
+      "url": "https://www.instagram.com/3dlab_brasil/"
+    }
+  ],
+  "reclamacoes": [
+    {
+      "empresa": "Bling ERP",
+      "tema": "bug",
+      "descricao": "Sistema lento que cai toda hora, especialmente as segundas-feiras. Usuarios relatam impossibilidade de emitir pedidos e NFs por 2+ dias. Bugs de sistema reportados com frequencia.",
+      "recorrente": true,
+      "data_aprox": "recorrente 2025-2026",
+      "oportunidade_hayzer": "Maker que usa Bling para gestao basica esta frustrado com instabilidade. Hayzer pode atacar diretamente com mensagem 'especifico para maker 3D, sem a complexidade e lentidao do Bling'. Landing comparativa Hayzer vs Bling e timing perfeito."
+    },
+    {
+      "empresa": "Bling ERP",
+      "tema": "funcionalidade",
+      "descricao": "Controle de estoque e-commerce falho: entradas de 50 itens aparecem como 80, saidas de 5 aparecem como 8. ERP que nao controla estoque de forma confiavel para e-commerce.",
+      "recorrente": true,
+      "data_aprox": "recorrente 2025-2026",
+      "oportunidade_hayzer": "Hayzer tem controle de estoque especifico para maker 3D (filamento, consumo por pedido, custo medio). Diferencial direto e atacavel em copy de aquisicao."
+    },
+    {
+      "empresa": "Bling ERP",
+      "tema": "suporte",
+      "descricao": "Suporte horivel: chat nao responde, atendentes caem a ligacao, tempo de resposta absurdo para problemas simples.",
+      "recorrente": true,
+      "data_aprox": "recorrente 2025-2026",
+      "oportunidade_hayzer": "Hayzer pode posicionar suporte humanizado via WhatsApp como diferencial principal. 'Fala com quem fez o sistema.'"
+    },
+    {
+      "empresa": "Bling ERP",
+      "tema": "financeiro",
+      "descricao": "Impossibilidade de downgrade de plano + cobranca indevida. Usuarios presos em planos caros sem saida facil.",
+      "recorrente": true,
+      "data_aprox": "recorrente 2025-2026",
+      "oportunidade_hayzer": "Hayzer pode oferecer trial real sem cartao e politica de cancelamento simples como argumento de conversao."
+    }
+  ],
+  "acao_recomendada": {
+    "responsavel": "Marcos",
+    "acao": "Criar post/anuncio direto de conversao atacando as dores do Bling: 'Cansado do ERP que cai toda hora? Hayzer foi feito pra maker 3D, nao pra loja de roupas.' + landing comparativa Bling vs Hayzer nos 3 pontos criticos (estoque filamento, suporte, preco). Aproveitar janela pre-Expo3DBr agosto para posicionamento de marca.",
+    "prazo": "esta semana",
+    "contexto": "Bling tem volume alto de reclamacoes ativas e recorrentes em junho 2026. Makers que usam ERP generico estao insatisfeitos e buscam alternativa. Hayzer tem soft launch em 13/06 - janela perfeita para capturar esse publico frustrado antes da Expo3DBr em agosto."
+  },
+  "sem_dados": [
+    "@3dprintacademy - perfil encontrado (50K seguidores, 234 posts), sem conteudo de junho 2026 acessivel",
+    "@appcustos3d - nenhum perfil Instagram encontrado indexado, dominio web encontrado",
+    "MakerFlow.app - produto de extensao Etsy para makers, nao concorrente direto no Brasil",
+    "Reclame Aqui buscas - HTTP 403 em todas as URLs de busca (dados coletados via snippets Google indexado)",
+    "custos3d.com - pagina em loading, sem dados extraiveis"
+  ],
+  "notas_metodologicas": "Instagram bloqueia WebFetch sem login (HTTP 429/403). Dados de Instagram coletados via WebSearch Google indexado - refletem snapshot de indexacao, nao posts em tempo real das ultimas 72h. Reclame Aqui bloqueia WebFetch com HTTP 403; dados de reclamacoes obtidos via snippets indexados pelo Google. AppCustos3D foi o unico site de concorrente com dados ricos extraiveis via WebFetch. Nenhum concorrente novo entrando no mercado detectado nas ultimas 72h - mercado estavel com players conhecidos."
+}
