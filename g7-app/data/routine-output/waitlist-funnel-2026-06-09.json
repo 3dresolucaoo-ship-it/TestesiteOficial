@@ -1,0 +1,73 @@
+{
+  "digest_date": "2026-06-09",
+  "generated_at": "2026-06-09T09:00:00-03:00",
+  "periodo_24h": {
+    "total_novos": 0,
+    "completaram_step2": 0,
+    "pct_step2": null,
+    "nota": "Step 2 definido como whatsapp preenchido (qualificacao)"
+  },
+  "media_7d": {
+    "media_diaria": 0.0,
+    "total_periodo": 0,
+    "ultimo_lead_recebido": "2026-05-23",
+    "dias_sem_novo_lead": 17
+  },
+  "tendencia": "baixa",
+  "comparativo_vs_7d_anterior": null,
+  "acumulado": {
+    "total": 3,
+    "total_real": 2,
+    "total_qa_test": 1,
+    "nota_real": "Gabriel assinou 2x (typo no email 15/05 e correto 23/05). 1 lead de QA (audit-... @hayzer-test.local, 20/05).",
+    "email_confirmados": 0,
+    "score_medio": 0
+  },
+  "utm_breakdown_24h": {},
+  "utm_breakdown_acumulado": {
+    "direct": { "total": 3, "pct": 100.0 }
+  },
+  "top3_utms_acumulado": [
+    { "utm_source": "direct", "total": 3, "pct": 100.0 }
+  ],
+  "tempo_medio_step1_step2_min": null,
+  "leads_detalhe": [
+    {
+      "created_at": "2026-05-23",
+      "email": "gabriel***@gmail.com",
+      "name": "Gabriel",
+      "has_whatsapp": true,
+      "email_confirmed": false,
+      "utm_source": null,
+      "status": "new",
+      "nota": "lead real - email correto"
+    },
+    {
+      "created_at": "2026-05-20",
+      "email": "audit-***@hayzer-test.local",
+      "name": "Auditor QA",
+      "has_whatsapp": true,
+      "email_confirmed": false,
+      "utm_source": null,
+      "status": "new",
+      "nota": "lead de teste QA - remover da base"
+    },
+    {
+      "created_at": "2026-05-15",
+      "email": "gabriel***@gmail.com",
+      "name": "Gabriel",
+      "has_whatsapp": true,
+      "email_confirmed": false,
+      "utm_source": null,
+      "status": "new",
+      "nota": "lead real - mesmo usuario, typo no email (gabrieleditsofcial vs gabrieleditsoficial)"
+    }
+  ],
+  "acoes_recomendadas": [
+    "Limpar lead QA de teste (audit-1779246218969@hayzer-test.local) da tabela waitlist_leads antes do soft launch 13/06",
+    "Gabriel assinou 2x por typo - merece mensagem de boas-vindas como primeiro inscrito real",
+    "Todos os links/posts do soft launch devem ter UTMs configurados (hoje 100% direct = zero rastreabilidade)",
+    "Zero leads novos em 17 dias e normal: landing ainda nao promovida. Gatilho e o soft launch 13/06",
+    "Configurar email de confirmacao: nenhum dos 3 leads confirmou o email (email_confirmed = false todos)"
+  ]
+}
