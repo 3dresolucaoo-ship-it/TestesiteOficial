@@ -1,0 +1,75 @@
+{
+  "date": "2026-06-10",
+  "time": "06:00 BRT",
+  "status": "ALERTA_AMARELO",
+  "routes": {
+    "checked": 4,
+    "ok": 3,
+    "details": {
+      "https://hayzer.com.br": 200,
+      "https://hayzer.com.br/calculadora": 200,
+      "https://hayzer.com.br/waitlist": 200,
+      "https://hayzer.com.br/calculadora/pro": 404
+    },
+    "notes": {
+      "calculadora_pro": "404 esperado — rota removida por ADR-024 (calc gratis magnet eterno), 6o dia consecutivo",
+      "waitlist": "200 OK — titulo generico no pre-render SSR, comportamento esperado"
+    }
+  },
+  "vercel": {
+    "project": "bvaz-hub",
+    "production_deployment_id": "dpl_Gmhgp814QLw7XFmhQK477Le8k8dT",
+    "production_hash": "9a062847",
+    "production_commit": "docs(adr-034): plano mestre de launch + status auditoria OWASP",
+    "production_branch": "main",
+    "production_age_hours": 82,
+    "production_state": "READY",
+    "deployments_24h": 7,
+    "errors_24h": 0,
+    "building_stuck": false,
+    "notes": "Sem novo deploy em main. 7 previews de feature branches todos READY."
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "region": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_total": 3,
+    "waitlist_novos_24h": 0,
+    "notifications_table": true,
+    "search_index_view": false,
+    "checked_at": "2026-06-10T09:04:19Z",
+    "notes": {
+      "search_index": "View ausente — issue recorrente, 6o dia consecutivo"
+    }
+  },
+  "performance": {
+    "lcp": null,
+    "inp": null,
+    "cls": null,
+    "note": "Vercel Analytics nao acessivel via MCP — pendente VERCEL_API_TOKEN (20o dia, soft launch 13/06 em 3 dias — URGENTE)"
+  },
+  "alerts": [
+    {
+      "severity": "AMARELO",
+      "item": "/calculadora/pro 404",
+      "detail": "Esperado por ADR-024 — Calc Pro revogada. 6o dia consecutivo."
+    },
+    {
+      "severity": "AMARELO",
+      "item": "search_index view ausente",
+      "detail": "View nao criada no Supabase. Issue recorrente, 6o dia consecutivo."
+    },
+    {
+      "severity": "AMARELO",
+      "item": "Vercel Analytics inacessivel",
+      "detail": "VERCEL_API_TOKEN nao configurado. 20o dia consecutivo. Soft launch 13/06 em 3 dias — acao CEO urgente."
+    },
+    {
+      "severity": "AMARELO",
+      "item": "Sem novos leads waitlist",
+      "detail": "3 leads totais, 0 novos nos ultimos dias. Watchpoint pre-launch."
+    }
+  ],
+  "summary": "Producao estavel, tudo verde no critico. Tres alertas amarelos conhecidos e recorrentes. Zero criticos."
+}
