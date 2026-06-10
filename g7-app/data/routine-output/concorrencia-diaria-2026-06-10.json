@@ -1,0 +1,94 @@
+{
+  "data": "2026-06-10",
+  "rotina": "concorrencia-diaria",
+  "status": "executado",
+  "cobertura": {
+    "instagram": "parcial — perfis identificados, posts 24h indisponiveis (Instagram bloqueia fetch sem autenticacao)",
+    "reclame_aqui": "parcial — Bling via busca indexada; concorrentes menores sem registro encontrado"
+  },
+  "alertas": [
+    {
+      "prioridade": 1,
+      "titulo": "Bling reajustou planos em abril/2026 — janela de captacao aberta",
+      "detalhe": "Bling aumentou precos em abril/2026 e passou a cobrar pedidos importados via API (antes gratuito). Reclamacoes recorrentes: suporte lento (media 9 dias resposta), instabilidade em sync de marketplace, e piora gradual do produto. Usuarios frustrados buscam alternativas. Hayzer pode capturar esse publico com posicionamento anti-ERP-generico.",
+      "acao_sugerida": "Marcos criar conteudo direto: 'Por que makers 3D largam o Bling' com dados reais de custo e dor de suporte"
+    },
+    {
+      "prioridade": 2,
+      "titulo": "MakerFlow e AppCustos3D colados no mesmo preco — guerra de R$29,90",
+      "detalhe": "Ambos cobram R$29,90/mes no plano basico e R$69,90/mes no plano pro. MakerFlow destaca 'analise com IA' e fila visual de producao. AppCustos3D lancou PDF de ficha de producao com tabela detalhada de custo. Ambos oferecem trial sem cartao. Hayzer entra nesse campo com suite mais completa (leads, financeiro, catalogo).",
+      "acao_sugerida": "Helena revisar posicionamento de preco do Hayzer vs esses dois — se entrar no mesmo tier, precisamos de diferencial claro na landing"
+    },
+    {
+      "prioridade": 3,
+      "titulo": "AppCustos3D lancou feature de PDF de ficha de producao",
+      "detalhe": "Novidade recente no site: PDF exportavel com 'tabela detalhada de composicao de custo'. Feature pequena mas diretamente ligada ao fluxo de orcamento do maker. Se Hayzer nao tem isso ainda, e candidata a backlog pos-launch.",
+      "acao_sugerida": "Felipe verificar se o modulo de orcamentos/catalogo do Hayzer ja exporta PDF com breakdown de custo. Se nao, avaliar para Bloco 5."
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "@3dlab_brasil",
+      "followers": "83K",
+      "observacao": "Perfil ativo com presenca em Reels. Sem acesso a posts das ultimas 24h (Instagram requer autenticacao). Ultima aparicao indexada: stand fisico em evento de cosplay (novembro/2025). Foco da conta: produtos fisicos (impressoras, filamentos), nao gestao/software.",
+      "relevancia_hayzer": "baixa — publico diferente (makers hardware, nao gestao de negocio)"
+    },
+    {
+      "conta": "@3dgeekshow",
+      "followers": "128K",
+      "observacao": "Maior conta de impressao 3D BR. Sem acesso a posts 24h. Foco em conteudo educacional e review de equipamentos.",
+      "relevancia_hayzer": "media — publico maker qualificado, mas foco em hardware. Oportunidade de parceria ou ads segmentados."
+    },
+    {
+      "conta": "@artbox3d",
+      "followers": "82K",
+      "observacao": "Foco em impressao 3D SP. Sem acesso a posts 24h.",
+      "relevancia_hayzer": "baixa-media"
+    },
+    {
+      "conta": "@3dprintacademy",
+      "followers": "50K",
+      "observacao": "Academia de impressao 3D. Publico em formacao — makers que estao comecando.",
+      "relevancia_hayzer": "alta — persona Rafael em fase inicial, momento ideal pra apresentar Hayzer como o proximo passo apos aprender a imprimir"
+    },
+    {
+      "conta": "@appcustos3d",
+      "observacao": "Perfil nao localizado no Instagram com esse handle exato. Pode estar inativo ou com nome diferente.",
+      "relevancia_hayzer": "nao avaliavel"
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling",
+      "tema": "Suporte lento + aumento de preco + instabilidade",
+      "detalhe": "Media de 9 dias pra resposta. Reclamacoes de 'sistema cada dia pior', lentidao, falhas em emissao de NF em momentos criticos. Reajuste de abril/2026 com cobranca de pedidos API sem aviso claro.",
+      "oportunidade_hayzer": "Maker que usa Bling pra gestao basica e fica frustrado com suporte e preco crescente e o prospect ideal do Hayzer. Dor clara: pagar mais por menos suporte."
+    },
+    {
+      "empresa": "MakerFlow / AppCustos3D",
+      "tema": "Sem registro de reclamacoes publicas encontrado",
+      "detalhe": "Nenhum dos dois aparece no Reclame Aqui. Pode indicar base de usuarios ainda pequena ou produto novo. Nao ha sinal de crise de suporte nos concorrentes diretos verticais.",
+      "oportunidade_hayzer": "Janela aberta: enquanto nao ha reclamacao publica, o diferencial deve vir de feature e posicionamento, nao de 'fugir da crise do concorrente'"
+    }
+  ],
+  "acao_recomendada": {
+    "responsavel": "Marcos + Helena",
+    "acao": "Criar 1 post/thread explorando o reajuste do Bling abril/2026 como gancho de entrada: 'O Bling aumentou de novo — o que o maker 3D realmente precisa?' com CTA direto pro Hayzer. Angulo: Hayzer nao e ERP generico, e feito pra quem imprime 3D. Aproveitar o momento pre-soft-launch (13/06) pra plantar essa narrativa.",
+    "prazo_sugerido": "Ate 12/06 (vespera do soft launch)"
+  },
+  "limitacoes_coleta": [
+    "Instagram: feed publico bloqueado sem autenticacao — posts 24h nao acessiveis via WebFetch. Proxima Routine 9 deve incluir scraping autenticado ou monitoramento via ferramenta dedicada (Phantombuster, Apify).",
+    "Reclame Aqui: paginas retornaram 403 no fetch direto. Dados obtidos via busca indexada do Google — podem ter delay de indexacao.",
+    "Concorrentes menores (PrintWorks3D, ZoomCalc3D, Custos3D) nao localizados no Reclame Aqui — possivelmente sem cadastro ou muito novos."
+  ],
+  "fontes": [
+    "https://appcustos3d.com.br/",
+    "https://www.makerflow3d.com.br/",
+    "https://www.reclameaqui.com.br/empresa/bling/lista-reclamacoes/",
+    "https://ajuda.bling.com.br/hc/pt-br/articles/30224184866583",
+    "https://www.instagram.com/3dlab_brasil/",
+    "https://www.instagram.com/3dgeekshow/",
+    "https://www.instagram.com/artbox3d/",
+    "https://www.instagram.com/3dprintacademy/"
+  ]
+}
