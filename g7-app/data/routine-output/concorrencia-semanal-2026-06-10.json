@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "data": "2026-06-10",
+    "tipo": "pesquisa-competitiva-semanal",
+    "analista": "deep-research-agent",
+    "fontes_visitadas": 18,
+    "confianca_geral": "alta"
+  },
+  "concorrentes_saas_3d": [
+    {
+      "nome": "3D Control",
+      "url": "https://3dcontrol.com.br",
+      "preco_mensal": 39.99,
+      "modelo": "assinatura",
+      "ancora_principal": "Sistema #1 em Gestão de Impressão 3D",
+      "features": ["Dashboard financeiro", "Gestão de pedidos", "Controle de filamentos", "Frota de impressoras", "CRM integrado", "Multi-plataforma (Shopee, ML, Elo7, Instagram)"],
+      "blog_novidades_7d": null,
+      "status": "ativo",
+      "risco_hayzer": "alto"
+    },
+    {
+      "nome": "AppCustos3D (Custos3D)",
+      "url": "https://appcustos3d.com.br",
+      "preco_mensal": 29.90,
+      "preco_pro": 69.90,
+      "modelo": "assinatura (Basic/Pro)",
+      "ancora_principal": "Pare de decidir no escuro. Custo e margem visiveis na impressao 3D.",
+      "features": ["Gestao estoque", "Calculo depreciacao/energia", "Controle pedidos e impressoras", "Leitor G-Code (Pro)", "Importacao pedidos Shopee (Pro)", "Relatorios financeiros (Pro)", "Suporte WhatsApp prioritario (Pro)"],
+      "blog_novidades_7d": null,
+      "demo_gratuita": "3 dias",
+      "diferencial": "Feita por makers para makers. Codigo na mao, nao gerador de IA.",
+      "status": "ativo",
+      "risco_hayzer": "alto"
+    },
+    {
+      "nome": "ZoomCalc3D",
+      "url": "https://zoomdigital.com.br/zoomcalc3d-precificacao-inteligente-para-impressao-3d",
+      "preco_mensal": 0,
+      "modelo": "gratuito",
+      "ancora_principal": "ZoomCalc3D: Precificacao inteligente para impressao 3D",
+      "features": ["Configuracao de maquina", "Gestao de estoque filamentos", "Suporte multi-material", "Calculo de custo completo", "Margens de risco", "Analise ROI/Payback", "Rastreio pos-processamento", "Historico de projetos", "Integracao WhatsApp", "IA (Gemini) integrada"],
+      "ultima_atualizacao": "2026-01-15",
+      "novidades_recentes": "Atualizacao janeiro 2026 com IA Gemini + importacao slicer G-code",
+      "status": "ativo",
+      "risco_hayzer": "medio - gratuito mas sem gestao completa"
+    },
+    {
+      "nome": "Precifi3D",
+      "url": "https://precifi3d.com",
+      "preco_mensal": "Starter gratis, Pro e Enterprise (precos nao divulgados)",
+      "modelo": "freemium",
+      "ancora_principal": "Calcule com precisao os custos de impressao 3D (FDM, Resina, Laser) e defina precos de venda otimizados.",
+      "features": ["Calculo por grama de filamento", "Consumo energetico", "Precificacao automatica", "Historico de projetos", "Exportacao PDF (Pro)", "Multi-material", "Guias educacionais"],
+      "suporte_tecnologias": ["FDM", "Resina", "Laser"],
+      "blog_novidades_7d": null,
+      "status": "ativo",
+      "risco_hayzer": "medio"
+    },
+    {
+      "nome": "Vultrix3D",
+      "url": "https://www.vultrix3d.com.br/ferramenta",
+      "preco_mensal": "nao definido - beta fechado",
+      "modelo": "beta fechado",
+      "ancora_principal": "A ferramenta do maker que quer operar com preco certo",
+      "features": ["Importacao .3mf/.gcode automatica", "Calculo custo completo", "Dashboard financeiro", "Gestao estoque filamentos", "Multicolorido", "Gamificacao (XP, niveis, conquistas)", "IA Mentor Maker", "Multi-impressoras", "Relatorios avancados"],
+      "diferencial": "Gamificacao + IA Mentor Maker + importacao slicer automatica",
+      "status": "beta fechado",
+      "risco_hayzer": "alto - quando lancar pode ser concorrente direto forte"
+    },
+    {
+      "nome": "QuantoCusta3D / Paralelo Maker",
+      "url": "https://quantocusta3d.com.br",
+      "preco_mensal": 0,
+      "modelo": "gratuito (calculadora) + expansao em desenvolvimento",
+      "ancora_principal": "Quanto custa?",
+      "expansao_anunciada": "Paralelo Maker - Produtos, encomendas, dashboard e anuncio com IA",
+      "status": "calculadora ativa, expansao em desenvolvimento",
+      "risco_hayzer": "crescente - estava so calculadora, agora virando plataforma"
+    },
+    {
+      "nome": "CalculaSTL",
+      "url": "https://calculastl.com.br",
+      "preco_mensal": 0,
+      "modelo": "gratuito",
+      "ancora_principal": "Calculadora de Preco Impressao 3D",
+      "features": ["Cadastro de maquinas", "Banco de materiais", "Calculadora automatica", "Gerenciamento de projetos", "Integracao taxas ML e Shopee"],
+      "status": "ativo",
+      "risco_hayzer": "baixo - so calculadora"
+    },
+    {
+      "nome": "Smart3D",
+      "url": "https://smart3d.opcognos.com",
+      "preco_mensal": "nao verificado",
+      "modelo": "nao verificado",
+      "ancora_principal": "Gestao completa para makers de impressao 3D",
+      "descricao": "Cobre o fluxo completo do negocio, do custo por grama ate orcamentos entregues ao cliente",
+      "status": "NOVO PLAYER DETECTADO",
+      "risco_hayzer": "a monitorar"
+    },
+    {
+      "nome": "MakerOS",
+      "url": "https://makeros3d.com",
+      "preco_mensal": "nao capturado",
+      "modelo": "SaaS",
+      "descricao": "Controle de impressoras FDM, materiais, produtos, producao, estoque, custos, precificacao e lucro com dashboard mobile-first",
+      "status": "ativo",
+      "risco_hayzer": "a monitorar"
+    }
+  ],
+  "erps_gerais": [
+    {
+      "nome": "Bling ERP",
+      "url": "https://www.bling.com.br",
+      "preco_entrada": 55,
+      "modelo": "assinatura mensal",
+      "ancora_principal": "Gestao inteligente para vender mais e se preocupar menos, tem no Bling!",
+      "base_usuarios": "300.000+ ativos diarios",
+      "integracoes": "250+",
+      "diferenciais": ["NF-e automatica", "Conta digital PJ integrada", "80+ automacoes", "Melhor Envio integrado"],
+      "risco_hayzer": "baixo para makers 3D - generico demais, sem especificidade de calculo de custo por filamento"
+    },
+    {
+      "nome": "Tiny ERP (Olist)",
+      "url": "https://tiny.com.br",
+      "planos": [
+        {"nome": "Avance", "mensal": 55},
+        {"nome": "Construa", "mensal": 143},
+        {"nome": "Impulsione", "mensal": 312},
+        {"nome": "Domine", "mensal": 758}
+      ],
+      "desconto_anual": "20%",
+      "integracoes": "100+",
+      "ancora_principal": "o sistema de gestao completo",
+      "risco_hayzer": "baixo - ERP generico, nao especializado em 3D"
+    }
+  ],
+  "bambu_lab": {
+    "controversia_authorization_control": {
+      "status": "ativo e escalando",
+      "firmwares_afetados": ["01.08.02.00 (P-Series)", "01.05.00.00 (A-Series)"],
+      "impacto": "Bloqueia softwares third-party incluindo OrcaSlicer community fork e Biqu Panda Touch",
+      "acao_legal": "Cease-and-desist contra Pawel Jarczak (desenvolvedor polonês fork OrcaSlicer) em abril 2026",
+      "resposta_comunidade": "Louis Rossmann publicamente contra Bambu Lab, oferecendo suporte financeiro ao dev",
+      "bambu_studio_versao": "V2.7.1",
+      "novidades_studio": ["Suporte A2L", "Texture-to-Color Painting", "Filament Manager"]
+    },
+    "impacto_hayzer": "Makers preocupados com lock-in de hardware podem valorizar mais ferramentas de gestao abertas e independentes"
+  },
+  "makerworld_trending": {
+    "semana": "2026-06-10",
+    "top_modelos": [
+      {"modelo": "FIFA World Cup 2026 Sticker Box", "downloads": 27100, "likes": 5800},
+      {"modelo": "Football World Cup Trophy (real size)", "downloads": 17600, "likes": 4700},
+      {"modelo": "World Cup Sticker Box Collection", "downloads": 17200, "likes": 2900},
+      {"modelo": "Stamp Maker - Customizable Stamps", "downloads": 27000, "likes": 18800},
+      {"modelo": "Annoy-A-Tron", "downloads": 14800, "likes": 4300}
+    ],
+    "categoria_dominante": "Copa do Mundo 2026",
+    "observacao": "Pico sazonal Copa do Mundo = aumento de volume de pedidos para makers brasileiros"
+  },
+  "hotmart_cursos": {
+    "top_cursos": [
+      "Curso Completo de Impressao 3D: Do Zero ao Avancado (Mercado Com Digital)",
+      "Curso de Impressao 3D Intensivo (3D Lab)",
+      "Curso Impressao 3D Para Iniciantes (Oswaldo Salzano)",
+      "Metodo de Impressao 3D para Colecionaveis (Leandro Correa Peres)",
+      "Curso de Impressao 3D em Resina (Denis Jesus Mendonca)",
+      "CURSO DE BLENDER - Modelagem para Impressao 3D (ReiRec 3D Studios)",
+      "CURSO MASTER DE IMPRESSAO 3D (Educaweb)"
+    ],
+    "observacao": "Precos e numero de alunos nao expostos publicamente sem login. Todos em formato de pagamento unico (acesso vitalicio)."
+  },
+  "marketplaces": {
+    "produtos_top_ml_shopee": [
+      {"categoria": "Suportes home office personalizados", "custo_material": "R$8-15", "preco_venda": "R$60-120", "margem": "300-700%"},
+      {"categoria": "Pecas reposicao eletrodomesticos", "custo_material": "R$5-12", "preco_venda": "R$45-90", "margem": "275-700%"},
+      {"categoria": "Gabaritos marcenaria/serralheria", "custo_material": "R$10-25", "preco_venda": "R$80-250", "margem": "220-1400%"},
+      {"categoria": "Acessorios drones e FPV", "margem": "alta"},
+      {"categoria": "Colecionaveis sob encomenda", "custo_material": "variavel", "preco_venda": "R$200-600", "margem": "200%+"},
+      {"categoria": "Brindes corporativos personalizados", "margem": "200%+"},
+      {"categoria": "Produtos Copa do Mundo 2026", "sazonalidade": "pico junho-julho 2026"}
+    ],
+    "impressoras_top_shopee": ["Kobra S1 Combo", "Bambu Lab A1 Combo"],
+    "filamento_top_ml": "PETG 1,75mm 1kg Masterprint"
+  },
+  "analise_competitiva": {
+    "mudancas_principais_vs_semana_anterior": [
+      {
+        "player": "QuantoCusta3D",
+        "mudanca": "Expansao anunciada para Paralelo Maker com gestao de pedidos + dashboard + anuncios com IA",
+        "impacto_hayzer": "ALTO - estava fora do radar como concorrente, agora virando plataforma completa",
+        "acao_recomendada": "Monitorar lancamento e posicionamento de preco"
+      },
+      {
+        "player": "Smart3D",
+        "mudanca": "Novo player detectado (smart3d.opcognos.com) - gestao completa para makers",
+        "impacto_hayzer": "MEDIO - a verificar proposta e preco",
+        "acao_recomendada": "Visitar site e mapear features na proxima semana"
+      },
+      {
+        "player": "Bambu Lab",
+        "mudanca": "Controversia Authorization Control escalou com cease-and-desist em abril/2026 e oposicao publica de Louis Rossmann",
+        "impacto_hayzer": "OPORTUNIDADE - makers insatisfeitos com lock-in valorizam independencia de hardware"
+      }
+    ],
+    "oportunidade_nova": {
+      "descricao": "Copa do Mundo 2026 gerando pico de demanda por produtos personalizados. Makers precisam gerenciar volume maior de pedidos em junho-julho. Nenhum concorrente fez campanha ou adaptacao para este momento.",
+      "acao": "Comunicar Hayzer como ferramenta para makers aproveitarem o pico de Copa do Mundo sem perder controle"
+    },
+    "ameaca_nova": {
+      "descricao": "Vultrix3D em beta fechado com stack muito similar ao Hayzer (gestao integrada + IA + importacao automatica de gcode + gamificacao). Quando lançar publicamente vai competir diretamente.",
+      "acao": "Acelerar soft launch 13/06 para ter usuarios reais e prova social antes do Vultrix entrar"
+    }
+  }
+}
