@@ -1,0 +1,35 @@
+{
+  "date": "2026-06-11",
+  "generated_at": "2026-06-11T09:00:00-03:00",
+  "periodo_24h": {
+    "total_new": 0,
+    "completed_step_2": 0,
+    "pct_step_2": null,
+    "por_utm": [],
+    "avg_min_step1_to_step2": null
+  },
+  "acumulado": {
+    "total_waitlist": 3,
+    "total_qualificados": 0,
+    "total_email_confirmado": 0,
+    "total_convertidos": 0
+  },
+  "ultimos_7d": {
+    "total_novos": 0,
+    "media_diaria": 0.0,
+    "qualificados": 0,
+    "crescimento_pct": 0
+  },
+  "top_utm_acumulado": [
+    { "utm_source": "direct", "total": 3, "pct": 100.0 }
+  ],
+  "tendencia": "critica",
+  "ultimo_lead_criado": "2026-05-23",
+  "dias_sem_novo_lead": 19,
+  "alertas": [
+    "Funil seco ha 19 dias -- ultimo lead em 23/05",
+    "0 de 3 leads qualificaram (etapa 2 = 0%)",
+    "0 de 3 emails confirmados -- pipeline email-sequence vazio",
+    "100% direct -- nenhum UTM ativo (LinkedIn, WhatsApp, organic)"
+  ]
+}
