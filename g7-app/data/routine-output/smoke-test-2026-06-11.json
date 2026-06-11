@@ -1,0 +1,62 @@
+{
+  "smoke_test": {
+    "date": "2026-06-11",
+    "run_time_brt": "06:00",
+    "status": "ALERTA_AMARELO",
+    "alertas": [
+      "/calculadora/pro retornou 404 (esperado per ADR-024, Calc Pro revogada)",
+      "Performance N/A: VERCEL_API_TOKEN ausente (21o dia consecutivo)",
+      "0 novos leads nas ultimas 24h (3 total acumulado)"
+    ]
+  },
+  "rotas": {
+    "total": 4,
+    "ok_200": 3,
+    "falhas": 1,
+    "resultados": {
+      "https://hayzer.com.br": { "status": 200, "ok": true, "titulo": "Hayzer - A raiz do seu negocio" },
+      "https://hayzer.com.br/calculadora": { "status": 200, "ok": true, "titulo": "Calculadora de custo de impressao 3D - Hayzer" },
+      "https://hayzer.com.br/waitlist": { "status": 200, "ok": true, "titulo": "Hayzer - A raiz do seu negocio", "nota": "CSR loading state normal" },
+      "https://hayzer.com.br/calculadora/pro": { "status": 404, "ok": false, "nota": "ESPERADO - ADR-024 Calc Pro revogada 21/05" }
+    }
+  },
+  "vercel": {
+    "project": "bvaz-hub",
+    "project_id": "prj_KHkxLpnoblctCyW3LVJWd8KX1nzX",
+    "producao_deploy_id": "dpl_3GGd5WqqbyLhYhtrJAMn5o5xbX3a",
+    "producao_commit_hash": "07cc8c0",
+    "producao_commit_hash_full": "07cc8c0ceda599fde9e7f79202be7660cd3a5b1a",
+    "producao_commit_msg": "monitoring: error-scan 2026-06-11",
+    "producao_state": "READY",
+    "producao_idade_horas": "~7h",
+    "producao_criado_brt": "2026-06-10 ~23:11 BRT",
+    "deploys_24h": 10,
+    "deploys_error": 0,
+    "deploys_building_longo": 0,
+    "status": "OK"
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "project_ref": "sqyrkisnllrgylnxwudu",
+    "regiao": "sa-east-1",
+    "status_projeto": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "waitlist_leads_total": 3,
+    "waitlist_novos_24h": 0,
+    "tabela_notifications": true,
+    "view_search_index": true,
+    "nota_search_index": "MUDANCA POSITIVA: search_index agora encontrado via to_regclass (era reportado ausente nos 6 dias anteriores - possivel artefato de query anterior)"
+  },
+  "performance": {
+    "status": "N/A",
+    "motivo": "VERCEL_API_TOKEN ausente - dia 21 consecutivo",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "soft_launch": {
+    "data": "2026-06-13",
+    "dias_restantes": 2
+  },
+  "rollback_ref": "vercel rollback dpl_3GGd5WqqbyLhYhtrJAMn5o5xbX3a --scope team_JPZ2UXx1CVIIr20I4V1u9uID"
+}
