@@ -1,0 +1,176 @@
+{
+  "meta": {
+    "data_pesquisa": "2026-06-11",
+    "rotina": "concorrencia-diaria",
+    "executado_por": "agent-pesquisa-automatizado",
+    "fontes": ["WebSearch", "WebFetch", "Instagram (rate-limited)", "Reclame Aqui (HTTP 403 — dados via search)"],
+    "duracao_estimada_min": 5
+  },
+
+  "alertas": [
+    {
+      "id": "ALERTA-01",
+      "titulo": "SP3DFEST 2026 em 8 dias — oportunidade de aquisicao direta",
+      "detalhe": "Maior evento maker 3D da America Latina acontece em 19-21/06 no Edificio Panamericano, Sao Paulo. Entrada gratuita. Concentracao maxima do publico-alvo exatamente na semana do soft launch (13/06). Janela de acao imediata.",
+      "urgencia": "ALTA",
+      "acao_sugerida": "Marcos + Helena: avaliar presenca fisica ou digital no evento. Material de divulgacao Hayzer pronto antes de 19/06.",
+      "fonte": "sympla.com.br/evento/sp3dfest/3053392"
+    },
+    {
+      "id": "ALERTA-02",
+      "titulo": "Bling aumentou preco +143% — makers migrando ativamente",
+      "detalhe": "Caso documentado no Reclame Aqui: R$185 para R$450/mes. Upgrade automatico para plano Platina em jan/2026 sem aviso. Nova cobranca para importacoes via API em abril/2026 (antes inclusa). Verbatim: 'SUBIU DEMAIS O PRECO E CAIU DEMAIS O NIVEL'. Taxa de resolucao 87.8% com 9 dias de espera media.",
+      "urgencia": "ALTA",
+      "acao_sugerida": "Carla: criar mensagem especifica 'voce usa Bling e esta pagando caro?' para campanha de captura pos-soft launch.",
+      "fonte": "reclameaqui.com.br — multiplas reclamacoes confirmadas"
+    },
+    {
+      "id": "ALERTA-03",
+      "titulo": "Crise Bambu Lab cria abertura de posicionamento independencia",
+      "detalhe": "Bambu Lab pediu remocao de codigo open-source de desenvolvedor em mai/2026. Comunidade maker global revoltada com vendor lock-in. Makers buscam alternativas. Momento favoravel para posicionar Hayzer como 'software independente, sem lock-in, feito por makers'.",
+      "urgencia": "MEDIA",
+      "acao_sugerida": "Marcos: post Instagram/WhatsApp explorando tema de independencia de ferramentas — 'sua ferramenta de gestao tambem te da liberdade?'",
+      "fonte": "netthings.pt — mai/2026"
+    }
+  ],
+
+  "posts_instagram": {
+    "status_coleta": "HTTP 429 Too Many Requests em todos os 5 perfis — Instagram bloqueou scraping paralelo",
+    "dados_recuperados_via_search": [
+      {
+        "perfil": "@3dgeekshow",
+        "seguidores": "128K",
+        "natureza": "Maior influenciador maker 3D do Brasil — Murilo Laffranchi, 120K makers ensinados",
+        "relevancia": "ALTA — parceiro estrategico sem produto de software associado visivel. Oportunidade de co-marketing."
+      },
+      {
+        "perfil": "@3dlab_brasil",
+        "seguidores": "83K",
+        "natureza": "Revenda de hardware (BH + SP) — nao e software de gestao",
+        "relevancia": "BAIXA para Hayzer — distribuidor, nao concorrente"
+      },
+      {
+        "perfil": "@artbox3d",
+        "seguidores": "82K",
+        "natureza": "Revenda Bambu Lab + laser cutting (SP) — nao e software de gestao",
+        "relevancia": "BAIXA para Hayzer"
+      },
+      {
+        "perfil": "@3dprintacademy",
+        "seguidores": "50K",
+        "natureza": "Escola/cursos — 6.000 alunos, 10 anos. Canal educacional.",
+        "relevancia": "MEDIA — canal de distribuicao potencial para Hayzer via parceria"
+      },
+      {
+        "perfil": "@appcustos3d",
+        "seguidores": "Sem dados publicos",
+        "natureza": "Concorrente direto — app de gestao de custos para makers",
+        "relevancia": "ALTA — monitorar proximo ciclo. Presenca Instagram fraca pode ser oportunidade."
+      }
+    ],
+    "posts_novos_24h": "NAO OBTIDOS — Instagram requer autenticacao para posts recentes"
+  },
+
+  "reclamacoes_reclame_aqui": [
+    {
+      "empresa": "Bling",
+      "total_reclamacoes": "Volume alto — entre os mais reclamados do SaaS BR",
+      "taxa_resolucao": "87.8%",
+      "tempo_resposta_medio": "9 dias e 17 horas",
+      "reclamacoes_recentes": [
+        {
+          "titulo": "Aumento abusivo da mensalidade do Bling e falta de suporte adequado",
+          "tema": "Preco — R$185 para R$450/mes (+143%)",
+          "recorrente": true
+        },
+        {
+          "titulo": "A cada dia que passa, entregam um sistema pior",
+          "tema": "Qualidade do produto em queda",
+          "recorrente": true
+        },
+        {
+          "titulo": "SUBIU DEMAIS O PRECO E CAIU DEMAIS O NIVEL!",
+          "tema": "Preco + qualidade simultaneamente",
+          "recorrente": true
+        },
+        {
+          "titulo": "Upgrade automatico para plano Platina sem aviso (jan/2026)",
+          "tema": "Pratica comercial abusiva",
+          "recorrente": false
+        },
+        {
+          "titulo": "Nova cobranca para importacoes via API (abril/2026)",
+          "tema": "Mudanca de feature paga — antes inclusa no plano",
+          "recorrente": false
+        }
+      ],
+      "oportunidade_hayzer": "Maker que paga Bling para ERP generico e reclamam de preco/complexidade sao leads qualificados para Hayzer. Messaging: especializado, preco previsivel, feito para fluxo 3D."
+    },
+    {
+      "empresa": "MakerFlow",
+      "total_reclamacoes": "Zero encontradas — produto novo/pequeno",
+      "oportunidade_hayzer": "Sem dados de dor do usuario — monitorar"
+    },
+    {
+      "empresa": "AppCustos3D",
+      "total_reclamacoes": "Zero encontradas — produto novo/pequeno",
+      "oportunidade_hayzer": "Sem dados de dor do usuario — monitorar"
+    }
+  ],
+
+  "mapa_concorrentes": {
+    "software_especifico_3d": [
+      {
+        "nome": "AppCustos3D",
+        "url": "appcustos3d.com.br",
+        "preco_basico": "R$29,90/mes (R$17/mes semestral)",
+        "preco_pro": "R$69,90/mes (R$36/mes semestral)",
+        "diferenciais": ["Leitor G-code automatico", "Import Shopee/ML via planilha", "Link rastreamento publico", "WhatsApp automation"],
+        "fraqueza_visivel": "Social proof zero (contadores mostram 0+). Instagram fraco. Produto novo."
+      },
+      {
+        "nome": "MakerFlow3D",
+        "url": "makerflow3d.com.br",
+        "preco_basico": "R$29,90/mes",
+        "preco_pro": "R$69,90/trimestre (mais popular)",
+        "diferenciais": ["Dashboard tempo real", "Fila de producao visual", "IA de analise de mercado", "OAuth ML/Shopee", "WhatsApp suporte"],
+        "fraqueza_visivel": "Sem depoimentos visiveis. Modelo de creditos PRO pode confundir. Produto novo."
+      },
+      {
+        "nome": "PrintWorks3D",
+        "url": "printworks3d.com.br",
+        "preco_basico": "GRATUITO",
+        "diferenciais": ["Filamentos + impressoras + custos + vendas + financeiro em um lugar", "Gratis"],
+        "fraqueza_visivel": "Site precario, produto provavelmente MVP simples. Gratis = sem compromisso de produto."
+      },
+      {
+        "nome": "Smart3D",
+        "url": "smart3d.opcognos.com",
+        "preco_basico": "Desconhecido (bloqueou scraping)",
+        "diferenciais": ["Orcamentos PDF", "Controle financeiro", "Rastreamento de pedidos"],
+        "fraqueza_visivel": "Site bloqueia acesso — produto fechado, sem presenca digital forte"
+      },
+      {
+        "nome": "Precifi3D",
+        "url": "precifi3d.com",
+        "preco_basico": "Starter gratis",
+        "diferenciais": ["Multi-material (PLA/ABS/PETG/TPU/Nylon)", "Exportacao PDF", "Conexao fornecedores"],
+        "fraqueza_visivel": "Escopo limitado — so calculadora de custo, nao gestao completa"
+      }
+    ],
+    "erp_generico_adjacente": [
+      {
+        "nome": "Bling",
+        "preco_entrada": "R$55/mes (plano Cobalto)",
+        "dor_para_makers": "Nao entende fluxo 3D (G-code, filamento), subiu 143% de preco, suporte 10 dias de espera, cobra features antes inclusas"
+      }
+    ]
+  },
+
+  "acao_recomendada": {
+    "proprietario": "Marcos + Helena",
+    "prazo": "Antes de 13/06 (soft launch)",
+    "acao": "SP3DFEST em 19-21/06: avaliar presenca Hayzer no evento. Se impossivel presenca fisica, preparar conteudo digital especifico para o evento (post dia 19 com messaging 'Hayzer para quem esteve no SP3DFEST'). Janela de captura de leads qualificados maxima da semana.",
+    "acao_secundaria": "Carla: esbocar copy de 1 post explorando dor do Bling ('paga caro em ERP generico que nao entende seu fluxo? Hayzer foi feito por maker, para maker')"
+  }
+}
