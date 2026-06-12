@@ -1,0 +1,92 @@
+{
+  "date": "2026-06-12",
+  "time_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "routes": {
+    "total": 4,
+    "ok_200": 3,
+    "results": {
+      "hayzer_com_br": {
+        "url": "https://hayzer.com.br",
+        "status": 200,
+        "ok": true
+      },
+      "calculadora": {
+        "url": "https://hayzer.com.br/calculadora",
+        "status": 200,
+        "ok": true
+      },
+      "waitlist": {
+        "url": "https://hayzer.com.br/waitlist",
+        "status": 200,
+        "ok": true,
+        "note": "CSR — HTML entregue com titulo correto, hidratacao client-side normal"
+      },
+      "calculadora_pro": {
+        "url": "https://hayzer.com.br/calculadora/pro",
+        "status": 404,
+        "ok": false,
+        "expected": true,
+        "reason": "ADR-024 Calc Pro revogada em 21/05/2026",
+        "consecutive_days": 8
+      }
+    }
+  },
+  "vercel": {
+    "production_deployment": {
+      "id": "dpl_3GGd5WqqbyLhYhtrJAMn5o5xbX3a",
+      "sha": "07cc8c0",
+      "commit": "monitoring: error-scan 2026-06-11",
+      "state": "READY",
+      "target": "production",
+      "age_hours": 31
+    },
+    "deployments_24h": {
+      "total": 5,
+      "ready": 5,
+      "error": 0,
+      "building_stuck": 0,
+      "note": "todos previews de PR — nenhum push em main nas ultimas 24h"
+    },
+    "runtime_errors_24h": 0
+  },
+  "supabase": {
+    "project_id": "sqyrkisnllrgylnxwudu",
+    "region": "sa-east-1",
+    "status": "ACTIVE_HEALTHY",
+    "health_check": "OK",
+    "leads_total": 6,
+    "leads_new_24h": 0,
+    "last_lead_at": "2026-06-01T15:54:24Z",
+    "notifications_table": true,
+    "search_index": true
+  },
+  "performance": {
+    "available": false,
+    "reason": "VERCEL_API_TOKEN ausente — 22o dia consecutivo",
+    "lcp": null,
+    "inp": null,
+    "cls": null
+  },
+  "context": {
+    "soft_launch": "2026-06-13 (AMANHA)",
+    "public_launch": "2026-06-27"
+  },
+  "alerts": [
+    {
+      "severity": 2,
+      "type": "route_404_expected",
+      "message": "/calculadora/pro 404 esperado — ADR-024 Calc Pro revogada, 8o dia consecutivo"
+    },
+    {
+      "severity": 2,
+      "type": "missing_token",
+      "message": "VERCEL_API_TOKEN ausente — Core Web Vitals indisponiveis, 22o dia consecutivo"
+    },
+    {
+      "severity": 1,
+      "type": "soft_launch_eve",
+      "message": "Soft launch AMANHA 13/06 — sistema verde, zero erros runtime, supabase healthy"
+    }
+  ]
+}
