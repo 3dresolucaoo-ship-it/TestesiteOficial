@@ -1,0 +1,80 @@
+{
+  "data": "2026-06-12",
+  "alertas": [
+    {
+      "titulo": "3D Lab abre loja fisica em Sao Paulo em 20/07",
+      "descricao": "A maior empresa de impressao 3D do Brasil (83K seguidores no Instagram) anuncia inauguracao da primeira loja SP para 20 de julho. Movimento de expansao geografica aggressiva apos anos so em BH. Estao usando influenciadores (Natacha Harumi Ota) com cupom de desconto para filamentos no evento. Isso aumenta visibilidade da marca para o publico maker paulistano exatamente no periodo do soft launch do Hayzer.",
+      "fonte": "Instagram @3dlab_brasil - reel instagram.com/reel/DL-a_wzxMoa/",
+      "urgencia": "media"
+    },
+    {
+      "titulo": "MakerFlow 3D opera com preco identico ao Hayzer (R$ 29,90/mes)",
+      "descricao": "Concorrente direto de SaaS para makers pratica R$ 29,90/mes (plano mensal) e R$ 69,90 trimestral. Feature set muito similar ao Hayzer: dashboard, gestao de pedidos, estoque, fila de producao, calculadora, financeiro. Diferencial deles: integracao OAuth com Mercado Livre e Shopee ja implementada. Ponto fraco aparente: sem onboarding wizard, sem golden path documentado, sem empty states trabalhados. Trial de 7 dias sem cartao.",
+      "fonte": "Site oficial makerflow3d.com.br",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "AppCustos3D tem plano Basic R$ 17/mes semestral, mais barato que alternativas",
+      "descricao": "AppCustos3D posiciona plano Basic a R$ 17/mes no semestral (R$ 29,90 mensal) e PRO a R$ 36/mes semestral (R$ 69,90 mensal). Feature killer: leitor de G-code que extrai tempo e consumo automaticamente ao arrastar arquivo. Importacao de pedidos Shopee/ML via planilha. Envio de proposta pelo WhatsApp PRO. Posicionamento 'feito por makers para makers' com critica implicita a 'geradores de IA'. Sem dados de reclamacoes no Reclame Aqui, o que sugere base pequena ou gerenciamento ativo.",
+      "fonte": "Site oficial appcustos3d.com.br",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "SP3DFEST acontece 19-21 junho em Sao Paulo - vitrine para concorrentes",
+      "descricao": "Maior evento gratuito de impressao 3D do Brasil acontece em 3 dias (19-21/06), no Edificio Panamericano, Bela Vista, SP. Todos os concorrentes estarao ou serao mencionados nesse ambiente. Oportunidade perdida se Hayzer nao tiver presenca ou material de divulgacao pronto antes disso.",
+      "fonte": "Sympla - sympla.com.br/evento/sp3dfest/3053392",
+      "urgencia": "alta"
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "@3dlab_brasil",
+      "tipo": "reels",
+      "texto_resumo": "Inauguracao da loja 3D Lab em SP no dia 20/07 (domingo). Post com influenciadora Natacha Harumi Ota anunciando cupom de desconto NATACHA5 para filamentos. Link de inscricao no evento na bio.",
+      "engajamento_estimado": "39 likes, 9 comentarios (engajamento baixo para conta de 83K - post niche/evento)",
+      "relevancia_hayzer": "Expansao fisica da 3D Lab para SP aumenta presenca de marca concorrente no principal mercado de makers do Brasil. Nao afeta o SaaS diretamente, mas aumenta Share of Mind no publico-alvo do Hayzer."
+    },
+    {
+      "conta": "@3dlab_brasil",
+      "tipo": "reels",
+      "texto_resumo": "Reel de posicionamento 'A maior empresa de impressao 3D do Brasil' com conteudo de expansao geografica.",
+      "engajamento_estimado": "Conta com 83K seguidores, 844 posts, presenca em BH e SP",
+      "relevancia_hayzer": "3D Lab e player de hardware/filamentos, nao SaaS concorrente direto. Mas e o ecossistema onde os makers do Hayzer vivem."
+    },
+    {
+      "conta": "@artbox3d",
+      "tipo": "reels",
+      "texto_resumo": "Conteudo sobre impressao 3D e modelagem em SP. Posts recentes identificados com hashtags #artbox3d #impressao3d.",
+      "engajamento_estimado": "Conta com 82K seguidores em SP. Posts com formato educativo/demonstrativo.",
+      "relevancia_hayzer": "ArtBox3D e loja/service bureau, nao SaaS. Baixa concorrencia direta. Relevante como canal de distribuicao ou parceria futura."
+    },
+    {
+      "conta": "@3dprintacademy",
+      "tipo": "desconhecido",
+      "texto_resumo": "Conta brasileira com 50K seguidores posicionada como 'Referencia ha 10 anos para quem quer viver de Impressao 3D'. Foco em educacao e cursos.",
+      "engajamento_estimado": "50K seguidores, ativa",
+      "relevancia_hayzer": "Canal educacional que forma exatamente o publico-alvo do Hayzer. Parceria ou presenca neste canal pode ser alavanca de aquisicao."
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "3D Prime (impressoras 3D)",
+      "queixa": "Vicio recorrente em impressoras com recusa de solucao definitiva + atraso na entrega com propaganda enganosa de pronta entrega",
+      "recorrente": true,
+      "oportunidade_hayzer": "O maker que compra uma impressora nova com problema ja comeca frustrado. Hayzer pode se posicionar como 'o software que organiza o caos mesmo quando o hardware da problema', humanizando o suporte e a gestao no onboarding."
+    },
+    {
+      "empresa": "MakerFlow / AppCustos3D / Precifi3D",
+      "queixa": "Nenhuma reclamacao encontrada no Reclame Aqui para os tres concorrentes SaaS diretos",
+      "recorrente": false,
+      "oportunidade_hayzer": "Base de usuarios ainda pequena nos concorrentes SaaS (ausencia no Reclame Aqui indica escala baixa). Janela de mercado ainda aberta para o Hayzer entrar e se tornar o padrao antes deles crescerem."
+    }
+  ],
+  "acao_recomendada": {
+    "descricao": "Duas acoes paralelas: (1) Marcos deve preparar material de posicionamento comparativo Hayzer vs MakerFlow vs AppCustos3D antes do SP3DFEST (19-21/06) - mesmo que nao haja presenca fisica, posts educativos sobre 'como escolher um software de gestao para maker' com SEO nos 3 dias do evento capturam intencao de busca do publico quente. (2) CEO deve testar trial do MakerFlow e do AppCustos3D essa semana para mapear gaps reais de UX que o Hayzer ja resolveu (onboarding wizard, empty states, golden path lead-pedido) - isso alimenta copy autentica pro soft launch 13/06.",
+    "responsavel": "Marcos",
+    "prazo": "amanha"
+  },
+  "sem_dados_significativos": false,
+  "nota_metodologica": "Instagram bloqueou WebFetch direto (HTTP 429 em todos os perfis testados). Dados de Instagram obtidos via WebSearch Google + WebFetch de reels publicos especificos. Reclame Aqui bloqueou WebFetch (HTTP 403). Dados do Reclame Aqui obtidos via WebSearch com site: operator - nenhum concorrente SaaS (MakerFlow, AppCustos3D, Precifi3D) aparece no Reclame Aqui, confirmando escala ainda baixa. Dados de funcionalidades e precos dos SaaS concorrentes obtidos via WebFetch direto nos sites oficiais (makerflow3d.com.br e appcustos3d.com.br e precifi3d.com) com sucesso. Evento SP3DFEST confirmado via Sympla. Inauguracao 3D Lab SP confirmada via reel publico com data 20/07. Busca por 'hayzer' nao retornou mencoes externas, confirmando que o produto ainda nao tem presenca publica indexada - normal pre-launch."
+}
