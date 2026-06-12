@@ -1,0 +1,39 @@
+{
+  "digest_date": "2026-06-12",
+  "generated_at": "2026-06-12T09:00:00-03:00",
+  "periodo_24h": {
+    "total_novos": 0,
+    "confirmados_etapa2": 0,
+    "pct_etapa2": null,
+    "ultimo_lead_ha_dias": 21,
+    "breakdown_utm": {}
+  },
+  "acumulado": {
+    "total": 3,
+    "email_confirmados": 0,
+    "convertidos": 0,
+    "pct_confirmacao": 0,
+    "pct_conversao": 0
+  },
+  "leads_por_dia_7d": {
+    "2026-06-05": 0,
+    "2026-06-06": 0,
+    "2026-06-07": 0,
+    "2026-06-08": 0,
+    "2026-06-09": 0,
+    "2026-06-10": 0,
+    "2026-06-11": 0
+  },
+  "media_diaria_7d": 0,
+  "tendencia": "baixa",
+  "top_utm_acumulado": [
+    { "utm_source": "direct/null", "total": 3, "pct": 100 }
+  ],
+  "tempo_medio_step1_step2_min": null,
+  "issues_criticos": [
+    "UTM tracking nulo em 100% dos leads - formulario nao captura parametros UTM",
+    "Taxa de confirmacao de email: 0% (0/3) - fluxo de email pode estar quebrado",
+    "Score = 0 em todos os leads - mecanismo de scoring nao dispara",
+    "Ultimo lead ha 21 dias - nenhuma aquisicao ativa no periodo"
+  ]
+}
