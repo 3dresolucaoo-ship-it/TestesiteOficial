@@ -1,0 +1,58 @@
+{
+  "date": "2026-06-13",
+  "hora_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "routes": {
+    "hayzer_com_br":   { "status": 200, "ok": true },
+    "calculadora":     { "status": 200, "ok": true },
+    "waitlist":        { "status": 200, "ok": true },
+    "calculadora_pro": { "status": 404, "ok": false, "note": "esperado — ADR-024, Calc Pro revogada 21/05, 10o dia consecutivo" }
+  },
+  "routes_ok": "3/4",
+  "vercel": {
+    "production_sha":        "07cc8c0",
+    "production_deploy_id":  "dpl_3GGd5WqqbyLhYhtrJAMn5o5xbX3a",
+    "production_status":     "READY",
+    "production_age_hours":  55,
+    "production_since":      "2026-06-11T02:50Z",
+    "deploys_24h":           7,
+    "deploys_24h_errors":    0,
+    "deploys_24h_note":      "todos READY, todos preview (target null) — nenhum push em main nas ultimas 24h"
+  },
+  "supabase": {
+    "project_status":              "ACTIVE_HEALTHY",
+    "health_check":                "OK",
+    "total_leads":                 6,
+    "waitlist_leads_source_null":  0,
+    "notifications_table":         true,
+    "search_index_view_public":    false,
+    "search_index_note":           "ausente em information_schema.views public — inconsistente com relato 11-12/06 (smoke anterior dizia encontrado via to_regclass). GlobalSearch pode estar degradado. Investigar schema correto."
+  },
+  "performance": {
+    "available":                  false,
+    "reason":                     "VERCEL_API_TOKEN ausente",
+    "consecutive_days_missing":   23,
+    "lcp":                        null,
+    "inp":                        null,
+    "cls":                        null
+  },
+  "alerts": [
+    {
+      "severity": "yellow",
+      "item":     "search_index_view",
+      "msg":      "Ausente em pg_views public schema. Status inconsistente vs 11-12/06. GlobalSearch pode estar degradado."
+    },
+    {
+      "severity": "yellow",
+      "item":     "producao_sem_deploy",
+      "msg":      "Producao 55h sem novo deploy em main. Ultimo: 07cc8c0 (11/06 02:50 UTC). Varios PRs preview pendentes de merge."
+    },
+    {
+      "severity": "yellow",
+      "item":     "performance_token_ausente",
+      "msg":      "VERCEL_API_TOKEN ausente ha 23 dias consecutivos. Core Web Vitals indisponiveis."
+    }
+  ],
+  "context": "SOFT LAUNCH 13/06 — primeiro dia com usuarios reais (grupo WhatsApp Beta)",
+  "checked_at": "2026-06-13T09:05:53Z"
+}
