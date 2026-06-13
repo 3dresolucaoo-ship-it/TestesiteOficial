@@ -1,0 +1,97 @@
+{
+  "data": "2026-06-13",
+  "instagram": [
+    {
+      "conta": "@3dlab_brasil",
+      "post_novo_24h": false,
+      "tipo": "desconhecido",
+      "tema": "Loja de impressoras 3D e filamentos (BH e SP). Conteudo habitual: filamentos, impressoras (Bambu, Creality), cursos e suporte tecnico.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "medio",
+      "notas": "Conta com 83K seguidores, 851 posts. WebFetch bloqueado (HTTP 429). Nenhum post especifico de 13/06 encontrado. Conta e de LOJA/DISTRIBUIDOR, nao de software de gestao."
+    },
+    {
+      "conta": "@artbox3d",
+      "post_novo_24h": true,
+      "tipo": "reels",
+      "tema": "Lancamento de plataforma 'Seminovos.ARTBOX3D.com.br' (marketplace P2P para impressoras usadas, zero comissao, 100+ usuarios) + reel de retomada de revenda oficial de impressoras.",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "alto",
+      "notas": "82K seguidores. Post indexado: instagram.com/p/DSc2v0TEZT7/ — seminovos confirmado como iniciativa real. ARTBOX3D esta expandindo o ecossistema alem do hardware, capturando jornada do maker. Movimento relevante para o mercado."
+    },
+    {
+      "conta": "@3dprintacademy",
+      "post_novo_24h": false,
+      "tipo": "desconhecido",
+      "tema": "Academia com acreditacao MEC + Cogna. 7.000+ alunos. Novo curso de Modelagem 3D disponivel.",
+      "engajamento_estimado": "medio",
+      "relevancia_hayzer": "medio",
+      "notas": "50K seguidores. Sem post recente datado. Academia foca em educacao tecnica, nao gestao de negocio — relevancia indireta: alunos sao makers potenciais do Hayzer."
+    },
+    {
+      "conta": "@3dgeekshow",
+      "post_novo_24h": true,
+      "tipo": "reels",
+      "tema": "CAMPANHA ATIVA: curso 'Seu Negocio de Impressao 3D com IA' por R$197 (sobe para R$497) com countdown urgency. Blog 06/06: '5 Nichos ESQUECIDOS da Impressao 3D (Ticket Alto, Zero Concorrencia)'. Blog 11/06: viagem a Shenzhen/China (possivel anuncio de novos equipamentos em breve).",
+      "engajamento_estimado": "alto",
+      "relevancia_hayzer": "alto",
+      "notas": "MAIOR influencer de impressao 3D do Brasil: 129K Instagram + 650K total. O curso toca EXATAMENTE no target Hayzer: maker com impressora ociosa querendo profissionalizar. Alunos que compram este curso precisarao de um sistema de gestao — Hayzer entra como complemento natural. JANELA DE 24-48H para acao."
+    },
+    {
+      "conta": "@appcustos3d",
+      "post_novo_24h": false,
+      "tipo": "desconhecido",
+      "tema": "CONCORRENTE DIRETO. Plano Basic R$29,90/mes (R$17/mes semestral), PRO R$69,90/mes (R$36/mes semestral). Funcionalidades: calculo de custo, estoque de filamento, ordens de producao, leitor G-code, integracao Shopee/ML via planilha, link publico de acompanhamento de pedido, PDF de Ficha de Producao.",
+      "engajamento_estimado": "desconhecido",
+      "relevancia_hayzer": "alto",
+      "notas": "Sem posts recentes encontrados. Sem CRM, sem kanban leads, sem golden path lead->pedido. Preco mais agressivo que Hayzer no anual mas escopo muito mais estreito. Posicionamento deles: 'feito por makers para makers'."
+    }
+  ],
+  "reclame_aqui": [
+    {
+      "empresa": "Bling ERP",
+      "reclamacao_recente": "Multiplas reclamacoes ativas 2026: (1) instabilidade cronica — em 12/05 ficou fora das 09:50 as 14:10 por falha de replicacao de banco afetando NF e estoque; (2) AUMENTO ABUSIVO em abril/2026 — clientes migrados automaticamente para planos superiores ao ultrapassar limite de pedidos importados (ex: Cobalt R$55 -> Titanio sem aviso claro); (3) suporte com respostas genericas sem solucao; (4) falta de adequacao a reforma tributaria 2026 (IBS e CBS).",
+      "tema_recorrente": true,
+      "oportunidade_hayzer": "OPORTUNIDADE DIRETA E IMEDIATA. Bling perdendo makers por (a) instabilidade tecnica cronica, (b) aumento de preco em abril/2026 sem aviso e (c) suporte ruim. Copy sugerida: 'Cansado de pagar mais e receber menos? O Hayzer foi feito pra maker, nao pra e-commerce.' Landing comparativa Hayzer vs Bling seria muito eficaz agora."
+    },
+    {
+      "empresa": "MakerFlow 3D",
+      "reclamacao_recente": "Nenhuma reclamacao encontrada. Feature de destaque: 'Analise de Mercado PRO com IA'. Preco: R$29,90/mes ou R$69,90/trimestre. Integracao ML+Shopee via OAuth.",
+      "tema_recorrente": false,
+      "oportunidade_hayzer": "CONCORRENTE DIRETO. Ausencia de reclamacoes pode indicar base de usuarios pequena. Hayzer diferencia por: multi-projeto, CRM/leads nativos, UX superior, Stripe integrado."
+    },
+    {
+      "empresa": "AppCustos3D",
+      "reclamacao_recente": "Nenhuma reclamacao encontrada.",
+      "tema_recorrente": false,
+      "oportunidade_hayzer": "Concorrente de escopo estreito (calculo de custo + ordens). Sem CRM, sem catalogo publico, sem onboarding wizard. Hayzer comunica 'sistema completo' vs 'calculadora avancada'."
+    },
+    {
+      "empresa": "Smart3D (opcognos.com) — NOVO, nao mapeado antes",
+      "reclamacao_recente": "Nenhuma reclamacao encontrada. Produto: gestao completa para makers 3D BR — calcula custo real por peca, pipeline visual (A Fazer -> Pronta -> Entregue), orcamento em PDF, calculo automatico de preco para Shopee/ML descontando taxa de marketplace.",
+      "tema_recorrente": false,
+      "oportunidade_hayzer": "CONCORRENTE DIRETO nao rastreado anteriormente. Cobre fluxo similar ao Hayzer. Requer inteligencia competitiva urgente: preco, tracao, reviews. Hayzer diferencia por: UI V4 premium, onboarding wizard, Stripe integrado, multi-projeto, catalogo publico."
+    },
+    {
+      "empresa": "3D Control",
+      "reclamacao_recente": "Nenhuma reclamacao encontrada. Preco unico R$39,99/mes. Integracoes: Shopee/ML/Elo7/Instagram.",
+      "tema_recorrente": false,
+      "oportunidade_hayzer": "Sem plano gratuito/trial longo. Hayzer pode explorar trial generoso + soft launch exclusivo como diferencial de aquisicao."
+    }
+  ],
+  "alertas": [
+    "URGENTE 24H: @3dgeekshow (129K+) tem campanha ativa do curso 'Seu Negocio de Impressao 3D com IA' por R$197 com countdown. Alunos deste curso sao leads quentes para Hayzer. Janela de acao agora — propor parceria de afiliado ou mencao antes do encerramento da campanha.",
+    "BLING PRECO ABRIL 2026: Bling mudou planos e aumentou precos em abril/2026 sem aviso claro. Onda de reclamacoes frescas no Reclame Aqui sobre instabilidade e cobranca abusiva. Janela de conquista de makers insatisfeitos aberta agora.",
+    "SMART3D NOVO CONCORRENTE: opcognos.com descoberto hoje — gestao completa maker 3D BR nao mapeada anteriormente. Investigar preco, tracao e diferenciais com urgencia."
+  ],
+  "posts_relevantes": [
+    "@artbox3d: lancamento de 'Seminovos.ARTBOX3D.com.br' — marketplace P2P zero comissao para impressoras usadas. Sinal de maturacao do ecossistema maker. (URL: instagram.com/p/DSc2v0TEZT7/)",
+    "@3dgeekshow blog 06/06/2026: '5 Nichos ESQUECIDOS da Impressao 3D (Ticket Alto, Zero Concorrencia)' — conteudo de estrategia de negocio maker alinhado ao ICP Hayzer, provavelmente distribuido via reels/stories na semana do soft launch",
+    "Curso ativo negociocomia.3dgeekshow.com.br: 'Seu Negocio de Impressao 3D com IA' R$197 com countdown — modulos sobre nicho, validacao, marca, copy e IA. Alunos = leads quentes Hayzer."
+  ],
+  "reclamacoes_interessantes": [
+    "Bling: 'O Bling destruiu nossa produtividade. Instabilidade cronica e mudancas arbitrarias de usabilidade' — reclamacao recorrente com padrao sistematico em 2025-2026",
+    "Bling: 'Aumento abusivo da mensalidade e falta de suporte — cliente migrado de plano sem aviso apos abril/2026' — dor diretamente exploravel por Hayzer com posicionamento de preco previsivel"
+  ],
+  "acao_recomendada": "Marcos + Helena: nas proximas 24h, contactar Murilo (@3dgeekshow) ou time via DM/email para propor parceria de afiliado — o curso 'Seu Negocio de Impressao 3D com IA' esta em campanha ativa e alunos precisarao de sistema de gestao. Paralelamente, Marcos redige post/thread 'Hayzer vs Bling' explorando dores reais de instabilidade e aumento de preco de abril/2026 documentadas no Reclame Aqui. Dois movimentos de aquisicao com timing perfeito para o dia do soft launch."
+}
