@@ -1,0 +1,43 @@
+{
+  "date": "2026-06-13",
+  "generated_at": "2026-06-13T09:00:00-03:00",
+  "schema_note": "Tabela nao tem coluna 'step'. Proxies usados: qualificado = whatsapp + business_name preenchidos; etapa2 = email_confirmed = true.",
+  "period_24h": {
+    "total_new": 0,
+    "qualified": 0,
+    "pct_qualified": 0,
+    "by_utm_source": {}
+  },
+  "accumulated": {
+    "total": 3,
+    "qualified": 0,
+    "email_confirmed": 0,
+    "avg_score": 0.0,
+    "all_status_new": true,
+    "note": "3 registros sao testes pre-launch criados entre 15-22/05. Nenhum com email confirmado ou qualificacao completa."
+  },
+  "trend_7d": {
+    "last_7d": 0,
+    "prev_7d": 0,
+    "daily_avg_7d": 0,
+    "pct_change_vs_prev_7d": null,
+    "direction": "sem_dados"
+  },
+  "top_utm_accumulated": {
+    "direct": 3,
+    "linkedin": 0,
+    "whatsapp": 0,
+    "organic": 0
+  },
+  "context": {
+    "soft_launch_date": "2026-06-13",
+    "is_soft_launch_day": true,
+    "note": "Primeiro digest gerado. Base real comeca hoje com o soft launch."
+  },
+  "action_items": [
+    "Soft launch hoje (13/06): base real começa do zero -- primeiros leads reais esperados nas proximas horas",
+    "3 registros existentes sao testes de maio -- considerar limpar ou marcar com tag 'teste' antes de analisar funil",
+    "UTM tracking: todos os 3 leads vieram como 'direct' -- verificar se links de campanha WhatsApp Beta estao com ?utm_source= ativos",
+    "Amanha 14/06 sera a primeira medição real do funil pos-launch"
+  ]
+}
