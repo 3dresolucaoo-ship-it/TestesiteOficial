@@ -1,0 +1,62 @@
+{
+  "date": "2026-06-14",
+  "hora_brt": "06:00",
+  "status": "ALERTA_AMARELO",
+  "routes": {
+    "hayzer_com_br":   { "status": 200, "ok": true },
+    "calculadora":     { "status": 200, "ok": true },
+    "waitlist":        { "status": 200, "ok": true, "note": "CSR — exibe 'Carregando...' antes da hidratacao JS, comportamento normal Next.js" },
+    "calculadora_pro": { "status": 404, "ok": false, "note": "esperado — ADR-024, Calc Pro revogada 21/05, 11o dia consecutivo" }
+  },
+  "routes_ok": "3/4",
+  "vercel": {
+    "production_sha":        "07cc8c0",
+    "production_deploy_id":  "dpl_3GGd5WqqbyLhYhtrJAMn5o5xbX3a",
+    "production_status":     "READY",
+    "production_age_hours":  71,
+    "production_since":      "2026-06-11T02:50Z",
+    "deploys_24h":           7,
+    "deploys_24h_errors":    0,
+    "deploys_24h_note":      "todos READY, todos preview (target null) — nenhum push em main em 3 dias"
+  },
+  "supabase": {
+    "project_status":           "ACTIVE_HEALTHY",
+    "health_check":             "OK",
+    "waitlist_leads_total":     3,
+    "waitlist_leads_new_24h":   0,
+    "notifications_table":      true,
+    "search_index_exists":      true,
+    "search_index_note":        "existe como tabela (to_regclass OK), nao como view em pg_views public — GlobalSearch depende do tipo exato, validar manualmente se necessario"
+  },
+  "performance": {
+    "available":                false,
+    "reason":                   "VERCEL_API_TOKEN ausente",
+    "consecutive_days_missing": 24,
+    "lcp":                      null,
+    "inp":                      null,
+    "cls":                      null
+  },
+  "alerts": [
+    {
+      "severity": "yellow",
+      "item":     "calculadora_pro_404",
+      "msg":      "/calculadora/pro retorna 404 — esperado (ADR-024, Calc Pro revogada). 11o dia consecutivo."
+    },
+    {
+      "severity": "yellow",
+      "item":     "producao_sem_deploy",
+      "msg":      "Producao 71h sem novo deploy em main (desde 11/06 02:50 UTC). Varios PRs preview pendentes de merge."
+    },
+    {
+      "severity": "yellow",
+      "item":     "performance_token_ausente",
+      "msg":      "VERCEL_API_TOKEN ausente ha 24 dias consecutivos. Core Web Vitals indisponiveis."
+    }
+  ],
+  "notes": [
+    "waitlist_leads: 3 (tabela waitlist_leads). Contagem de 6 em 13/06 era da tabela leads (CRM) — erro de query anterior. 3 e consistente com historico 09-11/06.",
+    "Pos soft launch 13/06: sem leads novos em 24h ainda — esperado no primeiro dia"
+  ],
+  "context": "Dia 2 pos soft launch (13/06). Grupo WhatsApp Beta ativo. Launch publico em 13 dias (27/06).",
+  "checked_at": "2026-06-14T09:06:34Z"
+}
