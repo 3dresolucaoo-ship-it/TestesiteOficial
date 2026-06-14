@@ -1,0 +1,68 @@
+{
+  "data": "2026-06-14",
+  "alertas": [
+    {
+      "titulo": "3DGeekShow com curso 'Negocio com IA' ativo a R$197 -- substituto direto ao Hayzer",
+      "detalhe": "O maior canal de impressao 3D do Brasil (129K Instagram, 125K YouTube) esta com lancamento ativo de curso 'Seu Negocio de Impressao 3D com IA' por R$197 (normal R$497) com countdown timer. Inclui planilha de precificacao como bonus. Posiciona-se exatamente no mesmo problema que Hayzer resolve. Alto risco de capturar o publico-alvo antes do lancamento de 27/06.",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "Bling com aumento de 150% nos planos em abril/2026 e falhas cronicas de sync com ML",
+      "detalhe": "Em abril/2026 o Bling reestruturou planos e passou a cobrar por volume de API alem de marketplaces. Usuarios relatam salto de R$185 para R$450 sem melhora. Suporte trocado por IA sem escalonamento humano, fila telefonica de 40min. Falha cronica de sincronizacao de estoque com Mercado Livre (variacao de produto gerando venda errada). Padrao de reclamacao consistente no Reclame Aqui em 2026.",
+      "urgencia": "alta"
+    },
+    {
+      "titulo": "Smart3D (opcognos) identificado como novo concorrente direto nao mapeado",
+      "detalhe": "Smart3D (smart3d.opcognos.com) e plataforma brasileira de gestao para makers de impressao 3D: calcula custos reais, controla pedidos, gera orcamentos em PDF, mostra lucratividade. Freemium. Nao estava no mapa de concorrentes do Hayzer. Mercado agora tem ao menos 5 solucoes diretas: AppCustos3D, MakerFlow3D, Smart3D, Precifi3D, Custos3D.com.",
+      "urgencia": "alta"
+    }
+  ],
+  "posts_relevantes": [
+    {
+      "conta": "@3dgeekshow",
+      "tipo": "lancamento de curso + posts educacionais",
+      "resumo": "Lancamento ativo: curso 'Negocio com IA' R$197 (preco lancamento, normal R$497), inclui calculadora de precificacao como bonus. Post de 06/06: '5 Nichos ESQUECIDOS da Impressao 3D'. Post de 13/06: 'A Impressora 3D Barata Morreu?' analisando escassez de modelos baratos. Post de 11/06: viagem a Shenzhen explorando ecossistema de fabricacao chines.",
+      "engajamento_est": "muito alto (129K Instagram, 125K YouTube, base monetizada e fiel)",
+      "relevancia_hayzer": "Critica. Educando o exato publico-alvo do Hayzer com solucao de baixo custo (planilha como bonus). Parceria ou posicionamento diferenciado urgente antes de 27/06."
+    },
+    {
+      "conta": "@artbox3d",
+      "tipo": "lancamento de marketplace",
+      "resumo": "82K seguidores. Post recente lancando 'seminovos.artbox3d.com.br' -- marketplace C2C de impressoras usadas sem comissao. Maior loja fisica 3D em SP, revenda oficial Bambu Lab, presenca forte no ML. Tem app proprio (app.artbox3d.com.br).",
+      "engajamento_est": "alto (82K seguidores, marketplace com 100+ usuarios ativos ja)",
+      "relevancia_hayzer": "Media-alta. Quem compra impressora usada via ARTBOX3D e candidato a assinar Hayzer nos primeiros 30 dias. Ponto de entrada do ecossistema maker."
+    },
+    {
+      "conta": "@3dlab_brasil",
+      "tipo": "educacional e institucional",
+      "resumo": "83K seguidores, 851 posts. Serie '3D em 3 Minutos', conteudo sobre filamentos, historico de campanha humanitaria (filtros para RS). Presenca no X/Twitter.",
+      "engajamento_est": "moderado a alto (ate 5.2K interacoes em posts comunitarios)",
+      "relevancia_hayzer": "Media. Publico de compradores e entusiastas, nao prioritariamente makers que vendem. Canal de parceria para conteudo de gestao de custos."
+    }
+  ],
+  "reclamacoes_interessantes": [
+    {
+      "empresa": "Bling ERP",
+      "queixa": "Falha cronica de sincronizacao com Mercado Livre: produto com variacao registrado no ERP como anuncio simples no ML, gerando vendas erradas, cancelamentos e queda de reputacao. Suporte confirmou que e estrutural para certos casos. Fila de 40min por telefone, IA substituiu atendimento humano sem escalonamento.",
+      "recorrente": true,
+      "oportunidade_hayzer": "Direta e imediata. Criar conteudo '3 falhas do Bling que destroem sua reputacao no ML' e landing page especifica. Copy: 'Sem bug de sincronizacao, sem pedido errado, sem reputacao caindo'."
+    },
+    {
+      "empresa": "Bling ERP",
+      "queixa": "Aumento abusivo de mensalidade: de R$185 para R$450 (150%) com piora de desempenho. Reestruturacao arbitraria de planos em abril/2026 sem comunicacao antecipada. Usuarios de 3+ anos relatando abandono.",
+      "recorrente": true,
+      "oportunidade_hayzer": "Alta. Makers migrando do Bling agora, janela aberta. Google Ads em 'alternativa bling', 'bling caro 2026'. Copy: 'Preco fixo que nao sobe quando voce cresce'."
+    }
+  ],
+  "acao_recomendada": "Nos proximos 7 dias: (1) Gravar video/reels do CEO mostrando por que planilha nao escala alem de 20 pedidos/mes -- resposta direta ao curso 3DGeekShow sem citar nome. (2) Montar landing page 'Alternativa ao Bling para impressao 3D' capturando busca dos insatisfeitos com o aumento de preco de abril/2026. (3) Fazer analise competitiva completa do Smart3D (smart3d.opcognos.com) -- concorrente nao mapeado com proposta similar.",
+  "resumo_textual": "Pesquisa de 14/06/2026. Instagram bloqueou acesso direto (429/403) em todos os perfis -- dados de perfil obtidos via metadados Google. Tres alertas criticos detectados: (1) 3DGeekShow, maior canal maker 3D do Brasil, esta com curso 'Negocio com IA' em lancamento ativo a R$197, incluindo planilha de precificacao como bonus -- substituto direto ao Hayzer para makers iniciantes, com risco de capturar publico antes de 27/06. (2) Bling gerou onda real de insatisfacao em 2026: aumento de 150% nos planos em abril, sincronizacao cronicamente quebrada com Mercado Livre, suporte virou IA sem escalonamento. Janela de migracao aberta agora. (3) Smart3D (opcognos.com) nao estava mapeado como concorrente e tem proposta freemium direta. Mercado agora tem ao menos 5 solucoes de SaaS especifico para maker 3D. A ARTBOX3D lancou marketplace de usados sem comissao, sinalizando entrada de novos makers no ecossistema -- publico em fase de setup e candidato a assinar Hayzer. Hayzer tem janela de 30 a 60 dias para se posicionar antes que os makers insatisfeitos com Bling migrem para outras solucoes. Acao mais urgente: responder ao movimento do 3DGeekShow com conteudo proprio mostrando por que planilha nao escala, e capturar busca de 'alternativa bling 2026'.",
+  "meta": {
+    "instagram_acessivel": false,
+    "reclame_aqui_acessivel": true,
+    "concorrentes_novos_detectados": ["Smart3D (smart3d.opcognos.com)", "Precifi3D"],
+    "concorrentes_confirmados": ["AppCustos3D", "MakerFlow3D", "Custos3D.com"],
+    "fonte_instagram": "metadados Google + busca (perfil direto bloqueado 429/403)",
+    "gerado_em": "2026-06-14T00:00:00-03:00",
+    "fontes_usadas": ["Google Search", "Reclame Aqui", "metadados Instagram via Google"]
+  }
+}
