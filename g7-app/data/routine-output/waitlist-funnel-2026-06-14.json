@@ -1,0 +1,36 @@
+{
+  "date": "2026-06-14",
+  "generated_at": "2026-06-14T09:00:00-03:00",
+  "period_24h": {
+    "total_new": 0,
+    "completed_step_2": 0,
+    "pct_step_2": null,
+    "utm_breakdown": []
+  },
+  "period_7d": {
+    "total": 0,
+    "avg_daily": 0.0,
+    "prev_7d_total": 0,
+    "growth_pct": null,
+    "trend": "sem_dados"
+  },
+  "accumulated": {
+    "total_all": 3,
+    "top_utm_sources": [
+      { "utm_source": "direct", "total": 3, "pct": 100 }
+    ]
+  },
+  "step_transition": {
+    "avg_minutes_step1_to_step2_7d": null,
+    "note": "Todos os 3 leads existentes completaram step 2. Nenhum lead novo nos ultimos 7 dias para calcular tempo medio."
+  },
+  "leads_detail": [
+    { "dia": "2026-05-22", "utm_source": "direct", "etapa": "step2", "status": "new" },
+    { "dia": "2026-05-20", "utm_source": "direct", "etapa": "step2", "status": "new" },
+    { "dia": "2026-05-15", "utm_source": "direct", "etapa": "step2", "status": "new" }
+  ],
+  "context": {
+    "soft_launch": "2026-06-13",
+    "note": "Soft launch foi ontem. Os 3 leads sao de maio (provavelmente testes CEO durante dev). Primeiro dia real de captacao."
+  }
+}
